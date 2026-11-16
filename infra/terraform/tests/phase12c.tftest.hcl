@@ -118,7 +118,7 @@ run "disabled_sources_have_no_empty_dashboard_widgets" {
 # Phase 15 P9 supersedes the N12 DynamoDB panels: the elasticity dashboard keeps at most 50 free native metrics, so the 6
 # ConditionalCheckFailedRequests and 42 per-operation SuccessfulRequestLatency series were dropped (rationale in
 # modules/observability/main.tf). The six-table read/write throttle series stay (pinned in phase12b "dashboard_metric_shapes_...").
-run "dynamodb_native_failure_and_latency_panels" {
+run "dynamodb_failure_and_latency_panels_removed_by_phase15_p9" {
   command = plan
   assert {
     condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if contains(["DynamoDB conditional write failures", "DynamoDB successful request latency (milliseconds)"], try(w.properties.title, ""))]) == 0 && !strcontains(output.phase12b_controls.observability.dashboard, "ConditionalCheckFailedRequests") && !strcontains(output.phase12b_controls.observability.dashboard, "SuccessfulRequestLatency")

@@ -249,10 +249,10 @@ class Fixture(unittest.TestCase):
                 shutil.copy(os.path.join(REPO, entry["path"]), target)
 
     def pin_session2(self):
-        """The pins the infra-engineer is asked for: the P22 sample ceiling and the P25 ledger (4 runs, 3.36 USD)."""
+        """The pins the infra-engineer is asked for: the P22 sample ceiling and the P25 ledger (4 runs, 3.53 USD cap)."""
         self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "60000")
         self.set_pin("EMR_MAX_LIVE_RUNS", "4")
-        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.36")
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")
 
     def write_l_slice(self, count=48187, sha=None):
         evidence = read_json(L_EVIDENCE)["slice"]
@@ -446,8 +446,8 @@ class RenderAndCheck(Fixture):
         self.pin_session2()
         failed, blocked, lines = self.run_check()
         self.assertFalse(failed or blocked, "\n".join(lines))
-        # Session 1 history 0.84 + 0.84, then S and one S retry 0.84 + 0.84 = 3.36 against the 3.36 / 4-run P25 cap: zero margin
-        self.assertTrue(any("15A ledger 3.36 USD over 4 runs (Session 1 history + S + one S retry) <= cumulative cap 3.36 USD / 4 runs (margin 0.00 USD, 0 runs)" in line for line in lines))
+        # Session 1 history 0.84 + 0.84, then S and one S retry 0.84 + 0.84 = 3.36 against the 3.53 USD / 4-run P25 cap: margin 0.17 USD and 0 runs
+        self.assertTrue(any("15A ledger 3.36 USD over 4 runs (Session 1 history + S + one S retry) <= cumulative cap 3.53 USD / 4 runs (margin 0.17 USD, 0 runs)" in line for line in lines))
         path = self.manifest_path("15a-emr-size-25.json")
         original = read_json(path)
         mutated = json.loads(json.dumps(original))
@@ -468,7 +468,7 @@ class RenderAndCheck(Fixture):
         self.assertFalse(failed, "\n".join(lines))
         self.assertTrue(blocked)
         self.assertTrue(any("CHECK-BLOCKED: 15A ledger 3.36 USD over 4 runs" in line and "cumulative cap 2.52 USD" in line and "P25" in line for line in lines))
-        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.36")
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")
         self.set_pin("EMR_MAX_LIVE_RUNS", "3")  # a second S attempt would be run 4
         failed, blocked, lines = self.run_check()
         self.assertTrue(blocked and not failed)

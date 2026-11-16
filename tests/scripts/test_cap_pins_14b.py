@@ -3,9 +3,10 @@ guards for the two spending caps and the project total. Every value below is der
 under test.
 
   * EMR (Phase 15 P25, user 2026-11-16, docs/agent-runs/phase-15/prompt.md line 131, verbatim: "P25: approved. Cap 4 runs and USD 3.36
-    cumulative, including Session 1's EMR spend"): 4 live runs x 0.84 USD per run (2 x m5.xlarge at 0.24 USD per hour, 90 minutes
-    cluster time = 2 x 0.24 x 1.5 = 0.72 plus the idle tail, planned at 0.84) = 3.36. scripts/config/release.conf pins
-    EMR_CUMULATIVE_CAP_USD=3.36 and EMR_MAX_LIVE_RUNS=4. History: Phase 14B pinned 3 runs x 0.84 = 2.52.
+    cumulative, including Session 1's EMR spend"; raised by the user decision of 2026-11-16 "Raise cap to 3.53"): 4 live runs, and
+    3.53 = 1.68 (Session 1: 2 runs at the 0.84 estimate) + 1.85 (Session 2: the D3 block, 2 x (75 min + 15 min idle tail) + 20 min cold
+    start = 200 min at 0.555 USD per hour = 1.85 exactly). scripts/config/release.conf pins EMR_CUMULATIVE_CAP_USD=3.53 and
+    EMR_MAX_LIVE_RUNS=4. History: P25 pinned 4 runs x 0.84 = 3.36; Phase 14B pinned 3 runs x 0.84 = 2.52.
   * Synthesis (repair round 3, Step 0 answer 3, "easiest"): 115 answers (buckets 10 + 60 + 40 + 5) x 0.001365 USD per answer (claude-haiku-5-5,
     (7150 x 0.10 + 1300 x 0.50) / 1e6) = 0.156975. The shared cap deliberately stays 1.33 (the receipt reserves the full cap), so it is
     now a conservative upper bound and the bucket counts bind first (1.33 / 0.001365 = 974 answers > 115). The cap is pinned in BOTH
@@ -14,7 +15,7 @@ under test.
     session plan, x 1.11 sales tax, USD 0.34 already spent, limit 22.00 = floor 3):
         (11.15 + 1.17 + 2.41 + 0.05 + 0.30 + 2.52 + 1.33 + 0.50) x 1.11 + 0.34 = 21.9073 <= 22.00
     Those terms no longer describe the Phase 15 plan (Session 1 has been spent, USD 15.83 combined, and Session 2 is priced as R0 + R-b
-    blocks), so re-expressing them with the new rule (x 1.00, 3.36 for EMR: 20.27 + 0.34 = 20.61 <= 23.00) would guard nothing real.
+    blocks), so re-expressing them with the new rule (x 1.00, 3.36 for EMR, the P25 cap then: 20.27 + 0.34 = 20.61 <= 23.00) would guard nothing real.
     The guard now checks the Session 2 plan (docs/runbooks/session-2-plan.md sections 6.2-6.4, an untracked draft read 2026-11-16)
     under the human's two Phase 15 rules recorded in prompt.md:
       - tax 0 on credit-covered spend, factor 1.00 (verbatim: "the portion of your bill deducted/covered by AWS credits is not taxed.
@@ -35,7 +36,8 @@ PROFILE = S.REPO / "load-tests/config/load-profile.v1.json"
 
 EMR_RUNS = 4  # Phase 15 P25 (was 3)
 EMR_PER_RUN = D("0.84")
-EMR_CAP = D("3.36")  # Phase 15 P25 (was 2.52)
+EMR_CAP = D("3.53")  # user decision 2026-11-16 "Raise cap to 3.53" (P25 had 3.36, Phase 14B 2.52)
+SESSION_2_BLOCK = D("1.85")  # D3: 200 min x 0.555 USD per hour, exact
 SESSION_1_RUNS = 2  # the ledger holds 2 Session 1 runs at the 0.84 estimate (prompt.md, coordinator check of P25)
 HAIKU_UNIT = D("0.001365")  # (7150 x 0.10 + 1300 x 0.50) / 1,000,000
 HAIKU_ANSWERS = 10 + 60 + 40 + 5
@@ -47,28 +49,32 @@ def conf_values():
 
 
 class EmrCumulativeCap(unittest.TestCase):
-    def test_the_hand_derivation_is_four_runs_of_eighty_four_cents(self):
-        self.assertEqual(EMR_RUNS * EMR_PER_RUN, EMR_CAP)
+    def test_the_hand_derivation_is_session_1_plus_the_d3_session_2_block(self):
+        self.assertEqual(SESSION_1_RUNS * EMR_PER_RUN + SESSION_2_BLOCK, EMR_CAP)
+        self.assertEqual(D("0.555") * D(2 * (75 + 15) + 20) / D(60), SESSION_2_BLOCK)
+        self.assertEqual(EMR_CAP - EMR_RUNS * EMR_PER_RUN, D("0.17"), "the margin over four planned runs, for a measured S overrun")
 
     def test_release_conf_pins_the_cumulative_cap_at_planned_use(self):
         values = conf_values()
         self.assertEqual(D(values["EMR_CUMULATIVE_CAP_USD"]), EMR_CAP)
-        self.assertEqual(D(values["EMR_CUMULATIVE_CAP_USD"]), EMR_RUNS * EMR_PER_RUN)
-        self.assertEqual(values["EMR_CUMULATIVE_CAP_USD"], "3.36")
+        self.assertEqual(D(values["EMR_CUMULATIVE_CAP_USD"]), SESSION_1_RUNS * EMR_PER_RUN + SESSION_2_BLOCK)
+        self.assertEqual(values["EMR_CUMULATIVE_CAP_USD"], "3.53")
 
     def test_release_conf_allows_exactly_four_live_runs(self):
         self.assertEqual(int(conf_values()["EMR_MAX_LIVE_RUNS"]), EMR_RUNS)
         self.assertEqual(conf_values()["EMR_MAX_LIVE_RUNS"], "4")
 
     def test_after_session_1_exactly_two_more_runs_fit_both_caps(self):
-        """The caps are cumulative and include Session 1: 4 - 2 = 2 runs (S then L, or S then one S retry) and 3.36 - 1.68 = 1.68 =
-        2 x 0.84. A third Session 2 run would break both the run count and the cumulative cap (1.68 + 3 x 0.84 = 4.20 > 3.36)."""
+        """The caps are cumulative and include Session 1: 4 - 2 = 2 runs (S and its one S retry; L was dropped on EMR on 2026-11-16) and 3.53 - 1.68 = 1.85, room
+        for 2 x 0.84 = 1.68 with 0.17 to spare (2.20 runs). A third Session 2 run would break both the run count and the cumulative
+        cap (1.68 + 3 x 0.84 = 4.20 > 3.53)."""
         values = conf_values()
         runs, cap = int(values["EMR_MAX_LIVE_RUNS"]), D(values["EMR_CUMULATIVE_CAP_USD"])
         spent = SESSION_1_RUNS * EMR_PER_RUN
         self.assertEqual(spent, D("1.68"))
         self.assertEqual(runs - SESSION_1_RUNS, 2)
-        self.assertEqual((cap - spent) / EMR_PER_RUN, 2)
+        self.assertEqual(cap - spent, SESSION_2_BLOCK)
+        self.assertEqual(int((cap - spent) / EMR_PER_RUN), 2, "two whole planned runs fit, not three")
         self.assertGreater(spent + 3 * EMR_PER_RUN, cap)
 
     def test_the_cap_keys_are_defined_once(self):
@@ -158,14 +164,14 @@ class Phase15ProjectArithmetic(unittest.TestCase):
     def test_the_emr_cap_fits_inside_the_r0_emr_block(self):
         """Pre-D3 history (the plan's published 6.4 figures until the D3 rounding is published): the R0 EMR block is 3.83
         cluster-hours: 2 runs x (90 min + 15 min idle tail) = 3.50 h + 20 min cold start = 3.833 h,
-        x 0.50 = 1.915, so 1.92. The ledger's remaining Session 2 allowance under the pinned cap is 3.36 - 1.68 = 1.68 (2 x 0.84),
-        inside the block, so the P25 cap raise adds no cost beyond the plan's 7.14."""
+        x 0.50 = 1.915, so 1.92. The ledger's remaining Session 2 allowance under the pinned cap is 3.53 - 1.68 = 1.85 (the D3 block),
+        inside the 1.92 block of the plan's 7.14."""
         hours = (2 * (D(90) + D(15)) + D(20)) / D(60)
         self.assertEqual(hours.quantize(self.CENT, ROUND_HALF_UP), self.EMR_BLOCK_HOURS)
         self.assertEqual((self.EMR_BLOCK_HOURS * self.EMR_RATE).quantize(self.CENT, ROUND_HALF_UP), self.EMR_BLOCK_CAP)
         cap = D(conf_values()["EMR_CUMULATIVE_CAP_USD"])
         allowance = cap - SESSION_1_RUNS * EMR_PER_RUN
-        self.assertEqual(allowance, D("1.68"))
+        self.assertEqual(allowance, D("1.85"))
         self.assertLessEqual(allowance, self.EMR_BLOCK_CAP)
         self.assertLessEqual(allowance, self.R0_CAP)
 
@@ -198,17 +204,18 @@ class Phase15ProjectArithmetic(unittest.TestCase):
         over = self.spent() + pre_d3_cap - self.EMR_BLOCK_CAP + (self.EMR_BLOCK_HOURS * self.D3_CLUSTER_RATE).quantize(self.CENT, ROUND_UP)
         self.assertGreater(over, self.limit())
 
-    def test_d3_ledger_fills_the_cumulative_cap_exactly(self):
+    def test_d3_ledger_leaves_a_seventeen_cent_margin_under_the_cumulative_cap(self):
         """Per run (the budget.py method, rounded UP to the cent): 0.555 x (75 x 60 + 900) / 3600 = 0.555 x 1.5 = 0.8325, so 0.84.
-        Session 1 (1.68) + S 0.84 + L 0.84 = 3.36 against the pinned 3.36: allowed with zero margin; one more cent is refused."""
+        Session 1 (1.68) + S 0.84 + the one S retry 0.84 = 3.36 against the pinned 3.53: allowed with 0.17 margin (the room for a measured S
+        overrun); the margin is exactly the D3 block (1.85) less the two planned runs (1.68)."""
         per_run = (self.D3_CLUSTER_RATE * D(self.D3_RUN_MINUTES * 60 + 900) / D(3600)).quantize(self.CENT, ROUND_UP)
         self.assertEqual(per_run, D("0.84"))
         cap = D(conf_values()["EMR_CUMULATIVE_CAP_USD"])
         total = SESSION_1_RUNS * EMR_PER_RUN + 2 * per_run
         self.assertEqual(total, D("3.36"))
         self.assertLessEqual(total, cap)
-        self.assertEqual(cap - total, D("0"), "zero margin")
-        self.assertGreater(total + self.CENT, cap)
+        self.assertEqual(cap - total, D("0.17"))
+        self.assertGreater(total + D("0.18"), cap)
 
     def test_the_dropped_tax_column_would_have_broken_the_limit(self):
         """Why the factor matters (plan 6.4, column B, dropped 2026-11-16; pre-D3 figures, history): 15.75 x 1.11 + 0.075 = 17.5575 (17.56), then

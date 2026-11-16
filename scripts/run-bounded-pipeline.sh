@@ -108,7 +108,7 @@ G6 cost guard
   PIPELINE_MAX_IDLE_TIMEOUT_SECONDS, 900 s) hours: the idle tail before the cluster stops is billed too. It is printed in
   the dry run and before --execute. --execute is REFUSED when the estimate exceeds EMR_MAX_RUN_USD (3) or the declared
   budget, when the run ledger already holds EMR_MAX_LIVE_RUNS (4) live runs, when the cumulative estimate would exceed
-  EMR_CUMULATIVE_CAP_USD (3.36), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
+  EMR_CUMULATIVE_CAP_USD (3.53), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
   the approval record already started a run, or while EMR_PRICING_CONFIRMED_BY_HUMAN is not true (a human flips it after
   checking the sources).
 

@@ -11,6 +11,20 @@ Run everything from the repository root with `python3 -I` (isolated mode).
 - **Default: non-LLM endpoints only** (`/healthz`, `/readyz`, `/metrics`, `/v1/graph/nodes/{id}`, `/v1/graph/nodes/{id}/neighbors`, `/v1/evidence/{id}`). Routes that need IDs you did not supply are dropped and reported (`ROUTE-DROPPED`, `routes_dropped` in the run record), never silently. `POST /v1/query` (planner + synthesis on claude-haiku-5-5 through the Anthropic API; the Bedrock route is the selectable fallback) is **opt-in** with `--llm`.
 - Aborts (exit 4, run kept and marked `aborted`) on repeated 5xx or transport failures (20 of the last 40 requests) or 5 consecutive 401/403. Timeouts: 10 s per request, 30 s for an answer, whole run at most 7,200 s, at most 300,000 requests. All limits are in `config/load-profile.v1.json`.
 
+## Semantic route (P42; manifest `experiments/manifests/15b-ecs-scaling-semantic.json`)
+
+A manifest with a `semantic` block adds `POST /v1/semantic/retrieve` (the P40 public route: API key as `Authorization: Bearer`, body `{"question": ..., "topK": N}`, `N` at most 20) to the route mix with weight 40 (profile). The questions come from the one fixed file given with `--questions-file`: 100-200 distinct lines, each at most 1,000 characters, and its sha256 and count must equal the manifest pin (`semantic.questions_sha256`, `questions_count`); a different, duplicated or missing file is refused before anything is sent. `--llm` cannot be combined with it. The raw rows keep the index of the question, never its text. Without the block the semantic route does not exist for a run (it is neither used nor listed as dropped).
+
+- **Required per-level request limits** (constants in `loadgen.py`, `SEMANTIC_LEVEL_CAPS` and `SEMANTIC_HOLD_CAP`): level 1 600, level 5 3,000, level 25 15,000, level 50 30,000, a phase named `hold...` at level 50 150,000; at most 198,600 in total (`SEMANTIC_RAMP_TOTAL`). `validate-manifest`, `plan` and `run` refuse a phase above its limit, a missing `max_requests`, a level without a limit, a second phase for the same limit or a hold below level 50. They are the S3 Vectors cost bound of R-b and must not be raised; lowering one is allowed.
+- **Warm-up phase** (`"type": "warmup"`, exactly one, first, level 1, `max_requests` from the question count up to 200): one worker sends each question once in file order and stops; no retries. It is a phase of its own in the raw rows and every summary, so it never mixes into the level-1 figures. Without the `semantic` block a warm-up phase is refused.
+- **429 replies** (outcome `throttled`) count toward the phase limit and are reported **separately**: `rate_limited_429` per phase and route in `summary.json`, the `summary.csv` and `timeline.csv` columns of the same name, `totals.rate_limited_429` and a `rate_limited_429` field per phase in the run record, and one `RATE-LIMITED-429: phase=... count=...` console line per phase. They are excluded from `throughput_rps`, `success_rps`, the error rates and every latency figure (`latency_ms_all_responses` holds served responses other than 429; `latency_ms_2xx` holds 2xx only), and they never count toward the abort rules. Added figures: `served_requests`, `successful_requests`, `success_rps` (2xx over the phase window), `active_seconds` and `success_rps_active` (over the span in which requests were sent), `peak_success_rps_1s`.
+- `--observe-seconds N` shortens every observe phase of a manifest to at most `N` seconds (it can only lower a window; for local rehearsals, never R-b). The value is recorded in the run record.
+
+```bash
+python3 -I load-tests/loadgen.py plan --manifest experiments/manifests/15b-ecs-scaling-semantic.json --questions-file experiments/inputs/15b/semantic-questions.txt
+python3 -I load-tests/loadgen.py run  --manifest experiments/manifests/15b-ecs-scaling-semantic.json --questions-file experiments/inputs/15b/semantic-questions.txt --run-id <run-id>
+```
+
 ## LLM budget: answer buckets (opt-in)
 
 claude-haiku-5-5 on the Anthropic API is billed by Anthropic, outside the AWS credits (primary route since repair round 3, 2026-11-09, after the instructor approved the Anthropic API and Voyage AI given the Bedrock quota restriction). The USD 1.33 session cap (lowered from USD 1.50 on 2026-11-09, user decision "Caps = planned use"; kept at 1.33 in round 3, user decision "easiest option") is split into **answer buckets**, pinned in `experiments/manifests/llm-allocation.json` (user decision 2026-11-08): **14c 10 / 15b 60 / 16b 40 / 17 5 = 115 answers**, 115 x 0.001365 = USD 0.156975 at the estimate below. At these prices USD 1.33 is a **conservative upper bound** and the bucket counts are the binding limit (the cap would allow 974 answers). **Each bucket is a hard stop**: once used up, that step makes no more LLM calls; the USD 1.33 total is the backstop; nothing rolls over automatically.
@@ -105,15 +119,15 @@ Exit codes: 0 ok, 2 usage, 3 refused before sending, 4 run aborted or interrupte
 |---|---|
 | `raw/requests.jsonl`, `raw/events.jsonl`, `raw/run-record.json` | immutable raw evidence, mode 0444. The run record holds commit, tree dirty flag, profile sha256, manifest sha256, phases with UTC bounds, outcome (`completed`, `aborted`, `interrupted`), LLM answers sent and estimated cost, ledger totals |
 | `raw/raw.sha256` | `sha256sum`-format listing of the other raw files; `summarize` refuses if any file changed |
-| `derived/summary.json`, `summary.csv` | per phase and per route: requests, throughput, error rates, p50/p95/p99 (nearest-rank, all responses and 2xx only) |
-| `derived/timeline.csv` | one row per UTC minute (the CloudWatch period) for lining up with ECS and ALB metrics |
+| `derived/summary.json`, `summary.csv` | per phase and per route: requests, `rate_limited_429` (separate; excluded from the other figures), throughput, `success_rps`, error rates, p50/p95/p99 (nearest-rank, served responses other than 429, and 2xx only) |
+| `derived/timeline.csv` | one row per UTC minute (the CloudWatch period) for lining up with ECS and ALB metrics; `successful_requests` and `rate_limited_429` columns split the minute's requests, and the p95 excludes 429 replies |
 
 Failed and aborted runs keep their directory and record; reruns get a new run id.
 
 ## Tests
 
 ```bash
-python3 -I -m unittest discover -s load-tests/tests -v     # loopback only; 71 tests, about 50 s in total (test_eval16b.py alone: 17 tests, about 10 s)
+python3 -I -m unittest discover -s load-tests/tests -v     # loopback only; 91 tests, about 70 s in total (test_loadgen_semantic.py: 20 tests, about 18 s; test_eval16b.py alone: 17 tests, about 10 s)
 ```
 
 ## Limits

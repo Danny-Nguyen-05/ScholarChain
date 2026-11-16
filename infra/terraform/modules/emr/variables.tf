@@ -57,7 +57,7 @@ variable "config" {
   validation {
     # D3: exactly the reviewed pair. Primary m5.xlarge or r5.xlarge; the core (and task) type stays pinned to m5.xlarge above.
     # G6 at r5.xlarge: the largest allowed cluster (r5 primary 0.315 + core and one task m5 0.240 each, USD per hour) costs
-    # 0.795 x (180 min + 900 s) = USD 2.58, inside the USD 3 per-run cap; tests/phase15_emr_primary.tftest.hcl derives it.
+    # 0.795 x (180 min + 900 s) = USD 2.59 (2.58375 rounded up), inside the USD 3 per-run cap; tests/phase15_emr_primary.tftest.hcl derives it.
     condition     = contains(["m5.xlarge", "r5.xlarge"], var.config.primary_instance_type)
     error_message = "D3: the primary instance type must be r5.xlarge (the reviewed default) or m5.xlarge; no other type has a reviewed rate and cap check."
   }

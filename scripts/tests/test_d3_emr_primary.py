@@ -8,8 +8,10 @@ check uses real numbers, not the cap."
 Every expected number is derived by hand from the reviewed rates (coordinator, public AWS price lists read 2026-11-16, us-east-2):
 r5.xlarge 0.252 EC2 + 0.063 EMR = 0.315 USD/h, m5.xlarge 0.192 + 0.048 = 0.240 USD/h, so primary r5 + one core m5 = 0.555 USD/h.
 At the 75-minute cap plus the 900 s idle tail: 0.555 x (4500 + 900) / 3600 = 0.8325, rounded UP to the cent = 0.84.
-Session 1's ledger holds 2 x 0.84 = 1.68, so S + one S retry = 1.68 + 0.84 + 0.84 = 3.36 <= EMR_CUMULATIVE_CAP_USD 3.36 (the
-coordinator's 3.35 is the unrounded 1.68 + 2 x 0.8325 = 3.345; the scripts round each run up, so the margin is exactly 0.00).
+Session 1's ledger holds 2 x 0.84 = 1.68, so S + one S retry = 1.68 + 0.84 + 0.84 = 3.36 (the coordinator's 3.35 is the unrounded
+1.68 + 2 x 0.8325 = 3.345). User decision 2026-11-16, verbatim "Raise cap to 3.53": EMR_CUMULATIVE_CAP_USD is 3.53 = 1.68 + 3.33 h x 0.555 = 1.85,
+because --record-actual measures S from cluster creation and adds a 0.14 idle tail per cluster; the retry (0.84) is admitted iff S measured
+<= 3.53 - 1.68 - 0.84 - 0.14 = 0.87 (the quoted "3.36" above is the cap before that decision).
 Step timeouts at 75 minutes from PIPELINE_STEP_WEIGHTS (5/20/20/5/40/10 percent of 4500 s): 225, 900, 900, 225, 1800, 450 s.
 Fake aws/yarn/hadoop binaries only; no network, no credentials, no cloud call.
 """
@@ -82,7 +84,7 @@ class PinTests(unittest.TestCase):
 
     def test_the_ledger_caps_and_step_weights_are_the_ones_the_arithmetic_uses(self):
         release = conf("scripts/config/release.conf")
-        self.assertEqual((release["EMR_MAX_LIVE_RUNS"], release["EMR_CUMULATIVE_CAP_USD"], release["PIPELINE_MAX_IDLE_TIMEOUT_SECONDS"]), ("4", "3.36", "900"))
+        self.assertEqual((release["EMR_MAX_LIVE_RUNS"], release["EMR_CUMULATIVE_CAP_USD"], release["PIPELINE_MAX_IDLE_TIMEOUT_SECONDS"]), ("4", "3.53", "900"))
         self.assertEqual(release["PIPELINE_STEP_WEIGHTS"], "stage-in=5 hadoop-prep=20 entity-resolution=20 spark-class-origin=5 spark-job=40 copy-out=10")
 
     def test_terraform_defaults_to_an_r5_primary_and_an_m5_core(self):
@@ -196,24 +198,31 @@ class LedgerBase(unittest.TestCase):
 
 
 class LedgerAt75MinutesTests(LedgerBase):
-    def test_s_and_one_s_retry_fit_the_3_36_cap_exactly_and_nothing_more(self):
+    def test_s_and_one_s_retry_fit_the_3_53_cap_and_nothing_more(self):
+        self.assertEqual(self.cap, "3.53")
         self.assertEqual(self.reserve("s-run")[0], 0)  # 1.68 + 0.84 = 2.52
-        rc, out, _ = self.reserve("s-retry")  # 2.52 + 0.84 = 3.36 <= 3.36 (inclusive)
+        rc, out, _ = self.reserve("s-retry")  # 2.52 + 0.84 = 3.36 <= 3.53
         self.assertEqual(rc, 0, out)
         self.assertIn("live_runs=4 of 4 cumulative_usd=3.36", out)
         rc, out, _ = self.check()
         self.assertEqual(rc, 1)
         self.assertIn("4 live EMR runs are already recorded in the ledger (limit 4)", out)
-        self.assertIn("cumulative estimate 4.20 USD (recorded 3.36 + this run 0.84) would exceed the cap 3.36 USD", out)
+        self.assertIn("cumulative estimate 4.20 USD (recorded 3.36 + this run 0.84) would exceed the cap 3.53 USD", out)
+
+    def test_the_largest_per_run_estimate_that_fits_twice_is_0_92(self):
+        # 1.68 + 2 x 0.92 = 3.52 <= 3.53 fits; 1.68 + 2 x 0.93 = 3.54 > 3.53 does not (0.925 is the exact limit)
+        self.assertEqual(self.reserve("s-run", "0.92")[0], 0)
+        self.assertEqual(self.reserve("s-retry", "0.92")[0], 0)
+        self.assertEqual(self.cumulative(), ("4", "3.52"))
 
     def test_one_cent_more_per_run_would_not_fit(self):
-        self.assertEqual(self.reserve("s-run", "0.85")[0], 0)
-        rc, out, _ = self.reserve("s-retry", "0.84")
+        self.assertEqual(self.reserve("s-run", "0.93")[0], 0)  # 1.68 + 0.93 = 2.61
+        rc, out, _ = self.reserve("s-retry", "0.93")  # 2.61 + 0.93 = 3.54 > 3.53
         self.assertEqual(rc, 1)
-        self.assertIn("cumulative estimate 3.37 USD", out)
+        self.assertIn("cumulative estimate 3.54 USD (recorded 2.61 + this run 0.93) would exceed the cap 3.53 USD", out)
 
     def test_the_old_90_minute_cap_with_an_r5_primary_would_not_fit(self):
-        # 0.98 per run at 90 minutes: 1.68 + 0.98 + 0.98 = 3.64 > 3.36
+        # 0.98 per run at 90 minutes: 1.68 + 0.98 + 0.98 = 3.64 > 3.53
         self.assertEqual(self.reserve("s-run", "0.98")[0], 0)
         self.assertEqual(self.reserve("s-retry", "0.98")[0], 1)
 
@@ -263,6 +272,36 @@ class RecordActualTests(LedgerBase):
         self.assertEqual(rc, 0, out)
         self.assertIn("window=2026-11-18T16:00:00Z..2026-11-18T16:55:00Z", out)
         self.assertEqual(self.cumulative(), ("3", "2.19"))
+
+    def retry_after_s_measured(self, seconds, wanted_measured):
+        """Session 1 (1.68) + S reserved (0.84); S's actual is recorded on a WAITING cluster (measured from creation 16:00:00Z, plus the
+        0.14 idle tail); then the retry estimate 0.84 is checked against the cap."""
+        self.assertEqual(self.cap, "3.53")
+        self.reserve("s-run")
+        as_of = "2026-11-18T%02d:%02d:00Z" % (16 + seconds // 3600, seconds % 3600 // 60)
+        rc, out, _ = self.record("s-run", describe(state="WAITING", ended=None), as_of=as_of)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("measured_usd=%s tail_seconds=900 tail_usd=0.14" % wanted_measured, out)
+        return self.check("0.84")
+
+    def test_the_retry_is_admitted_when_s_measured_0_87_and_refused_at_0_88(self):
+        # 5640 s x 0.555 / 3600 = 0.8695 -> 0.87; tail 900 s x 0.555 / 3600 = 0.13875 -> 0.14
+        # recorded 1.68 + 0.87 + 0.14 = 2.69; the retry 0.84 -> 3.53 <= 3.53 (inclusive): admitted
+        rc, out, _ = self.retry_after_s_measured(5640, "0.87")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("cumulative_usd=2.69 this_run_usd=0.84", out)
+        rc, out, _ = self.reserve("s-retry")
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(self.cumulative(), ("4", "3.53"))  # 1.68 + 0.87 + 0.84 + 0.14 = 3.53 exactly
+
+    def test_the_retry_is_refused_when_s_measured_0_88(self):
+        # 5700 s x 0.555 / 3600 = 0.87875 -> 0.88; recorded 1.68 + 0.88 + 0.14 = 2.70; 2.70 + 0.84 = 3.54 > 3.53: refused
+        rc, out, _ = self.retry_after_s_measured(5700, "0.88")
+        self.assertEqual(rc, 1)
+        self.assertIn("cumulative estimate 3.54 USD (recorded 2.70 + this run 0.84) would exceed the cap 3.53 USD", out)
+        rc, out, _ = self.reserve("s-retry")
+        self.assertEqual(rc, 1)
+        self.assertEqual(self.cumulative(), ("3", "2.70"), "a refused reservation writes nothing")
 
     def test_epoch_second_timestamps_are_accepted(self):
         self.reserve("s-run")
@@ -319,10 +358,10 @@ class RecordActualTests(LedgerBase):
     def test_an_actual_above_the_cap_is_recorded_and_flagged(self):
         self.reserve("s-run")
         self.reserve("s-retry")
-        # 16:00 -> 19:00 = 3 h x 0.555 = 1.665 -> 1.67: 1.68 + 1.67 + 0.84 = 4.19 > 3.36
+        # 16:00 -> 19:00 = 3 h x 0.555 = 1.665 -> 1.67: 1.68 + 1.67 + 0.84 = 4.19 > 3.53
         rc, out, _ = self.record("s-run", describe(ended="2026-11-18T19:00:00Z"), recorded="2026-11-18T19:05:00Z")
         self.assertEqual(rc, 0, out)
-        self.assertIn("LEDGER-OVER-CAP: the cumulative total 4.19 USD exceeds the cap 3.36 USD", out)
+        self.assertIn("LEDGER-OVER-CAP: the cumulative total 4.19 USD exceeds the cap 3.53 USD", out)
         self.assertEqual(self.check()[0], 1)
 
 
@@ -400,7 +439,7 @@ class PipelinePrimaryTests(PipelineFixture):
         self.assertEqual(result.rc, 0, result.out)
         self.assertIn("LEDGER-ACTUAL: run=%s cluster=%s" % (RUN, CLUSTER), result.stdout)
         self.assertIn("measured_usd=0.47 tail_seconds=0 tail_usd=0.00 reserved_estimate_usd=0.84", result.stdout)
-        self.assertIn("cumulative_usd=0.47 (was 0.84; 1 run(s) now counted at actuals) cap_usd=3.36", result.stdout)
+        self.assertIn("cumulative_usd=0.47 (was 0.84; 1 run(s) now counted at actuals) cap_usd=3.53", result.stdout)
         self.assertIn("RESULT: PASS", result.stdout)
         self.assertEqual(self.calls(), [], "--record-actual makes no aws call")
         with open(self.ledger_path(), encoding="utf-8") as handle:

@@ -469,3 +469,197 @@ BLOCKED-ON OWNER: none for approval. Repairs:
 BLOCKED-ON EVIDENCE: the final sbt check result, and an observed (not skipped) run of test_hadoop_prep_args_15.
 
 NEXT GATE: the final sbt check must pass. Then commit under the standing consent, and route the should-fix items before the go/no-go.
+
+
+### Review 2 — pipeline repair round 1 and elasticity P42
+
+Code-reviewer agent `a6f59b4c4d52b0826` (Opus 5.5, high), launched by the coordinator on the owners' targeted gate results (user rule 2026-11-16: the full check runs once after APPROVE); verbatim
+
+STATUS: COMPLETE. **Verdict: APPROVE.** I found no blockers. Findings 1-4 of review 1 are resolved, and the 3.53 / 0.87 / 0.14 / 1.85 figures agree across code, tests and runbook. P42 meets the user's requirements. Two should-fix items must be routed before the Session 2 go/no-go. Neither can raise spend: the first is a disclosure gap on the money side, the second a missing runtime guard.
+
+OWNER: code-reviewer (read-only)
+
+WORK ORDER: independent review of the uncommitted Phase 15 tree (pipeline repair round 1 and P42) on branch phase-15, HEAD f801d28.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+COMMANDS RUN: Read, Grep and Glob only. I had no shell tool, so I could not run `git diff HEAD`. I reviewed the current contents of every listed file and checked them against owner-report.md (4205-4370). I made no network calls and read no tfvars, state, `.env` or secrets.
+
+TEST RESULTS: not run by me. The owner gate results in the work order are agent-reported, and I did not observe them.
+
+VALIDATION RESULTS
+- **Finding 1 resolved.**
+  - Cap: release.conf:239-245 sets 3.53.
+  - Runbook: session-2-plan.md:443-444 (5a/6) and the P19 draft at :325-329 state the ≤0.87 rule, about 94 min.
+  - Tests: TimeoutThenRetryOnTheSameCluster (tests/scripts/test_record_actual_15.py:141-223) drives the real `--execute` / `--record-actual` paths. 5643 s gives 0.87, admitted at 3.53 inclusive, and a fifth run is refused by the count. 5700 s gives 0.88, refused at 3.54.
+  - Arithmetic: 3.53 − 1.68 − 0.84 − 0.14 = 0.87, and 0.87 × 3600 / 0.555 = 5643 s ≈ 94.05 min. Correct.
+- **Finding 2 resolved:** session-2-plan.md:426-430. The two addresses match main.tf:4 and phase14b-providers.tf:83. State is local (no backend block), so `state list` needs no credentials.
+- **Finding 3 resolved:** experiments/README.md:38 (but see note 3).
+- **Finding 4 resolved:**
+  - release.conf:60-61 now says 22.98 / 2.02, and :236-237 is updated.
+  - scripts/README.md:315.
+  - session-2-plan.md:458.
+  - 2.59 / 3.37 at variables.tf:60, phase15_emr_primary.tftest.hcl:270/274 and infra README:572.
+- **Findings 6-8 also resolved:**
+  - 6: release.conf:322-323 records why 8 GiB is kept.
+  - 7: run renamed at phase12c.tftest.hcl:121. The old name survives only in historical evidence.
+  - 8: r5 rates restated at session-2-plan.md:322-324.
+- **The 3.53 cap appears consistently in:**
+  - run-bounded-pipeline.sh:111;
+  - scripts/README.md:315, 399, 401, 403, 409 and 489;
+  - test_providers:178, test_pipeline:1097, test_phase15_pipeline_pins:314, test_d3:87/202;
+  - test_cap_pins:39-61, test_prespend_floors:282 and test_experiments:255.
+- **Every remaining 3.36 is either a sum of reserves (1.68 + 0.84 + 0.84) or labelled history:**
+  - release.conf:235;
+  - test_d3:204-210 and test_cap_pins:215;
+  - test_experiments:381/450/470 and test_pipeline_refusals:268/306;
+  - session-2-plan.md:256/319/1070.
+  - None of these is the cap. The project figures 19.54 / 22.98, the 3.33 h = 1.93 block and spend + 3.57 ≤ 23.00 are unchanged.
+- **P42 checks:**
+  - The caps are constants (loadgen.py:89-92). They are enforced by `validate-manifest`, `plan` and `run` (:231-272, :376-394, :914), and check_manifests.py:433-530 requires the exact five values.
+  - Warm-up: one worker, one pass, no retry (:805-843).
+  - Questions file: pinned by sha256 and count, 100-200 lines, distinct (:930-942); 150 committed, provenance verified.
+  - 429 handling: 429 is classified as `throttled` (:515), counted toward the phase cap (:539-548), never counted toward abort, and excluded from latency, throughput, success and error rates (:1087-1112, :1163).
+  - API key: read from env only (:148-156), sent only in the header (:647-652), and the record stores only the variable's name.
+  - Body and auth match the P40 contract: PublicSemanticRoute.scala:169/176 (keys question/topK, topK ≤ 20) and Bearer auth at ApiContracts.scala:140.
+  - The manifest has a 1800 s quiet window.
+  - Without a semantic block the semantic route is skipped (:963), so the graph 15B runs are unchanged.
+- **The 71 pre-existing tests keep their meaning:** no pre-existing load-tests test uses a 429 status. The change in behaviour is disclosed in load-tests/README.md:122-123.
+- **Security:** no 12-digit numbers, e-mail addresses or keys in the changed files. prompt.md and review.md are unmodified.
+
+## Findings
+
+**1. should-fix: the 3.33 h block's own worst case is refused by 1 cent.**
+- Paths:
+  - session-2-plan.md:325-329, 443-444 and 256;
+  - tests/scripts/test_cap_pins_14b.py:7-8;
+  - proven by scripts/tests/test_d3_emr_primary.py:297-301.
+- What happens:
+  - 3.53 is the exact 200-minute block, but every ledger term is rounded up.
+  - The plan's 20-min cold start plus a full 75-min S makes 95 min, which records 0.87875, rounded up to 0.88.
+  - 1.68 + 0.88 + 0.14 + 0.84 = 3.54, so the retry is refused.
+  - In practice: if S runs its full 75 min, the time from cluster creation to S submission plus the delay before recording must be ≤ about 19 min. Measured cold start is 4-5 min (:408), so this usually fits.
+- Fix:
+  - documentation-engineer: state the 19-minute budget in 5a/6 and the P19 draft. Add operator steps: write record 1 as soon as the cluster ID exists, and run `--record-actual` immediately after an S failure.
+  - Human: accept this, or record a few-cent rounding allowance. More than about 0.02 would push the 0.58/h block past 1.93.
+
+**2. should-fix: `--observe-seconds` can shorten the R-b quiet window below 25 minutes.**
+- Paths: load-tests/loadgen.py:342-343 and :1182.
+- The help text says "never for R-b", but nothing enforces it for a non-loopback target. check_manifests checks only the committed manifest (owner-report.md:4342 discloses this).
+- Owner: experiment-engineer.
+- Fix: in `finish_setup`, refuse `--observe-seconds` when `target_loopback` is false (or when the result is below 1500 s), and add a test.
+
+**3. note: experiments/README.md:38 is now inaccurate.**
+- It says a longer cap "is refused by the ledger". With 0.17 of room, runs of up to 0.92 each fit (test_d3:212-216). Only check_manifests' 75-min pin refuses a longer S.
+- Same file: :137 says "84 tests" but :28 says 100, and :144 still says "3-run ledger".
+- Owner: experiment-engineer.
+
+**4. note: L wording left over after L was dropped.**
+- Paths:
+  - test_cap_pins_14b.py:68 and :209 ("S then L", "S 0.84 + L 0.84");
+  - test_pipeline_refusals.py:268-270 and :815-816;
+  - session-2-plan.md:256 ("If L's manifest needs a longer runtime").
+- In the P19 draft, :332-334 ("if S succeeds the next run is L") contradicts :307-308. It quotes the human verbatim, so annotate it as superseded; do not rewrite it.
+- Owners: test-engineer and documentation-engineer.
+
+**5. note: session-2-plan.md:441 is stale.**
+- It still calls the D3 change "not yet reviewed or committed"; it was committed in f801d28.
+- Owner: documentation-engineer.
+
+**6. note: /readyz in the semantic mix rests on an unverified pricing claim.**
+- Paths: experiments/README.md:226 and the profile note.
+- /readyz is weight 1 of 44, about 4,500 calls. The claim that GetVectors probes "carry no per-request charge" was not checked against S3 Vectors pricing (no network here).
+- The cost is bounded and small either way.
+- Fix: the human either verifies the pricing or accepts the default as it stands (experiment-engineer).
+
+**7. note: the byte-for-byte question reproduction test skips in a clean snapshot.**
+- Path: experiments/tests/test_semantic_manifest.py:259. It needs the git-ignored slice, so the clean snapshot will skip it, as in old finding 5.
+- Coordinator: record whether it actually ran in the working tree (not skipped).
+
+**8. note: the defaults the agent chose are acceptable.**
+- topK 10 is within the public limit of 20, and S3 Vectors query cost does not depend on topK.
+- Weight 40 gives 90.9% semantic traffic. The cost bound treats every request as semantic, so it is conservative.
+
+ASSUMPTIONS: The file contents I read are the uncommitted working tree; I could not see the diff itself. Authorship comes from owner-report.md. All files are within their owners' territories.
+
+RISKS: Neither P42 nor `--record-actual` has run against AWS. The rate limit for the P35 rehearsal must be raised locally (owner-report.md:4354).
+
+MANUAL ACTION REQUIRED: human decision on finding 1 (accept the 19-minute budget or add a rounding allowance) and on finding 6.
+
+BLOCKED-ON OWNER: none for approval. Repairs: documentation-engineer (1, 4, 5); experiment-engineer (2, 3, 6); test-engineer (4); coordinator (7).
+
+BLOCKED-ON EVIDENCE: the full clean-snapshot check.sh and sbt check results; an observed non-skipped run of test_semantic_manifest.py:260.
+
+NEXT GATE: full check.sh and sbt check, then commit after the human's explicit yes. Route the should-fix items before the go/no-go.
+
+
+### Review 3 — review-2 fixes and the P35 record
+
+Code-reviewer agent `ab3c5630f6883fccc` (Opus 5.5, high), launched by the coordinator on the owners' targeted gate results after the review-2 repairs (user rule 2026-11-16: the full check runs once after APPROVE); verbatim
+
+STATUS: COMPLETE. **Verdict: APPROVE (review 3).** Findings 1-7 from review 2 are resolved, and every P35 figure I checked matches the evidence. Nothing here blocks. The notes below are about disclosure only; none of them changes money, caps or code behaviour.
+
+OWNER: code-reviewer (read-only)
+
+WORK ORDER: Phase 15 review 3. Scope: the fixes made after review 2, plus the P35 record. Branch phase-15, HEAD f801d28, uncommitted working tree.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+COMMANDS RUN: Read, Grep and Glob only. I had no shell, so I ran no `git diff` and no tests. No network. I read no tfvars, state, ~/.aws, .env or secrets.
+
+TEST RESULTS: I did not run any. The owner results (95 / 100 / 79 OK, links 0 broken) are reported by the agents, not seen by me. For finding 7 I read target/phase15/pipeline/r1/semantic-manifest-tests.log. It shows "Ran 16 tests … OK", and the byte-for-byte test (test_semantic_manifest.py:259-268) shows "... ok", not skipped.
+
+VALIDATION RESULTS
+- **F1 resolved.** The text is at session-2-plan.md:354-362 (P19 draft), :475 (step 5, operator step a), :481 (5a, operator step b), :482 (step 6) and :257 (P25). The cap stays 3.53.
+  - 95 min × 0.555/h = 0.87875, rounded up to 0.88: 1.68 + 0.88 + 0.14 + 0.84 = 3.54, refused.
+  - 94 min = 0.8695, rounded up to 0.87: total 3.53, admitted.
+  - The budget is 19 min, and :481 says the 94-min total is what counts.
+  - prompt.md:281-287 records the decision.
+- **F2 resolved.** The refusal is at loadgen.py:951-952, inside `finish_setup`. That is before `read_key` (:975), before `os.makedirs` (:986) and before any socket call. Help text is at :1184.
+  - Tests at test_loadgen_semantic.py:514-560 cover: three remote URL forms with no connection and no DNS lookup; no run directory created; the key not in stderr; refusal even at 99999; loopback (127.0.0.1 and localhost) still allowed; and the committed 1800 s quiet window.
+- **F3 and F6 resolved.**
+  - experiments/README.md:38: the ledger no longer refuses a longer cap; check_manifests' 75-min pin does. 0.92 = 1.85 / 2 is correct.
+  - :137 and :28 both say 100 tests (48 + 23 + 16 + 13).
+  - :144 now says "4-run ledger".
+  - :226 and plan :841 mark the GetVectors pricing as unverified.
+- **F4 resolved.** Changes at test_cap_pins_14b.py:68 and :208-210, and test_pipeline_refusals.py:264-271 and :815-818, touch only wording and test names; the asserted values are unchanged. Plan :257 and the superseded note at :368-371 keep the human's text.
+- **F5 resolved** (:478, "committed in `f801d28`").
+- **P35 figures.** All match per-level-results.json, summary.json and metrics-after.txt.
+  - Rates and CPU: 33.319 / 88.08 / 222.469 / 450.572 / 806.235 / 1,015.538 requests per second (× 60 = 1,999 / 5,285 / 13,348 / 27,034 / 48,374 / 60,932 per minute); 1-second peaks 52 / 131 / 293 / 668 / 1,262 / 1,737; CPU 99.4 / 100 / 98.8 / 98.4 / 96.5 / 95.1 %.
+  - Cache: 150 misses + 180,594 hits = 180,744. That equals the sum of semantic-route requests and the `/v1/semantic/retrieve` 200 count.
+  - `api_rate_limited_total` was 0 before and after. Server total 198,753 = 198,750 load requests + 3 setup calls.
+  - `/readyz` calls: 4,500 observed, against the plan's 4,513 estimate.
+  - Local rule: 27,034 / 2 = 13,517, so the rule allows 5,285 < T ≤ 13,517.
+  - Rate limit: r_S2 = ceil(2 × 1,737 = 3,474) = 3,500, within 1-100,000. b_S2 = 7,000, within 1-1,000,000, and equal to 2 × r_S2. Terraform validation matches (phase12b-variables.tf:460, :470).
+  - The sha256 values agree across COPIED.sha256, not-copied.sha256, raw.sha256 and SHA256SUMS.txt (spot-checked).
+- **No key values in the evidence.** p35-run.sh.txt:8-12 generates the keys at run time, exports only their SHA-256 and passes `-e NAME` without values. run-record.json stores only a hash of the base URL. There are no 12-digit numbers or e-mail addresses in the changed files I scanned.
+- **The query-api cap is 2.** The default is at phase12b-variables.tf:197, and the validation at :207 limits HTTP services to `max <= 2`. Plan :565 also sets max 2.
+
+FINDINGS
+1. **note, about how honestly the T = 3,000 ratios are stated** (documentation-engineer; session-2-plan.md:304 and :1059).
+   - "Level 25 about 2.5 × T, level 50 about 5 × T" is honest as a single-task offered-rate estimate before any scale-out, which is the rule's own measure. :304 also mentions the cap of 2.
+   - Two things are not said:
+     - **After scale-out to the cap of 2**, level 50 still gives about 7,500 per target (2.5 × T). The policy would want about 5 tasks, so it stays pinned at the maximum through the hold, and scale-in can only follow the end of the load.
+     - **Level 25 cannot trigger scale-out.** At 200 ms it reaches its 15,000 cap in about 120 s (:867), which is shorter than the plan's own estimate of about 6.5 min to scale out (:957, three one-minute datapoints). Scale-out is therefore expected during level 50 and the hold.
+   - The "robust for about 50-400 ms" in prompt.md:291 holds only in a weak sense. At 400 ms, level 25 is 1.25 × T, not 2 × T. At 100 ms or less, level 5 reaches T. Do not edit prompt.md (it is append-only). The runbook does not repeat the claim, but should add one sentence on this sensitivity.
+   - Fix: add those two points at :304 and :1059.
+2. **note** (documentation-engineer; :841). "The 0.53 figure does not include it" overstates the gap. The 198,600 bound already counts the roughly 4,500 `/readyz` requests, each priced as a QueryVectors call. The only uncovered part is the amount by which a `/readyz` probe, which may call GetVectors on more than one index (AwsComposition.scala 267-268 and 316), costs more than one query.
+3. **note** (experiment-engineer / documentation-engineer; :301). The per-phase CPU figures are interpolated from cgroup samples taken every 2 s (analyze.py:14-20), using the container clock. The warm-up (4.5 s) and baseline (6.8 s) phases span only 2-4 samples. Add "interpolated, approximate" to the wording.
+4. **note** (documentation-engineer; :368-371). The agent-written "[Superseded …]" bracket sits inside the ```text block the human copies into the approval record, and it says "item 3 above" from inside item 3. Move it outside the block, or tell the human to delete it when copying.
+5. **nit** (coordinator; evidence/p35/rehearsal/SHA256SUMS.txt:3). `container-id.txt` is hashed but appears in neither COPIED.sha256 nor not-copied.sha256.
+
+ASSUMPTIONS: The files I read are the working tree. Without git I could not confirm that prompt.md only had text appended: the new sections at :281-296 sit at the end, and the earlier text I checked is unchanged, but this is **unverified**. All files are within their owners' territories.
+
+RISKS: No live run yet backs T = 3,000 or the 200 ms estimate. If S is slow to start, the retry's rounding budget depends on the operator acting promptly.
+
+MANUAL ACTION REQUIRED: none for approval. The human sets 3000 / 3500 / 7000 in the private tfvars.
+
+BLOCKED-ON OWNER: none. Optional repairs: documentation-engineer (1-4), coordinator (5).
+
+BLOCKED-ON EVIDENCE: the full clean-snapshot check.sh and `sbt check` (JDK 17) results, and a git diff showing that prompt.md only had text appended.
+
+NEXT GATE: the full check.sh and `sbt check`, then the commit after the human's explicit yes.
+
+Coordinator check of review 3's blocked-on evidence: `git diff HEAD --numstat` shows `docs/agent-runs/phase-15/prompt.md` 16 added, 0 deleted and `review.md` 123 added, 0 deleted at the time of this review, so both are append-only. Nit 5 fixed: `evidence/p35/rehearsal/container-id.txt` copied and `COPIED.sha256` regenerated. Notes 1-4 routed to the documentation-engineer (wording only, no figure changed); the coordinator checks them against this review before the full check.

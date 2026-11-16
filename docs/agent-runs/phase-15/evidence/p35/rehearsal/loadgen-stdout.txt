@@ -1,0 +1,24 @@
+PLAN: 7 phase(s), total 1800 s
+PHASE warmup: warmup level=1 duration=600s max_requests=200
+PHASE baseline-1: load level=1 duration=120s max_requests=600
+PHASE level-5: load level=5 duration=120s max_requests=3000
+PHASE level-25: load level=25 duration=150s max_requests=15000
+PHASE level-50: load level=50 duration=180s max_requests=30000
+PHASE hold-50: load level=50 duration=600s max_requests=150000
+PHASE cooldown-observe: observe (no requests) 30s
+SEMANTIC: route=semantic top_k=10 questions=150 (sha256 bde5f63b49e4) ramp_cap_total=198600 warmup_max=200; 429 replies are counted per level and excluded from latency, throughput and success rate
+LLM: disabled: non-LLM endpoints only, no POST /v1/query
+LLM-COST-PER-ANSWER-USD: 0.001365 (estimate, not metered)
+RUN-ID: p35-local-1
+RUN-DIR: /Users/danny/Documents/UIC/CS441/ScholarChain/target/experiment-runs/15b-ecs-scaling-semantic-p35-local-1
+ROUTE-DROPPED: graph_node (no node_ids supplied)
+ROUTE-DROPPED: graph_neighbors (no node_ids supplied)
+ROUTE-DROPPED: evidence (no evidence_ids supplied)
+RATE-LIMITED-429: phase=warmup level=1 count=0 of 150 requests (reported separately; excluded from latency, throughput and success rate)
+RATE-LIMITED-429: phase=baseline-1 level=1 count=0 of 600 requests (reported separately; excluded from latency, throughput and success rate)
+RATE-LIMITED-429: phase=level-5 level=5 count=0 of 3000 requests (reported separately; excluded from latency, throughput and success rate)
+RATE-LIMITED-429: phase=level-25 level=25 count=0 of 15000 requests (reported separately; excluded from latency, throughput and success rate)
+RATE-LIMITED-429: phase=level-50 level=50 count=0 of 30000 requests (reported separately; excluded from latency, throughput and success rate)
+RATE-LIMITED-429: phase=hold-50 level=50 count=0 of 150000 requests (reported separately; excluded from latency, throughput and success rate)
+COST-REPORT: aws=not-metered anthropic=0.000000 voyage=0.000000 combined=0.000000 (anthropic + voyage only (AWS not included: take it from the bill))
+RESULT: COMPLETED run=p35-local-1 requests=198750 llm_answers=0 reason=-

@@ -277,8 +277,9 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
         conf = (S.REPO / "scripts/config/release.conf").read_text()
         values = dict(re.findall(r"^([A-Z_]+)=(\S+)", conf, re.M))
         self.assertEqual(float(values["PRESPEND_MIN_HEADROOM_USD"]), 2.0)  # floor 2 since Phase 15 option (i) (was 3)
-        # Phase 15 P25 (user, 2026-11-16, prompt.md line 131): 4 runs / USD 3.36 cumulative (were 3 / 2.52); the per-run cap stays 3
-        self.assertEqual(float(values["EMR_CUMULATIVE_CAP_USD"]), 3.36)
+        # Phase 15 P25 (user, 2026-11-16, prompt.md line 131): 4 runs / USD 3.36 cumulative (were 3 / 2.52); user decision
+        # 2026-11-16 "Raise cap to 3.53" = 1.68 (Session 1) + 1.85 (Session 2 D3 block); the per-run cap stays 3
+        self.assertEqual(float(values["EMR_CUMULATIVE_CAP_USD"]), 3.53)
         self.assertEqual(float(values["EMR_MAX_RUN_USD"]), 3.0)
         self.assertEqual(int(values["EMR_MAX_LIVE_RUNS"]), 4)
         common = (S.REPO / "scripts/lib/common.sh").read_text()

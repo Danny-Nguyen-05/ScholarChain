@@ -277,3 +277,19 @@ Coordinator question (finding 1 of the pipeline-bundle review 1, `review.md` wor
 User answer, verbatim: "Raise cap to 3.53 (Recommended)"
 
 Coordinator defaults applied (not asked; outside the money, security and pipeline-correctness rule): review findings 7 (Phase 12C DynamoDB dashboard panels removed under P9) accepted, test run renamed and disclosed; finding 8, both r5 rates restated in the P19 draft for the user's approval record; finding 6, the 8 GiB copy-out ceiling kept with the reason recorded.
+
+## EMR retry rounding budget after review 2 (2026-11-16)
+
+Coordinator question (finding 1 of review 2, `review.md` work order 4): every ledger term rounds up to the cent, so with the 3.53 cap and a full 75-min S, the retry is admitted only if cluster creation to S submission plus the wait before recording is about 19 min or less (a 20-min cold start gives 0.88 and 3.54). Options: accept with operator steps (no money change), or add a 0.02 allowance (cap 3.55, project margin 0).
+
+User answer, verbatim: "Accept, add steps (Recommended)"
+
+Coordinator defaults applied (not asked): review 2 finding 6, `/readyz` stays in the semantic mix (weight 1 of 44, about 4,500 calls; bounded and small whatever the probe pricing), disclosed in the plan; finding 2, `--observe-seconds` is refused for a non-loopback target (experiment-engineer, after the P35 rehearsal ends, because P35 uses loadgen.py).
+
+## P35 scaling target after the local rehearsal (2026-11-16)
+
+Coordinator question: the P35 local rehearsal (run p35-local-1, evidence under `docs/agent-runs/phase-15/evidence/p35/`) was CPU-bound at 0.25 vCPU with no network latency, so its served rates (level 1 about 5,285/min, level 25 about 27,034/min per task) give T = 10,000 under the P35 rule (allowed 5,285 < T <= 13,517). The plan's live estimate (200 ms per request) puts level 25 at about 7,500/min and level 50 at about 15,000/min, so T = 10,000 would probably not scale out at level 25 live. Options: T = 3,000 from the live estimate (level 1 about 300 and level 5 about 1,500 below T; level 25 about 2.5x and level 50 about 5x; robust for about 50-400 ms latency; the Terraform max task count still caps scale-out), recorded as a deviation from the local rule; or T = 10,000 by the local rule.
+
+User answer, verbatim: "T = 3,000 (Recommended)"
+
+Coordinator defaults applied (not asked; the user's Q16 formula fixes them): `r_S2` = 3,500 (at least 2 x the local level-50 peak of 1,737 served requests per second per task, rounded up) and `b_S2` = 7,000 (2 x `r_S2`), both user-set tfvars (`query_semantic_rate_limit_per_second`, `query_semantic_rate_limit_burst`). The per-run request caps (198,600) bind the R-b cost, so these values do not change it. `query_requests_per_target_target` = 3000 is also a user-set tfvar.

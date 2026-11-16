@@ -569,7 +569,7 @@ the private subnet (the EMR security group admits only its own members and the s
   `r5.xlarge` (human decision and go-ahead, `docs/agent-runs/phase-15/prompt.md` "D3 decision" and "S run cap and D3
   go-ahead", 2026-11-16): the single-JVM entity-resolution step runs on the primary with `PIPELINE_ER_XMX=12g`, which needs the
   32 GiB r5.xlarge (supported from emr-7.0.0, so on the pinned emr-7.8.0). G6 with the r5 primary (0.252 + 0.063 USD/h): r5 +
-  core + one task m5 cost 0.795 x 3.25 h = 2.58 USD, inside the 3 USD cap; a fourth instance would cost 3.36 USD, so the one-task
+  core + one task m5 cost 0.795 x 3.25 h = 2.59 USD (2.58375 rounded up), inside the 3 USD cap; a fourth instance would cost 3.37 USD (3.36375 rounded up), so the one-task
   bound stays the tightest. `tests/phase15_emr_primary.tftest.hcl` pins the default plan (master r5.xlarge, core m5.xlarge),
   the refusals of every other primary and core type, and this arithmetic from the pinned files.
 * **G6 cross-check.** The estimate the scripts use is instances x (EC2 + EMR rate) x (maximum runtime + idle timeout). Under the

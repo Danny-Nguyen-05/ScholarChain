@@ -3980,3 +3980,842 @@ NEXT GATE: code-reviewer on the tests/** diff, then the coordinator's `sbt check
 
 tests/scripts/test_cap_pins_14b.py now uses the published D3 figures: R0 cap 3.57→3.58, R0 + R-b cap 7.14→7.15, project at caps 22.97→22.98, margin 0.03→0.02, AWS cap 6.72→6.73, and a new check that the 0.58/h rate gives the 1.93 block and the 3.58 R0 cap. The pre-D3 figures (3.57, 7.14, 22.97, column B 25.44) are kept as history asserts.
 Re-run, offline and without sbt: `python3 -I -m unittest discover -s tests/scripts -p 'test_cap_pins_14b.py'` → Ran 15, OK; `python3 -I -m unittest discover -s tests/scripts -p 'test_pipeline_refusals.py' -k test_d3` → Ran 5, OK.
+
+
+## Pipeline repair round 1 (review 1 findings and the 3.53 ledger-cap decision), agent reports, verbatim
+
+#### Agent report (2026-11-16T20:57:09.800Z, agent acf0957)
+
+STATUS: DONE (both tasks complete, gates observed passing)
+OWNER: experiment-engineer
+WORK ORDER: Phase 15, review finding 3 plus user decision 2026-11-16 "Raise cap to 3.53"
+
+FILES CREATED: none
+FILES MODIFIED (experiments/** only):
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/README.md line 35 (Ledger paragraph)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/tests/test_experiments.py lines 252, 255, 449, 450, 471
+
+CHANGES (old to new):
+- README:35 finding 3: the sentence "budget.py reserves its own unrounded estimate (0.833 per S run, cumulative 3.35 per the coordinator's figures in prompt.md); this check rounds each run up to the cent" is replaced. It now says budget.py also rounds the per-run estimate up to the cent, so it reserves 0.84 per S run (0.555/h x 90 min = 0.8325, rounded up to 0.84), the same as this check, and the 4-run cumulative is 3.36 in both. The 0.833 and 3.35 figures are gone.
+- README:35 cap: `EMR_CUMULATIVE_CAP_USD=3.36` becomes `3.53`, with the user decision recorded (1.68 Session 1 + 1.85). Margin "USD 0.00 and 0 runs" becomes "USD 0.17 and 0 runs (3.53 - 3.36)". It also says the 0.17 cannot pay for another 0.84 run, so any further EMR run still needs a new human decision.
+- test_experiments.py:252: docstring "(4 runs, 3.36 USD)" becomes "(4 runs, 3.53 USD cap)".
+- test_experiments.py:255: pin_session2 pin `EMR_CUMULATIVE_CAP_USD` 3.36 becomes 3.53.
+- test_experiments.py:449: comment updated to "against the 3.53 USD / 4-run P25 cap: margin 0.17 USD and 0 runs".
+- test_experiments.py:450: the expected line "cumulative cap 3.36 USD / 4 runs (margin 0.00 USD, 0 runs)" becomes "cumulative cap 3.53 USD / 4 runs (margin 0.17 USD, 0 runs)".
+- test_experiments.py:471: the pin restored after the 2.52 case, 3.36 becomes 3.53.
+
+3.36 LEFT UNCHANGED, because each is the cumulative total of reserves (0.84 x 4), not the cap:
+- README:35, "USD 3.36 over 4 runs" and the new "3.36 in both".
+- test_experiments.py:381, "15A ledger 3.36 USD over 4 runs" (the total in the refused-manifest check).
+- test_experiments.py:449, the "= 3.36" total in the comment.
+- test_experiments.py:470, "CHECK-BLOCKED: 15A ledger 3.36 USD over 4 runs". The 2.52 cap in that line is the pre-P25 pin and is unchanged.
+
+No script or manifest needed edits. check_manifests.py reads the cap from scripts/config/release.conf, and `grep -rn "3\.36" experiments` found no 3.36 in experiments/manifests, experiments/inputs or experiments/scripts. No pinned sha256 covers release.conf (config-sources.json lists only the four config files), so render_manifests.py did not need rerunning.
+
+COMMANDS RUN:
+- `grep -rn "3\.36\|3\.35\|0\.833" experiments`
+- `python3 -m unittest discover experiments/tests`
+- `python3 experiments/scripts/check_manifests.py`
+
+TEST RESULTS: `python3 -m unittest discover experiments/tests` printed "Ran 84 tests in 3.128s" and "OK". This ran against the infra-engineer's already-edited scripts/config/release.conf, where line 245 reads `EMR_CUMULATIVE_CAP_USD=3.53`.
+
+VALIDATION RESULTS: `python3 experiments/scripts/check_manifests.py` exited 0 with "RESULT: OK (placeholders allowed; run with --final before the commit freeze)". The ledger line is "CHECK-OK: 15A ledger 3.36 USD over 4 runs (Session 1 history + S + one S retry) <= cumulative cap 3.53 USD / 4 runs (margin 0.17 USD, 0 runs)". I did not run it with --final.
+
+ASSUMPTIONS:
+- The README "0.555/h x 90 min" wording follows your instruction. It is the 75-minute cap plus the 15-minute idle tail, consistent with the infra-engineer's release.conf comment at line 237.
+- I did not run `scripts/lib/budget.py`. I stated its rounding on the strength of your finding.
+
+RISKS:
+- The tests depend on release.conf carrying 3.53 only through the pins the tests write themselves, so they pass either way. The live check_manifests.py run does read the real release.conf, which is already 3.53.
+
+MANUAL ACTION REQUIRED: none
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: independent code-reviewer re-check of experiments/README.md:35 and the test edits. The human commit gate applies; I did not commit.
+
+#### Agent report (2026-11-16T20:57:49.074Z, agent a47f343)
+
+STATUS: COMPLETE. All six tasks are done in `docs/runbooks/session-2-plan.md`. I changed nothing in `docs/demo-script.md`. No BLOCKED-ON. The only gate I ran was my own link/PII scan, because `scripts/check.sh` has no docs link-check gate.
+
+OWNER: documentation-engineer
+WORK ORDER: Phase 15, user decision "Raise cap to 3.53" plus pipeline-bundle review 1 findings 1, 2, 4 (line 442) and 8. Branch phase-15, HEAD f801d28.
+
+FILES CREATED: none
+FILES MODIFIED: `/Users/danny/Documents/UIC/CS441/ScholarChain/docs/runbooks/session-2-plan.md` (uncommitted)
+- `docs/demo-script.md`: I grepped it for 3.36, 3.35, 90-min and cap figures and found no stale figure.
+- I did not touch `docs/agent-runs/**`.
+
+CHANGES (line numbers are after the edit):
+1. **Cap 3.36 → 3.53**
+   - **P25 row, line 256.** The cap reads "2.52 → **3.53** (was 3.36 = 4 x 0.84)". The row now has the decision text and the arithmetic 3.53 = 1.68 + 3.33 h x 0.555/h = 1.85. The worst case is 1.68 + 0.84 + 0.84 = 3.36 of 3.53 before actuals. It says the project figures do not change: 19.54 / 22.98, EMR block 3.33 h = 1.93, pre-R-b check spend + 3.57 ≤ 23.00. The ledger test acceptance now reads "cumulative-cap refusal at 3.53 (was 3.36)".
+   - **P19 approval-record draft (section 4a), lines 317-328.** The old text "USD 3.36 cumulative … zero margin" is replaced. It now says 3.53 (was 3.36), the 1.85 arithmetic, the 3.36-of-3.53 worst case, and that the project figures are unchanged.
+   - **Section 5.** The old 3.36 text at lines 317-319 was in the 4a draft, not section 5 proper, so it is covered by the bullet above. Section 5's step 5a at line 443 now carries the cap too.
+   - **Q5 row, line 1070.** It now reads "raise to 4 runs / 3.36 (was; now 3.53)" and the worst case 3.36 of 3.53. This was an extra stale place I found.
+2. **Finding 1, steps 5a and 6**
+   - **Step 5a, new sub-bullet at line 443.** After S's actual is recorded, the retry is admitted only if S's measured cost (from cluster creation, boot included) is ≤ 0.87. That is 3.53 − 1.68 − 0.84 − 0.14 tail, about 94 min at 0.555/h. Otherwise the retry is refused (fail-closed) and the plan goes to the step 7b fallback (P6 local S export). It also says not to edit the ledger to get around the refusal.
+   - **Step 6, line 444.** It has the same condition, with the refusal routing to step 7b.
+   - **4a draft, lines 324-328.** It has the same condition, so the approval record carries it.
+3. **Finding 2, P18 precondition, line 426 (5.2 step 1).**
+   - It runs `terraform -chdir=infra/terraform state list`, which prints addresses only. It says never to read the state file.
+   - The output must be exactly `terraform_data.configuration_guard` and `terraform_data.provider_guard`. I took these from `owner-report.md` near line 2032.
+   - Anything else means stop and report to the human, and do not plan. Otherwise plan stage a against the leftover state with no move-aside.
+   - The user's wording is quoted verbatim.
+4. **Line 442 → line 458.** "two full 90-minute S runs" now reads "two full S runs (each up to the 75-minute cap)".
+5. **Finding 8, 4a draft, lines 321-323.**
+   - It restates the r5.xlarge primary rate as EC2 0.252 + EMR 0.063 = 0.315/h, the m5.xlarge core rate as 0.240/h, and the cluster total as 0.555/h. It notes these sit under `emr-pricing.conf`'s human pricing confirmation.
+   - The earlier "Cluster:" line was shortened so the rates appear once.
+6. **Other stale items fixed:**
+   - **Line 188, F19.** It still says 3.36 > 2.52, which is correct as found. I changed "Each 90-minute run" to "As found (before D3) … since D3 an S run is capped at 75 min and reserves 0.84 = 0.555/h x (75 + 15) min".
+   - **Line 238, P6 results.** "Use the local L time to confirm L fits the 90-minute EMR cap" now says it is superseded: L is dropped, the S cap is 75 min, and the step timeouts sum to 4500 s.
+   - **Line 990, risk table.** "the 90-minute cap stays" now says the S cap is 75 min (D3; was 90).
+   - **Line 1071, Q6.** "90-minute cap" now says "EMR cap (at the time, 90 min; the S cap is now 75 min)".
+   - **Intentional history left unchanged.** Line 783 (pricing "was" row) and line 1047 (cluster-size "was 2 x m5.xlarge, 90 min") keep their "was" wording. Lines 188, 256 and 317-319 keep 3.36 as the old cap or the worst case.
+
+NUMBERS CHANGED (old → new):
+- EMR ledger cap: 3.36 → 3.53 (P25 row, 4a draft, Q5, acceptance test text).
+- Ledger headroom: zero margin → 3.36 of 3.53.
+- New figures: retry admission threshold ≤ 0.87 and about 94 min from cluster creation (3.53 − 1.68 − 0.84 − 0.14 = 0.87; 0.87 / 0.555 = 1.568 h = 94.1 min).
+- 90-min S run wording → 75-min cap (lines 188, 238, 458, 990, 1071).
+- Unchanged and restated: 19.54 / 22.98, EMR block 3.33 h = 1.93, pre-R-b check spend + 3.57 ≤ 23.00, 0.555/h, 0.315/h, 0.240/h, 0.252 + 0.063.
+
+COMMANDS RUN:
+- `grep -n "3\.36\|90-min\|90 min\|90-minute"` on both files, before and after the edits.
+- A one-off Python replace script in the scratchpad, `edit_docs.py`. It asserted that each target string matched exactly once.
+- `grep -n "EMR_CUMULATIVE_CAP_USD=" scripts/config/release.conf`
+- A `python3 -I` script that checks relative markdown links and scans for 12-digit numbers and e-mail addresses.
+
+TEST RESULTS: not applicable.
+
+VALIDATION RESULTS (observed):
+- `release.conf:245` already reads `EMR_CUMULATIVE_CAP_USD=3.53`.
+- `release.conf` line 235 still carries a "3.36 cumulative" comment. That is the infra-engineer's file, and the parallel update may still be in progress.
+- The 0.84 reserve, 0.315 and 0.240 rates, and the 0.14 tail (900 s at 0.555/h) match `scripts/lib/budget.py` and the review's arithmetic. The 19.54 / 22.98, 3.33 h = 1.93, 3.57 and 23.00 figures match `docs/agent-runs/phase-15/prompt.md` and the runbook's own tables.
+- Link check on both files: session-2-plan.md has 20 relative links with 0 broken, and demo-script.md has 2 with 0 broken.
+- Neither file contains a 12-digit number or an e-mail address.
+- `scripts/check.sh` has no docs link-check gate, so I used my own script, and its output is the only link evidence.
+
+ASSUMPTIONS:
+- The old "3.36" in the 4a draft was the "section 5" text the work order meant (lines 317-319).
+- The two guard addresses are exactly `terraform_data.configuration_guard` and `terraform_data.provider_guard`, per `owner-report.md` line 2032.
+
+RISKS:
+- `budget.py` computes the retry admission, and no test of "S times out, actual recorded, retry" exists yet. That is the test-engineer's item from finding 1.
+- The 94-minute figure rounds 0.87 / 0.555 = 94.05 min. The ledger's cent rounding on the measured cost could shift it by about a minute.
+
+MANUAL ACTION REQUIRED: The human should review the new wording in 4a and 5.2 before recording the P19 approval. The 4a draft now states the retry-admission rule and the restated rates for that record.
+
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+
+NEXT GATE: independent review of the diff, then the human P19 approval record. The infra-engineer should also fix `release.conf:235`, which I did not touch. No commit was made.
+
+#### Agent report (2026-11-16T21:22:55.139Z, agent ad00bea)
+
+STATUS: DONE. Cap pins moved to 3.53 and the finding-1 scenario tests are added. Both gates pass against the release.conf that has landed (`EMR_CUMULATIVE_CAP_USD=3.53`).
+
+OWNER: test-engineer (tests/** only; no production, scripts/ or infra/ edits)
+
+WORK ORDER: Phase 15, branch phase-15, HEAD f801d28. User decision 2026-11-16 "Raise cap to 3.53" (1.68 Session 1 + 1.85). Review finding 1.
+
+FILES CREATED: none
+
+FILES MODIFIED:
+- /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts/test_cap_pins_14b.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts/test_pipeline_refusals.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts/test_prespend_floors_14b.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts/test_record_actual_15.py
+
+Task 1, 3.36 -> 3.53 in the pins and boundaries:
+- test_prespend_floors_14b.py asserts `EMR_CUMULATIVE_CAP_USD == 3.53`.
+- test_cap_pins_14b.py:
+  - `EMR_CAP` is now 3.53, and a `SESSION_2_BLOCK` of 1.85 was added.
+  - The hand derivation is 1.68 + 1.85, where 1.85 is 200 min x 0.555/h, exact. The old test claimed 4 x 0.84 equals the cap, which is no longer true.
+  - The string pin is "3.53".
+  - "Two more runs fit" is now `int((cap - spent) / 0.84) == 2` with `cap - spent == 1.85`.
+  - The R0-block allowance is now 1.85.
+  - The D3 ledger test is renamed `test_d3_ledger_leaves_a_seventeen_cent_margin_under_the_cumulative_cap` (total 3.36, margin 0.17).
+- test_pipeline_refusals.py, every boundary recomputed (prior ledger sum plus estimate = 3.53 allowed, one cent more refused):
+  - Default run 0.60: 1.46 + 1.47 allowed, 1.46 + 1.48 refused.
+  - Mid run 1.26: 2.27 allowed, 2.28 refused.
+  - Big run 2.88: 0.65 allowed, 0.66 refused.
+  - S/L case: 0.84 + 1.01 + 0.84 allowed, 0.84 + 1.02 + 0.84 refused. I added an "L exactly at the cap" case.
+  - The old 2.52 and 3.36 boundaries, plus one cent, are asserted allowed under 3.53.
+  - D3 test renamed to `test_d3_the_75_minute_s_run_and_l_fit_under_3_53_with_a_seventeen_cent_margin`.
+- test_record_actual_15.py: the over-cap test now uses 12000 s (0.555 x 12000/3600 = 1.85 exact, total 3.53, no marker) and 12001 s (1.850154 -> 1.86, total 3.54, LEDGER-OVER-CAP). The comment 3.36-2.24 became 3.53-2.24 = 1.29.
+
+The 3.36 values I left alone:
+- tests/infra/test_emr_module_13c.py:54 is "1.035 x 3.25 = 3.36375 > 3". That is a per-run cost against the per-run cap of 3, not the cumulative cap. It is unchanged and needs no change; the file has no `EMR_CUMULATIVE_CAP_USD` pin.
+- In test_pipeline_refusals.py, the `3.36` in the S/L docstring, the D3 docstring and the default-ledger comments is the genuine sum 2.52 + 0.84 or Session 1 + S + L = 3.36. I kept it and added that it is at most 3.53. Other 3.36 mentions are history notes in docstrings and comments (P25 value).
+
+TESTS ADDED, all in test_record_actual_15.py, class `TimeoutThenRetryOnTheSameCluster`. They drive the real run-bounded-pipeline.sh `--execute` and `--record-actual` code paths through budget.py, with fakes for the cloud binaries:
+- `test_the_cap_and_run_limit_in_release_conf_are_the_hand_derived_ones`
+  - Reads `EMR_CUMULATIVE_CAP_USD` and `EMR_MAX_LIVE_RUNS` from release.conf.
+  - Asserts the cap equals 1.68 + 0.87 + 0.14 + 0.84 = 3.53 and the run limit is 4.
+- `test_retry_at_exactly_the_cap_is_admitted_and_a_fifth_run_is_refused_by_the_run_limit`
+  - Session 1 at 1.68 and S reserved at 0.84 (75-min plan, 0.555 x 5400/3600 = 0.8325 -> 0.84).
+  - Actual recorded for a running cluster 5643 s after creation: measured 0.87, tail 0.14, cumulative 2.69, `live_runs=3 of 4`.
+  - The retry (estimate 0.84) is admitted: 2.69 + 0.84 = 3.53 <= 3.53.
+  - The fifth run is refused at the g6-gate with "4 live EMR runs are already recorded in the ledger (limit 4)", and the ledger file is byte-identical afterwards.
+- `test_retry_one_cent_over_the_cap_is_refused_with_the_cumulative_cap_message`
+  - The actual is recorded at 5700 s: measured 0.88, tail 0.14, cumulative 2.70, no LEDGER-OVER-CAP.
+  - The retry is refused at the g6-gate with "cumulative estimate 3.54 USD (recorded 2.70 + this run 0.84) would exceed the cap 3.53 USD".
+  - The run-limit message is absent and no reservation is added.
+
+COMMANDS RUN (all offline, from /Users/danny/Documents/UIC/CS441/ScholarChain):
+- `grep -rn "3\.36" tests`
+- `python3 -m unittest test_record_actual_15`, run from tests/scripts: Ran 7 tests in 44.631s, OK
+- `python3 -m unittest discover tests/scripts`
+- `python3 -m unittest discover tests/infra`
+
+TEST RESULTS (observed):
+- `python3 -m unittest discover tests/scripts`: "Ran 485 tests in 1400.443s", "OK", exit 0
+- `python3 -m unittest discover tests/infra`: "Ran 468 tests in 986.691s", "OK", exit 0
+
+VALIDATION RESULTS: release.conf already had `EMR_CUMULATIVE_CAP_USD=3.53` before the gate runs, so no failures are attributable to the infra-engineer change landing late. I made no network calls and read none of the forbidden files. I wrote no new 12-digit numbers.
+
+ASSUMPTIONS:
+- The 5643 s and 5700 s timeout durations are my choice. They are the only whole-second values that give measured 0.87 and 0.88 with the 0.555/h cluster rate and a 900 s tail of 0.14.
+- The scenario test is placed in test_record_actual_15.py next to the other `--record-actual` tests.
+
+RISKS:
+- The scenario test's S timeout is modelled as a still-running cluster that is recorded with `--as-of-utc` (the tail applies). A terminated cluster would carry no tail and so is not what finding 1 describes.
+- The gates are slow (about 23 and 16 minutes when run in parallel).
+- I did not run mutation testing; the exact-message assertions (3.54 vs 3.53, 2.69 vs 2.70) are the discriminators.
+
+MANUAL ACTION REQUIRED: none
+
+BLOCKED-ON OWNER: none
+
+BLOCKED-ON EVIDENCE: none
+
+NEXT GATE: Independent code-reviewer review of the 4 test files. `sbt check` was not run, since no Scala inputs changed and the repair-round scope rule says to skip it. The human decides acceptance and commit; I made no commit.
+
+#### Agent report (2026-11-16T22:02:12.366Z, agent ae61105)
+
+STATUS: COMPLETE (offline; all four tasks done; all gates observed green)
+OWNER: infra-engineer (scripts/**, infra/terraform/**)
+WORK ORDER: Phase 15 repair round after code review (tasks 1 to 4)
+
+FILES CREATED: none
+
+FILES MODIFIED (all inside the infra-engineer territory)
+- scripts/config/release.conf
+  - ~60-61 (PRESPEND comment): 22.97 -> 22.98 and 2.03 -> 2.02 (both occurrences each).
+  - ~236-245 (EMR block): the stale "exactly 2 more 90-minute runs (S and L) fit / no L retry" is replaced. It now says S and one S retry at the 75-minute cap (0.555 USD/h x 1.5 h = 0.8325 -> 0.84, no L run on EMR). A new comment records the user decision "Raise cap to 3.53", the arithmetic 1.68 + 3.33 h x 0.555 = 1.85, and the retry rule (admitted iff S measured <= 0.87).
+  - `EMR_CUMULATIVE_CAP_USD` 3.36 -> 3.53. `EMR_MAX_LIVE_RUNS` stays 4 and `EMR_MAX_RUN_USD` stays 3.
+  - ~323 (before `PIPELINE_MAX_COPYOUT_BYTES`): comment added. EMR now runs S only (copy-out about 1.1 GB); the 8 GiB ceiling stays as an upper bound (user-approved default; changing it would also change the reviewed pins). The value is unchanged at 8589934592.
+- scripts/run-bounded-pipeline.sh line 111 (help text): "EMR_CUMULATIVE_CAP_USD (3.36)" -> (3.53).
+- scripts/README.md
+  - Line 315: the old text said "90 minutes, ... 4 x 0.84 = 3.36 equals the cap exactly". It now describes the 75-minute S run (0.555 x 1.5 = 0.8325 -> 0.84, r5 primary + m5 core), cap 3.53 = 1.68 + 3.33 h x 0.555, and S plus retry = 3.36.
+  - Line 399: pinned cap 3.36 -> 3.53 with the decision text. Also "exceed 3.36" -> "exceed 3.53".
+  - Line 401: "zero margin" text rewritten; the retry is admitted iff S measured <= 0.87.
+  - Lines 403, 409, 489: 3.36 -> 3.53 (the lines 403/409 sentences, and the line 489 pin mention).
+  - Remaining "3.36" mentions in the README are deliberate history or the S + retry sum.
+- infra/terraform/modules/emr/variables.tf:60: G6 comment "USD 2.58" -> "USD 2.59 (2.58375 rounded up)". Checked: 0.795 x 3.25 = 2.58375.
+- infra/terraform/tests/phase15_emr_primary.tftest.hcl
+  - Line 270: "= 2.58 <= 3" -> "= 2.58375, USD 2.59 rounded up, <= 3".
+  - Line 274: "= 3.36 > 3" -> "= 3.36375, USD 3.37 rounded up, > 3". This is the 4th-instance G6 context, and not a cap reference.
+  - Both are message text only; the assertions are untouched.
+- infra/terraform/README.md:572: "2.58 USD" -> "2.59 USD (2.58375 rounded up)", and "would cost 3.36 USD" -> "3.37 USD (3.36375 rounded up)". Checked: 1.035 x 3.25 = 3.36375.
+- infra/terraform/tests/phase12c.tftest.hcl:118: run `dynamodb_native_failure_and_latency_panels` renamed to `dynamodb_failure_and_latency_panels_removed_by_phase15_p9`. Assertions are untouched. The old name now appears only in historical evidence files under docs/ (not mine).
+- scripts/tests/test_providers.py:177-178: pin ("3","4","3.36") -> ("3","4","3.53"), comment updated.
+- scripts/tests/test_pipeline.py
+  - ~563: comment cap 3.36 -> 3.53 (4 x 0.50 + 1.26 = 3.26 still under the cap, so only the count refuses).
+  - ~569-575, renamed `test_g6_the_cumulative_estimate_may_not_exceed_3_53`: refused ledger [1.00, 1.28] (2.28 + 1.26 = 3.54 > 3.53); allowed ledger [1.00, 1.27] (2.27 + 1.26 = 3.53, inclusive).
+  - ~577-585: third-run test renamed to `..._pass_the_3_53_cap`, message cap 3.36 -> 3.53 (ledger 1.50, 1.00: 2.50 + 1.26 = 3.76 > 3.53 still refused).
+  - ~595: comment 3.36 -> 3.53.
+  - ~1097: pinned cap assertion "3.36" -> "3.53".
+- scripts/tests/test_phase15_pipeline_pins.py (LedgerCapTests, ~266-355)
+  - Header comment updated.
+  - Pin ("4","3.36","3") -> ("4","3.53","3").
+  - `test_the_cap_is_four_times_...` renamed `test_the_cap_is_session_1_plus_3_33_hours_at_the_s_rate`. It asserts 2 x 84 + 185 = 353 cents (1.68 + ceil(3.33 x 0.555 = 1.84815) = 1.85).
+  - `test_the_cumulative_cap_refuses_above_3_53_and_admits_exactly_3_53`. The estimate 0.85 now fits (3.37 <= 3.53), so the boundary moved: check/reserve 1.02 -> 3.54 refused with "cap 3.53 USD"; check 1.01 -> 3.53 admitted; check 0.84 admitted.
+  - L test (2.52 + 1.08 = 3.60) message cap 3.36 -> 3.53, still refused.
+  - Runs 3 and 4 test unchanged: cumulative_usd=3.36 is still the sum of four 0.84 reservations, and the count refuses run 5.
+- scripts/tests/test_d3_emr_primary.py
+  - Docstring updated; the verbatim user quote of "3.36" is kept and annotated.
+  - Pin ("4","3.53","900").
+  - `test_s_and_one_s_retry_fit_the_3_53_cap_and_nothing_more`: S 2.52, retry 3.36, then check 4.20 refused by count and by "cap 3.53 USD".
+  - New `test_the_largest_per_run_estimate_that_fits_twice_is_0_92`: 1.68 + 2 x 0.92 = 3.52 fits.
+  - `test_one_cent_more_per_run_would_not_fit` reworked: 0.93 + 0.93 gives 2.61 then 3.54 > 3.53, refused. The old 0.85 + 0.84 = 3.37 would now be admitted.
+  - 90-minute comment 3.64 > 3.53. Over-cap test: "exceeds the cap 3.53 USD" (total 4.19). `--record-actual` test: `cap_usd=3.53`.
+  - NEW hand-derived ledger tests, `retry_after_s_measured` helper plus two tests.
+    - Session 1 1.68, S reserved 0.84, S actual recorded on a WAITING cluster created 16:00Z with as_of = creation + 5640 s (17:34Z): 5640 x 0.555/3600 = 0.8695 -> 0.87; tail 900 s -> 0.14. Recorded 1.68 + 0.87 + 0.14 = 2.69; the retry 0.84 gives 3.53 <= 3.53, admitted (check rc 0, `cumulative_usd=2.69`; reserve rc 0; cumulative ("4","3.53")).
+    - Same with 5700 s: 5700 x 0.555/3600 = 0.87875 -> 0.88; recorded 2.70; 2.70 + 0.84 = 3.54 > 3.53, refused with "cumulative estimate 3.54 USD (recorded 2.70 + this run 0.84) would exceed the cap 3.53 USD". A refused reservation writes nothing (cumulative stays ("3","2.70")).
+
+EVERY NUMBER CHANGED (old -> new)
+- `EMR_CUMULATIVE_CAP_USD` 3.36 -> 3.53 (release.conf, the run-bounded-pipeline.sh help, scripts/README.md 399/403/409/489, and all scripts tests above).
+- release.conf PRESPEND comment 22.97 -> 22.98 and 2.03 -> 2.02.
+- G6 text: 2.58 -> 2.59 (modules/emr/variables.tf:60, phase15_emr_primary.tftest.hcl:270, infra/terraform/README.md:572). 3.36 -> 3.37 (README:572 and phase15_emr_primary.tftest.hcl:274).
+- Unchanged: `EMR_MAX_LIVE_RUNS` 4, `EMR_MAX_RUN_USD` 3, `PIPELINE_MAX_COPYOUT_BYTES` 8589934592 (8 GiB, comment only).
+- No 12-digit number was written (scanned the diff of scripts and infra).
+
+COMMANDS RUN and OBSERVED RESULTS
+- `bash -n scripts/run-bounded-pipeline.sh` -> exit 0 (printed BASHN_OK).
+- `cd infra/terraform && terraform init -backend=false -input=false` -> success. Providers were already cached; it only registered the local modules; no state touched.
+- `terraform fmt -check -recursive` in infra/terraform -> exit 3. The only file listed is `environments/course.local.tfvars`, a git-ignored local file. I did not read it and did not change it; it is not mine to touch.
+- `git ls-files -z '*.tf' '*.tfvars' '*.tftest.hcl' | xargs -0 terraform fmt -check` (tracked files) -> exit 0, no output. The deployer is untouched, so no separate deployer run.
+- `terraform test` in infra/terraform -> "Success! 333 passed, 0 failed." (rc 0).
+- `cd scripts && python3 -m unittest discover tests` (run to a file, 1820 s under heavy machine load) -> "Ran 1199 tests in 1820.375s", "OK", rc 0.
+- Targeted before the full run: `python3 -m unittest test_d3_emr_primary.LedgerAt75MinutesTests ... .RecordActualTests ... .PinTests test_phase15_pipeline_pins.LedgerCapTests test_providers` -> Ran 48 tests, OK.
+- tests/** assertions on 3.36: none fail. tests/scripts/test_record_actual_15.py (test-engineer) already asserts 3.53 and the 0.87/0.88 boundary. tests/infra/test_emr_module_13c.py:54 has a comment with 3.36375 only. I did not run the tests/** suite.
+
+ASSUMPTIONS
+- The cap arithmetic is from your task: 1.68 + 3.33 h x 0.555 = 1.85, so 3.53. The 0.14 tail is from `ledger_totals` and the existing 900 s tail test.
+- The line 274 "3.36" in phase15_emr_primary.tftest.hcl is not a cap reference (4th instance 1.035 x 3.25 = 3.36375). I changed it to 3.37 for G6-context consistency with the README. Revert if you want it untouched.
+
+RISKS
+- The `--record-actual` boundary is inclusive and has no margin: the retry is admitted iff S measured <= 0.87 (0.0 USD spare at exactly 0.87).
+- The ~30-minute `unittest discover` runtime under parallel load is a gate-time concern only.
+- Existing reviewed pins/records elsewhere (docs/**, experiments/**, tests/**) that cite 3.36 are owned by other agents.
+
+MANUAL ACTION REQUIRED: none for me. The orchestrator should confirm the docs/** records and experiments/** text reflect 3.53 (parallel owners).
+
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+
+NEXT GATE: independent code-reviewer re-review of the repair diff (scripts/**, infra/terraform/**); the sbt gate is not needed here (no Scala input changed). Then human approval before any live use.
+
+
+## Elasticity bundle P42 (load generator semantic route and manifest), agent report, verbatim
+
+#### Agent report (2026-11-16T21:55:10.430Z, agent a105bb6)
+
+STATUS: COMPLETE for P42 within load-tests/** and experiments/**. All suites I ran are OK. Reviewer and coordinator gates (code-reviewer, check.sh, sbt) are NOT run by me. Nothing was sent anywhere: offline only, loopback fake servers, fake key.
+
+OWNER: experiment-engineer
+WORK ORDER: P42, load generator `semantic` route and manifest (docs/runbooks/session-2-plan.md rows P42, P35, section 6.3a). Also read the P40 route contract in PublicSemanticRoute.scala and ApiApplication.scala.
+
+FILES CREATED
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/manifests/15b-ecs-scaling-semantic.json (hand-authored: the renderer covers 15A only and no sha pin covers 15b manifests)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/inputs/15b/semantic-questions.txt (150 phrases, sha256 bde5f63b49e46c321dbbf958094646cf644fcef15516b6ee0e67822ccb9978af)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/inputs/15b/semantic-questions.provenance.json
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/scripts/derive_semantic_questions.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/load-tests/tests/test_loadgen_semantic.py (20 tests)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/tests/test_semantic_manifest.py (16 tests)
+
+FILES MODIFIED
+- /Users/danny/Documents/UIC/CS441/ScholarChain/load-tests/loadgen.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/load-tests/config/load-profile.v1.json (new `semantic` route, weight 40)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/scripts/check_manifests.py (new `check_semantic`, called at the end of `check_15b_16b`)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/load-tests/README.md
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/README.md
+- Not mine: `experiments/README.md` and `experiments/tests/test_experiments.py` already had uncommitted edits at the start (EMR cap 3.53). I did not touch `test_experiments.py`. I added to `experiments/README.md` on top of those edits.
+
+WHAT WAS BUILT
+- Route: a manifest with a `semantic` block enables `POST /v1/semantic/retrieve`. Header is `Authorization: Bearer <key>` (the P40 contract uses Bearer, not a custom header) plus `Content-Type: application/json`. Body is exactly `{"question","topK"}` (topK 10 in the manifest, max 20). The key is read from the env var named by `--api-key-env` and is never printed or stored (tests check output and every raw file). Raw rows keep `question_index`, never the question text. Without the block the route is neither used nor listed as dropped, so ordinary runs are unchanged.
+- Weights: semantic 40 against healthz 2, readyz 1, metrics 1 (90.9% with no ID files, 74.1% with both).
+- Caps (constants in loadgen.py, not raisable by flags): 600 / 3,000 / 15,000 / 30,000, and a phase named `hold...` at level 50 capped at 150,000. Total 198,600. Warm-up is at most 200. `validate-manifest`, `plan` and `run` refuse a phase above its cap, a missing max_requests, a level with no cap, a duplicate cap slot, a hold below level 50 and a total above 198,600. Lowering a cap is allowed. `check_manifests.py` additionally requires the committed manifest to carry exactly the five values.
+- Warm-up: its own phase (`type: warmup`, exactly one, first, level 1, max_requests from 150 to 200). One worker sends each question once in file order, with no retry. It never mixes into the level-1 figures. The manifest uses max_requests 200 and duration 600 s (an upper bound; it ends after one pass).
+- Questions file: `--questions-file` must match the manifest's pinned sha256 and count, 100-200 lines, distinct case-insensitively, each ≤1000 characters. Otherwise it is refused before sending. `--llm` is refused with a semantic manifest.
+- 429 separation: counted per phase and per route as `rate_limited_429` in summary.json, summary.csv, timeline.csv (columns appended at the end), the run record (`totals` and per phase) and a console line `RATE-LIMITED-429: phase=… level=… count=… of N requests`. They count toward the phase cap, never toward the abort rules, and are excluded from latency, `throughput_rps`, `success_rps` and the error rates. Added figures: `served_requests`, `successful_requests`, `success_rps` (2xx over the phase window), `active_seconds`, `success_rps_active`, `peak_success_rps_1s`.
+- Behaviour change to shared code: `throughput_rps`, p50/p95/p99 and `client_error_rate` now exclude 429 rows, and `client_error_rate` no longer counts 429. This only matters when a 429 occurs; all 71 existing loadgen tests pass unchanged.
+- Extra flag `--observe-seconds N`: can only lower manifest observe windows, for local rehearsals; recorded in the run record.
+- Questions provenance: derived from the Phase 6 DBLP slice (dblp-2026-10-03, 10,577 inproceedings, CC0). The source sha256 equals the one in datasets/phase6/dblp-slice-manifest.v1.json (c25a1e1a…); the script verifies it before use. It reads the git-ignored `target/phase6-inputs/6fg-dblp/dblp.xml`. The rule is 2- and 3-word title windows, document frequency ≥5, fragments and plural duplicates skipped. Per-phrase title counts are in the provenance file. A test regenerates both files byte for byte.
+
+COMMANDS RUN (all from /Users/danny/Documents/UIC/CS441/ScholarChain)
+1. `python3 -I -m unittest discover -s load-tests/tests` gave `Ran 91 tests in 67.884s` and `OK`. That is the 71 existing tests plus my 20.
+2. `python3 -I -m unittest discover -s load-tests/tests -p "test_loadgen_semantic.py"` with `-W error::ResourceWarning` gave `Ran 20 tests in 18.061s` and `OK`.
+3. `python3 -I -m unittest discover -s experiments/tests` gave `Ran 100 tests in 3.413s` and `OK`. That includes my `test_semantic_manifest.py`: `Ran 16 tests in 0.226s`, `OK` (run alone).
+4. `python3 -I experiments/scripts/check_manifests.py` ended with `CHECK-OK: 15b-ecs-scaling-semantic.json: per-level limits 600 / 3,000 / 15,000 / 30,000 / 150,000 = 198600 requests, warm-up 200 <= 200 at level 1, quiet window 30 min, 150 fixed questions (sha256 pinned, provenance matches)` and `RESULT: OK (placeholders allowed; run with --final before the commit freeze)`.
+5. `python3 -I experiments/scripts/check_manifests.py --final` ended with `RESULT: OK (final: no placeholders)`.
+6. `python3 -I load-tests/loadgen.py validate-manifest` returned `RESULT: MANIFEST-OK` for both `15b-ecs-scaling-semantic.json` and `15b-ecs-scaling.json`.
+7. `python3 -I load-tests/loadgen.py plan --manifest experiments/manifests/15b-ecs-scaling-semantic.json --questions-file experiments/inputs/15b/semantic-questions.txt` gave `RESULT: PLAN-OK (nothing sent)`, 7 phases, 3570 s total, `ramp_cap_total=198600 warmup_max=200`.
+8. Not in my scope, run only to detect breakage from the profile edit: `python3 -I -m unittest discover -s tests/scripts -p "test_cap_pins_14b.py"` gave `Ran 15 tests`, `OK`. `-p "test_llm_budget_14b.py"` gave `Ran 21 tests`, `OK`. (My first attempt with file paths errored on my invocation, not on the code.)
+9. Not run, as instructed: check.sh and sbt.
+
+TEST RESULTS: as listed above. No failures remain. My coverage:
+- Route: body and header, the key from env, a different `--api-key-env`, an unset key (nothing sent), a wrong key.
+- Caps: each of the five caps exceeded, refused by validate, plan and run with nothing sent; shape refusals; lowering allowed; the 198,600 totals.
+- Warm-up: once each in file order; not retried; its limits and placement.
+- Questions file: pinned, distinct, required, and incompatible with `--llm`.
+- 429s: counted per level; excluded from latency, throughput and success rate; an all-429 run still completes.
+- Hand-derived `summarize` figures, and the committed manifest's totals.
+
+VALIDATION RESULTS: the committed manifest carries levels 1/5/25/50 plus the hold. Per-phase caps are 600 / 3,000 / 15,000 / 30,000 / 150,000, sum 198,600, warm-up 200 (own phase, level 1, first), and a 1800 s (30 min) quiet window against the ≥25 min requirement. No 12-digit run in any new or changed file (grepped). No key value anywhere.
+
+ASSUMPTIONS
+- The warm-up is its own phase (the plan allows this), so the ramp sums to 198,600 and the total with warm-up is 198,800, the figure in section 6.3a.
+- "Hold" is recognised by the phase name starting with `hold`.
+- topK 10 is my choice (the public max is 20).
+- Weight 40 is my choice; the plan gives no number.
+- The quiet-window ≥25 min rule is enforced by check_manifests.py only, not by loadgen, so rehearsals can shorten it.
+- `success_rps` uses the whole phase window as denominator, like the existing throughput. For phases that hit their cap early use `success_rps_active` and `peak_success_rps_1s`; the choice of figure for deriving the target is yours.
+
+RISKS
+- `/readyz` stays in the mix (weight 1 of 44, about 4,500 calls over 198,600 requests). It fans out to graph-service and semantic-service probes (Neptune, S3 Vectors `GetVectors`). These have no per-request charge, but they are not zero load; say if you want it removed from the semantic mix.
+- `read_lines` silently skips lines starting with `#`; no phrase starts with one.
+- Some phrases are 2-word fragments of longer topics (for example "large language", "congest model"). They are real title phrases; the fragment filter is a heuristic.
+- Warm-up on a throttled Voyage (free-trial 3/min, plan section 6.3a) would show as 5xx. Phases are timed by the 10 s request timeout, and 20 failures in the last 40 abort the run. Confirm the paid tier first (the P26 tier check).
+- Never run against the real stack; only fake servers on loopback.
+
+MANUAL ACTION REQUIRED (none for me; for the coordinator)
+- Review by code-reviewer, then the coordinator's full check.sh. I did not commit.
+- P35 needs the local query-api rate limit raised: the P40 default of 50/s with burst 100 will 429 at level 50. Set `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND` high (for example 100000) in the offline-synthetic container, otherwise acceptance item (6) fails.
+
+P35 REHEARSAL COMMAND (loopback http is accepted; key in env, value never on the command line)
+```
+export SCHOLARCHAIN_LOAD_API_KEY=<local smoke key from the shell, never a file>
+python3 -I load-tests/loadgen.py run --manifest experiments/manifests/15b-ecs-scaling-semantic.json --questions-file experiments/inputs/15b/semantic-questions.txt --run-id <rehearsal-id> --base-url http://127.0.0.1:<port> --observe-seconds 30
+```
+- Do not pass `--node-ids-file`, `--evidence-ids-file` or `--llm`.
+- Offline plan check: same command with `plan` instead of `run`, no `--base-url`, no key.
+- Output: `target/experiment-runs/15b-ecs-scaling-semantic-<run-id>/`. Per level, read `derived/summary.json` (`success_rps`, `success_rps_active`, `peak_success_rps_1s`, `rate_limited_429`, `latency_ms_2xx`) and `derived/timeline.csv` (`successful_requests` per minute, divide by task count for the per-task figure).
+- Acceptance (6), zero 429s, is `rate_limited_429` equal to 0 in every phase including `warmup` (the run prints `RATE-LIMITED-429:` per phase).
+- The local run takes about 20 min of load plus the shortened quiet window.
+
+BLOCKED-ON OWNER: none.
+BLOCKED-ON EVIDENCE: none. The wall-clock run is bounded by `--observe-seconds`, not blocked.
+NEXT GATE: code-reviewer (read-only), then the coordinator's check.sh. Then the P35 rehearsal by me or the coordinator with the command above (it needs P40/P41 images and the raised local rate limit). The experiment commit follows the human's explicit "yes".
+
+
+## Elasticity P35 local rehearsal and review-2 repairs, agent reports, verbatim
+
+#### Agent report (2026-11-16T22:11:56.969Z, agent acb38fb)
+
+STATUS: DONE for the rehearsal run. All six acceptance items were observed and met. I made two deviations from the work order's wording, both stated under ASSUMPTIONS. One decision for the human is flagged in RISKS: the derived target is a local-CPU-bound figure and may not fire at level 25 live.
+
+OWNER: experiment-engineer
+WORK ORDER: P35, local elasticity rehearsal (branch phase-15, HEAD f801d28, tree dirty)
+
+FILES CREATED (all under git-ignored target/, no tracked file touched)
+- /Users/danny/Documents/UIC/CS441/ScholarChain/target/p35-rehearsal/run-1/ holds my evidence:
+  - cgroup-cpu-max.txt, cgroup-cpu-samples.txt (2 s samples), container-id.txt, container-limits.txt, container-log-raw.txt
+  - load-start.txt, load-end.txt, loadgen-exit.txt, loadgen-stdout.txt
+  - metrics-before.txt, metrics-after.txt, per-level-results.json
+  - analyze.py, p35-run.sh.txt (copy of the driver script), results-summary.md, SHA256SUMS.txt
+- /Users/danny/Documents/UIC/CS441/ScholarChain/target/experiment-runs/15b-ecs-scaling-semantic-p35-local-1/ is the loadgen output: raw/{events.jsonl, requests.jsonl, raw.sha256, run-record.json} and derived/{summary.json, summary.csv, timeline.csv}.
+- Scratch progress log: /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/efc32638-2d79-4248-918e-efd62da545bc/scratchpad/progress-p35.md. The driver script is p35-run.sh in the same directory.
+
+FILES MODIFIED: none. `git status` shows only the pre-existing changes. `docs/agent-runs/phase-15/prompt.md` and `review.md` were already modified, not by me.
+
+COMMANDS RUN
+1. `JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home sbt -batch packageServices` exited 0 and was already up to date ("Total time: 1 s"). There was no `sbt clean`. The services.jar sha256 is 701c8cfe1d1d474de0434c71f1b23085cd8094c40b3362f6d040b2bb28ac0e7e. The jar contains the P40 classes.
+2. `open -a Docker` (the daemon was down).
+3. `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND=100000 SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST=100000 scripts/smoke-local.sh` ended with `RESULT: PASS`. All 6 checks plus the 2 semantic checks passed (route 200 with exactly {hits, model}, 401 without key, cache hits 0 to 1). Output was shown on stdout only, not saved.
+4. `docker build -q -t scholarchain-local-p35/query-api:p35 .` built a local-only image from the root Dockerfile (never pushed). Its id was 882486c79758be33f80fa524c51aab23f95afbe8196cc0f07fe5237e6ddc6957.
+5. The driver script (copy in p35-run.sh.txt) did the following:
+   - Generated a throwaway API key and internal token in shell env vars. They were never written to a file, put on a command line or printed. The container received only their sha256, as a value-less `-e NAME` pass-through.
+   - Ran `docker run -d --name scholarchain-p35-query-api --cpus 0.25 --memory 1g -p 127.0.0.1:18435:8080` with SCHOLARCHAIN_SERVICE_MODE=offline-synthetic, the rate limit at 100000 per second and burst 100000.
+   - Sampled the cgroup `cpu.stat` inside the container every 2 s.
+   - Scraped `/metrics` before and after the load.
+   - Ran `python3 -I load-tests/loadgen.py run --manifest experiments/manifests/15b-ecs-scaling-semantic.json --questions-file experiments/inputs/15b/semantic-questions.txt --run-id p35-local-1 --base-url http://127.0.0.1:18435 --observe-seconds 30`.
+6. Teardown: the container was removed with `docker rm -f` and the local image with `docker rmi`. `docker ps -a` is empty. Docker Desktop is still running because I started it. Quit it if you do not want it.
+
+TEST RESULTS: the rehearsal is not a unit test. loadgen printed `RESULT: COMPLETED run=p35-local-1 requests=198750 llm_answers=0 reason=-`. No tests were run.
+
+VALIDATION RESULTS (acceptance items, observed)
+
+1. Outcome. `run-end` outcome is `completed`. The 198,750 requests are 150 warm-up plus 198,600 ramp. All 198,750 returned 200 (0 errors, error_rate 0 in every phase). The cap sums match the manifest (600 / 3,000 / 15,000 / 30,000 / 150,000).
+
+2. Served rate per level, one task, 429s excluded (there were none):
+
+| Phase | Level | Seconds | success_rps | Per minute (x60) | peak_success_rps_1s |
+|---|---|---|---|---|---|
+| warmup | 1 | 4.5 | 33.319 | 1,999 | 52 |
+| baseline-1 | 1 | 6.8 | 88.08 | 5,285 | 131 |
+| level-5 | 5 | 13.5 | 222.469 | 13,348 | 293 |
+| level-25 | 25 | 33.3 | 450.572 | 27,034 | 668 |
+| level-50 | 50 | 37.2 | 806.235 | 48,374 | 1,262 |
+| hold-50 | 50 | 147.7 | 1,015.538 | 60,932 | 1,737 |
+
+   - Derivation: the target T must satisfy T > 5,285 (level 1) and 2T <= 27,034 (level 25, the smallest of the levels that must reach 2x). That gives 5,285 < T <= 13,517.
+   - **Proposed `query_requests_per_target_target` = 10,000.**
+   - Check: level 1 is 5,285 (53% of T; even its peak second, 131/s = 7,860/min, is below T). Level 25 is 2.70x T, level 50 is 4.84x T, and the hold is 6.09x T. The range is within the P41 limit of 1-100,000.
+
+3. Embed calls. `/metrics` after the run, with a before-scrape of all zeros:
+   - `embedding_cache_misses_total 150`, `embedding_cache_hits_total 180594`, `embedding_cache_evictions_total 0`, `embedding_cache_size 150`, `capacity 1024`.
+   - 150 misses equal the 150 distinct pinned questions (one task).
+   - Hits plus misses = 180,744, which equals the server's `api_route_requests_total{route="/v1/semantic/retrieve",status="200"}` and the 180,744 semantic rows in `raw/requests.jsonl`.
+   - The other server counters match loadgen: healthz 9,159 vs 9,157, readyz 4,500, metrics 4,350 vs 4,349. The healthz and metrics differences are my own probe and scrape calls.
+
+4. query-api CPU per level, from the in-container cgroup `usage_usec`, interpolated to phase boundaries. The limit is 0.25 vCPU (cpu.max 25000 100000):
+
+| Phase | CPU seconds | % of the 0.25 limit | Throttled-period share |
+|---|---|---|---|
+| warmup | 1.12 | 99.4 | 97.9% |
+| baseline-1 (level 1) | 1.70 | 100.0 | 100% |
+| level-5 | 3.33 | 98.8 | 100% |
+| level-25 | 8.19 | 98.4 | 100% |
+| level-50 | 8.98 | 96.5 | 100% |
+| hold-50 | 35.12 | 95.1 | 99.9% |
+
+   CPU is saturated at every level, including level 1.
+
+5. Rate limit. The measured peak served rate per task at level 50 is `peak_success_rps_1s` = 1,737 (hold-50, a level-50 phase; level-50 phase 1,262). That counts all routes, which is conservative. The semantic-only peak is 1,573 (hold) and 1,150 (level-50).
+   - 2 x 1,737 = 3,474.
+   - **Proposed `r_S2` = 3,500 and `b_S2` = 7,000.**
+   - Check: r_S2 is within 1-100,000, b_S2 is within the 1-1,000,000 burst range, and b_S2 = 2 x r_S2.
+   - With these values, the cost-cap formula `min(3,000 r_S2 + 2 b_S2, per-run cap, 300,000)` is bound by the per-run cap of 198,600 queries. So r_S2 does not change the plan cost.
+
+6. 429s. `rate_limited_429` is 0 in every phase, including warmup: 0 of 150, 600, 3,000, 15,000, 30,000 and 150,000 requests. Server `api_rate_limited_total` is 0 before and after.
+
+**Which loadgen figure I used**
+- Target (item 2): `success_rps`, the 2xx count over the phase window.
+  - Each phase ended at its request cap, so the window equals the active time.
+  - `success_rps_active` differs by less than 0.3% (level 25: 451.834 vs 450.572; level 50: 808.32 vs 806.235).
+  - It matches what ALB RequestCountPerTarget averages per minute, and 429s are excluded (there were none).
+- Level-1 safety check: I also used `peak_success_rps_1s` for the "below target at level 1" test.
+- `r_S2` (item 5): `peak_success_rps_1s`, because a token bucket limits instantaneous rate.
+
+**Caveat: no S3 Vectors latency.** Offline-synthetic has no S3 Vectors, Voyage or network latency, and the fake route returns `hits=0` (a smaller reply than live). Served rates are therefore far above live. On the other hand, the 0.25 vCPU limit plus host loadgen contention (Docker VM 3 CPUs, 3.8 GiB) bound the local rates, so the figures are a CPU-bound upper estimate and not a live prediction. `r_S2` errs toward no throttling, as the plan says.
+
+Evidence sha256, with each file at its path under `target/p35-rehearsal/run-1/` or `target/experiment-runs/15b-ecs-scaling-semantic-p35-local-1/`. The full list is `target/p35-rehearsal/run-1/SHA256SUMS.txt`.
+- raw/requests.jsonl: a66a467221c47aa6184be19112899f4dbe25ae9eac52681b1f33226a474c5bd7
+- raw/events.jsonl: df63c297489dc18d93affa39127c1b3c2875749cf6b7981bf1e41f7d62a92a56
+- raw/run-record.json: 5e89febd33672179b7968d2cec9d6dc07dc1ca7fed75a208cd8b1dc14f64c62b
+- derived/summary.json: c33aa8ea030a50d20ce443c7ff48582eb9c5d89f947174451e8b9add18f31eac
+- derived/summary.csv: 1bffce2fe6a8b215741b56302f19541ecee0d8b70e6243321b6d5cd6285932af
+- derived/timeline.csv: ce672d16ee657c3090cd4669dc139c9e0777e8cc3db3a6cdc5e8814994fda3ed
+- cgroup-cpu-samples.txt: 49c87715365398ed91c6ccaeddd18c2e0e5c4c949ea351c903298d1748c8d37d
+- metrics-before.txt: 8ead3f0ed091a567ba6683d1440f98108a4301c4f61b25d02d24ad9c492436e7
+- metrics-after.txt: dafec2d593702333bfb1749a0d38dcaef4fd4e4d52077700ed722e32c236235c
+- loadgen-stdout.txt: 5efe0adbab4ac08aca31daa2c513ee46eafdfc023af58a5db3dc6738cd0a3393
+- per-level-results.json: ee78f230c2ac2a5b5288f68e2b95e3503378f7be8f12eaa0d3bca107f6895dea
+- results-summary.md: d135acf5bcd6229620ba6641bd0a42960061a3d1cf07cb442cf01d3108ee5a2e
+- container-log-raw.txt: d94c7ff1d1b7b0101cfbd844b379ed1dfed329082eca6290395d39697e4450ea
+- analyze.py: 586d859cf02dc49e2b41be020306c8d4e6c8f5972c95520896d9e52d6c222d04
+
+The container log has no key-shaped string and no "Bearer". Its request ids are `p35-local-1-N`.
+
+ASSUMPTIONS
+- **Docker instead of smoke-local.sh for the load run.** `scripts/smoke-local.sh` starts a plain JVM (no Docker, no CPU limit), generates its own key internally and stops the service when the smoke checks end. It cannot hold a service for loadgen or apply 0.25 vCPU. I did not edit it. I ran the script once as the smoke check, then started the same distribution via the root Dockerfile image with `docker run --cpus 0.25`. The service and its env are the same as the script's, except that mine runs in the container with a 1 GiB limit (my choice, not taken from Terraform).
+- **Rate limit set to 100000 / 100000.** This is a rehearsal value only.
+- **CPU per level is by interpolation.** I interpolated the 2 s cgroup samples linearly to phase start and end times. The 0.25 vCPU limit is what the cgroup enforces.
+- **Short phases at the caps.** Levels 1-50 ended at their request caps after 7-148 s, so their rates are from short windows. Level 1 is also JVM-cold.
+
+RISKS
+- **Local figures may not transfer live.** The local rate is CPU-bound at 1,000+ per second per task, and live rates will be far lower. Under the plan's 200 ms assumption (section 6.3a), level 25 offers about 125/s, which is 7,500/min per task. That is below T = 10,000, so request-count scale-out may not fire at level 25 live, and level 50 (about 250/s, 15,000/min) is only 1.5x T. The required local acceptance gives 5,285 < T <= 13,517. This is a human decision: accept 10,000, or choose a lower T, for example below about 7,500 and above the live level-1 rate, as a recorded experiment parameter.
+- **CPU saturation.** The 0.25 vCPU limit is saturated at all levels (95-100%) in this offline run, including level 1. The CPU policy cannot be assessed from this run, and the 60% target would be exceeded everywhere here.
+- **Host contention.** Loadgen runs on the host and competes with the Docker VM (3 CPUs).
+- **The request-count policy itself** cannot run locally and is covered by P41's `terraform test`.
+- **Evidence is under `target/`, which is git-ignored.** Copy it under `docs/agent-runs/**` via the orchestrator if it must be kept.
+- **The smoke-local.sh stdout was not saved to a file.** Its result is quoted in COMMANDS RUN.
+
+MANUAL ACTION REQUIRED
+- Decide the final `query_requests_per_target_target` (10,000 is proposed; the allowed range is 5,285 < T <= 13,517 under the acceptance rule).
+- Set `query_semantic_rate_limit_per_second` = 3500 and `query_semantic_rate_limit_burst` = 7000 as user-set tfvars; I did not set them.
+- Quit Docker Desktop if you do not want it running.
+
+BLOCKED-ON OWNER: none for this run. Follow-up suggestion, not blocking: if a repeatable local rehearsal wants `scripts/smoke-local.sh` to hold the service open, set a CPU limit or run in Docker, that is infra-engineer scope (`scripts/**`).
+BLOCKED-ON EVIDENCE: none.
+NEXT GATE: code-reviewer review of the evidence and derivations, then the human decision on T, `r_S2` and `b_S2`, which go into the user-set tfvars (P41 variables).
+
+#### Agent report (2026-11-16T22:12:32.288Z, agent a7290f7)
+
+STATUS: DONE. All four tasks are edited in `docs/runbooks/session-2-plan.md`. The link and scan checks pass. Nothing was committed and nothing outside this file was written except the progress log.
+
+OWNER: documentation-engineer
+
+WORK ORDER: Phase 15, session-2-plan.md repairs for review 2 findings 1, 4, 5 and 6, with the user decision "Accept, add steps".
+
+FILES CREATED: none.
+
+FILES MODIFIED:
+- `/Users/danny/Documents/UIC/CS441/ScholarChain/docs/runbooks/session-2-plan.md`
+- Progress line appended to `/private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/efc32638-2d79-4248-918e-efd62da545bc/scratchpad/progress-docs2.md`
+
+The file already carried other uncommitted hunks from earlier rounds (around lines 188, 238, 313, 1022 and 1086 of the new text). I did not touch those.
+
+CHANGES (line numbers are in the new file):
+- **Finding 1, P19 draft, item 3 (lines 330-338):** inserted a "Rounding budget" paragraph after the S retry condition. It states:
+  - the cap stays 3.53;
+  - every term rounds up to the cent;
+  - the ≤ about 19 min budget (creation to S submission plus the wait before `--record-actual`);
+  - the arithmetic 95 min = 0.87875 → 0.88, and 1.68 + 0.88 + 0.14 + 0.84 = 3.54 > 3.53;
+  - the cold start of 4-5 min;
+  - operator steps (a) and (b).
+- **Finding 1, step 5 (line 451):** appended operator step (a). Write record 1 and submit S as soon as the cluster ID exists, and pre-write record 2 only after S is submitted.
+- **Finding 1, step 5a (line 457):** added a new "Rounding budget" bullet after the retry admission condition.
+  - It carries the 19 min budget and the same arithmetic.
+  - It adds the check that 94 min gives 0.8695 → 0.87, which gives 3.53 and just fits.
+  - It adds operator step (b): run `--record-actual` immediately after an S failure, before anything else.
+- **Finding 1, step 6 (line 458):** added one sentence pointing at the rounding budget and step (b). The existing 0.87 and 94 min text is unchanged.
+- **Finding 1, P25 row (line 256):** also added a one-sentence rounding-budget pointer. You did not ask for this; it is easy to drop.
+- **Finding 4, P25 row (line 256):**
+  - Old: "If L's manifest needs a longer runtime (at most `PIPELINE_MAX_RUNTIME_MINUTES` 180), recompute the cap…"
+  - New: "L is dropped on EMR (2026-11-16), so no L manifest sets a longer runtime; if a later S manifest ever needs one (at most … 180), recompute the cap…"
+- **Finding 4, P19 draft (lines 344-347):** the "if S succeeds the next run is L … If L fails" sentence is verbatim from the human's P25 decision. I checked it against `docs/agent-runs/phase-15/prompt.md` line 131. I did not rewrite it. I added a bracketed note below it marking it superseded by the 2026-11-16 decision to drop L on EMR, with the second EMR run existing only as the S retry.
+- **Finding 5, step 5a (line 454):**
+  - Old: "…part of the D3 infra change, which is **not yet reviewed or committed**…"
+  - New: "…re-read in the working tree 2026-11-16; part of the D3 infra change, committed in `f801d28` (pipeline-bundle review 1: APPROVE; the working tree carries a later one-line change to that script)…"
+  - The cited lines 18, 67 and 124 of `scripts/run-bounded-pipeline.sh` still match.
+- **Finding 6, section 6.3a (line 817):** added a paragraph after "What one request queries".
+  - `/readyz` stays in the P42 mix as a coordinator default, not asked.
+  - The mix is 40 / 2 / 1 / 1, so weight 1 of 44, which is about 4,500 calls (198,600 / 44 = 4,513).
+  - The "no per-request charge" claim in `experiments/README.md` is marked unverified.
+  - The cost is bounded and small. As an illustration only, billing every probe at 2.67 per million would add about USD 0.012. This is not in 0.53 and no cap changes.
+  - The human may verify the pricing or accept the default.
+
+COMMANDS RUN: `grep`, `sed`, `Read` and `git diff -U0` on the target file and the sources below. One `python3 -I` script did the link check, the scan and the arithmetic.
+
+TEST RESULTS: not applicable. This is a docs-only change and no code gate was run.
+
+VALIDATION RESULTS:
+- **Link check:** 20 relative links in the file, 0 broken.
+- **Scan:** 12-digit numbers: none. E-mail addresses: none. Key patterns: none.
+- **Arithmetic, recomputed with Decimal and round-up:**
+  - 95 min x 0.555/h = 0.87875 → 0.88; 1.68 + 0.88 + 0.14 + 0.84 = 3.54.
+  - 94 min → 0.87; 1.68 + 0.87 + 0.14 + 0.84 = 3.53.
+  - 900 s idle tail → 0.14.
+  - 3.53 - 1.68 - 0.84 - 0.14 = 0.87, which is 94.05 min at 0.555/h.
+- **Config check:** `scripts/config/release.conf` has `EMR_MAX_LIVE_RUNS=4`, `EMR_CUMULATIVE_CAP_USD=3.53`, `PIPELINE_MAX_IDLE_TIMEOUT_SECONDS=900`. `scripts/lib/budget.py` quantizes every term with `ROUND_UP` to the cent (lines 101, 140, 590, 591).
+- **Cold start:** section 5.0 (line 408) says 4-5 min.
+- **Not verified:** `/readyz` probe pricing. No network was available and none was attempted.
+
+ASSUMPTIONS:
+- The 19 min figure comes from review 2 and the user answer. I confirmed it arithmetically as 94 - 75.
+- Step 5a's `--record-actual` measures to the UTC time of the saved describe file while the cluster is still up. That comes from the existing 5a text and `--as-of-utc`.
+
+RISKS:
+- Operator steps (a) and (b) are procedure only. Nothing enforces them, and `--record-actual` has not run against AWS.
+- The P19 draft is wording for the human to copy; it is not a record.
+
+MANUAL ACTION REQUIRED:
+- The human decides whether to verify `/readyz` probe pricing or accept the default (finding 6).
+- The human commits after an explicit yes.
+
+BLOCKED-ON OWNER: none.
+
+BLOCKED-ON EVIDENCE: none for this file.
+
+NEXT GATE: independent review of `docs/runbooks/session-2-plan.md`, then the human's explicit yes to commit.
+
+
+## Review-2 repairs and P35 runbook record, agent reports, verbatim
+
+#### Agent report (2026-11-16T22:15:27.865Z, agent a0f7927)
+
+STATUS: DONE (one file edited, offline, nothing committed). No BLOCKED-ON.
+OWNER: documentation-engineer
+WORK ORDER: Phase 15, P35 results and scaling-target decision, `docs/runbooks/session-2-plan.md` only (branch phase-15, HEAD f801d28)
+
+FILES CREATED: none in the repo. A scratch backup and edit script are in the scratchpad, outside the repo.
+FILES MODIFIED: /Users/danny/Documents/UIC/CS441/ScholarChain/docs/runbooks/session-2-plan.md. I built on your earlier uncommitted edits. My part is 35 inserted lines and 10 changed lines. `git diff --stat` for the whole file now shows 82 insertions and 25 deletions in total.
+
+CHANGES (line numbers are in the file after my edits; old → new)
+1. Line 45 (header amendment list), new bullet: the P35 result and the decision "T = 3,000 (Recommended)", pointing to the new results paragraph, with the three values. It states that all three are set by you in the private tfvars.
+2. Row P35, line 268, end of the acceptance text:
+   - old: "The measured per-level rates replace the 200 ms planning assumption in section 6.3a."
+   - new: "Result and decision (2026-11-16): see the P35 results paragraph below this table. The measured local per-level rates did not replace the 200 ms planning assumption in section 6.3a: you set the target from the live estimate instead (T = 3000), a recorded deviation from the local rule in item (2)."
+3. Row P41(b), line 274:
+   - "the value comes from P35" → "...: **3000**, your decision of 2026-11-16, see the P35 results paragraph below the prerequisites table".
+   - "the P40 code defaults 50 / 100 apply" → adds "(Session 2 values from P35: **3500** and **7000**)".
+4. New "P35 results and decision" block, lines 286-308, directly after the prerequisites table and before section 4a. The block holds:
+   - **Run:** p35-local-1, completed, 198,750 requests (150 warm-up plus 198,600), 0 errors, 0 x 429. The server's `api_rate_limited_total` was 0.
+   - **Per-level table:** served per second, per minute and peak 1 s, from `per-level-results.json` and `loadgen/derived/summary.json`.
+
+   | Level | Served per minute | Peak 1 s |
+   |---|---|---|
+   | warm-up (level 1) | 1,999 | 52 |
+   | baseline (level 1) | 5,285 | 131 |
+   | level 5 | 13,348 | 293 |
+   | level 25 | 27,034 | 668 |
+   | level 50 | 48,374 | 1,262 |
+   | hold at 50 | 60,932 | 1,737 |
+
+   - **Embed misses:** 150 = the 150 distinct questions. Hits are 180,594 and hits plus misses are 180,744.
+   - **CPU:** saturated at 0.25 vCPU at every level (95.1 to 100.0%). The block says the CPU policy cannot be assessed from this run.
+   - **Offline-synthetic caveat:** no S3 Vectors, Voyage or network latency, so the local rates do not predict live rates.
+   - **The local rule:** 5,285 < T ≤ 13,517. Under the 200 ms live estimate it would probably not scale out at level 25.
+   - **The decision:** `query_requests_per_target_target` = **3000**, a recorded deviation from the local rule. Live estimates per task: level 1 about 300 and level 5 about 1,500 per minute stay below T. Level 25 (about 7,500) is about 2.5 × and level 50 (about 15,000) about 5 ×. These are estimates, not measurements. Scale-out is still capped by the Terraform maximum task count (query-api max 2).
+   - **The rate limit:** `query_semantic_rate_limit_per_second` = **3500** and `query_semantic_rate_limit_burst` = **7000**. This is 2 × the 1,737/s local level-50 peak, rounded up, with burst 2 ×.
+   - **What P35 did not show:** AWS policy behaviour, and whether level 1 stays below T live. Locally level 1 is 5,285/min, above 3000, only because the offline task is CPU-bound.
+5. Section 5.3 step 2, lines 567-568:
+   - "`query_requests_per_target_target` from P35 (P41);" → "= **3000** (P41; your P35 decision of 2026-11-16, a deviation from the local rule; set by you in the private tfvars);"
+   - "`...per_second` = `r_S2` and `...burst` = 2 x `r_S2`" → "= `r_S2` = **3500** and ... = `b_S2` = 2 x `r_S2` = **7000** (set by you in the private tfvars; ...)".
+6. Checklist, line 537: the target, `r_S2` and `b_S2` now carry the values, the 1,737/s local peak and the observed "0 of 198,750".
+7. Section 6.3a, lines 859, 862 and 868:
+   - Line 859: "to be replaced by the P35 measurement" → "the P35 local measurement did not replace it ... you set the request target from this live estimate".
+   - Line 862: now says `r_S2` = 3500.
+   - Line 868: now says 2 × 1,737 = 3,474, so `r_S2` = 3500 and `b_S2` = 7000, and that the local peak is far above the 250/s live planning rate.
+8. Section 9.3, line 1149: the observed peak, `r_S2`, `b_S2` and the 0 of 198,750 429s are added.
+9. Risk row "No scale-out", line 1059: notes that the local task was CPU-saturated, so nothing is shown about the live CPU policy, and that T = 3000 gives about 2.5 × at level 25 and 5 × at level 50.
+10. Section 10 provenance, line 1173: a new bullet listing the evidence files and the prompt.md section used.
+
+NOTES FOR THE REVIEWER
+- "Wednesday private config keys": the plan has no separate list. Those keys appear in the places above: row P41(b), section 5.3 step 2 and the checklist.
+- The results block sits in section 4, after the prerequisites table. The header bullet and the cross-references say "section 4", not "section 3".
+
+COMMANDS RUN
+- Read-only `cat`, `sed`, `grep` and `python3` over `docs/agent-runs/phase-15/evidence/p35/rehearsal/{results-summary.md,per-level-results.json,metrics-after.txt,loadgen-stdout.txt}`, `loadgen/derived/summary.json`, the P35 report at the end of `docs/agent-runs/phase-15/owner-report.md` and the last section of `docs/agent-runs/phase-15/prompt.md`.
+- A Python edit script with an exact-match assert on every replacement. All replacements applied once.
+- A Python (`-I`) relative-link and pattern scan over the plan file.
+- A first `sed -i` fix attempt failed (BSD sed syntax). I redid it with Python, and a follow-up `grep` found no stale "section 3" text.
+- No git write, no AWS call, no Terraform or `sbt`.
+
+TEST RESULTS: not applicable. This is a docs-only change.
+
+VALIDATION RESULTS (observed)
+- Relative-link check: 20 relative links checked, 0 broken.
+- Scan for 12-digit numbers: none. E-mail scan: none. Key-pattern scan (`AKIA...`, `sk-...`): none.
+- Numbers were cross-checked against `per-level-results.json`, `results-summary.md` and `metrics-after.txt`. I confirmed hits plus misses is 180,594 + 150 = 180,744, and 2 × 1,737 = 3,474, which rounds up to 3,500. The live estimates (300, 1,500, 7,500, 15,000 per minute) follow from L = 200 ms, which gives 5 requests/s per worker.
+- The final scan was run before my last small "section 4" wording fix. That fix changed only section-number text, and a `grep` confirmed it applied.
+
+ASSUMPTIONS
+- The rate-limit values come from the coordinator defaults you gave, not from a new user answer.
+- "98-100% of periods throttled" is taken from the throttled-period share in the evidence. It ranges from 97.9% in warm-up to 100%, so I wrote the lower bound as 98.
+
+RISKS
+- The live per-minute figures are estimates from the 200 ms assumption. The plan says so, and the new text marks them as not measured.
+- The experiment-engineer's report warns that if live latency is much lower than 200 ms, level 1 could exceed T = 3000. Locally it does only because it is CPU-bound. I recorded it under "Not shown by P35".
+
+MANUAL ACTION REQUIRED: you set the three tfvars privately (`query_requests_per_target_target` = 3000, `query_semantic_rate_limit_per_second` = 3500, `query_semantic_rate_limit_burst` = 7000). Nothing is committed. A commit needs your explicit yes.
+BLOCKED-ON OWNER: none.
+BLOCKED-ON EVIDENCE: none.
+NEXT GATE: code-reviewer (read-only) on `docs/runbooks/session-2-plan.md`, then your commit decision.
+
+#### Agent report (2026-11-16T22:16:09.532Z, agent aef04b8)
+
+STATUS: DONE. Findings 2, 3 and 6 are implemented offline and all three gates pass.
+
+OWNER: experiment-engineer (territory: load-tests/**, experiments/**)
+
+WORK ORDER: Phase 15, branch phase-15, HEAD f801d28, code review 2 findings 2, 3 and 6.
+
+FILES CREATED: none.
+
+FILES MODIFIED (the working tree also carries the earlier uncommitted P42 changes in these files; only the lines below are new in this round):
+- /Users/danny/Documents/UIC/CS441/ScholarChain/load-tests/loadgen.py
+  - Lines 951-952, in `finish_setup`, right after `cfg["target_loopback"]` is set. When `args.observe_seconds` is not None and the target is not loopback, it raises `Refused`.
+  - The run exits with rc 3 and writes `REFUSED: --observe-seconds is refused for a non-loopback target: it can shorten the 25-minute R-b quiet window, which only a local rehearsal may do; drop the flag (or point --base-url at 127.0.0.1 or localhost). Nothing was sent` to stderr.
+  - The check runs before the key is read, the output directory is created, and any connection is made.
+  - Help text of `--observe-seconds` (around line 1184) now says "refused unless the target is loopback, so never for R-b".
+- /Users/danny/Documents/UIC/CS441/ScholarChain/load-tests/tests/test_loadgen_semantic.py
+  - Lines 505-562 add four tests and the helper `run_with_flag`.
+  - `test_observe_seconds_is_refused_for_a_non_loopback_target_and_nothing_is_sent`:
+    - Uses three URLs: https://api.example.org, https://api.example.org:8443 and https://10.0.0.5.
+    - Asserts rc 3 and the message text (it names R-b, "drop the flag" and "Nothing was sent").
+    - `socket.create_connection` and `socket.getaddrinfo` are patched to fail, and the test asserts neither was called.
+    - It also asserts the fake server received 0 requests, no run directory was created, and the key is absent from stderr.
+  - `test_observe_seconds_is_refused_even_when_it_would_not_shorten_a_window`: the refusal also holds with `--observe-seconds 99999`.
+  - `test_observe_seconds_is_still_allowed_on_127_0_0_1_and_localhost`: a full run exits 0 for both hosts and the run record shows `loopback` true and `observe_seconds_override` 0.2.
+  - `test_without_the_flag_the_manifest_windows_are_unchanged`: the plan shows 1800s, and the committed manifest's observe phases are `[1800]`.
+- /Users/danny/Documents/UIC/CS441/ScholarChain/experiments/README.md
+  - Line 38 (finding 3a): a longer S cap is no longer "refused by the ledger". It now says runs up to 0.92 each fit the 3.53 cap with 0.17 of room, and only `check_manifests.py`'s 75-minute S pin refuses a longer S. Further EMR runs and a costlier node type are still said to be refused by the ledger.
+  - Line 137 (finding 3b): "84 tests (48 + 23 + the 13 identity-bypass tests)" is now "100 tests (48 + 23 + 16 + the 13 identity-bypass tests)". It matches line 28 and the observed count.
+  - Line 144 (finding 3c): "3-run ledger" is now "4-run ledger".
+  - Line 226 (finding 6): "they carry no per-request charge" is replaced. It now says the S3 Vectors `GetVectors` pricing is unverified and not pinned in this repository. It says the cost is bounded and small (about 4,500 calls), and that `/readyz` stays in the semantic mix by the coordinator's recorded default.
+  - I grepped `load-tests/config/load-profile.v1.json`, `load-tests/README.md` and the semantic manifest for the "no per-request charge" claim. It was not there, so those files needed no change.
+
+COMMANDS RUN AND TEST RESULTS:
+- `python3 -I -m unittest discover -s load-tests/tests`: `Ran 95 tests in 70.198s`, `OK`.
+- `python3 -I -m unittest discover -s experiments/tests`: `Ran 100 tests in 3.566s`, `OK`.
+- `python3 -I experiments/scripts/check_manifests.py`: `RESULT: OK (placeholders allowed; run with --final before the commit freeze)`. Every CHECK line was OK, including the semantic manifest (198600 requests, quiet window 30 min, 150 questions sha256 pinned).
+
+VALIDATION RESULTS: the refusal is observed in the test (rc 3, no socket call, no directory). The loopback runs on 127.0.0.1 and localhost still pass. The 4,500 figure is not a new metric: it is about 1/44 of 198,600 requests (`/readyz` weight 1 against a total of 44 with no ID files), as the coordinator stated.
+
+ASSUMPTIONS:
+- The `plan` command takes no `--base-url`, so `plan --observe-seconds` is unchanged and prints the shortened window. Nothing is sent by `plan`, so the refusal applies only to `run`. The existing plan test still passes.
+- The "0.92 each" figure follows from 1.68 + 2x <= 3.53, which gives x <= 0.925. Rounded down to cents it is 0.92.
+
+RISKS:
+- The `run` command refuses on any non-loopback host, including https hosts that are private rehearsal targets. That matches the instruction.
+
+MANUAL ACTION REQUIRED: none.
+
+BLOCKED-ON OWNER: none.
+
+BLOCKED-ON EVIDENCE: none.
+
+NEXT GATE: independent code review of the diff. Nothing was committed or stashed.
+
+#### Agent report (2026-11-16T22:18:33.774Z, agent a89b35f)
+
+STATUS: COMPLETE. Only wording changed, no assertion value changed. Both changed files pass.
+
+OWNER: test-engineer
+WORK ORDER: Phase 15 review 2, finding 4 (leftover L wording after L was dropped on EMR on 2026-11-16)
+
+FILES CREATED: none
+
+FILES MODIFIED (tests/** only):
+1. /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts/test_cap_pins_14b.py
+   - :68 docstring of test_after_session_1_exactly_two_more_runs_fit_both_caps. "(S then L, or S then one S retry)" is now "(S and its one S retry; L was dropped on EMR on 2026-11-16)".
+   - :209 docstring of test_d3_ledger_leaves_a_seventeen_cent_margin_under_the_cumulative_cap. "S 0.84 + L 0.84" is now "S 0.84 + the one S retry 0.84".
+2. /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts/test_pipeline_refusals.py
+   - :264 test renamed from test_session_2_s_then_l_fit_after_session_1_and_a_fifth_run_does_not to test_session_2_s_and_its_retry_fit_after_session_1_and_a_fifth_run_does_not.
+   - :265-272 docstring:
+     - "L, or the one S retry" now says "the one S retry (L was dropped on EMR on 2026-11-16, so Session 2 is S and its retry)".
+     - The boundary sentence now says "leaves the retry at 3.53" and "leaves it refused at 3.54".
+     - Added one sentence: the 1.01 and 1.02 ledgers stand for a measured S overrun, not for an L run.
+   - :275-279 subTest labels renamed: "L after S" to "S retry after S", "L exactly at the cap" to "S retry exactly at the cap", "L one cent over" to "S retry one cent over". The ledger values and the allowed/refused expectations are unchanged.
+   - :814 test renamed from test_d3_the_75_minute_s_run_and_l_fit_under_3_53_with_a_seventeen_cent_margin to test_d3_the_75_minute_s_run_and_its_retry_fit_under_3_53_with_a_seventeen_cent_margin.
+   - :815-818 docstring: "S 0.84 + L 0.84" is now "S 0.84 + the one S retry 0.84". "L is allowed" and "+ L 0.84" are now "the retry is allowed" and "retry 0.84". The 3.36, 3.53, 3.54, 0.17 and 2.69 figures are unchanged.
+
+These files already had uncommitted edits from the repair round. The line numbers above are in the current tree.
+
+Left as is, on purpose:
+- test_pipeline_refusals.py:135 and :152 mention "L slice" and "the largest L slice must fit". This is the local 50,000-record sample slice for the 60,000 ceiling, not an EMR L run. It is correct as written.
+- No test exercises an L-sized EMR run as a refusal or boundary case. The renamed boundary cases are S-retry cases, so no "kept deliberately" docstring was needed.
+- docs/agent-runs/phase-15/owner-report.md:2926 and :4143 still quote the old test names. Those are historical records, and I do not own them.
+
+COMMANDS RUN:
+- grep for the old test names across the repo (excluding .git), to check that nothing else refers to them. Only owner-report.md does.
+- A Python script that made the exact-match replacements, asserting that each pattern occurs once.
+- `cd /Users/danny/Documents/UIC/CS441/ScholarChain/tests/scripts && python3 -m unittest -v test_cap_pins_14b test_pipeline_refusals 2>&1 | tail -15`
+
+TEST RESULTS: `Ran 79 tests in 406.888s`, then `OK`. Only these two files were run. The run was slow (about 407 s) because the local load rehearsal was running on the machine. I piped through `tail`, so the per-test lines were not shown. The count of 79 includes the three renamed tests.
+
+VALIDATION RESULTS: Offline only. No 12-digit numbers were added. I did not read tfvars, state, ~/.aws, .env or secrets. No commit was made.
+
+ASSUMPTIONS: In the retry-boundary cases, the "S retry" labels fit the ledgers. The 1.01 and 1.02 entries are an overrun of the second recorded S run, which is the retry scenario.
+
+RISKS: Anything outside tests/** that quotes the old test names will not find them. Only historical owner-report.md lines do.
+
+MANUAL ACTION REQUIRED: none
+
+BLOCKED-ON OWNER: none
+
+BLOCKED-ON EVIDENCE: none
+
+NEXT GATE: Coordinator or code-reviewer confirms finding 4. The full `sbt check` runs once after APPROVE, per the user rule.
+
+
+## Review-3 disclosure notes, agent report, verbatim
+
+#### Agent report (2026-11-16T22:24:59.332Z, agent a176b1f)
+
+STATUS: DONE (wording only; offline; no commit; nothing outside docs/runbooks/session-2-plan.md edited)
+OWNER: documentation-engineer
+WORK ORDER: Phase 15, review 3 disclosure notes 1-4, branch phase-15, HEAD f801d28
+FILES CREATED: none
+FILES MODIFIED: /Users/danny/Documents/UIC/CS441/ScholarChain/docs/runbooks/session-2-plan.md (built on the existing uncommitted edits)
+
+Changes, with line refs after the edit:
+- Note 1, P35 results block: line 304 is unchanged, and three sub-bullets follow it at lines 305-307.
+  - Line 305 (a): after scale-out to 2 tasks, level 50 still offers about 7,500 per target per minute (2.5 x T). The policy would want about 5 tasks (15,000 / 3,000). It stays pinned at the maximum of 2 through the hold, and scale-in follows only the end of the load.
+  - Line 306 (b): level 25 is not expected to trigger scale-out. At 200 ms it reaches its 15,000-request cap in about 120 s (section 6.3a). That is shorter than the plan's own scale-out estimate of about 6.5 min (three one-minute datapoints plus task start; see the section 6.4 hold arithmetic). Scale-out is expected during level 50 and the hold.
+  - Line 307 (c): at 400 ms, level 25 offers about 3,750 per minute per task (1.25 x T). At 100 ms or less, level 5 offers about 3,000 or more per minute and reaches T. T is unchanged at 3000.
+  - The hold-arithmetic cross-reference reads section 6.4, since the paragraph at ~:957 sits under 6.4.
+- Note 1, risk row (now line 1060, "No scale-out" row): the same three points are added in compact form inside the existing parenthetical.
+- Note 2, line 842: "the 0.53 figure does not include it" is replaced. The new text says the 198,600 bound behind the 0.53 figure already counts the roughly 4,500 `/readyz` requests, each priced as a query call. Only the extra cost of a probe that may call `GetVectors` on more than one index is not covered, and no cap changes.
+- Note 3, line 301: the CPU bullet is retitled "CPU (interpolated, approximate)". It now says the per-phase CPU figures are interpolated from 2 s cgroup samples and that the warm-up and baseline phases span only 2-4 samples.
+- Note 4: the "[Superseded ...]" bracket is removed from inside the ```text block. The human's verbatim item 3 text is otherwise untouched, and the block now runs from the item 3 run rule straight into "If S fails twice...".
+  - A standalone "Superseded note (outside the record wording; ...)" paragraph sits directly after the closing fence, at line 423.
+  - It names the superseded run-rule sentence, refers to "item 3 of the text above" from outside the block, and cites the 2026-11-16 drop-L decision and P25.
+
+COMMANDS RUN:
+- Python text edits with exact-match asserts (each target string occurred exactly once).
+- `grep -n` to confirm the new text is at the stated lines.
+- A light Python scan of the file for relative links, 12-digit numbers and e-mail addresses.
+
+TEST RESULTS: not applicable (docs only; no sbt run).
+
+VALIDATION RESULTS (observed):
+- Relative-link check on session-2-plan.md: broken links: [].
+- 12-digit number scan: [].
+- E-mail scan: [].
+- The scan covered `](...)` markdown links only; bare path mentions were not checked.
+
+ASSUMPTIONS:
+- The 3,750 per minute figure at 400 ms is derived as 2.5 requests/s x 60 x 25 workers.
+- The level 5 sensitivity at 100 ms is derived as 10 requests/s x 60 x 5 workers = 3,000 per minute (about 3,000 or more at 100 ms or less).
+- Both are estimates, labelled as such in the text.
+
+RISKS: the new figures are planning estimates, not measurements, and are labelled so. The note 4 paragraph is new text outside the human's record wording, and it is marked as not part of that wording.
+
+MANUAL ACTION REQUIRED: independent review of the diff, then the human commits (ask before commit).
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: reviewer or human reads the five touched spots (lines 301, 305-307, 423, 842, 1060).

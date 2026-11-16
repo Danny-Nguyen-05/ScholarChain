@@ -15,6 +15,13 @@ experiments/manifests/llm-allocation.json, overall cap USD 1.33):
     the moment the 15b bucket (or the total, or the run limit) is exhausted all LLM calls stop for the rest of the run.
 The cost per answer is an ESTIMATE derived from config/load-profile.v1.json (tokens x pinned claude-haiku-5-5 rates); it is not metered.
 
+SEMANTIC (P42, session-2 plan): a manifest with a "semantic" block enables the route POST /v1/semantic/retrieve (API key, body
+{"question": ..., "topK": ...}) with questions drawn from ONE fixed questions file (--questions-file, sha256 pinned in the manifest, 100-200
+distinct real DBLP topic phrases). The per-level request caps 600 / 3,000 / 15,000 / 30,000 / 150,000 (levels 1, 5, 25, 50 and the hold at 50;
+198,600 in total) are REQUIRED and are enforced here (validate-manifest, plan and run refuse a manifest above them); they are the cost bound of
+R-b and must not be raised. A "warmup" phase (level 1, at most 200 requests) sends each distinct question once before the ramp. 429 replies are
+counted per level and reported separately; they are excluded from the latency, throughput and success-rate figures.
+
 Subcommands
   plan            print the effective plan, the answer budget table and every refusal; sends nothing
   run             execute (sends requests); --manifest FILE takes the phases from a load experiment manifest
@@ -72,9 +79,22 @@ ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,63}$")
 MAX_BODY = 262144
 USER_AGENT = "scholarchain-loadgen/1"
 MANIFEST_SCHEMA = "scholarchain.load-experiment-manifest.v1"
-MANIFEST_KEYS = {"schema", "id", "description", "region", "target", "phases", "llm", "metrics_to_collect", "approval_record_path", "provenance", "limits_note"}
+MANIFEST_KEYS = {"schema", "id", "description", "region", "target", "phases", "llm", "metrics_to_collect", "approval_record_path", "provenance", "limits_note", "semantic"}
 PHASE_LOAD_KEYS = {"name", "type", "level", "duration_seconds", "llm_answers", "max_requests", "max_rps", "purpose"}
 PHASE_OBSERVE_KEYS = {"name", "type", "duration_seconds", "purpose"}
+PHASE_WARMUP_KEYS = {"name", "type", "level", "duration_seconds", "max_requests", "purpose"}
+LOAD_TYPES = ("load", "warmup")  # phase types that send requests
+# P42 / session-2 plan section 6.3a (user answer Q16, 2026-11-15): the REQUIRED semantic request limits. They bound the S3 Vectors queries
+# of R-b at 198,600 (plus at most 200 warm-up requests) and must NOT be raised; the load generator refuses a manifest above them.
+SEMANTIC_LEVEL_CAPS = {1: 600, 5: 3000, 25: 15000, 50: 30000}
+SEMANTIC_HOLD_CAP = 150000  # the hold phase (name starting with "hold") at level 50
+SEMANTIC_RAMP_TOTAL = 198600
+SEMANTIC_WARMUP_MAX = 200
+SEMANTIC_QUESTIONS_MIN, SEMANTIC_QUESTIONS_MAX = 100, 200
+SEMANTIC_TOPK_MAX = 20  # the P40 public route limit
+SEMANTIC_QUESTION_MAXLEN = 1000  # the P40 public route limit (characters)
+SEMANTIC_KEYS = {"route", "top_k", "questions_file", "questions_sha256", "questions_count", "provenance"}
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
 class UsageError(Exception):
@@ -170,10 +190,10 @@ def manifest_problems(doc):
     names = set()
     for index, phase in enumerate(phases):
         label = "phases[%d]" % index
-        if not isinstance(phase, dict) or phase.get("type") not in ("load", "observe"):
-            problems.append("%s.type must be load or observe" % label)
+        if not isinstance(phase, dict) or phase.get("type") not in ("load", "observe", "warmup"):
+            problems.append("%s.type must be load, observe or warmup" % label)
             continue
-        allowed = PHASE_LOAD_KEYS if phase["type"] == "load" else PHASE_OBSERVE_KEYS
+        allowed = {"load": PHASE_LOAD_KEYS, "observe": PHASE_OBSERVE_KEYS, "warmup": PHASE_WARMUP_KEYS}[phase["type"]]
         for key in sorted(set(phase) - allowed):
             problems.append("%s has an unknown key: %s" % (label, key))
         name = phase.get("name")
@@ -185,7 +205,7 @@ def manifest_problems(doc):
         duration = phase.get("duration_seconds")
         if isinstance(duration, bool) or not isinstance(duration, (int, float)) or not 0 < duration <= 1800:
             problems.append("%s.duration_seconds must be a number from 1 to 1800" % label)
-        if phase["type"] == "load":
+        if phase["type"] in LOAD_TYPES:
             level = phase.get("level")
             if isinstance(level, bool) or not isinstance(level, int) or not 1 <= level <= 50:
                 problems.append("%s.level must be an integer from 1 to 50" % label)
@@ -198,12 +218,91 @@ def manifest_problems(doc):
             rate = phase.get("max_rps", 1)
             if isinstance(rate, bool) or not isinstance(rate, (int, float)) or not 0 < rate <= 5000:
                 problems.append("%s.max_rps must be a number from 0 to 5000" % label)
+    problems.extend(semantic_problems(doc))
     llm = doc.get("llm")
     if not isinstance(llm, dict) or set(llm) - {"default_enabled", "note"} or llm.get("default_enabled") is not False:
         problems.append("llm must be an object with default_enabled false (LLM use is enabled only by --llm on the command line)")
     metrics = doc.get("metrics_to_collect")
     if not isinstance(metrics, list) or not metrics or not all(isinstance(m, dict) and m.get("source") and m.get("metric") for m in metrics):
         problems.append("metrics_to_collect must be a non-empty list of objects with source and metric")
+    return problems
+
+
+def semantic_cap_problems(phases):
+    """The REQUIRED P42 request limits (see SEMANTIC_LEVEL_CAPS). `phases` are dicts with name, type, level and max_requests (a manifest's
+    raw phases or the built phases). Returns a list of problems; an empty list means the semantic phases are within the limits."""
+    problems = []
+    warmups = [p for p in phases if p.get("type") == "warmup"]
+    loads = [p for p in phases if p.get("type") == "load"]
+    seen = set()
+    ramp_total = 0
+    for p in loads:
+        name, level, cap = p.get("name"), p.get("level"), p.get("max_requests")
+        if not isinstance(cap, int) or isinstance(cap, bool):
+            problems.append("semantic phase %s: max_requests is required (an integer)" % name)
+            continue
+        hold = isinstance(name, str) and name.startswith("hold")
+        if hold:
+            limit = SEMANTIC_HOLD_CAP if level == 50 else None
+            kind = "hold at level 50"
+        else:
+            limit = SEMANTIC_LEVEL_CAPS.get(level)
+            kind = "level %s" % level
+        if limit is None:
+            problems.append("semantic phase %s: level %s is not allowed (levels 1, 5, 25 and 50; a hold only at 50)" % (name, level))
+            continue
+        if cap > limit:
+            problems.append("semantic phase %s: max_requests %d exceeds the required limit %d for %s (600 / 3,000 / 15,000 / 30,000 / 150,000; they must not be raised)" % (name, cap, limit, kind))
+        if (hold, level) in seen:
+            problems.append("semantic phase %s: a second %s phase (each of the five limits is used once)" % (name, kind))
+        seen.add((hold, level))
+        ramp_total += cap
+    if ramp_total > SEMANTIC_RAMP_TOTAL:
+        problems.append("semantic phases add up to %d requests, over the required total %d" % (ramp_total, SEMANTIC_RAMP_TOTAL))
+    if len(warmups) > 1:
+        problems.append("at most one warmup phase is allowed")
+    for p in warmups:
+        if p.get("level") != 1:
+            problems.append("warmup phase %s must run at level 1" % p.get("name"))
+        cap = p.get("max_requests")
+        if not isinstance(cap, int) or isinstance(cap, bool) or not 1 <= cap <= SEMANTIC_WARMUP_MAX:
+            problems.append("warmup phase %s: max_requests must be an integer from 1 to %d" % (p.get("name"), SEMANTIC_WARMUP_MAX))
+    if warmups and phases[0].get("type") != "warmup":
+        problems.append("the warmup phase must come before every other phase")
+    return problems
+
+
+def semantic_problems(doc):
+    """Checks of the optional manifest block "semantic" and its interplay with the phases. Without the block no phase may be a warmup."""
+    block = doc.get("semantic")
+    phases = [p for p in (doc.get("phases") or []) if isinstance(p, dict)]
+    if block is None:
+        return ["a warmup phase needs the semantic block" for p in phases if p.get("type") == "warmup"][:1]
+    problems = []
+    if not isinstance(block, dict):
+        return ["semantic must be an object"]
+    for key in sorted(set(block) - SEMANTIC_KEYS):
+        problems.append("semantic has an unknown key: %s" % key)
+    if block.get("route") != "semantic":
+        problems.append("semantic.route must be semantic")
+    top_k = block.get("top_k")
+    if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= SEMANTIC_TOPK_MAX:
+        problems.append("semantic.top_k must be an integer from 1 to %d (the public route limit)" % SEMANTIC_TOPK_MAX)
+    if not isinstance(block.get("questions_file"), str) or not block["questions_file"].strip():
+        problems.append("semantic.questions_file must be a non-empty string")
+    if not isinstance(block.get("questions_sha256"), str) or not HEX64.match(block["questions_sha256"]):
+        problems.append("semantic.questions_sha256 must be 64 lowercase hex characters")
+    count = block.get("questions_count")
+    if isinstance(count, bool) or not isinstance(count, int) or not SEMANTIC_QUESTIONS_MIN <= count <= SEMANTIC_QUESTIONS_MAX:
+        problems.append("semantic.questions_count must be an integer from %d to %d" % (SEMANTIC_QUESTIONS_MIN, SEMANTIC_QUESTIONS_MAX))
+    problems.extend(semantic_cap_problems(phases))
+    warmups = [p for p in phases if p.get("type") == "warmup"]
+    if len(warmups) != 1:
+        problems.append("the semantic manifest needs exactly one warmup phase (each distinct question sent once before the ramp)")
+    elif isinstance(count, int) and not isinstance(count, bool) and isinstance(warmups[0].get("max_requests"), int) and warmups[0]["max_requests"] < count:
+        problems.append("the warmup max_requests %s is below the %d distinct questions (each is sent once)" % (warmups[0]["max_requests"], count))
+    if any(p.get("llm_answers") for p in phases):
+        problems.append("a semantic manifest sends no LLM answers (llm_answers must be 0)")
     return problems
 
 
@@ -239,7 +338,13 @@ def build_phases(args, profile, manifest):
     if manifest:
         for item in manifest["phases"]:
             if item["type"] == "observe":
-                phases.append({"name": item["name"], "type": "observe", "duration_seconds": float(item["duration_seconds"])})
+                seconds = float(item["duration_seconds"])
+                if getattr(args, "observe_seconds", None) is not None:
+                    seconds = min(seconds, float(args.observe_seconds))  # a flag can only LOWER a quiet window (local rehearsals)
+                phases.append({"name": item["name"], "type": "observe", "duration_seconds": seconds})
+            elif item["type"] == "warmup":
+                phases.append({"name": item["name"], "type": "warmup", "level": item["level"], "duration_seconds": float(item["duration_seconds"]),
+                               "max_requests": int(item["max_requests"]), "max_rps": None, "llm_answers": 0})
             else:
                 level = item["level"]
                 default = profile["per_level"].get(str(level), {})
@@ -268,19 +373,25 @@ def build_phases(args, profile, manifest):
     return phases
 
 
-def check_phase_limits(phases, profile):
+def check_phase_limits(phases, profile, semantic=None):
     limits = profile["limits"]
     total_seconds = 0.0
     for phase in phases:
         if not 0 < phase["duration_seconds"] <= limits["max_phase_duration_seconds"]:
             raise Refused("phase %s: duration %s s is outside 0..%d s" % (phase["name"], phase["duration_seconds"], limits["max_phase_duration_seconds"]))
         total_seconds += phase["duration_seconds"]
-        if phase["type"] == "load" and phase["max_requests"] < 1:
+        if phase["type"] in LOAD_TYPES and phase["max_requests"] < 1:
             raise Refused("phase %s: max_requests must be at least 1" % phase["name"])
     if total_seconds > limits["max_total_seconds"]:
         raise Refused("the phases add up to %.0f s, over the %d s total cap" % (total_seconds, limits["max_total_seconds"]))
-    if sum(p["max_requests"] for p in phases if p["type"] == "load") > limits["max_total_requests"]:
+    if sum(p["max_requests"] for p in phases if p["type"] in LOAD_TYPES) > limits["max_total_requests"]:
         raise Refused("the per-phase request caps add up to more than the total cap %d" % limits["max_total_requests"])
+    if semantic is not None:
+        problems = semantic_cap_problems(phases)
+        if problems:
+            raise Refused("; ".join(problems))
+    elif any(p["type"] == "warmup" for p in phases):
+        raise Refused("a warmup phase needs the semantic manifest block")
 
 
 def llm_plan(args, profile, phases):
@@ -324,10 +435,14 @@ def llm_plan(args, profile, phases):
 def print_plan(plan, phases, out):
     out.write("PLAN: %d phase(s), total %.0f s\n" % (len(phases), sum(p["duration_seconds"] for p in phases)))
     for p in phases:
-        if p["type"] == "load":
-            out.write("PHASE %s: load level=%d duration=%.0fs max_requests=%d\n" % (p["name"], p["level"], p["duration_seconds"], p["max_requests"]))
+        if p["type"] in LOAD_TYPES:
+            out.write("PHASE %s: %s level=%d duration=%.0fs max_requests=%d\n" % (p["name"], p["type"], p["level"], p["duration_seconds"], p["max_requests"]))
         else:
             out.write("PHASE %s: observe (no requests) %.0fs\n" % (p["name"], p["duration_seconds"]))
+    sem = plan.get("semantic")
+    if sem:
+        out.write("SEMANTIC: route=semantic top_k=%d questions=%d (sha256 %s) ramp_cap_total=%d warmup_max=%d; 429 replies are counted per level and excluded from latency, throughput and success rate\n" % (
+            sem["top_k"], sem["questions_count"], sem["questions_sha256"][:12], SEMANTIC_RAMP_TOTAL, SEMANTIC_WARMUP_MAX))
     out.write("LLM: %s\n" % ("ENABLED (opt-in)" if plan["enabled"] else "disabled: non-LLM endpoints only, no POST /v1/query"))
     out.write("LLM-COST-PER-ANSWER-USD: %s (estimate, not metered)\n" % plan["cost_per_answer_usd"])
     if plan["enabled"]:
@@ -566,9 +681,18 @@ class Runner:
         self.note_outcome(outcome, status)
         return status, data
 
+    def do_semantic(self, client, phase, worker, seq, index):
+        """POST /v1/semantic/retrieve with the Authorization header (the key from the environment) and {"question", "topK"}. The raw record keeps only
+        the index of the question in the fixed file, never the text."""
+        route = self.cfg["profile"]["routes"]["semantic"]
+        body = json.dumps({"question": self.cfg["semantic_questions"][index], "topK": self.cfg["semantic"]["top_k"]}).encode("utf-8")
+        self.send(client, phase, worker, seq, "semantic", route, route["path"], body=body, extra={"Content-Type": "application/json"}, question_index=index)
+
     def do_normal(self, client, phase, worker, seq, rng):
         name = rng.choices(self.routes["names"], weights=self.routes["weights"])[0]
         route = self.cfg["profile"]["routes"][name]
+        if name == "semantic":
+            return self.do_semantic(client, phase, worker, seq, rng.randrange(len(self.cfg["semantic_questions"])))
         path = route["path"]
         fields = {}
         if "{node_id}" in path:
@@ -673,10 +797,50 @@ class Runner:
         ended = time.time()
         delta = {k: v - counts_before.get(k, 0) for k, v in self.counts.items()}
         result = {"phase": spec["name"], "type": "load", "level": spec["level"], "started_utc": stamp(started), "ended_utc": stamp(ended),
-                  "requests": phase.issued, "outcomes": {k: v for k, v in sorted(delta.items()) if v}, "max_inflight_observed": phase.max_inflight,
-                  "llm_answers_planned": phase.llm_total, "llm_answers_sent": phase.llm_sent}
+                  "requests": phase.issued, "outcomes": {k: v for k, v in sorted(delta.items()) if v}, "rate_limited_429": delta.get("throttled", 0),
+                  "max_inflight_observed": phase.max_inflight, "llm_answers_planned": phase.llm_total, "llm_answers_sent": phase.llm_sent}
         self.phase_results.append(result)
         self.event("phase-end", **{k: v for k, v in result.items() if k not in ("phase",)}, phase=spec["name"])
+
+    def run_warmup(self, spec):
+        """The P42 warm-up pass: one worker at level 1 sends each distinct question once, in file order, and stops. No retry: at most one request per
+        question, so the phase never exceeds max_requests (at most 200). Its rows are a phase of their own and never mix into the level-1 figures."""
+        phase = Phase(self, spec)
+        counts_before = collections.Counter(self.counts)
+        phase.start = time.monotonic()
+        phase.deadline = phase.start + spec["duration_seconds"]
+        started = time.time()
+        questions = self.cfg["semantic_questions"]
+        self.event("phase-start", phase=spec["name"], type="warmup", level=spec["level"], planned_seconds=spec["duration_seconds"],
+                   max_requests=spec["max_requests"], questions_planned=len(questions))
+        client = HttpClient(self.scheme, self.host, self.port, self.limits["request_timeout_seconds"])
+        sent = 0
+        try:
+            for index in range(len(questions)):
+                if self.stop.is_set() or time.monotonic() >= phase.deadline:
+                    break
+                seq = phase.take_request()
+                if not seq:
+                    break
+                with phase.lock:
+                    phase.inflight += 1
+                    phase.max_inflight = max(phase.max_inflight, phase.inflight)
+                try:
+                    self.do_semantic(client, phase, 0, seq, index)
+                    sent += 1
+                finally:
+                    with phase.lock:
+                        phase.inflight -= 1
+        finally:
+            client.close()
+        ended = time.time()
+        delta = {k: v - counts_before.get(k, 0) for k, v in self.counts.items()}
+        result = {"phase": spec["name"], "type": "warmup", "level": spec["level"], "started_utc": stamp(started), "ended_utc": stamp(ended),
+                  "requests": phase.issued, "outcomes": {k: v for k, v in sorted(delta.items()) if v}, "rate_limited_429": delta.get("throttled", 0),
+                  "max_inflight_observed": phase.max_inflight, "questions_planned": len(questions), "questions_sent": sent,
+                  "llm_answers_planned": 0, "llm_answers_sent": 0}
+        self.phase_results.append(result)
+        self.event("phase-end", **{k: v for k, v in result.items() if k != "phase"}, phase=spec["name"])
 
     def run_observe(self, spec):
         started = time.time()
@@ -693,7 +857,7 @@ class Runner:
             if self.stop.is_set() or time.monotonic() - run_start > self.limits["max_total_seconds"]:
                 self.event("phase-skipped", phase=spec["name"], reason=self.abort_reason or "total-time-cap")
                 continue
-            (self.run_load if spec["type"] == "load" else self.run_observe)(spec)
+            {"load": self.run_load, "warmup": self.run_warmup, "observe": self.run_observe}[spec["type"]](spec)
 
 
 # ------------------------------------------------------------------------------------------------------------- run setup
@@ -746,12 +910,36 @@ def prepare(args, command):
     if not RUN_ID.match(run_id):
         raise UsageError("--run-id must match %s" % RUN_ID.pattern)
     phases = build_phases(args, profile, manifest)
-    check_phase_limits(phases, profile)
+    semantic = manifest.get("semantic") if manifest else None
+    check_phase_limits(phases, profile, semantic)
+    if semantic is not None and args.llm:
+        raise Refused("--llm cannot be combined with a semantic manifest (its --questions-file is the fixed semantic question set)")
+    if semantic is not None and profile["routes"].get("semantic", {}).get("weight", 0) <= 0:
+        raise Refused("the profile has no semantic route with a positive weight")
     plan = llm_plan(args, profile, phases)
+    plan["semantic"] = semantic
     budget = llm_budget.Budget(args.ledger, args.allocation, args.profile) if plan["enabled"] else None
     cfg = {"budget": budget, "profile": profile, "profile_sha256": sha256_file(args.profile), "manifest": manifest, "manifest_sha256": manifest_sha, "experiment_id": experiment_id,
-           "run_id": run_id, "phases": phases, "llm_plan": plan, "api_key_env": args.api_key_env}
+           "run_id": run_id, "phases": phases, "llm_plan": plan, "api_key_env": args.api_key_env, "semantic": semantic,
+           "semantic_questions": []}
+    if semantic is not None and (command == "run" or args.questions_file):
+        cfg["semantic_questions"] = read_semantic_questions(args.questions_file, semantic)
     return cfg
+
+
+def read_semantic_questions(path, semantic):
+    """The fixed semantic question set: the file named by --questions-file must be the one the manifest pins (sha256 and count), 100-200 lines,
+    all distinct (case-insensitive), each within the public route's question limit. Refuses otherwise; nothing is sent."""
+    if not path:
+        raise Refused("--questions-file is required with a semantic manifest (the fixed question set pinned by the manifest)")
+    questions = read_lines(path, "semantic questions", limit=SEMANTIC_QUESTIONS_MAX, maxlen=SEMANTIC_QUESTION_MAXLEN)
+    if sha256_file(path) != semantic["questions_sha256"]:
+        raise Refused("the semantic questions file differs from the one the manifest pins (sha256 mismatch); the question set is fixed")
+    if len(questions) != semantic["questions_count"] or len(questions) < SEMANTIC_QUESTIONS_MIN:
+        raise Refused("the semantic questions file holds %d questions; the manifest pins %d (at least %d)" % (len(questions), semantic["questions_count"], SEMANTIC_QUESTIONS_MIN))
+    if len({q.casefold() for q in questions}) != len(questions):
+        raise Refused("the semantic questions must all be distinct")
+    return questions
 
 
 def finish_setup(cfg, args):
@@ -760,6 +948,8 @@ def finish_setup(cfg, args):
     url = args.base_url or os.environ.get(args.base_url_env, "")
     cfg["target"] = parse_base_url(url)
     cfg["target_loopback"] = cfg["target"][1] in LOOPBACK
+    if getattr(args, "observe_seconds", None) is not None and not cfg["target_loopback"]:
+        raise Refused("--observe-seconds is refused for a non-loopback target: it can shorten the 25-minute R-b quiet window, which only a local rehearsal may do; drop the flag (or point --base-url at 127.0.0.1 or localhost). Nothing was sent")
     cfg["target_sha256"] = sha256_bytes(("%s://%s:%s" % (cfg["target"][0], cfg["target"][1], cfg["target"][2])).encode("utf-8"))
     cfg["node_ids"] = read_lines(args.node_ids_file, "node ids", maxlen=200) if args.node_ids_file else []
     cfg["evidence_ids"] = read_lines(args.evidence_ids_file, "evidence ids", maxlen=200) if args.evidence_ids_file else []
@@ -772,6 +962,8 @@ def finish_setup(cfg, args):
         if route["llm"] or route["weight"] <= 0:
             continue
         need = route["needs"]
+        if need == "semantic_questions" and not cfg["semantic"]:
+            continue  # the semantic route exists only for a manifest with a semantic block; ordinary runs neither use nor report it
         if need and not cfg[need]:
             dropped.append({"route": name, "reason": "no %s supplied" % need})
             continue
@@ -829,7 +1021,11 @@ def run_command(args, out):
         "profile": {"path": os.path.relpath(args.profile, REPO) if os.path.commonpath([os.path.abspath(args.profile), REPO]) == REPO else "external", "sha256": cfg["profile_sha256"]},
         "manifest_sha256": cfg["manifest_sha256"], "target": {"scheme": cfg["target"][0], "loopback": cfg["target_loopback"], "base_url_sha256": cfg["target_sha256"],
                                                               "host": cfg["target"][1] if cfg["target_loopback"] else "withheld"},
-        "api_key_env": args.api_key_env, "phases": runner.phase_results, "totals": {"requests": runner.total_requests, "outcomes": dict(sorted(runner.counts.items()))},
+        "api_key_env": args.api_key_env, "phases": runner.phase_results,
+        "totals": {"requests": runner.total_requests, "outcomes": dict(sorted(runner.counts.items())), "rate_limited_429": runner.counts.get("throttled", 0)},
+        "semantic": ({"route": "semantic", "top_k": cfg["semantic"]["top_k"], "questions_count": len(cfg["semantic_questions"]), "questions_sha256": cfg["semantic"]["questions_sha256"],
+                      "ramp_cap_total": SEMANTIC_RAMP_TOTAL, "warmup_max": SEMANTIC_WARMUP_MAX} if cfg["semantic"] else None),
+        "observe_seconds_override": args.observe_seconds,
         "routes": cfg["routes"]["names"], "routes_dropped": cfg["dropped"],
         "llm": {"enabled": runner.llm_enabled, "answers_sent": runner.llm_sent, "estimated_cost_usd": money(runner.llm_spent), "cost_per_answer_usd": money(runner.cost),
                 "stopped_reason": runner.llm_stop_reason or None, "shared_cap_usd": money(runner.cap), "remaining_cap_input_usd": cfg["llm_plan"].get("remaining_cap_usd"),
@@ -844,6 +1040,10 @@ def run_command(args, out):
         handle.write(json.dumps(record, indent=2, sort_keys=True) + "\n")
     seal(raw_dir)
     summarize(run_dir)
+    for result in runner.phase_results:
+        if result["type"] in LOAD_TYPES:
+            out.write("RATE-LIMITED-429: phase=%s level=%d count=%d of %d requests (reported separately; excluded from latency, throughput and success rate)\n" % (
+                result["phase"], result["level"], result["rate_limited_429"], result["requests"]))
     out.write("COST-REPORT: aws=%s anthropic=%s voyage=%s combined=%s (%s)\n" % (
         cost_report["aws"]["usd"] or "not-metered", cost_report["anthropic"]["usd"], cost_report["voyage"]["usd"], cost_report["combined_usd"], cost_report["combined_scope"]))
     out.write("RESULT: %s run=%s requests=%d llm_answers=%d reason=%s\n" % (outcome.upper(), cfg["run_id"], runner.total_requests, runner.llm_sent, reason or "-"))
@@ -887,15 +1087,28 @@ def parse_utc(text):
 
 
 def group_stats(rows, seconds):
-    responded = sorted(r["latency_ms"] for r in rows if r["status"] > 0)
-    good = sorted(r["latency_ms"] for r in rows if r["outcome"] == "ok")
+    """Per-group figures. A 429 reply (outcome 'throttled') is counted in `requests` (it counts toward the request cap) and reported on its own as
+    `rate_limited_429`; it is EXCLUDED from throughput, success rate, error rates and every latency figure (P42, plan answer 2026-11-15).
+    `success_rps` and `peak_success_rps_1s` count 2xx responses only: they are the served rates P35 derives the request-count target from."""
+    served = [r for r in rows if r["status"] != 429]
+    ok_rows = [r for r in rows if r["outcome"] == "ok"]
+    responded = sorted(r["latency_ms"] for r in served if r["status"] > 0)
+    good = sorted(r["latency_ms"] for r in ok_rows)
     outcomes = collections.Counter(r["outcome"] for r in rows)
-    failures = sum(1 for r in rows if r["status"] >= 500 or r["outcome"] in ("timeout", "transport_error"))
+    failures = sum(1 for r in served if r["status"] >= 500 or r["outcome"] in ("timeout", "transport_error"))
+    per_second = collections.Counter(r["started_utc"][:19] for r in ok_rows)
+    # a phase that hits its request cap early sends nothing afterwards, so also report the rate over the span in which requests were sent
+    starts = [parse_utc(r["started_utc"]) for r in rows]
+    active = (max(starts) - min(starts)) if starts else 0.0
     return {
-        "requests": len(rows), "outcomes": dict(sorted(outcomes.items())), "seconds": round(seconds, 3),
-        "throughput_rps": round(len(rows) / seconds, 3) if seconds > 0 else None,
-        "error_rate_5xx_or_transport": round(failures / len(rows), 6) if rows else None,
-        "client_error_rate": round(sum(1 for r in rows if r["outcome"] in ("client_error", "throttled")) / len(rows), 6) if rows else None,
+        "requests": len(rows), "rate_limited_429": len(rows) - len(served), "served_requests": len(served), "successful_requests": len(ok_rows),
+        "outcomes": dict(sorted(outcomes.items())), "seconds": round(seconds, 3),
+        "throughput_rps": round(len(served) / seconds, 3) if seconds > 0 else None,
+        "success_rps": round(len(ok_rows) / seconds, 3) if seconds > 0 else None,
+        "active_seconds": round(active, 3), "success_rps_active": round(len(ok_rows) / active, 3) if active >= 1 else None,
+        "peak_success_rps_1s": max(per_second.values()) if per_second else 0,
+        "error_rate_5xx_or_transport": round(failures / len(served), 6) if served else None,
+        "client_error_rate": round(sum(1 for r in served if r["outcome"] == "client_error") / len(served), 6) if served else None,
         "latency_ms_all_responses": {"p50": percentile(responded, 50), "p95": percentile(responded, 95), "p99": percentile(responded, 99), "n": len(responded)},
         "latency_ms_2xx": {"p50": percentile(good, 50), "p95": percentile(good, 95), "p99": percentile(good, 99), "n": len(good)},
     }
@@ -911,7 +1124,7 @@ def summarize(run_dir):
         events = [json.loads(line) for line in handle if line.strip()]
     windows = {}
     for event in events:
-        if event["event"] == "phase-end" and event.get("type") == "load":
+        if event["event"] == "phase-end" and event.get("type") in LOAD_TYPES:
             windows[event["phase"]] = (event["started_utc"], event["ended_utc"], event["level"])
     by_phase = collections.OrderedDict()
     for row in rows:
@@ -935,20 +1148,23 @@ def summarize(run_dir):
         handle.write(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     with open_new_text(os.path.join(derived, "summary.csv")) as handle:
         writer = csv.writer(handle, lineterminator="\n")
-        writer.writerow(["phase", "level", "started_utc", "ended_utc", "requests", "throughput_rps", "error_rate_5xx_or_transport", "client_error_rate", "p50_ms", "p95_ms", "p99_ms"])
+        writer.writerow(["phase", "level", "started_utc", "ended_utc", "requests", "throughput_rps", "error_rate_5xx_or_transport", "client_error_rate", "p50_ms", "p95_ms", "p99_ms",
+                         "rate_limited_429", "successful_requests", "success_rps", "peak_success_rps_1s"])
         for p in phases:
             lat = p["latency_ms_all_responses"]
-            writer.writerow([p["phase"], p["level"], p["started_utc"], p["ended_utc"], p["requests"], p["throughput_rps"], p["error_rate_5xx_or_transport"], p["client_error_rate"], lat["p50"], lat["p95"], lat["p99"]])
+            writer.writerow([p["phase"], p["level"], p["started_utc"], p["ended_utc"], p["requests"], p["throughput_rps"], p["error_rate_5xx_or_transport"], p["client_error_rate"], lat["p50"], lat["p95"], lat["p99"],
+                             p["rate_limited_429"], p["successful_requests"], p["success_rps"], p["peak_success_rps_1s"]])
     buckets = collections.OrderedDict()
     for row in sorted(rows, key=lambda r: r["started_utc"]):
         minute = row["started_utc"][:16] + ":00Z"  # one row per UTC minute, the CloudWatch period
         buckets.setdefault((minute, row["phase"], row["level"]), []).append(row)
     with open_new_text(os.path.join(derived, "timeline.csv")) as handle:
         writer = csv.writer(handle, lineterminator="\n")
-        writer.writerow(["minute_utc", "phase", "level", "requests", "errors_5xx_or_transport", "p95_ms_all_responses"])
+        writer.writerow(["minute_utc", "phase", "level", "requests", "errors_5xx_or_transport", "p95_ms_all_responses", "successful_requests", "rate_limited_429"])
         for (minute, name, level), group in buckets.items():
-            lat = sorted(r["latency_ms"] for r in group if r["status"] > 0)
-            writer.writerow([minute, name, level, len(group), sum(1 for r in group if r["status"] >= 500 or r["outcome"] in ("timeout", "transport_error")), percentile(lat, 95)])
+            lat = sorted(r["latency_ms"] for r in group if r["status"] > 0 and r["status"] != 429)  # 429 replies are not in the latency figure
+            writer.writerow([minute, name, level, len(group), sum(1 for r in group if r["status"] >= 500 or r["outcome"] in ("timeout", "transport_error")), percentile(lat, 95),
+                             sum(1 for r in group if r["outcome"] == "ok"), sum(1 for r in group if r["status"] == 429)])
     return summary
 
 
@@ -965,6 +1181,7 @@ def build_parser():
         p.add_argument("--max-requests", type=int, help="override the per-level request cap")
         p.add_argument("--max-rps", type=float, help="optional pacing: at most this many requests per second in total, per level")
         p.add_argument("--pause-seconds", type=float, default=5.0, help="idle gap between levels (default 5)")
+        p.add_argument("--observe-seconds", type=float, help="manifest runs: shorten every observe (quiet) phase to at most this many seconds; can only LOWER a window, for local rehearsals; refused unless the target is loopback, so never for R-b")
         p.add_argument("--experiment-id", help="default adhoc-load, or the manifest id")
         p.add_argument("--run-id")
         p.add_argument("--llm", action="store_true", help="OPT IN: also send POST /v1/query (calls claude-haiku-5-5 on the Anthropic API; capped by the answer budget and the ledger)")
@@ -973,7 +1190,7 @@ def build_parser():
         p.add_argument("--bucket", default="15b", help="answer bucket charged by --llm (default 15b)")
         p.add_argument("--allocation", default=llm_budget.DEFAULT_ALLOCATION, help="pinned bucket sizes (experiments/manifests/llm-allocation.json)")
         p.add_argument("--ledger", help="LLM ledger path (default from the profile, under ~/.scholarchain)")
-        p.add_argument("--questions-file", help="one question per line (required with --llm)")
+        p.add_argument("--questions-file", help="one question per line (required with --llm); with a semantic manifest, the fixed semantic question set it pins")
         p.add_argument("--api-key-env", default=DEFAULT_KEY_ENV, help="NAME of the environment variable holding the API key")
 
     p = sub.add_parser("plan")

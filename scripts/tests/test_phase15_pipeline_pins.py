@@ -267,7 +267,9 @@ class CopyOutTests(unittest.TestCase):
 # ---- P25: EMR ledger caps -------------------------------------------------------------------------------------------------------
 # User decision 2026-11-16 (docs/agent-runs/phase-15/prompt.md line 131): "Cap 4 runs and USD 3.36 cumulative, including Session 1's
 # EMR spend". Session 1 left 2 reservations of 0.84 (1.68) in the ledger; each 90-minute run of primary + one core m5.xlarge estimates
-# 2 x (0.192 + 0.048) x (90 min + 900 s = 1.75 h) = 0.84, so runs 3 and 4 fit exactly (3.36) and run 5 is refused.
+# 2 x (0.192 + 0.048) x (90 min + 900 s = 1.75 h) = 0.84, so runs 3 and 4 fit (3.36) and run 5 is refused by the count.
+# Repair round (user decision 2026-11-16, verbatim "Raise cap to 3.53"): the cumulative cap is now 3.53 = 1.68 + 3.33 h x 0.555 USD/h
+# = 1.68 + 1.85, so a retry survives the measured-actual tail (scripts/lib/budget.py ledger_totals); the run count stays 4.
 BUDGET = os.path.join(SCRIPTS_DIR, "lib", "budget.py")
 
 
@@ -309,15 +311,16 @@ class LedgerCapTests(unittest.TestCase):
             return len(handle.readlines())
 
     def test_the_pins_are_the_approved_values(self):
-        self.assertEqual((self.max_runs, self.cap, conf()["EMR_MAX_RUN_USD"]), ("4", "3.36", "3"))
+        self.assertEqual((self.max_runs, self.cap, conf()["EMR_MAX_RUN_USD"]), ("4", "3.53", "3"))
 
-    def test_the_cap_is_four_times_the_scripts_own_90_minute_estimate(self):
+    def test_the_cap_is_session_1_plus_3_33_hours_at_the_s_rate(self):
         rc, out, _ = budget("estimate", "--instance-type", "m5.xlarge", "--primary-count", 1, "--core-count", 1, "--task-count", 0, "--minutes", 90,
                             "--idle-seconds", 900, "--ec2-rate", "0.192", "--emr-rate", "0.048", "--max-run-usd", conf()["EMR_MAX_RUN_USD"],
                             "--budget-usd", "0.84")
         self.assertEqual(rc, 0, out)
         self.assertEqual(json.loads(out)["estimate_usd"], "0.84")
-        self.assertEqual(4 * 84, int(self.cap.replace(".", "")))
+        # Session 1: 2 x 0.84 = 1.68; 3.33 h x 0.555 USD/h = 1.84815, rounded up to the cent = 1.85; 168 + 185 = 353 cents
+        self.assertEqual(2 * 84 + 185, int(self.cap.replace(".", "")))
 
     def test_runs_3_and_4_are_reserved_and_run_5_is_refused(self):
         rc, out, _ = self.reserve("s2-run-3")
@@ -333,24 +336,26 @@ class LedgerCapTests(unittest.TestCase):
         self.assertIn("live EMR runs", out)
         self.assertEqual(self.lines(), 5, "the init record and four reservations only")
 
-    def test_the_cumulative_cap_refuses_above_3_36_and_admits_exactly_3_36(self):
+    def test_the_cumulative_cap_refuses_above_3_53_and_admits_exactly_3_53(self):
         self.assertEqual(self.reserve("s2-run-3")[0], 0)  # 2.52 recorded
-        rc, out, _ = self.check("0.85")
+        rc, out, _ = self.check("1.02")
         self.assertEqual(rc, 1)
-        self.assertIn("cumulative estimate 3.37 USD (recorded 2.52 + this run 0.85) would exceed the cap 3.36 USD", out)
-        rc, out, _ = self.reserve("s2-run-4-big", "0.85")
+        self.assertIn("cumulative estimate 3.54 USD (recorded 2.52 + this run 1.02) would exceed the cap 3.53 USD", out)
+        rc, out, _ = self.reserve("s2-run-4-big", "1.02")
         self.assertEqual(rc, 1)
-        self.assertIn("would exceed the cap 3.36 USD", out)
+        self.assertIn("would exceed the cap 3.53 USD", out)
         self.assertEqual(self.lines(), 4, "a refused reservation writes nothing")
+        rc, out, _ = self.check("1.01")  # 2.52 + 1.01 = 3.53 <= 3.53 (inclusive)
+        self.assertEqual(rc, 0, out)
         rc, out, _ = self.check("0.84")
         self.assertEqual(rc, 0, out)
 
     def test_a_longer_l_run_does_not_fit_after_s(self):
-        # An L manifest at 120 minutes estimates 2 x 0.24 x (2 h + 0.25 h) = 1.08; 2.52 + 1.08 = 3.60 > 3.36: refused (recompute the cap first).
+        # An L manifest at 120 minutes estimates 2 x 0.24 x (2 h + 0.25 h) = 1.08; 2.52 + 1.08 = 3.60 > 3.53: refused (recompute the cap first).
         self.assertEqual(self.reserve("s2-run-3")[0], 0)
         rc, out, _ = self.check("1.08")
         self.assertEqual(rc, 1)
-        self.assertIn("cumulative estimate 3.60 USD (recorded 2.52 + this run 1.08) would exceed the cap 3.36 USD", out)
+        self.assertIn("cumulative estimate 3.60 USD (recorded 2.52 + this run 1.08) would exceed the cap 3.53 USD", out)
 
 
 

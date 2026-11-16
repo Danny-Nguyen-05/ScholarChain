@@ -1,0 +1,247 @@
+{
+  "schema": "scholarchain.load-experiment-manifest.v1",
+  "id": "15b-ecs-scaling-semantic",
+  "description": "Experiment 15B, semantic variant (session-2 plan P42; R-b load): query-api ECS scale-out and scale-in driven by POST /v1/semantic/retrieve (public API-key route, P40) through load-tests/loadgen.py at concurrency 1, 5, 25 and 50, then a sustained hold at 50 and a 30-minute no-load observation window. A warm-up pass first sends each of the 150 fixed DBLP topic phrases once at concurrency 1, so Voyage is called at most once per distinct question per semantic-service task (query-embedding cache, P40). Each request does real work: query-api forwards to semantic-service, which embeds the question (cache) and queries one S3 Vectors index. No LLM answers are sent. Per-level request limits are REQUIRED and are the S3 Vectors cost bound of R-b: 600 / 3,000 / 15,000 / 30,000 / 150,000 (198,600 in total, plus the warm-up of at most 200); they must not be raised.",
+  "region": "us-east-2",
+  "target": {
+    "service": "query-api",
+    "scaling_policy": {
+      "type": "ECS service target tracking on ECSServiceAverageCPUUtilization (standard AWS/ECS metric; Container Insights is off), plus, when the P41 variable query_requests_per_target_target is set, ALBRequestCountPerTarget (query-api only)",
+      "target_percent_reference": "cpu_target_percent in infra/terraform/phase12b-variables.tf (default 60); read the applied value before the run, it is not in this file",
+      "scale_out_cooldown_seconds": 60,
+      "scale_in_cooldown_seconds": 300,
+      "scale_in_alarm": "AWS-managed low alarm needs 15 consecutive one-minute datapoints under 90 percent of the target, so scale-in cannot start before about 15 minutes of low CPU",
+      "min_tasks": 1,
+      "max_tasks": 2,
+      "capacity_source": "service_capacity.query-api in the private tfvars (the example file has min 1, max 2); confirm with aws application-autoscaling describe-scalable-targets before the run",
+      "fargate_shape": "0.25 vCPU / 1 GiB, raised only in private tfvars",
+      "request_count_policy": "exists only when query_requests_per_target_target is set in the runtime tfvars (value from the P35 rehearsal); read the applied value and policy before the run, they are not in this file",
+      "rate_limit_reference": "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND / _BURST on query-api (P40 code defaults 50 / 100; query_semantic_rate_limit_per_second and _burst, P41); the Session 2 value is set from P35 so that no level is throttled; read the applied values before the run"
+    }
+  },
+  "phases": [
+    {
+      "name": "warmup",
+      "type": "warmup",
+      "level": 1,
+      "duration_seconds": 600,
+      "max_requests": 200,
+      "purpose": "warm-up: each of the 150 distinct questions sent once, in file order, one worker; embed calls then equal the distinct questions per semantic-service task. Its own phase, so cold-cache latency stays out of the level-1 baseline. The phase ends after one pass; 600 s is only the upper bound"
+    },
+    {
+      "name": "baseline-1",
+      "type": "load",
+      "level": 1,
+      "duration_seconds": 120,
+      "llm_answers": 0,
+      "max_requests": 600,
+      "purpose": "baseline CPU, latency and task count at concurrency 1 (warm cache)"
+    },
+    {
+      "name": "level-5",
+      "type": "load",
+      "level": 5,
+      "duration_seconds": 120,
+      "llm_answers": 0,
+      "max_requests": 3000,
+      "purpose": "concurrency 5"
+    },
+    {
+      "name": "level-25",
+      "type": "load",
+      "level": 25,
+      "duration_seconds": 150,
+      "llm_answers": 0,
+      "max_requests": 15000,
+      "purpose": "concurrency 25"
+    },
+    {
+      "name": "level-50",
+      "type": "load",
+      "level": 50,
+      "duration_seconds": 180,
+      "llm_answers": 0,
+      "max_requests": 30000,
+      "purpose": "concurrency 50"
+    },
+    {
+      "name": "hold-50",
+      "type": "load",
+      "level": 50,
+      "duration_seconds": 600,
+      "llm_answers": 0,
+      "max_requests": 150000,
+      "purpose": "sustain concurrency 50 for 10 minutes so the request rate stays above the target for the datapoints a scale-out needs and the new task has time to start (health-check grace 300 s)"
+    },
+    {
+      "name": "cooldown-observe",
+      "type": "observe",
+      "duration_seconds": 1800,
+      "purpose": "no load for 30 minutes (at least 25 quiet minutes): scale-in needs 15 low minutes plus the 300 s cooldown; evidence is the metric rows before, during and after, collected outside this process"
+    }
+  ],
+  "semantic": {
+    "route": "semantic",
+    "top_k": 10,
+    "questions_file": "experiments/inputs/15b/semantic-questions.txt",
+    "questions_sha256": "bde5f63b49e46c321dbbf958094646cf644fcef15516b6ee0e67822ccb9978af",
+    "questions_count": 150,
+    "provenance": "experiments/inputs/15b/semantic-questions.provenance.json"
+  },
+  "llm": {
+    "default_enabled": false,
+    "note": "No LLM answers: this manifest sends none (llm_answers 0 everywhere) and --llm is refused with it. The only external call behind the load is Voyage query embedding on cache misses (at most the distinct questions per semantic-service task, session-2 plan section 6.3a), read from the Voyage usage page after the run, not from this process."
+  },
+  "metrics_to_collect": [
+    {
+      "source": "AWS/ECS",
+      "metric": "CPUUtilization",
+      "dimensions": [
+        "ClusterName",
+        "ServiceName=query-api"
+      ],
+      "statistics": [
+        "Average",
+        "Maximum"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "AWS/ECS",
+      "metric": "MemoryUtilization",
+      "dimensions": [
+        "ClusterName",
+        "ServiceName=query-api"
+      ],
+      "statistics": [
+        "Average",
+        "Maximum"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "AWS/ApplicationELB",
+      "metric": "RequestCount",
+      "dimensions": [
+        "LoadBalancer",
+        "TargetGroup"
+      ],
+      "statistics": [
+        "Sum"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "AWS/ApplicationELB",
+      "metric": "TargetResponseTime",
+      "dimensions": [
+        "LoadBalancer",
+        "TargetGroup"
+      ],
+      "statistics": [
+        "p50",
+        "p95",
+        "p99"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "AWS/ApplicationELB",
+      "metric": "RequestCountPerTarget",
+      "dimensions": [
+        "LoadBalancer",
+        "TargetGroup"
+      ],
+      "statistics": [
+        "Sum"
+      ],
+      "period_seconds": 60,
+      "note": "the metric the P41 request-count policy tracks; it includes 429 replies, so with zero 429s it equals the served requests"
+    },
+    {
+      "source": "AWS/ApplicationELB",
+      "metric": "HTTPCode_Target_4XX_Count",
+      "dimensions": [
+        "LoadBalancer",
+        "TargetGroup"
+      ],
+      "statistics": [
+        "Sum"
+      ],
+      "period_seconds": 60,
+      "note": "429 replies from the query-api rate limiter appear here; the load generator reports them per level"
+    },
+    {
+      "source": "AWS/ApplicationELB",
+      "metric": "HTTPCode_Target_5XX_Count",
+      "dimensions": [
+        "LoadBalancer",
+        "TargetGroup"
+      ],
+      "statistics": [
+        "Sum"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "AWS/ApplicationELB",
+      "metric": "HealthyHostCount",
+      "dimensions": [
+        "LoadBalancer",
+        "TargetGroup"
+      ],
+      "statistics": [
+        "Average",
+        "Minimum",
+        "Maximum"
+      ],
+      "period_seconds": 60,
+      "note": "the task count over time as a standard metric: 1 to 2 is the scale-out, 2 back to 1 the scale-in"
+    },
+    {
+      "source": "ecs:DescribeServices",
+      "metric": "desiredCount, runningCount, pendingCount",
+      "poll_seconds": 60,
+      "note": "Container Insights is off, so AWS/ECS RunningTaskCount does not exist; poll the service every minute with UTC timestamps"
+    },
+    {
+      "source": "application-autoscaling:DescribeScalingActivities",
+      "metric": "scaling activity history for service/<cluster>/query-api",
+      "note": "start and end time and cause of each scale-out and scale-in"
+    },
+    {
+      "source": "cloudwatch:DescribeAlarmHistory",
+      "metric": "target tracking alarm state changes for query-api",
+      "note": "AlarmHigh and AlarmLow transition times"
+    },
+    {
+      "source": "AWS/DynamoDB",
+      "metric": "ThrottledRequests, ConsumedReadCapacityUnits",
+      "statistics": [
+        "Sum"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "AWS/Neptune",
+      "metric": "ServerlessDatabaseCapacity, CPUUtilization",
+      "statistics": [
+        "Average",
+        "Maximum"
+      ],
+      "period_seconds": 60
+    },
+    {
+      "source": "loadgen raw results",
+      "metric": "per-request latency, status and route with run IDs; per level: successful_requests, success_rps, peak_success_rps_1s, rate_limited_429",
+      "note": "target/experiment-runs/15b-ecs-scaling-semantic-<run-id>/raw/ (sha256 sealed); derived/summary.json and timeline.csv (one row per UTC minute, with successful_requests and rate_limited_429). 429 replies are counted per level and excluded from latency, throughput and success rate."
+    }
+  ],
+  "approval_record_path": "docs/agent-runs/phase-15/human-gate.md",
+  "provenance": {
+    "requirements": "docs/runbooks/session-2-plan.md rows P42, P35 and P40, sections 6.3a and 5.3 (required per-level limits, warm-up, 429 separation); questions: experiments/inputs/15b/semantic-questions.provenance.json",
+    "profile": "load-tests/config/load-profile.v1.json",
+    "run": "python3 -I load-tests/loadgen.py run --manifest experiments/manifests/15b-ecs-scaling-semantic.json --questions-file experiments/inputs/15b/semantic-questions.txt --run-id <run-id> (no --node-ids-file, --evidence-ids-file or --llm; commands in experiments/README.md)"
+  },
+  "limits_note": "The per-level limits 600 / 3,000 / 15,000 / 30,000 / 150,000 are the R-b cost bound and must not be raised; load-tests/loadgen.py and experiments/scripts/check_manifests.py refuse a manifest above them. A 429 counts toward its phase limit. Known limitation to report: query-api max is 2 tasks, so scale-out is 1 to 2 only. If neither policy scales out at concurrency 50, report that and the measured values rather than tuning the service or the target inside the run."
+}

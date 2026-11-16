@@ -25,6 +25,8 @@ Checks
        * the L local-evidence record says L is not an EMR run and, once datasets/phase15/dblp-l-slice-manifest.v1.json exists, states its
          publication count and sha256.
   15B  experiments/manifests/15b-ecs-scaling.json against load-tests/loadgen.py (strict schema, phase limits, answer budget).
+  15B semantic (P42)  experiments/manifests/15b-ecs-scaling-semantic.json: the REQUIRED per-level limits 600 / 3,000 / 15,000 / 30,000 / 150,000 (198,600 in
+       total), one warm-up phase at level 1 of at most 200 requests, at least 25 quiet minutes, the fixed questions file (sha256, count, distinct, provenance).
   16B  16b-live-evaluation.json and llm-allocation.json (v2, buckets 14c/15b/16b/17): allocated answers x the pinned claude-haiku-5-5 (Anthropic API) cost per answer must fit in the shared cap (USD 1.33 stays; the bucket counts bind first),
        and the 15B and 16B figures must equal the allocation.
   --final  also refuses the all-zero sha256 placeholders and the PLACEHOLDER-L-* markers: the state required before the commit freeze
@@ -425,6 +427,106 @@ def check_15b_16b(root, final, lines):
     if by_owner.get("15b") != profile_sum:
         failed = True
         lines.append("CHECK-FAILED: the profile per-level answers sum to %d, the 15b bucket is %s" % (profile_sum, by_owner.get("15b")))
+    return check_semantic(root, final, lines, loadgen, profile) or failed
+
+
+SEMANTIC_MANIFEST = "15b-ecs-scaling-semantic.json"
+SEMANTIC_PHASE_CAPS = (("baseline-1", 1, 600), ("level-5", 5, 3000), ("level-25", 25, 15000), ("level-50", 50, 30000), ("hold-50", 50, 150000))
+SEMANTIC_QUIET_MINUTES = 25
+
+
+def check_semantic(root, final, lines, loadgen, profile):
+    """P42: the semantic 15B manifest against load-tests/loadgen.py: the REQUIRED per-level limits 600 / 3,000 / 15,000 / 30,000 / 150,000 (198,600 in
+    total), a warm-up of at most 200 requests, at least 25 quiet minutes, the fixed questions file and its provenance, and the semantic route weight."""
+    failed = False
+
+    def fail(message):
+        nonlocal failed
+        failed = True
+        lines.append("CHECK-FAILED: %s: %s" % (SEMANTIC_MANIFEST, message))
+
+    path = os.path.join(root, "experiments", "manifests", SEMANTIC_MANIFEST)
+    try:
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        manifest = json.loads(text)
+    except (OSError, ValueError):
+        fail("is missing or not valid JSON")
+        return failed
+    for row in policy_problems(text):
+        fail(row)
+    problems = loadgen.manifest_problems(manifest)
+    for row in problems:
+        fail(row)
+    if problems:
+        return failed
+    block = manifest["semantic"]
+
+    class Args:
+        llm_answers = None
+        levels = ""
+        duration_seconds = None
+        max_requests = None
+        pause_seconds = 0
+
+    try:
+        phases = loadgen.build_phases(Args, profile, manifest)
+        loadgen.check_phase_limits(phases, profile, block)
+    except loadgen.Refused as error:
+        fail(str(error))
+        return failed
+    load = {p["name"]: p for p in manifest["phases"] if p["type"] == "load"}
+    for name, level, cap in SEMANTIC_PHASE_CAPS:
+        phase = load.get(name)
+        if phase is None or phase["level"] != level or phase["max_requests"] != cap:
+            fail("phase %s must run at level %d with max_requests exactly %d (the required per-level limit; it must not be raised)" % (name, level, cap))
+    total = sum(p["max_requests"] for p in load.values())
+    if set(load) != {name for name, _, _ in SEMANTIC_PHASE_CAPS} or total != loadgen.SEMANTIC_RAMP_TOTAL:
+        fail("the load phases must be exactly baseline-1, level-5, level-25, level-50 and hold-50 with %d requests in total (found %d)" % (loadgen.SEMANTIC_RAMP_TOTAL, total))
+    warmup = [p for p in manifest["phases"] if p["type"] == "warmup"]
+    if len(warmup) != 1 or manifest["phases"][0] is not warmup[0] or warmup[0]["level"] != 1 or not block["questions_count"] <= warmup[0]["max_requests"] <= loadgen.SEMANTIC_WARMUP_MAX:
+        fail("one warmup phase at level 1 must come first, with max_requests from the question count to %d" % loadgen.SEMANTIC_WARMUP_MAX)
+    tail = 0
+    for phase in reversed(manifest["phases"]):
+        if phase["type"] != "observe":
+            break
+        tail += phase["duration_seconds"]
+    if tail < SEMANTIC_QUIET_MINUTES * 60:
+        fail("the quiet window after the last load phase is %.0f s, under %d minutes" % (tail, SEMANTIC_QUIET_MINUTES))
+    if manifest["llm"].get("default_enabled") is not False or any(p.get("llm_answers") for p in manifest["phases"]):
+        fail("a semantic manifest sends no LLM answers")
+    semantic_route = profile["routes"].get("semantic", {})
+    others = sum(r["weight"] for name, r in profile["routes"].items() if name != "semantic" and not r["llm"])
+    if (semantic_route.get("method"), semantic_route.get("path"), semantic_route.get("auth"), semantic_route.get("llm")) != ("POST", "/v1/semantic/retrieve", True, False) \
+            or semantic_route.get("weight", 0) <= others:
+        fail("the profile must have the semantic route (POST /v1/semantic/retrieve, API key) with a weight above all other routes together (%d)" % others)
+    # the fixed questions file and its provenance
+    questions_path = os.path.join(root, block["questions_file"])
+    provenance_path = os.path.join(root, block["provenance"])
+    try:
+        questions = loadgen.read_lines(questions_path, "semantic questions", limit=loadgen.SEMANTIC_QUESTIONS_MAX, maxlen=loadgen.SEMANTIC_QUESTION_MAXLEN)
+        with open(questions_path, "rb") as handle:
+            digest = hashlib.sha256(handle.read()).hexdigest()
+        with open(provenance_path, encoding="utf-8") as handle:
+            provenance = json.load(handle)
+    except (loadgen.Refused, OSError, ValueError) as error:
+        fail("the questions file or its provenance cannot be read: %s" % error)
+        return failed
+    if digest != block["questions_sha256"] or len(questions) != block["questions_count"]:
+        fail("the questions file (%d lines, sha256 %s) differs from the manifest pin (%d, %s)" % (len(questions), digest, block["questions_count"], block["questions_sha256"]))
+    if len({q.casefold() for q in questions}) != len(questions):
+        fail("the questions are not all distinct")
+    recorded = provenance.get("outputs", {}).get("semantic-questions.txt", {})
+    if recorded.get("sha256") != digest or [x.get("phrase") for x in provenance.get("phrases", [])] != questions:
+        fail("the provenance record does not match the questions file")
+    slice_manifest = os.path.join(root, "datasets", "phase6", "dblp-slice-manifest.v1.json")
+    if os.path.isfile(slice_manifest):
+        with open(slice_manifest, encoding="utf-8") as handle:
+            if provenance.get("source", {}).get("sha256") != json.load(handle)["output"]["sha256"]:
+                fail("the provenance source sha256 differs from the Phase 6 slice manifest")
+    if not failed:
+        lines.append("CHECK-OK: %s: per-level limits 600 / 3,000 / 15,000 / 30,000 / 150,000 = %d requests, warm-up %d <= %d at level 1, quiet window %.0f min, %d fixed questions (sha256 pinned, provenance matches)" % (
+            SEMANTIC_MANIFEST, total, warmup[0]["max_requests"], loadgen.SEMANTIC_WARMUP_MAX, tail / 60, len(questions)))
     return failed
 
 
