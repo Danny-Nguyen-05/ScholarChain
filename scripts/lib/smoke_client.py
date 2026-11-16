@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """HTTP checks for scripts/smoke-test.sh (stdlib http.client; python3 -I). Never prints the API key.
 
-  validate-url URL               exit 0 when URL is http(s)://host[:port][/] with no user-info, query or fragment, and
-                                 plain http only for a loopback host (a bearer key is never sent in clear to a remote host)
+  validate-url URL [--require-loopback]
+                                 exit 0 when URL is http(s)://host[:port][/] with no user-info, query or fragment, and
+                                 plain http only for a loopback host (a bearer key is never sent in clear to a remote host);
+                                 with --require-loopback the host itself must be loopback (the offline-synthetic semantic mode)
   check NAME --url URL --state FILE --key-env VAR [--body-file F] [--request-timeout S] [--job-timeout S] [--idem-key K]
-        NAME is one of healthz, readyz, query, evidence, idempotency, error-path. Prints one "CHECK-OK: ..." line on
+        NAME is one of healthz, readyz, query, evidence, idempotency, error-path, semantic, semantic-cache (the last two
+        are opt-in through smoke-test.sh --semantic and are never in the default six). Prints one "CHECK-OK: ..." line on
         success (exit 0), or "CHECK-FAILED: ..." (exit 1; exit 124 when a request or job timed out). The API key is read
         from the environment variable named by --key-env; its value never reaches stdout, stderr or the state file.
         Checks share a JSON state file (query id, job id, evidence ids, the first response fingerprint).
@@ -19,6 +22,12 @@ Contract (modules/services/README.md and the OpenAPI file):
   GET  /v1/evidence/{evidenceId}            200 Evidence {evidenceId, sourceDataset, provenance, ...}
   GET  /v1/queries/{queryId}/evidence       200 {queryId, evidenceIds}
   401 on a missing or invalid key           {error:"UNAUTHORIZED", message, traceId, retryable}
+  POST /v1/semantic/retrieve    (P40) Bearer key, JSON {question, topK 1..20, filters?}; 200 exactly {hits, model} with
+                                hits[] = {key, distance, metadata} and model = {modelId, version, dimension}; 401 without a
+                                key; 429 RATE_LIMITED with Retry-After over the per-key rate
+  GET  /metrics                 Bearer key; Prometheus text. embedding_cache_hits_total exists on the offline-synthetic
+                                query-api with an in-process semantic route (and on semantic-service), not on a deployed
+                                query-api, so semantic-cache is valid only against the local offline-synthetic service
 """
 import argparse
 import http.client
@@ -32,6 +41,11 @@ import urllib.parse
 MAX_BODY = 1048576
 DEFAULT_BODY = {"question": "Synthetic fixture: publication count for A", "output": {"includeScores": False}}
 LOOPBACK = {"127.0.0.1", "localhost", "::1"}
+# The one fixed synthetic semantic question. It is never taken from input, so nothing else can reach the logs.
+SEMANTIC_BODY = {"question": "Synthetic fixture: semantic retrieval smoke for A", "topK": 5}
+SEMANTIC_PATH = "/v1/semantic/retrieve"
+CACHE_HITS_METRIC = "embedding_cache_hits_total"
+CACHE_HITS_LINE = re.compile(r"^embedding_cache_hits_total(?:\{[^}]*\})?\s+([0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)(?:\s+[0-9]+)?\s*$")
 
 
 class CheckFailed(Exception):
@@ -226,6 +240,65 @@ def check_error_path(client, args, state):
     return "POST /v1/query without a key and with an invalid key both returned 401 UNAUTHORIZED"
 
 
+def post_semantic(client, auth=True):
+    return client.request("POST", SEMANTIC_PATH, body=SEMANTIC_BODY, auth=auth)
+
+
+def expect_semantic_reply(status, headers, parsed):
+    """The P40 reply contract: 200 and exactly the top-level keys hits and model, each of the documented shape."""
+    if status == 429:
+        raise CheckFailed("POST %s returned 429 (rate limited, Retry-After %s); expected 200" % (SEMANTIC_PATH, headers.get("retry-after", "absent")))
+    expect(status == 200, "POST %s returned %s, expected 200" % (SEMANTIC_PATH, status))
+    expect(isinstance(parsed, dict), "the semantic reply is not a JSON object")
+    keys = sorted(parsed)
+    expect(keys == ["hits", "model"], "the semantic reply must have exactly the top-level keys hits and model, got [%s]" % ",".join(keys))
+    hits, model = parsed["hits"], parsed["model"]
+    expect(isinstance(hits, list), "the semantic reply hits is not an array")
+    for hit in hits:
+        expect(isinstance(hit, dict) and sorted(hit) == ["distance", "key", "metadata"], "a semantic hit is not exactly {key, distance, metadata}")
+        number = isinstance(hit["distance"], (int, float)) and not isinstance(hit["distance"], bool)
+        expect(isinstance(hit["key"], str) and number and isinstance(hit["metadata"], dict), "a semantic hit has a malformed key, distance or metadata")
+    expect(isinstance(model, dict) and sorted(model) == ["dimension", "modelId", "version"], "the semantic reply model is not exactly {modelId, version, dimension}")
+    whole = isinstance(model["dimension"], int) and not isinstance(model["dimension"], bool)
+    expect(isinstance(model["modelId"], str) and isinstance(model["version"], str) and whole, "the semantic reply model has a malformed field")
+    return hits, model
+
+
+def check_semantic(client, args, state):
+    status, headers, parsed, _t = post_semantic(client)
+    hits, model = expect_semantic_reply(status, headers, parsed)
+    status2, _h2, parsed2, text2 = post_semantic(client, auth=False)
+    expect(status2 == 401, "POST %s without a key returned %s, expected 401" % (SEMANTIC_PATH, status2))
+    expect(isinstance(parsed2, dict) and parsed2.get("error") == "UNAUTHORIZED", "the semantic 401 body is not the typed UNAUTHORIZED error")
+    held = client.key or ""
+    expect(not held or held not in text2, "the semantic 401 body echoed the API key")
+    state["semantic_ok"] = True
+    return "POST %s 200 exactly {hits, model} (hits=%d, model=%s); without a key 401 UNAUTHORIZED" % (SEMANTIC_PATH, len(hits), model["modelId"])
+
+
+def cache_hits(client):
+    status, _h, _parsed, text = client.request("GET", "/metrics")
+    expect(status == 200, "GET /metrics returned %s, expected 200" % status)
+    total, seen = 0.0, False
+    for line in text.splitlines():
+        match = CACHE_HITS_LINE.match(line)
+        if match:
+            total += float(match.group(1))
+            seen = True
+    expect(seen, "GET /metrics has no %s sample (only the offline-synthetic query-api with an in-process semantic route exposes it)" % CACHE_HITS_METRIC)
+    return total
+
+
+def check_semantic_cache(client, args, state):
+    expect(state.get("semantic_ok"), "the semantic check did not pass first, so the question is not in the cache")
+    before = cache_hits(client)
+    status, headers, parsed, _t = post_semantic(client)
+    expect_semantic_reply(status, headers, parsed)
+    after = cache_hits(client)
+    expect(after > before, "repeating the same semantic question did not increase %s (before %g, after %g)" % (CACHE_HITS_METRIC, before, after))
+    return "repeat of the same semantic question increased %s from %g to %g" % (CACHE_HITS_METRIC, before, after)
+
+
 CHECKS = {
     "healthz": check_healthz,
     "readyz": check_readyz,
@@ -233,8 +306,10 @@ CHECKS = {
     "evidence": check_evidence,
     "idempotency": check_idempotency,
     "error-path": check_error_path,
+    "semantic": check_semantic,
+    "semantic-cache": check_semantic_cache,
 }
-NEEDS_KEY = {"query", "evidence", "idempotency", "error-path"}
+NEEDS_KEY = {"query", "evidence", "idempotency", "error-path", "semantic", "semantic-cache"}
 
 
 def cmd_check(args):
@@ -258,7 +333,9 @@ def cmd_check(args):
 
 def cmd_validate_url(args):
     try:
-        parse_url(args.url)
+        _scheme, host, _port = parse_url(args.url)
+        if args.require_loopback and host not in LOOPBACK:
+            raise CheckFailed("the offline-synthetic semantic mode needs a loopback target (127.0.0.1, localhost or ::1)")
     except CheckFailed as error:
         print("SMOKE-URL-REFUSED: %s" % error)
         return 1
@@ -270,6 +347,7 @@ def build_parser():
     sub = parser.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("validate-url")
     p.add_argument("url")
+    p.add_argument("--require-loopback", action="store_true")
     p.set_defaults(fn=cmd_validate_url)
     p = sub.add_parser("check")
     p.add_argument("name", choices=sorted(CHECKS))

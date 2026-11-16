@@ -183,3 +183,62 @@ NEXT GATE: the user's commit consent, then the human's 2026-11-17 live modify; P
 ```
 
 The reviewer's NEXT PROMPT (section 4) was followed by the coordinator: this verdict recorded, `repairs.md` statuses updated, commit consent requested.
+
+## Work order 2 — P40 public semantic route and query-embedding cache
+
+### Review 1 — user-supplied external review (pasted by the user on 2026-11-16; sections 1–4 verbatim as pasted, with the tables flattened by the paste; section 5, the NEXT PROMPT, followed)
+
+```text
+1. VERDICT: APPROVE
+No blocking findings. The code in the tree is byte-identical to the tested snapshot. I compared the 15 code and script diffs file by file against p40-tracked.diff and all 12 untracked files against p40-untracked.tar. Only owner-report.md, repairs.md and test-report.md changed after the snapshot. Every claimed log sha256, test count and exit code matches the retained logs under target/phase15/p40/.
+
+2. Acceptance table (session-2-plan row P40)
+#	Check	Status	Evidence
+1	Same API key as the other /v1 routes; 401 without it	Met	ApiApplication.scala:170 runs the shared Auth.authorized before any route branch. The route at :200-224 comes after it, so the rate limiter, parsing and the downstream call all run after authentication. The internal token cannot open the public route because the path is not under /internal/. Tests: PublicSemanticRouteSpec:83,105, AdversarialPublicSemanticHttpSpec:176
+2	Bounded topK and question length; 400 when exceeded	Met	PublicSemanticRoute.scala:163-191. Order: body size (8,192 UTF-8 bytes), then nesting depth, then ujson.read. Only question, topK and filters are allowed. The question counts code points (1,000). topK must be a whole number from 1 to 20. Filters: at most 16, string values. Off-by-one tests (1,000/1,001 including 1,000 emoji; 8,192/8,193 bytes; topK 0/1/20/21/2.5; filters 16/17): PublicSemanticRouteSpec:170-224, Adversarial…:265
+3	Rate limit with a configured per-key rate and a typed 429	Met	PublicSemanticRoute.scala:99-148, wired at ApiApplication.scala:207-215. The limiter runs after authentication and before validation, and a 429 makes no downstream call. The 429 is RATE_LIMITED, retryable, carries Retry-After, and is counted at :212. The environment settings are range-checked at :51-54 and refuse startup with exit 2. Tests: PublicSemanticRouteSpec:232-300, Adversarial…:503,606,641,671
+4	Typed errors in the ApiError shape (400/401/429/503/504)	Met	Downstream errors go through the existing allowlisted mapping in RemoteServices.scala:88-110, so the downstream body is never forwarded. 502 DOWNSTREAM_FAILURE is also possible and is documented. Tests: PublicSemanticRouteSpec:370, Adversarial…:763
+5	Reply no wider than the internal route	Met	PublicSemanticRoute.scala:197-215 rebuilds the reply from only hits[].{key, distance, metadata} and model, keeping at most the first topK hits. Tests: PublicSemanticRouteSpec:112, RequestNestingSpec:327, Adversarial…:695,736
+6	One embed call per distinct question (cache)	Met offline	CachingEmbeddingClient.scala:111-163. Only the query client is wrapped: AwsComposition.scala:251 wraps the client built with EmbeddingPurpose.Query (AwsPorts.scala:343). Tests: SemanticCacheWiringSpec:87-150, Adversarial…:836,880. Smoke run 2: hits went from 0 to 1. Real Voyage calls through the cache are deferred to Session 2
+7	No question text in logs	Met	Logs carry only the route template (ApiApplication.scala:246-248). Cache keys hold a SHA-256 only (CachingEmbeddingClient.scala:105). Tests: PublicSemanticRouteSpec:391, Adversarial…:763. The smoke question string appears 0 times in smoke-local-p40-r2.log
+8	Unit and service tests for (1)-(7), plus an independent test-engineer API test	Met	Five new suites, all present in sbt-check-p40.log (1639 succeeded / 0 failed / 1 canceled; the canceled one is the existing optional packageRelease probe)
+9	The offline-synthetic smoke calls the route	Met	smoke-local.sh passes --semantic offline-synthetic. Run 2 log: RESULT: PASS all 6 checks plus 2 semantic check(s), smoke-exit=0, jar 64d1d190… (matches the jar on disk)
+3. Findings (none blocking)
+ID	Severity	Path:line	Evidence and impact	Owner	Check	Blocking
+R1	Info	CachingEmbeddingClient.scala:35,83,105; modules/rag/README.md	Accepted default (c) names the cache key as (model, input type, hash). The key actually holds provider + model.tag + SHA-256, with no input type. The input type is fixed by the one wrapped query client (AwsPorts.scala:343), which is safe and documented, but it differs from the literal default. Impact: none today. The record should name the deviation so a future document-client wrap is not cached under the same identity.	coordinator (records) / rag-engineer	6	no
+R2	Low, future scope (P42 / Session 2)	AwsComposition.scala:257; plan F25	In aws mode, embedding_cache_* exist only on semantic-service /metrics, and the ALB sends every path to query-api. During R-b the “Voyage calls ≤ distinct questions per task” claim cannot be read from these counters through the ALB. P35 (offline, in-process) is unaffected. Session 2 needs another evidence source, for example Voyage usage or a recorded statement that the figure is unverified.	experiment-engineer / coordinator (P42, Session 2 runbook)	6	no
+R3	Low (draft doc)	docs/runbooks/session-2-plan.md:581	Says SemanticApi.scala line 98 makes the QueryVectors call. Line 98 is the embed call; vectors.query is at line 100.	documentation-engineer	—	no
+R4	Info	smoke-local-p40-r2.log (hits=0)	The offline in-process vector store is empty, so the smoke checks only the reply shape with zero hits. Projection of non-empty hits is covered by unit and independent tests. P35’s offline load is also zero-hit retrieval with no S3 Vectors latency, which the plan already notes.	—	5, 9	no
+R5	Low (already S1)	scripts/smoke-local.sh --build	A stale jar gave a 404 in run 1. Before the P35 rehearsal, run sbt -batch packageServices explicitly or fix --build.	infra-engineer	9	no
+Security checks that found no defect:
+
+JSON depth pre-scan (RequestJson.scala:29-47): one loop, constant state, O(body). It handles unterminated strings, escaped quotes, a backslash at the end and brackets inside strings; ujson rejects whatever residue the scan lets through.
+Parse coverage: all three request-body parses are covered. The remaining ujson.read calls read stored payloads, downstream replies, or an HMAC-verified cursor (GraphApi.scala:144-147).
+422→400 on /v1/query: documented in the services README and the OpenAPI.
+Token-bucket arithmetic: no overflow (at most about 1e15 units), monotonic clock, negative elapsed time ignored.
+Key growth: buckets are created after authentication, so with one configured key only one bucket can exist. maxKeys 1,024 is an extra bound.
+Metric labels: a closed set of route templates with a regex guard (ApiApplication.scala:26-29).
+Re-serialized forward: the public limits are narrower than the internal ones (8,192 chars / 64 KiB / topK 50), so a forwarded body cannot exceed the internal bounds.
+Smoke scripts: they never print the key or a free-text question; --semantic defaults to off; the rate-limit pass-through is regex- and range-checked.
+Ownership: matches docs/agents.md.
+Hardcoding and secrets: no hardcoded account, bucket, endpoint or model, and no secrets in the bundle (grep clean).
+Future scope (not demanded here): Terraform env wiring (P41); load generator, manifest, warm-up and separate 429 reporting (P42); r_S2 measurement and zero 429s (P35); image rebuild (P15); deployed-route and real-Voyage checks (Session 2). Records-only items stay open: S2 (ClosedChannelException decision), S3 (hook, factory-engineer), S4 (disclosed slip), T2(b) and T2(c).
+
+4. Report fields
+STATUS: COMPLETE (APPROVE)
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Phase 15 work order 2, P40 public semantic route + query-embedding cache (offline), review 1
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only only: git status/diff (d5e74aa), sed/grep/cat of in-scope files and records; shasum -a 256 of target/phase15/p40/*; per-file comparison of current diff and untracked files against p40-tracked.diff / p40-untracked.tar (extracted to the scratchpad); grep of sbt-check-p40.log, check-skip-sbt-p40.log and the smoke logs; secret/ID grep of the bundle. No build, test, AWS, provider or tfstate access.
+TEST RESULTS: not run by the reviewer. Retained logs confirm: sbt -batch check exit 0, 1639/0/1 canceled (9 summary lines summed), tree unchanged before and after; check.sh --skip sbt exit 5, PARTIAL passed=6 skipped: sbt (scripts/tests 1078, tests/scripts 463, tests/infra 465, 0 skipped); smoke-local run 1 exit=4 (404, stale jar); run 2 package-exit=0, smoke-exit=0, jar 64d1d190… equals the jar on disk. All 7 claimed sha256 values match.
+VALIDATION RESULTS: acceptance checks (1)-(9) met offline; code identical to the tested snapshot; records' agent-reported counts are labelled as such.
+ASSUMPTIONS: the snapshot diff is `git diff HEAD` (16 files including prompt.md), as test-report.md states, rather than the `-- modules scripts` pathspec in the checkpoint facts; the code files are identical either way.
+RISKS: R2 (cache counters not observable through the ALB in Session 2); R5 (stale-jar smoke before P35); rate limiter unverified under real load (P35).
+MANUAL ACTION REQUIRED: the user's "Yes, commit" for the P40 bundle; decision S2 still pending.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: commit of P40 by Tue 2026-11-17 (cutoff Wed 2026-11-18 12:00 CST); then P41 Step 0.
+```
+
+The reviewer's NEXT PROMPT (section 5) is being followed by the coordinator: this verdict is recorded, R1–R5 are in `repairs.md`, and commit consent has been requested. P41 Step 0 starts only after the commit.

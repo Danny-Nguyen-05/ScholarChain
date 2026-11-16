@@ -21,3 +21,64 @@ Coordinator runs, offline, no AWS, Anthropic or Voyage call. Log: git-ignored `t
 - Only change since the round-0 patch: in a worktree of `a576878` with the new patch applied, putting line 264 of `docs/runbooks/phase-14-live-session.md` back to its round-0 text gives `git diff | shasum -a 256` = `def2c2817b2f32b60a8a2f369bb259d61b03aaa031d6b01b748fd91389176d4f`, the round-0 patch hash. So the round-1 tracked change is that one line and nothing else.
 - Link check, clean worktree of `a576878` plus the new patch only (no untracked files; `session-2-plan.md` and `demo-script.md` absent), scratch checker `linkcheck.py` (relative links and GitHub heading anchors; lychee and markdown-link-check are not installed): `docs/runbooks/phase-14-live-session.md` **links=62, broken=0**, exit 0. Also run on the other changed Markdown files: `infra/terraform/billing-bootstrap/README.md` 10 links, 0 broken; `scripts/billing/VERIFICATION.md` and `tests/infra/README.md` 0 links; `scripts/billing/README.md` 19 links, **1 broken**: the absolute local-path link to `infra/terraform/billing-bootstrap/main.tf:28` on line 38. That link is unchanged since `a576878` (present there, not in the P0 diff); recorded as coordinator observation O1 in `repairs.md`, not fixed in this round.
 - `sbt check` skipped in this round: no Scala, Java, build or test source changed (only `docs/runbooks/phase-14-live-session.md` and `docs/agent-runs/phase-15/**`), per the user's standing rule. The P0 `sbt check` evidence stands: exit 0, 1567 / 0 / 1 canceled, log sha256 `6c2f5e7e3a9e2df572e5ae12deee1c3163850e7bc54619015ebc56a688bf4960`. `check.sh --skip sbt` was not rerun: no test or gate under `tests/`, `scripts/`, `modules/` or `infra/` reads `docs/runbooks/phase-14-live-session.md` (grep: no match), and `check.sh` reads Markdown only for the constitution files, which are unchanged.
+
+## Work order 2: P40 public semantic route and query-embedding cache (2026-11-15/16)
+
+All runs offline; no AWS, Anthropic or Voyage call. Lines marked "agent-reported; log not retained" come from the agents' final reports, quoted in `owner-report.md` ("Work order 2"). Lines with a sha256 have a retained git-ignored log under `target/phase15/p40/`.
+
+### Agent-reported (logs not retained)
+
+- rag-engineer: `rag/test` **228 succeeded, 0 failed** (18 suites), including the 17 `CachingEmbeddingClientSpec` tests.
+- service-engineer repair 1 (final state): `services/test` **165 succeeded, 0 failed** (17 suites, including `PublicSemanticRouteSpec`, `SemanticCacheWiringSpec` and the new `RequestNestingSpec` with 10 tests); `AdversarialPublicSemanticHttpSpec` **14 succeeded, 0 failed**, with no "StackOverflow" in its log; `IndependentServices*` (8 suites) plus `AdversarialRuntimeHttpSpec` **51 succeeded, 0 failed**.
+- test-engineer, before the repair: `AdversarialPublicSemanticHttpSpec` **13 of 14 passed**. The failing test was deep-nested JSON inside 8 KiB, which gave HTTP 500 and a printed StackOverflowError. That production defect was routed to the service-engineer (repair 1) and is recorded in `repairs.md`.
+- infra-engineer: `scripts/tests/test_smoke.py` **48 run, 48 OK** (31 before, 17 new). Also `tests/scripts` `test_smoke*.py` 38 OK, `test_regression_13a.py` 20 OK, `test_13b_repairs.py` 22 OK and `test_syntax.py` 20 OK.
+
+### Coordinator runs
+
+- **Snapshot of the bundle under test.** HEAD `d5e74aa`.
+  - Tracked diff: `git diff HEAD`, sha256 `f88095220a13d78d208d7b8cebf17f261723cede827412a69d7e866189327137` (git-ignored `p40-tracked.diff`).
+  - Untracked files: tar sha256 `bb68fe0868d015d799b5b52cc1aac648060040c09105a7aebe207adbc08d084e` (`p40-untracked.tar`, 12 files).
+  - The tar also holds `docs/demo-script.md`, the documentation-engineer's untracked work-order-1 draft. It is not part of P40.
+  - The `git status` before and after `sbt check` and at the snapshot are identical.
+- **`sbt -batch check` (JDK 17) on the working tree.**
+  - Result: **exit 0**, 754 s (2026-11-16T01:57:12Z to 02:09:49Z).
+  - ScalaTest summed over all modules: **1639 succeeded, 0 failed, 1 canceled**.
+  - The tree did not change during the run, and `markTestRun` updated the marker.
+  - The log has one `[error] (checkProbeInjectFailure)` block. It comes from the build's own failure-path probe (`CheckFailurePathSpec`), which injects it deliberately, and it is expected.
+  - Log sha256 `07e845ce566291fc37b2b20033a975c617f375de76ae91ec5f2dbff6e2085d93` (`sbt-check-p40.log`).
+- **Clean snapshot, `scripts/check.sh --skip sbt`.** The run used a detached worktree of `d5e74aa` with the tracked diff and the untracked tar applied, JDK 17, and AWS credential variables unset.
+  - Result: **exit 5, `RESULT: PARTIAL passed=6 skipped: sbt`**.
+  - Gates:
+    - constitution, hooks, shell and python: PASS;
+    - terraform: PASS (`terraform test` 12, 19, 113, 40, 6 and 272 passed, 0 failed);
+    - script-tests: PASS (3867 s), with 0 skipped in every suite:
+
+      | Suite | Tests run |
+      |---|---|
+      | `scripts/tests` | 1078, including the required classes with 7 and 6 tests (1061 at P0; the 17 new smoke tests explain the difference) |
+      | `phase12d-spike` | 78 |
+      | billing | 115, 62 and 39 |
+      | `tests/scripts` | 463 |
+      | `tests/infra` | 465 |
+
+  - `terraform init` downloaded providers from the public registry (logged); there was no AWS call.
+  - Log sha256 `92d5435452646e56b3a016e2373f43121842d5d7edbbc03f3b10d5707b10acdf` (`check-skip-sbt-p40.log`). The worktree was removed afterwards.
+- **`scripts/smoke-local.sh --build`, run 1: FAIL (recorded).**
+  - The script reused an existing `modules/services/target/distribution` built before P40 (services.jar sha256 `a2d04be1…2895d`), because `--build` packages only when the distribution is missing.
+  - The six base checks passed. `smoke-semantic` failed with `POST /v1/semantic/retrieve returned 404, expected 200`, so smoke-test.sh exited 4 and the run ended with **exit=4**.
+  - Cause: a stale build, not a P40 code defect. A follow-up is recorded in `repairs.md` (S1).
+  - Log sha256 `9362723ecee1c43f89a2e1780b5255cfc75c83e3adf982b1e4545df2671755e1` (`smoke-local-p40.log`).
+- **`sbt -batch packageServices`, then `scripts/smoke-local.sh --build`, run 2: PASS.**
+  - Package: exit 0; new services.jar sha256 `64d1d190b2668733ff3291206b059c786f02675f4ef39c9aeb372c7a4ef8c7a2`.
+  - The semantic rate limit used the service code defaults (no override).
+  - Throwaway API key: not printed; only its sha256 reached the service.
+  - Checks:
+    - `CHECK-OK: semantic`: 200, exactly `{hits, model}`, and without a key 401 `UNAUTHORIZED`;
+    - `CHECK-OK: semantic-cache`: `embedding_cache_hits_total` went from 0 to 1 when the same question was repeated.
+  - Result: `RESULT: PASS all 6 checks plus 2 semantic check(s)`, **smoke-exit=0**.
+  - Log sha256 `60261eebf8911e48ae2f8fe15835477cc7e0a80f06729ed348cf69ea20df635d` (`smoke-local-p40-r2.log`).
+  - The run used local loopback only.
+- **Not verified offline:**
+  - the route on the deployed query-api, the Terraform env wiring (P41) and the rebuilt images (P15);
+  - the rate limiter under the real load profile (P35 must show zero 429s at the heaviest level, with r_S2 ≥ 2× the measured peak served rate per task);
+  - the real Voyage embedding through the cache.

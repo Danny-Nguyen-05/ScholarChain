@@ -16,8 +16,11 @@ Purpose
   (modules/services/target/distribution) in SCHOLARCHAIN_SERVICE_MODE=offline-synthetic, with a freshly generated
   throwaway API key whose sha256 alone is passed to the service (SCHOLARCHAIN_API_KEY_SHA256) and a separate random
   internal-token hash, run scripts/smoke-test.sh against it with the key in SCHOLARCHAIN_SMOKE_API_KEY, and stop the
-  service. The supported fixture question is asked: "Synthetic fixture: publication count for A". Nothing is
-  deployed and no cloud service is contacted.
+  service. The supported fixture question is asked: "Synthetic fixture: publication count for A". smoke-test.sh runs
+  with --semantic offline-synthetic, so after the six checks it also calls the public P40 route POST /v1/semantic/retrieve
+  with one fixed synthetic question (200 with exactly hits and model; 401 without the key) and requires a repeat of
+  that question to increase embedding_cache_hits_total on /metrics (STEP: smoke-semantic, smoke-semantic-cache).
+  Nothing is deployed and no cloud service is contacted.
 
 Inputs
   --build              when the distribution is missing, run `sbt -batch packageServices` under JDK 17 first
@@ -27,6 +30,11 @@ Inputs
   --run-seconds S      hard cap on the service process lifetime (default 300; it is killed with its process group)
   JDK 17: the script applies the JDK 17 environment itself (JAVA_HOME, /usr/libexec/java_home -v 17, then the
   configured fallback). Environment variable names: JAVA_HOME, SBT_BIN, SCHOLARCHAIN_REPO_ROOT.
+  SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND, SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST (optional, for the P35
+                       rehearsal): when set in the caller's environment they are validated and passed to the local
+                       query-api; each must be a positive whole number without sign or leading zero, per-second
+                       1..100000 and burst 1..1000000 (the service's ranges). An invalid value is refused (exit 2)
+                       before the service starts. Unset (the default) leaves the service code defaults (50/s, burst 100).
 
 Modes
   Real run only, local only (loopback). The key is generated per run, never printed, never written to a file.
@@ -36,7 +44,7 @@ Human approval points (plan Section 7.3)
 
 Exit codes
   0    the service started and every smoke check passed
-  2    usage error
+  2    usage error, or an invalid SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND / _BURST value
   3    refused: JDK 17 or the distribution is missing, or the service did not become healthy
   4    a smoke check failed (the smoke-test.sh STEP marker is in the output)
   5    the sbt build or the service process failed
@@ -94,6 +102,22 @@ sc_step "inputs"
 sc_require_tool python3
 [[ "${STARTUP_SECONDS}" =~ ^[0-9]+$ && "${RUN_SECONDS}" =~ ^[0-9]+$ ]] || sc_usage_error "--startup-seconds and --run-seconds must be integers"
 [[ -z "${PORT}" || "${PORT}" =~ ^[0-9]+$ ]] || sc_usage_error "--port must be an integer"
+# Optional semantic rate-limit overrides from the caller (P35 rehearsal). Only names and validated whole numbers are
+# printed; an unset variable stays unset so the service code defaults apply.
+RATE_ENV=()
+_rate_override() { # NAME MAX
+  local name="$1" max="$2" value
+  [[ -n "${!name+set}" ]] || return 0
+  value="${!name}"
+  if [[ ! "${value}" =~ ^[1-9][0-9]{0,6}$ ]] || ((value > max)); then
+    sc_usage_error "${name} must be a whole number from 1 to ${max} (no sign, no leading zero) when set"
+  fi
+  RATE_ENV+=("${name}=${value}")
+  sc_info "passing ${name}=${value} to the local query-api"
+}
+_rate_override SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND 100000
+_rate_override SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST 1000000
+[[ "${#RATE_ENV[@]}" -gt 0 ]] || sc_info "semantic rate limit: service code defaults (no override set)"
 
 sc_step "jdk17"
 sc_setup_jdk17
@@ -135,7 +159,7 @@ sc_mktemp SERVICE_LOG
   cd "${DIST}"
   exec env SCHOLARCHAIN_SERVICE_MODE=offline-synthetic "SCHOLARCHAIN_API_KEY_SHA256=${API_KEY_SHA256}" \
     "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=${INTERNAL_SHA256}" SCHOLARCHAIN_HTTP_HOST=127.0.0.1 "SCHOLARCHAIN_HTTP_PORT=${PORT}" \
-    python3 -I "${SC_LIB_DIR}/timeout.py" --seconds "${RUN_SECONDS}" --grace 5 --output "${SERVICE_LOG}" -- \
+    ${RATE_ENV[@]+"${RATE_ENV[@]}"} python3 -I "${SC_LIB_DIR}/timeout.py" --seconds "${RUN_SECONDS}" --grace 5 --output "${SERVICE_LOG}" -- \
     "${JAVA_HOME}/bin/java" -cp 'services.jar:lib/*' edu.uic.cs441.scholarchain.services.QueryApiMain
 ) </dev/null >/dev/null 2>&1 &
 SERVICE_PID=$!
@@ -173,7 +197,7 @@ sc_info "healthy after ~${waited}s"
 
 sc_step "run-smoke-test"
 SMOKE_RC=0
-SMOKE_OUT="$(env "SCHOLARCHAIN_SMOKE_API_KEY=${API_KEY}" bash "${SC_SCRIPTS_DIR}/smoke-test.sh" --url "${URL}" 2>&1)" || SMOKE_RC=$?
+SMOKE_OUT="$(env "SCHOLARCHAIN_SMOKE_API_KEY=${API_KEY}" bash "${SC_SCRIPTS_DIR}/smoke-test.sh" --url "${URL}" --semantic offline-synthetic 2>&1)" || SMOKE_RC=$?
 printf '%s\n' "${SMOKE_OUT}" | sc_redact_stream | while IFS= read -r line; do printf 'smoke| %s\n' "${line}"; done
 _service_log_excerpt
 
@@ -186,4 +210,4 @@ sc_info "service stopped"
 if [[ "${SMOKE_RC}" -ne 0 ]]; then
   sc_fail "${SMOKE_RC}" "smoke-test.sh exited ${SMOKE_RC} against the local offline-synthetic query-api"
 fi
-sc_result PASS "local offline-synthetic query-api passed all smoke checks on 127.0.0.1:${PORT}" "${EX_OK}"
+sc_result PASS "local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:${PORT}" "${EX_OK}"
