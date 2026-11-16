@@ -123,7 +123,7 @@ class Verification:
 
     OPTION and SHAPE are the one switch between the Phase 12D expectations
     (USD 200, PERCENTAGE 50/80/100, option B) and the Phase 14B ones
-    (USD 25, ABSOLUTE_VALUE 10/15/20, option M, ModifiedVerification).
+    (USD 25, ABSOLUTE_VALUE 18/20/22, option M, ModifiedVerification).
     """
     OPTION = 'B'
     SHAPE = b.INITIAL_SHAPE

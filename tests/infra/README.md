@@ -197,12 +197,14 @@ repository files only read (every mutation edits a scratch copy).
   only the dashboard disappears; `service_capacity` accepts 256/1024 and 256/2048, refuses 256/512 and 256/4096; committed defaults
   512/1024 (worker max 4); the cheap values in `course.local.tfvars.example` are valid.
 - `test_billing_replan_14b.py` with `account_scan.py` (W3): `ROOTS["billing"]` plan: limit 25, exactly three ACTUAL / ABSOLUTE_VALUE /
-  GREATER_THAN alerts at 10, 15, 20, credits excluded, ceiling variable accepts only 25; `scripts/billing/modify-public-inputs.template.json`
-  has no 12-digit number and the `<acct>` placeholder; a scan of what the working tree ADDS (diff against HEAD plus untracked files, not
+  GREATER_THAN alerts at 18, 20, 22 (human decision 2026-11-15, replacing the never-applied 10/15/20 set of 2026-11-08; the tests also
+  assert that 10 and 15 and the 50/80/100 percentages are absent), credits and refunds excluded, ceiling variable accepts only 25;
+  `scripts/billing/modify-public-inputs.template.json` has no 12-digit number and the `<acct>` placeholder; a scan of what the working tree ADDS (diff against the merge base with main plus untracked files, not
   `docs/agent-runs/phase-12/**`) for a 12-digit run that is not `111122223333` or `000000000000`. It reports path and line only, never
   the digits. File-scoped synthetic values are listed in `SCOPED_SYNTHETIC` as named `ScopedSynthetic(name, value, path, pattern)`
   entries (see the account-scan notes below for the three entries and the 2026-11-09 user decision).
-  Limit: after the work is committed the diff is empty, so the scan then covers only untracked files; rerun it before committing.
+  (The diff is taken against `git merge-base HEAD main`, so committed branch work stays covered; on a branch whose HEAD equals main the
+  scan covers uncommitted and untracked work only.)
 - `test_operator_roles_14b.py` with `operator_checks.py` (W5a): `ROOTS["deployer14ops"]`; invariants O1..O9 (default off; three named
   roles; MFA-only trust on the single operator; 14,400 s; same-device login policy; no `aws-marketplace` anywhere; no wildcard action;
   data-plane and run-prefix scope; the runtime boundary has the four ssmmessages actions and no Neptune load/write action) and an
@@ -263,3 +265,17 @@ repository files only read (every mutation edits a scratch copy).
 - `tests/scripts`: `test_upload_emr_artifacts_14b.py`, `test_experiment_tokens_14b.py`, `test_smoke_checks_14b.py`, `test_llm_budget_14b.py`;
   `PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS` is 12,000 (pipeline-specific) while `phase4-emr-smoke.sh` keeps 1,000 and the other six ceilings stay
   equal to Phase 4 (`sc_support.CEILINGS`, `test_pipeline_refusals.py`, `test_pipeline_dryrun.py`).
+
+## Phase 15 P0-T: alert amounts 18/20/22 and a base-independent scan test (test-engineer, 2026-11-15)
+
+- `test_billing_replan_14b.py` `BudgetPlan`: the expected alert amounts are hand-written from the human decision of 2026-11-15 (USD 25 budget,
+  ACTUAL / ABSOLUTE_VALUE / GREATER_THAN alerts at USD 18, 20 and 22; credits and refunds excluded), not read from `main.tf`.
+  `test_the_superseded_10_15_20_set_is_gone` asserts the never-applied 10/15/20 set (10 and 15) is absent; the 50/80/100/160/200 check stays.
+- The old `test_the_scan_really_covers_changed_and_new_files` assumed `scripts/billing/modify-public-inputs.template.json` differs from the
+  merge base; that stopped holding once Phase 14 merged into main (template unchanged since f5490d3). It is replaced by
+  (a) `test_the_scan_covers_exactly_what_the_branch_adds_in_the_real_repository`: the scanned set must EQUAL the set derived with separate git
+  calls from the same merge base (`git diff --numstat -z` files with added text lines, plus readable untracked files, minus
+  `docs/agent-runs/phase-12/**`), which holds for any base; and (b) `AccountScanOnAControlledRepository`: a scratch git repository the test
+  builds (main, a branch with a commit after the base, an uncommitted edit, an untracked file, a phase-12 file, an unchanged file, and a
+  change on main after the branch point). Exactly the three branch-added files are scanned, each planted ID is found at its line, and the
+  digits are never in the findings. Mutants that diff against HEAD or against main's tip instead of the merge base fail these tests.

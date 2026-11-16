@@ -544,10 +544,10 @@ class Features(Fixture):
 
 
 def usd25_values():
-    """Hand-derived USD 25 readback: amount 25, ACTUAL ABSOLUTE_VALUE alerts at 10, 15 and 20."""
+    """Hand-written USD 25 readback (human decision 2026-11-15): amount 25, ACTUAL ABSOLUTE_VALUE alerts at 18, 20 and 22."""
     values = responses()
     values[0]['Budget']['BudgetLimit']['Amount'] = '25.0'
-    values[2]['Notifications'] = [b.expected_notification(x, 'ABSOLUTE_VALUE') for x in (10, 15, 20)]
+    values[2]['Notifications'] = [b.expected_notification(x, 'ABSOLUTE_VALUE') for x in (18, 20, 22)]
     return values
 
 
@@ -628,14 +628,16 @@ class ModifiedFeatures(Fixture):
         self.assertIs(v.Verification.SHAPE, b.INITIAL_SHAPE); self.assertEqual(v.Verification.OPTION, 'B')
         self.assertIs(v.ModifiedVerification.SHAPE, b.USD25_SHAPE); self.assertEqual(v.ModifiedVerification.OPTION, 'M')
         self.assertEqual(v.ModifiedVerification.SHAPE.amount, 25)
-        self.assertEqual(v.ModifiedVerification.SHAPE.thresholds, (10, 15, 20))
+        self.assertEqual(v.ModifiedVerification.SHAPE.thresholds, (18, 20, 22))  # hand-written, 2026-11-15 decision
+        self.assertTrue(all(t < 25 for t in v.ModifiedVerification.SHAPE.thresholds))
+        self.assertFalse({10, 15, 50, 80, 100} & set(v.ModifiedVerification.SHAPE.thresholds))
         self.assertEqual(v.ModifiedVerification.SHAPE.threshold_type, 'ABSOLUTE_VALUE')
 
     def test_new_shape_verifies_with_six_explicit_absolute_value_selectors(self):
         result = self.mex.verify()
         self.assertEqual(len(self.calls), 6)
         self.assertEqual([x['argv'][2] for x in self.calls], ['describe-budget', 'list-tags-for-resource', 'describe-notifications-for-budget', *['describe-subscribers-for-notification']*3])
-        self.assertEqual(self.selectors(), [b.expected_notification(t, 'ABSOLUTE_VALUE') for t in (10, 15, 20)])
+        self.assertEqual(self.selectors(), [b.expected_notification(t, 'ABSOLUTE_VALUE') for t in (18, 20, 22)])
         self.assertEqual((result['stage'], result['option']), ('verify', 'M'))
         self.assertEqual(result['result']['notification_count'], 3); self.assertTrue(result['result']['private_recipients_match'])
         self.assertEqual(result['plan_sha256'], self.modify_plan)
@@ -657,6 +659,8 @@ class ModifiedFeatures(Fixture):
         cases = {'amount_200': (lambda vals: vals[0]['Budget']['BudgetLimit'].update(Amount='200'), 'BUDGET_AMOUNT'),
                  'amount_26': (lambda vals: vals[0]['Budget']['BudgetLimit'].update(Amount='26'), 'BUDGET_AMOUNT'),
                  'top_alert_25': (alert(2, Threshold=25), 'NOTIFICATION_THRESHOLD'),
+                 'superseded_10_15_20': (lambda vals: [n.update(Threshold=t) for n, t in zip(vals[2]['Notifications'], (10, 15, 20))], 'NOTIFICATION_THRESHOLD'),
+                 'superseded_15_left': (alert(0, Threshold=15), 'NOTIFICATION_THRESHOLD'),
                  'percentage_left': (alert(0, ThresholdType='PERCENTAGE'), 'NOTIFICATION_DRIFT'),
                  'omitted_type': (lambda vals: vals[2]['Notifications'][1].pop('ThresholdType'), 'NOTIFICATION_DRIFT'),
                  'forecasted': (alert(1, NotificationType='FORECASTED'), 'NOTIFICATION_DRIFT'),
@@ -675,7 +679,7 @@ class ModifiedFeatures(Fixture):
     def test_original_verifier_expectations_reject_the_new_shape(self):
         new = usd25_values()
         with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
-            b.sanitize_readback(new[0], new[1], new[2], {t: new[3+i] for i, t in enumerate((10, 15, 20))}, ADDRESS, v.Verification.SHAPE)
+            b.sanitize_readback(new[0], new[1], new[2], {t: new[3+i] for i, t in enumerate((18, 20, 22))}, ADDRESS, v.Verification.SHAPE)
         with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
             old = responses()
             b.sanitize_readback(old[0], old[1], old[2], {t: old[3+i] for i, t in enumerate((50, 80, 100))}, ADDRESS, v.ModifiedVerification.SHAPE)

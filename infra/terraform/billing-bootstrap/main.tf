@@ -41,12 +41,14 @@ resource "aws_budgets_budget" "project" {
     use_amortized              = false
     use_blended                = false
   }
-  # User-selected actual-spend alerts at fixed dollar amounts under the USD 25
-  # cap (USD 10/15/20, ABSOLUTE_VALUE, not percentages); monitoring only, not a
-  # spending stop. Notifications are inline blocks, so changing them is an
-  # in-place update of this one resource, never a replacement.
+  # Human decision 2026-11-15: actual-spend alerts at fixed dollar amounts under
+  # the USD 25 cap (USD 18/20/22, ABSOLUTE_VALUE, not percentages; this replaces
+  # the never-applied 10/15/20 set). AWS charges only; credits and refunds are
+  # excluded above. Monitoring only, not a spending stop. Notifications are
+  # inline blocks, so changing them is an in-place update of this one resource,
+  # never a replacement.
   dynamic "notification" {
-    for_each = toset([10, 15, 20])
+    for_each = toset([18, 20, 22])
     content {
       comparison_operator        = "GREATER_THAN"
       threshold                  = notification.value

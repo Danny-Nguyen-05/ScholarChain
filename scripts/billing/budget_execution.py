@@ -58,11 +58,12 @@ MODIFY_ACCOUNT_PLACEHOLDER = "<acct>"
 MODIFY_RECORD_PREFIX = "docs/agent-runs/phase-14/"
 MODIFY_PACKET_PREFIX = "docs/agent-runs/phase-14/evidence/14b/"
 # A budget shape is (name, USD limit, threshold type, alert thresholds). "initial"
-# is the Phase 12D create shape; "usd25" is the Phase 14B target. The ONE switch
-# between the two expectations is this value; there is no other flag.
+# is the Phase 12D create shape; "usd25" is the Phase 14B target (alerts USD 18/20/22
+# per the 2026-11-15 human decision; the earlier 10/15/20 target was never applied).
+# The ONE switch between the two expectations is this value; there is no other flag.
 Shape = namedtuple("Shape", "name amount threshold_type thresholds")
 INITIAL_SHAPE = Shape("initial", Decimal(200), "PERCENTAGE", (50, 80, 100))
-USD25_SHAPE = Shape("usd25", Decimal(25), "ABSOLUTE_VALUE", (10, 15, 20))
+USD25_SHAPE = Shape("usd25", Decimal(25), "ABSOLUTE_VALUE", (18, 20, 22))
 MAX_BYTES = 8 * 1024 * 1024
 READ_TIMEOUT_SECONDS = 60
 APPLY_TIMEOUT_SECONDS = 300
@@ -1071,7 +1072,7 @@ class Execution:
         return shape, sanitize_readback(b, t, n, subs, self.private_recipient(), shape)
 
     def modify(self):
-        """Reviewed in-place update of the live budget: USD 200 / 50-80-100 percent -> USD 25 / 10-15-20 dollars."""
+        """Reviewed in-place update of the live budget: USD 200 / 50-80-100 percent -> USD 25 / 18-20-22 dollars."""
         require(self.gate is not None and self.gate.get("option") == "M", "MODIFY_GATE_REQUIRED")
         self.check_checkout(); self.check_modify_record(); self.check_modify_files()
         self.check_modify_state(); self.check_window()

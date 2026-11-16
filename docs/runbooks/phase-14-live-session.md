@@ -105,6 +105,8 @@ What this does: `JAVA_HOME` selects Java 17 (sbt breaks on newer Java); `tfout` 
 
 **Money rule (read twice):** the whole project may spend at most **USD 25**, cumulative, including the USD 0.34 already spent. The USD 25 covers **three bills together: AWS, Anthropic and Voyage AI** (the instructor counts external API charges toward it). The Anthropic and Voyage charges are not on the AWS bill and the AWS budget e-mails do not see them. **At every GO / NO-GO box, and before every receipt, read the actual charges in all three places** (AWS Cost Explorer, the Anthropic Console usage and billing page, the Voyage AI dashboard usage page) and write each number in the session clock log; the USD 25 is a ceiling, not a target, so stop paid resources as soon as the experiments finish. While the stack is up it costs about **USD 0.31 per hour before tax (about USD 0.35 per hour including about 11% sales tax)** even when idle. Sales tax counts toward the USD 25 cap. The budget alerts at USD 10, 15 and 20 are **only e-mails: they stop nothing, and billing data arrives 8 to 24 hours late.** Our own caps do the protecting. **Start cleanup (Section C) no later than H35, and never let the session pass H37.** If anything is going badly, going to cleanup early is always allowed.
 
+2026-11-15 note: from Phase 15 P0 the AWS budget alerts are at USD 18/20/22, not 10/15/20 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)); the paragraph above is the Session 1 record.
+
 ---
 
 ## Timeline (planning estimates, not measurements)
@@ -258,6 +260,8 @@ Plain words: this file pins the size and fingerprint (sha256) of 209 tracked fil
 - **Tell the coordinator:** drift count before and after, and `shasum -a 256 scripts/billing/reviewed-pins.json`. Then return to A1.7 (the pins are committed there). Step A3.10 adds the `modify` object and makes a second commit.
 
 ## A3. Budget modify to USD 25 (the FIRST LIVE STEP)
+
+> **2026-11-15:** A3 was skipped on 2026-11-11 (user decision); the modify is done in Phase 15 as P0 with alerts at USD 18/20/22 instead of 10/15/20 — see `docs/runbooks/session-2-plan.md` (row P0; draft, not yet committed) and [scripts/billing/README.md](../../scripts/billing/README.md). The original Session 1 text below (including every 10/15/20 mention in this section) is kept unchanged as the historical record.
 
 Plain words: the AWS Budget currently warns at 50/80/100% of USD 200. This changes it to a USD 25 budget with warnings at USD 10, 15 and 20. A special billing role and a purpose-built wrapper script do it. It changes only the budget (a monitor); it cannot spend money. Full detail: [billing README, "Phase 14B"](../../scripts/billing/README.md) and [VERIFICATION.md](../../scripts/billing/VERIFICATION.md). The numbers below are the README's step numbers.
 
@@ -604,6 +608,7 @@ Plain words: the ledger is a local counter that makes the answer buckets (14c 10
 - [ ] A1 reviewer APPROVE seen; EMR flag true; manifests rendered; `approval-14c.md` committed; `check.sh` PASS gates=7; committed; HEAD noted
 - [ ] A2 pins: `209 pinned; 0 drifted` (and `modify` object added in A3)
 - [ ] A3 budget is USD 25 with alerts at 10/15/20 (apply log and verify log both OK); packet and gate record committed
+  - 2026-11-15 note: A3 was skipped on 2026-11-11; done in Phase 15 P0 with alerts at USD 18/20/22 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)).
 - [ ] A4 deployer applied; verification outputs as expected; state backups copied to Drive
 - [ ] A5 all five roles rehearsed (Arn shapes OK; three CREDENTIALS-RESOLVED lines)
 - [ ] A6 (only for a Bedrock run) quotas non-zero; playground/Titan calls OK; Marketplace subscription listed. Default run: A6 skipped.
@@ -626,6 +631,7 @@ Money is spent from the first apply until the last cleanup pass. Keep the clock:
 - **Do:**
   1. Console: sign in as your IAM user with MFA (fresh). In T1: `date -u | tee -a target/phase14/evidence/14b/session-clock.log` and `date -u +%s > target/phase14/private/h0.epoch` (used later to set approval expiry to H0 + 37 hours).
   2. Console > **Billing and Cost Management** > **Cost Explorer**: group by Service, date range from the project start, and untick **Credits** and **Refunds** under Charge type (the USD 25 cap counts usage regardless of credits; confirm this setting with the coordinator). Note the total and the "data through" date. Then Billing > **Budgets**: one budget, USD 25, alerts at 10/15/20. Then read the **Anthropic Console** usage and billing page and the **Voyage AI dashboard** usage page and note both totals in US dollars (they feed the two new receipt fields; `0` if nothing yet).
+     - 2026-11-15 note: from Phase 15 P0 the alerts are at USD 18/20/22, not 10/15/20 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)).
   3. T1: `git status --short` (must print nothing), `git rev-parse HEAD` (must equal the A12 HEAD), `curl -s https://checkip.amazonaws.com` (must equal the IP in your tfvars), `python3 -I load-tests/llm_budget.py status` (nothing used).
 - **Success looks like:** the three checks above agree; the budget page shows USD 25 with three alerts.
 - **If it fails:** a dirty tree, a different HEAD or a different IP means stop; tell the coordinator (HEAD change = redo A12; IP change = update `public_ingress_cidrs` before B4).
@@ -1529,6 +1535,7 @@ General rules: stop first. Send the log path and the last `STEP:`/`RESULT:` line
 - Real Q5 failures (rollback policy 13-5): healthz or readyz failing, a 5xx, AccessDenied, a timeout (exit 124) or an authentication failure.
 
 **E5. A budget e-mail arrives (USD 10, 15 or 20).**
+- 2026-11-15 note: from Phase 15 P0 the alerts are at USD 18/20/22, not 10/15/20 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)); E5 below is the Session 1 record.
 - The alerts are informational. They do not stop spending and arrive 8 to 24 hours late.
 - USD 10 is expected during the session. Compare with your own running total (Procedure R.1); nothing else to do.
 - USD 15: recompute headroom (25 - reported - unreported - reserves). If it is below 3, tell the coordinator and drop optional work (B11, B12); never drop cleanup.
