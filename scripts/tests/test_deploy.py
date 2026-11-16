@@ -548,16 +548,16 @@ class DeployPrespendTests(DeployBase):
 
     def test_insufficient_headroom_refused(self):
         def mutate():
-            self.set_prespend(remaining_headroom_usd=2.99)
+            self.set_prespend(remaining_headroom_usd=1.99)
 
-        self.refuse_in_every_stage("headroom 2.99", mutate, "below the required 3.0 USD")
+        self.refuse_in_every_stage("headroom 1.99", mutate, "below the required 2.0 USD")
 
     def test_headroom_of_1_usd_is_refused_by_every_spending_stage(self):
-        """Hand-derived: cleanup-prepare has no floor, but base-apply, push and runtime-apply keep the floor of 3; 1 < 3 is refused in each."""
+        """Hand-derived: cleanup-prepare has no floor, but base-apply, push and runtime-apply keep the floor of 2 (human floor-2 decision, Phase 15 prompt.md "R-b option decision"); 1 < 2 is refused in each."""
         def mutate():
             self.set_prespend(remaining_headroom_usd=1)
 
-        self.refuse_in_every_stage("headroom 1", mutate, "below the required 3.0 USD")
+        self.refuse_in_every_stage("headroom 1", mutate, "below the required 2.0 USD")
 
     def test_a_headroom_that_leaves_a_provider_out_is_refused_by_every_spending_stage(self):
         """Repair round 3: the default receipt is 25 - (5 + 0.5 + 0) - 1 - 6 = 12.5; a headroom above that ignores some spend."""
@@ -605,8 +605,8 @@ class DeployPrespendTests(DeployBase):
         self.refuse_in_every_stage("invalid json", mutate, "not valid JSON")
 
     def test_boundaries_pass(self):
-        """Exactly 3 USD of headroom (the pinned floor) and a 23 hour old snapshot are accepted (dry run)."""
-        self.set_prespend(remaining_headroom_usd=3, cost_snapshot_utc=utc_hours_ago(23))
+        """Exactly 2 USD of headroom (the pinned floor) and a 23 hour old snapshot are accepted (dry run)."""
+        self.set_prespend(remaining_headroom_usd=2, cost_snapshot_utc=utc_hours_ago(23))
         result = self.deploy()
         self.assertEqual(result.rc, 0, result.out)
 
@@ -615,11 +615,12 @@ class DeployPrespendTests(DeployBase):
         self.assert_refused(self.deploy(), "prespend-receipt")
 
     def test_pins_cannot_be_weakened_from_the_environment(self):
-        self.set_prespend(remaining_headroom_usd=2)
+        # 1.5 would pass a floor of 1 taken from the environment; the pinned floor of 2 still refuses it.
+        self.set_prespend(remaining_headroom_usd=1.5)
         result = self.deploy(PRESPEND_MIN_HEADROOM_USD="1", PRESPEND_MAX_AGE_HOURS="9999")
         self.assert_refused(result, "prespend-receipt")
         self.assertIn("CONFIG-IGNORED", result.stdout)
-        self.assertIn("below the required 3.0 USD", result.out)
+        self.assertIn("below the required 2.0 USD", result.out)
 
 
 class DeployPrespendFreshnessTests(DeployBase):
@@ -1721,17 +1722,17 @@ class DeployCleanupPrepareStageTests(DeployBase):
         self.set_prespend(remaining_headroom_usd=1)
         result = self.execute(PRESPEND_MIN_HEADROOM_CLEANUP_USD="0", PRESPEND_MIN_HEADROOM_USD="0")
         self.assert_refused(result, "prespend-receipt")
-        self.assertIn("below the required 3.0 USD", result.out)
+        self.assertIn("below the required 2.0 USD", result.out)
 
-    def test_the_spending_floor_is_2_99_refused_and_3_00_accepted_for_a_spending_stage(self):
+    def test_the_spending_floor_is_1_99_refused_and_2_00_accepted_for_a_spending_stage(self):
         self.arrange("runtime-apply")
-        self.set_prespend(remaining_headroom_usd=2.99)
+        self.set_prespend(remaining_headroom_usd=1.99)
         result = self.execute()
         self.assert_refused(result, "prespend-receipt")
-        self.assertIn("below the required 3.0 USD", result.out)
+        self.assertIn("below the required 2.0 USD", result.out)
         self.assertNotIn("has no headroom floor", result.out)
         self.arrange("runtime-apply")
-        self.set_prespend(remaining_headroom_usd=3.00)
+        self.set_prespend(remaining_headroom_usd=2.00)
         result = self.execute()
         self.assertNotIn("below the required", result.out)
         self.assertNotIn("has no headroom floor", result.out)

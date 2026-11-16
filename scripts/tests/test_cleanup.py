@@ -446,6 +446,55 @@ class CleanupListingTests(CleanupBase):
             self.assertNotIn(forbidden, trace)
 
 
+class CleanupGuardRuleTests(CleanupBase):
+    """Phase 15 P5 (Session 1 finding S1-F3): terraform_data.phase12b_guard is an EXACT teardown address; configuration_guard and
+    provider_guard stay UNLISTED (safe default: no AWS object, kept residual state, a plan that deletes them fails closed)."""
+
+    GUARD = ("terraform_data.phase12b_guard", "terraform_data", ["delete"])
+
+    def test_a_destroy_plan_that_deletes_the_phase12b_guard_gets_a_token(self):
+        show = self.show_with(TEARDOWN_CHANGES + [self.GUARD], "guard.json")
+        result = self.listing(FAKE_SHOW_JSON=show)
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertEqual(result.steps()[-1], "confirm", "the policy accepted the plan and the listing went on to the token step")
+        self.assertNotIn("POLICY-VIOLATION", result.stdout)
+        printed = [l[len("DESTROY-ACTION: "):] for l in result.stdout.splitlines() if l.startswith("DESTROY-ACTION: ")]
+        self.assertEqual(printed, sorted(SORTED_ACTIONS + ["delete terraform_data.phase12b_guard"]))
+        self.assertIsNotNone(self.token_of(result.stdout))
+        self.assertEqual(self.applied(), [])
+
+    def test_a_rogue_terraform_data_address_and_the_two_kept_guards_are_still_refused(self):
+        for label, address in {
+            "rogue guard": "terraform_data.rogue_guard",
+            "not a prefix rule": "terraform_data.phase12b_guard_extra",
+            "root copy with an index-like suffix": "terraform_data.phase12b_guards",
+            "configuration guard": "terraform_data.configuration_guard",
+            "provider guard": "terraform_data.provider_guard",
+        }.items():
+            with self.subTest(label):
+                show = self.show_with(TEARDOWN_CHANGES + [self.GUARD, (address, "terraform_data", ["delete"])], "rogue.json")
+                result = self.listing(FAKE_SHOW_JSON=show)
+                self.assertEqual(result.rc, 3, result.out)
+                self.assertEqual(result.steps()[-1], "destroy-policy")
+                self.assertIn("POLICY-VIOLATION: delete is not in the teardown set: %s" % address, result.stdout)
+                self.assertIsNone(self.token_of(result.stdout))
+                self.assertEqual(self.applied(), [])
+
+    def test_the_rule_is_one_exact_address_and_the_kept_guards_are_unlisted(self):
+        conf = {}
+        with open(os.path.join(SCRIPTS_DIR, "config", "release.conf"), encoding="utf-8") as handle:
+            for line in handle:
+                match = re.match(r"^([A-Z][A-Z0-9_]*)=(.*)$", line.rstrip("\n"))
+                if match:
+                    conf[match.group(1)] = match.group(2)
+        rules = conf["CLEANUP_TEARDOWN_ADDRESS_RULES"].split(",")
+        self.assertEqual([r for r in rules if "terraform_data" in r], ["terraform_data.phase12b_guard"])
+        self.assertNotIn("terraform_data.", rules, "never a prefix rule over every terraform_data resource")
+        for kept in ("terraform_data.configuration_guard", "terraform_data.provider_guard"):
+            self.assertNotIn(kept, rules)
+            self.assertNotIn(kept, conf["CLEANUP_PRESERVE_ADDRESS_RULES"].split(","))
+
+
 class CleanupConfirmTests(CleanupBase):
     def listed(self, **env):
         first = self.listing(**env)

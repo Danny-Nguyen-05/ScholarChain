@@ -82,7 +82,7 @@ Checks, in order (each prints "STEP: <name>"; the first failure refuses with a d
                     Anthropic and Voyage spend to date (entered from the provider consoles; 0 when a
                     provider charged nothing), unreported-usage allowance, reserves and remaining
                     headroom all present and numeric (missing is never zero); headroom at least
-                    PRESPEND_MIN_HEADROOM_USD (3, pinned; no environment variable changes it) and at
+                    PRESPEND_MIN_HEADROOM_USD (2, pinned; no environment variable changes it) and at
                     most PRESPEND_PROJECT_CEILING_USD (25) minus every provider's spend, the allowance
                     and the reserves, for every stage that can spend. The
                     teardown-only --stage cleanup-prepare has NO headroom floor: negative headroom is

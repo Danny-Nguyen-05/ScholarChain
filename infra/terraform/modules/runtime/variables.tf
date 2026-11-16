@@ -175,8 +175,9 @@ variable "neptune_tunnel_task_role_arn" {
   description = "Task role of the tunnel task (modules/identity: four ssmmessages channel actions only). Required when the tunnel is registered."
 }
 
-# Phase 15 P41 (session-2-plan.md rows F26 and P41, Work order 3 defaults accepted 2026-11-16). All three default to null, which keeps
-# the earlier plan exactly: no request-count policy and no rate-limit variable in any task environment. The values come from the P35
+# Phase 15 P41 (session-2-plan.md rows F26 and P41, Work order 3 defaults accepted 2026-11-16). All three default to null: no new
+# resource and no new environment variable (no request-count policy, no rate-limit variable in any task environment). When the ALB
+# exists and the dashboard is on, the dashboard gains the ALB panels regardless of these variables. The values come from the P35
 # rehearsal and reach this module from the root variables (phase12b-variables.tf): query_requests_per_target_target (same name),
 # query_semantic_rate_limit_per_second -> semantic_rate_limit_per_second, query_semantic_rate_limit_burst -> semantic_rate_limit_burst.
 variable "query_requests_per_target_target" {

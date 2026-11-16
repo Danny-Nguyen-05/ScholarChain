@@ -11,11 +11,12 @@
 #  - the two rate-limit variables reach the query-api task environment only, as decimal strings, each only when its own variable is set;
 #  - the dashboard ALB panel has 2 metrics (RequestCountPerTarget by TargetGroup; HTTPCode_Target_4XX_Count by LoadBalancer + TargetGroup),
 #    period 60, Sum, and exists only while the ALB exists. Dashboard metric count with Neptune on and EMR off (this fixture), counted by
-#    hand from modules/observability/main.tf: 12 task + 8 utilization + 2 queue depth + 1 queue age + 24 table + 3 API latency + 3 graph/
-#    vector/LLM latency + 3 API requests/errors + 3 LLM tokens + 2 Step Functions + 6 conditional + 42 request latency = 109, plus 5 Neptune
-#    = 114 without the ALB panel and 116 with it. (P9's 50-metric free-tier limit is NOT met by the current dashboard either way; P9 owns it.)
+#    hand from modules/observability/main.tf after Phase 15 P9: 6 ECS utilization (3 HTTP services x CPU, memory) + 2 queue depth + 1 queue
+#    age + 2 Step Functions + 12 DynamoDB throttle (6 tables x read, write) = 23 base, plus 5 Neptune = 28 without the ALB, plus 9 ALB
+#    (1 healthy hosts + 3 requests/5XX + 3 response-time percentiles + 2 in the P41 panel) = 37 with it. (Before P9: 114 and 116.)
+#    The P9 limit (at most 50 in every combination) is asserted in phase15_elasticity_dashboard.tftest.hcl.
 #  - validation: target 1..100000 whole (0, 100001, 1.5 refused); rate 1..100000 whole (0, 100001, 2.5 refused); burst 1..1000000 whole
-#    (0, 1000001 refused); the boundary values 1 / 100000 / 1000000 are accepted.
+#    (0, 1000001, 2.5 refused); the boundary values 1 / 100000 / 1000000 are accepted.
 # All identifiers in this file are synthetic mock fixtures. No AWS client runs. Plan-only: never remove the mock_provider or run apply.
 mock_provider "aws" {
   override_during = plan
@@ -299,8 +300,8 @@ run "dashboard_has_the_alb_panel_while_the_alb_exists" {
     error_message = "One ALB panel: RequestCountPerTarget (TargetGroup) and HTTPCode_Target_4XX_Count (LoadBalancer + TargetGroup), period 60, Sum."
   }
   assert {
-    condition     = sum([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : length(try(w.properties.metrics, []))]) == 116
-    error_message = "Dashboard metric count with Neptune on, EMR off and the ALB: 114 + 2 = 116 (hand count in the header)."
+    condition     = sum([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : length(try(w.properties.metrics, []))]) == 37
+    error_message = "Dashboard metric count with Neptune on, EMR off and the ALB: 23 + 5 + 9 = 37 (hand count in the header; P9)."
   }
 }
 
@@ -317,8 +318,8 @@ run "dashboard_has_no_alb_panel_without_the_alb" {
     error_message = "No ALB: no ALB panel and no empty widget."
   }
   assert {
-    condition     = sum([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : length(try(w.properties.metrics, []))]) == 114
-    error_message = "Dashboard metric count without the ALB is the earlier 114 (Neptune on, EMR off)."
+    condition     = sum([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : length(try(w.properties.metrics, []))]) == 28
+    error_message = "Dashboard metric count without the ALB: 23 + 5 = 28 (Neptune on, EMR off; P9)."
   }
 }
 
@@ -397,6 +398,15 @@ run "burst_above_1000000_is_refused" {
   command = plan
   variables {
     query_semantic_rate_limit_burst = 1000001
+  }
+  expect_failures = [var.query_semantic_rate_limit_burst]
+}
+
+# P41 review 1 F3: the whole-number (floor) check on the burst is exercised.
+run "fractional_burst_is_refused" {
+  command = plan
+  variables {
+    query_semantic_rate_limit_burst = 2.5
   }
   expect_failures = [var.query_semantic_rate_limit_burst]
 }

@@ -1,0 +1,21 @@
+<!--
+  Logging for the storage command-line tools (StorageLoadMain, RuntimeArtifactMain). ToolLogging.install()
+  selects this file through logback.configurationFile unless the operator already set that property.
+  It has a unique name so it never competes with the services' logback.xml on a shared classpath.
+-->
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <pattern>%d{ISO8601} %-5level [%thread] %logger{20} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <!-- Wire, header and signer logging from these libraries can carry temporary session tokens. -->
+  <logger name="org.apache.http" level="WARN"/>
+  <logger name="org.apache.hc" level="WARN"/>
+  <logger name="software.amazon.awssdk" level="WARN"/>
+  <logger name="io.netty" level="WARN"/>
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

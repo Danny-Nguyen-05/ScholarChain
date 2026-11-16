@@ -76,6 +76,7 @@ variable "emr_config" {
     job_jar_sha256               = optional(string)
     extra_artifacts              = optional(list(object({ uri = string, sha256 = string, dest = string })), [])
     instance_type                = optional(string, "m5.xlarge")
+    primary_instance_type        = optional(string, "r5.xlarge")
     max_task_nodes               = optional(number, 0)
     task_node_count              = optional(number, 0)
     managed_scaling_enabled      = optional(bool, false)
@@ -98,6 +99,13 @@ variable "emr_config" {
   validation {
     condition     = var.emr_config.instance_type == "m5.xlarge"
     error_message = "Only m5.xlarge keeps the smallest cluster (primary + core) inside the USD 3 per-run cap at the maximum runtime plus idle tail (G6); m5.2xlarge would not."
+  }
+  # Phase 15 D3 (human decision, docs/agent-runs/phase-15/prompt.md, "D3 decision" and "S run cap and D3 go-ahead", 2026-11-16):
+  # instance_type is the core (and task) type; the primary node has its own type, r5.xlarge by default, for the 12g single-JVM
+  # entity-resolution step that runs on the primary. Exactly the reviewed pair: primary m5.xlarge or r5.xlarge, core m5.xlarge.
+  validation {
+    condition     = contains(["m5.xlarge", "r5.xlarge"], var.emr_config.primary_instance_type)
+    error_message = "D3: the primary instance type must be r5.xlarge (the reviewed default) or m5.xlarge; no other type has a reviewed rate and cap check."
   }
   validation {
     condition     = floor(var.emr_config.max_task_nodes) == var.emr_config.max_task_nodes && var.emr_config.max_task_nodes >= 0 && var.emr_config.max_task_nodes <= 1
@@ -429,8 +437,9 @@ variable "runtime_audit_prefix" {
 }
 
 # Phase 15 P41 (docs/runbooks/session-2-plan.md rows F26 and P41, section 5.3 step 2; Work order 3 defaults accepted 2026-11-16).
-# Three optional runtime inputs for the Session 2 elasticity experiment (R-b). All default to null, which leaves the plan exactly as
-# before: no request-count policy and no rate-limit variable in any task environment. The values are derived in the P35 rehearsal
+# Three optional runtime inputs for the Session 2 elasticity experiment (R-b). All default to null: no new resource and no new
+# environment variable (no request-count policy, no rate-limit variable in any task environment). When the ALB exists and the dashboard
+# is on, the dashboard gains the ALB panels regardless of these variables. The values are derived in the P35 rehearsal
 # and go in the private runtime tfvars (environments/course.local.tfvars.example documents them). Passed to modules/runtime.
 variable "query_requests_per_target_target" {
   type        = number

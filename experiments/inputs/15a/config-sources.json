@@ -1,5 +1,5 @@
 {
-  "decision": "Phase 14B pre-session item 1 (user, 2026-11-10): use the files already in the repository from the Phase 5/6 local runs; no new settings",
+  "decision": "Phase 14B pre-session item 1 (user, 2026-11-10): use the files already in the repository from the Phase 5/6 local runs; Phase 15 session-2 plan P1, P22 and P24 (2026-11-16): the Hadoop prep config is uploaded as config/hadoop-config.json, and the Spark template is the experiment-owned EMR template with the accepted 64 shuffle partitions (the Phase 6 evidence file is unchanged)",
   "files": {
     "er-config": {
       "origin": "committed copy of target/phase6-inputs/6fg-runtime/er-config.json (byte-identical, same sha256), the --config of the Phase 6 local ER run; llm adjudication disabled (deterministic-fake provider, maxSpendUsd 0.0)",
@@ -11,12 +11,17 @@
       "path": "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
       "sha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f"
     },
+    "hadoop-config": {
+      "origin": "experiment-owned Hadoop prep config of 15A (P22: maxLocalSampleRecords 60000 covers the L slice, at most 50,000 DBLP records by the dataset-engineer's TARGET_MAX, plus the 3 one-line committed openalex/crossref/orcid samples); uploaded to config/hadoop-config.json (P1)",
+      "path": "experiments/inputs/15a/prep-config.json",
+      "sha256": "5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57"
+    },
     "spark-config-template": {
-      "origin": "committed copy of target/phase6-inputs/6fg-runtime/spark-first.json (byte-identical), the Phase 6 first Spark run config; scripts/emr/sc-render-spark-config.py replaces its four path keys hadoopRunRoot, entityResolutionRunRoot, outputRoot, checkpointDirectory at run time",
-      "path": "docs/agent-runs/phase-06/evidence/6fg/local-spark-first-config.json",
-      "sha256": "753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458"
+      "origin": "experiment-owned EMR template (P24) for both 15A sizes: the Phase 6 first-run config docs/agent-runs/phase-06/evidence/6fg/local-spark-first-config.json (sha256 753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458, unchanged) with shufflePartitions 4 -> 64, which equals the accepted 14C export config (target/phase6-inputs/14c-runtime/spark-export.json, sha256 ee27421d7b6b9a01d624efa1b04b473e2e41f34c3819c406bfaea2fd0718c1e1) in every key except the four path keys; those hold /replaced-at-run-time/<key> and scripts/emr/sc-render-spark-config.py replaces hadoopRunRoot, entityResolutionRunRoot, outputRoot, checkpointDirectory per run",
+      "path": "experiments/inputs/15a/spark-emr-template.json",
+      "sha256": "9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a"
     }
   },
   "schema": "scholarchain.experiment-config-sources.v1",
-  "usage": "scripts/upload-emr-artifacts.sh --er-policy <er-policy path> --er-config <er-config path> --spark-config-template <spark-config-template path>; the sha256 values are the --sha er-policy / er-config / spark-config-template values for experiments/scripts/render_manifests.py; experiments/tests/test_derive_14c_inputs.py fails if a file drifts"
+  "usage": "scripts/upload-emr-artifacts.sh --er-policy <er-policy path> --er-config <er-config path> --spark-config-template <spark-config-template path> --hadoop-config <hadoop-config path> (the --hadoop-config option is the infra-engineer's P1 change); experiments/scripts/render_manifests.py reads the four sha256 values from these files itself and refuses a --sha that differs; experiments/scripts/check_manifests.py fails a manifest whose pinned sha256 differs from the file; experiments/tests/test_derive_14c_inputs.py fails if a file drifts from this list"
 }

@@ -263,12 +263,20 @@ private[storage] class RowRunLedger(rows: StorageRows, table: String) extends Ru
       }
     }
   }
-  private def transition(id: String, stage: String, next: RunStage): StorageResult[RunStage] = {
+  // `known` is the stage row the caller has already read (recordStage, completeStage): reading it
+  // again costs one more DynamoDB GetItem per transition and decides nothing new, because the
+  // transaction below is conditioned on that exact stage payload (or its absence) and on the root.
+  private def transition(
+      id: String,
+      stage: String,
+      next: RunStage,
+      known: Option[StorageResult[RunStage]] = None
+  ): StorageResult[RunStage] = {
     if (stage.isEmpty || next.retryCount < 0) return Rejected("invalid-stage")
     RowCodec.map(roots.get(rootKey(id))) { root =>
       if (root.state != "running") Rejected("run-not-running")
       else {
-        val current = stages.get(stageKey(id, stage))
+        val current = known.getOrElse(stages.get(stageKey(id, stage)))
         val condition = current match {
           case Missing if next.state == "running" && next.retryCount == 0 =>
             Some(RowCondition.Absent)
@@ -313,9 +321,9 @@ private[storage] class RowRunLedger(rows: StorageRows, table: String) extends Ru
     }
   }
   def recordStage(id: String, stage: String): StorageResult[RunStage] = {
-    val retries =
-      StorageResult.value(stages.get(stageKey(id, stage))).map(_.retryCount).getOrElse(0)
-    transition(id, stage, RunStage(stage, "running", retries, None))
+    val current = stages.get(stageKey(id, stage))
+    val retries = StorageResult.value(current).map(_.retryCount).getOrElse(0)
+    transition(id, stage, RunStage(stage, "running", retries, None), Some(current))
   }
   def recordFailure(
       id: String,
@@ -327,9 +335,9 @@ private[storage] class RowRunLedger(rows: StorageRows, table: String) extends Ru
     else transition(id, stage, RunStage(stage, "failed", retryCount, Some(reason)))
   }
   def completeStage(id: String, stage: String): StorageResult[RunStage] = {
-    val retries =
-      StorageResult.value(stages.get(stageKey(id, stage))).map(_.retryCount).getOrElse(0)
-    transition(id, stage, RunStage(stage, "complete", retries, None))
+    val current = stages.get(stageKey(id, stage))
+    val retries = StorageResult.value(current).map(_.retryCount).getOrElse(0)
+    transition(id, stage, RunStage(stage, "complete", retries, None), Some(current))
   }
   def completeRun(id: String): StorageResult[RunRecord] = RowCodec.map(roots.get(rootKey(id))) {
     root =>

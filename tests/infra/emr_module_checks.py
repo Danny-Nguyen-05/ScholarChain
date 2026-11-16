@@ -90,7 +90,7 @@ def check_inventory(plan):
 
 
 def check_cluster_is_decision_12_10(plan):
-    """EMR emr-7.8.0 with applications ["Hadoop"] only; no key pair; auto-termination set; one primary and one core."""
+    """EMR emr-7.8.0 with applications ["Hadoop"] only; no key pair; auto-termination set; one r5.xlarge primary (D3) and one m5.xlarge core."""
     c = _cluster(plan)
     problems = []
     if c.get("applications") != ["Hadoop"]:
@@ -105,10 +105,12 @@ def check_cluster_is_decision_12_10(plan):
     policies = as_list(c.get("auto_termination_policy"))
     if len(policies) != 1 or not (60 <= policies[0].get("idle_timeout", 0) <= 900):
         problems.append("auto_termination_policy idle_timeout must be set and at most 900 s, got %r" % policies)
-    for group in ("master_instance_group", "core_instance_group"):
+    # Phase 15 D3 (human, docs/agent-runs/phase-15/prompt.md "D3 decision" and "S run cap and D3 go-ahead", 2026-11-16): the PRIMARY
+    # is one r5.xlarge (the 12g entity-resolution JVM runs there); the core stays one m5.xlarge. Any other type in either group fails.
+    for group, expected in (("master_instance_group", "r5.xlarge"), ("core_instance_group", "m5.xlarge")):
         g = as_list(c.get(group))
-        if len(g) != 1 or g[0].get("instance_count") != 1 or g[0].get("instance_type") != "m5.xlarge":
-            problems.append("%s must be one m5.xlarge" % group)
+        if len(g) != 1 or g[0].get("instance_count") != 1 or g[0].get("instance_type") != expected:
+            problems.append("%s must be one %s" % (group, expected))
     return problems
 
 

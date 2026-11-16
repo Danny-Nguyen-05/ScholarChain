@@ -233,7 +233,7 @@ run "pipeline_emr_actions_are_scoped_to_clusters_carrying_the_three_project_tags
         "aws:ResourceTag/scholarchain:stack" = "main-emr"
       } }
     ])
-    error_message = "The cluster checks (describe-cluster, get-auto-termination-policy, list-instance-groups, describe-step) need the project, environment and stack resource tags and us-east-2."
+    error_message = "The cluster checks (describe-cluster with its ListInstanceGroups and ListBootstrapActions calls, get-auto-termination-policy, describe-step) need the project, environment and stack resource tags and us-east-2."
   }
   assert {
     condition = anytrue([

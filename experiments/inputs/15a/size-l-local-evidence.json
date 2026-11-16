@@ -1,0 +1,74 @@
+{
+  "emr": "NOT an EMR run: the user dropped L on EMR on 2026-11-16 (P25 rule; docs/agent-runs/phase-15/prompt.md, 'L, second size'). No EMR manifest exists for L; experiments/scripts/check_manifests.py fails any 15a-*.json manifest outside the S run and the Session 1 history.",
+  "id": "15a-size-l-local",
+  "identityBypassSpark": {
+    "disclosure": "ER bypassed: identity pass-through (no cross-source resolution), local only, not the EMR path",
+    "programs": [
+      "experiments/scripts/er_identity_bypass.py",
+      "experiments/scripts/run_spark_bypass.py"
+    ],
+    "summaries": {
+      "L": {
+        "allYearsComponents": 2811,
+        "allYearsEdges": 320690,
+        "allYearsLargestComponent": 65597,
+        "canonicalResearchers": 76623,
+        "canonicalWorks": 48188,
+        "componentIterations": 15,
+        "exitCode": 0,
+        "kCoreIterations": 26,
+        "missingGraphEndpoints": 0,
+        "pairCountMismatches": 0,
+        "path": "target/phase15/p6/l-bypass/spark-L/summary.json",
+        "peakSumDiskBytes": 25316182591,
+        "sha256": "7fe4deb7de1da28b7b9ff82bbd23c71ac283f6230c8d4a658876c34332de66c9",
+        "shuffleWriteBytes": 58588839113,
+        "sidecarCsvParts": 231,
+        "sidecarMaxPartBytes": 8565999,
+        "stages": 2000,
+        "tasks": 32117,
+        "wallSeconds": 1110.14
+      },
+      "S": {
+        "allYearsComponents": 1045,
+        "allYearsEdges": 81181,
+        "allYearsLargestComponent": 17179,
+        "canonicalResearchers": 21819,
+        "canonicalWorks": 10578,
+        "componentIterations": 17,
+        "exitCode": 0,
+        "kCoreIterations": 16,
+        "missingGraphEndpoints": 0,
+        "pairCountMismatches": 0,
+        "path": "target/phase15/p6/l-bypass/spark-S/summary.json",
+        "peakSumDiskBytes": 7891467094,
+        "sha256": "9b0c2d978607a36eb6c64b3d104fc6d66f6498a2122fcbd223fac34d3015a9be",
+        "shuffleWriteBytes": 12567833110,
+        "sidecarCsvParts": 57,
+        "sidecarMaxPartBytes": 8506349,
+        "stages": 1984,
+        "tasks": 27282,
+        "wallSeconds": 459.84
+      }
+    },
+    "template_sha256": "9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a"
+  },
+  "inputTree": {
+    "command": "python3 -I experiments/scripts/build_l_input.py",
+    "output": "target/experiment-inputs/15a/size-l/ and size-l.subset.json (git-ignored)"
+  },
+  "p6Local": {
+    "entityResolution": "java.lang.OutOfMemoryError: Java heap space at -Xmx22g after 963.5 s (user: out of memory at 22g after 16 min)",
+    "hadoopPrep": "exit 0 in 131.8 s, 137.2 s and 141.3 s over three local runs (user: 132 s); OVERSIZE_TEAM 210 works over the maxAuthorTeamSize 16 limit; largest team 79",
+    "source": "user statement, docs/agent-runs/phase-15/prompt.md 'L, second size'; run log target/phase15/lanes/p6-progress.md (git-ignored)"
+  },
+  "schema": "scholarchain.experiment-local-evidence.v1",
+  "slice": {
+    "bytes": 27964881,
+    "distinctExactAuthorStrings": 76623,
+    "manifest": "datasets/phase15/dblp-l-slice-manifest.v1.json",
+    "nestingCheck": "PASS",
+    "publicationCount": 48187,
+    "sha256": "7e62bb428a6ef34dd7961f337b6a2d42978d7c2cbf1c566c7ce83eac3b21ea34"
+  }
+}

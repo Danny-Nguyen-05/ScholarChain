@@ -220,6 +220,41 @@ run "module_refuses_a_fractional_target" {
   expect_failures = [var.query_requests_per_target_target]
 }
 
+# P41 review 1 F3: the Session 2 ACM path. The root passes https_enabled = true from plan-time values (api_domain_name) while the
+# Terraform-requested certificate's ARN is still unknown (null here); local.https is then true, query-api is load balanced, and the
+# precondition passes: exactly one request-count policy.
+run "module_target_on_the_acm_path_creates_exactly_one_policy" {
+  command = plan
+  module {
+    source = "./modules/runtime"
+  }
+  variables {
+    https_enabled                    = true
+    certificate_arn                  = null
+    query_requests_per_target_target = 600
+  }
+
+  assert {
+    condition     = length(aws_appautoscaling_policy.query_requests) == 1 && aws_appautoscaling_policy.query_requests[0].target_tracking_scaling_policy_configuration[0].target_value == 600 && aws_appautoscaling_policy.query_requests[0].target_tracking_scaling_policy_configuration[0].predefined_metric_specification[0].resource_label == "app/synthetic/1234567890123456/targetgroup/synthetic/6543210987654321"
+    error_message = "https_enabled = true with certificate_arn = null (the ACM path): exactly one request-count policy, target 600, label \"<ALB>/<TG>\"."
+  }
+  assert {
+    condition     = length(aws_appautoscaling_policy.http_cpu) == 3 && output.alb_metric_dimensions == { load_balancer = "app/synthetic/1234567890123456", target_group = "targetgroup/synthetic/6543210987654321" }
+    error_message = "The three CPU policies stay, and the dashboard dimensions are set on the ACM path."
+  }
+}
+
+run "module_refuses_a_fractional_burst" {
+  command = plan
+  module {
+    source = "./modules/runtime"
+  }
+  variables {
+    semantic_rate_limit_burst = 2.5
+  }
+  expect_failures = [var.semantic_rate_limit_burst]
+}
+
 run "module_refuses_burst_above_1000000" {
   command = plan
   module {

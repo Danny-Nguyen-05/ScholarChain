@@ -8,22 +8,71 @@ Run all commands from the repository root with `python3 -I`.
 
 | Path | Purpose |
 |---|---|
-| `manifests/15a-emr-size-{25,50,100}.json` | the three EMR runs; schema `scholarchain.experiment-manifest.v1`, accepted by `scripts/run-experiment.sh` |
+| `manifests/15a-emr-size-{25,50,100}.json` | the EMR runs: size-25 and size-50 are Session 1 history, size-100 is size S (75 min, r5.xlarge primary); size L has no EMR manifest; schema `scholarchain.experiment-manifest.v1`, accepted by `scripts/run-experiment.sh` |
 | `manifests/15b-ecs-scaling.json` | query-api scale-out / scale-in driven by `load-tests/loadgen.py`; schema `scholarchain.load-experiment-manifest.v1` (run-experiment.sh is EMR-only and cannot take it) |
 | `manifests/16b-live-evaluation.json` | 16B placeholder: the LLM answer budget, the Voyage embeddings allowance, their tie to the shared claude-haiku-5-5 cap and the command (`load-tests/eval16b.py`) that asks the 40 questions |
 | `manifests/llm-allocation.json` | proposed split of the USD 1.33 claude-haiku-5-5 (Anthropic API) cap across 14C, 15B and 16B |
-| `inputs/15a/prep-config.json`, `datasets.json` | the Hadoop prep config and the dataset snapshot manifest the 15A manifests name |
-| `inputs/15a/config-sources.json` | the repository files used for `--er-policy`, `--er-config`, `--spark-config-template` (paths and sha256; item 1 of the 14B pre-session list) |
+| `inputs/15a/prep-config.json`, `datasets.json` | the Hadoop prep config (uploaded as `config/hadoop-config.json`, P1; `maxLocalSampleRecords` 60,000, P22) and the dataset snapshot manifest the 15A manifests name |
+| `inputs/15a/spark-emr-template.json` | the EMR Spark template for both sizes (P24; 64 shuffle partitions), uploaded as `config/spark-config-template.json` |
+| `inputs/15a/config-sources.json` | the repository files used for `--hadoop-config`, `--er-policy`, `--er-config`, `--spark-config-template` (paths and sha256) |
 | `inputs/14c/` | the real include list, smoke body, 40 questions and node IDs derived from export `f6e63b4b`, with a provenance file |
 | `scripts/derive_14c_inputs.py` | derives `inputs/14c/` from the local Phase 6 export (deterministic) |
-| `scripts/make_dblp_subsets.py` | builds the three input trees locally from the real Phase 6 slice |
-| `scripts/render_manifests.py` | renders the 15A manifests (tokens for buckets and run prefix; real artifact hashes) |
+| `scripts/make_dblp_subsets.py` | builds the three input trees locally from the real Phase 6 slice (and, with `--tree-label`, the L tree) |
+| `scripts/build_l_input.py` | one command for the local size-L tree: builds `size-l/` from the dataset-engineer's L slice, rechecks S ⊂ L and the evidence record |
+| `inputs/15a/size-l-local-evidence.json` | size L, local evidence only (not an EMR run): slice facts, P6 numbers, identity-bypass Spark summaries |
+| `scripts/render_manifests.py` | renders the size S manifest (tokens for buckets and run prefix; config hashes from the files, JAR hashes from `--sha`); never rewrites the Session 1 history |
 | `scripts/check_manifests.py` | offline validation of every manifest and the cost arithmetic |
-| `tests/test_experiments.py`, `tests/test_derive_14c_inputs.py` | 28 + 23 tests |
+| `tests/test_experiments.py`, `tests/test_derive_14c_inputs.py` | 48 + 23 tests |
 
-## 15A: three EMR runs at three dataset sizes
+## 15A: EMR runs (Session 1 history and size S)
 
-One run per size, each on 1 primary + 1 core `m5.xlarge` (capacity 2), 90 minutes of cluster time at most, 900 s idle auto-termination. G6 estimate per run = 2 x (0.192 + 0.048) x (5,400 + 900) / 3,600 = **USD 0.84**; three runs **USD 2.52** against the USD 2.52 cumulative cap (`EMR_CUMULATIVE_CAP_USD=2.52` in `scripts/config/release.conf`, human decision 2026-11-09 "caps = planned use", 3 runs x 0.84, so no headroom) and 3 live runs (`EMR_MAX_LIVE_RUNS`). The same number comes out of the real `run-bounded-pipeline.sh` dry run (`ESTIMATE-USD: 0.84`). EMR capacity is fixed per run: a node-level scale-out would need `max_task_count` above 0 (3 nodes = USD 1.26; 0.84 + 0.84 + 1.26 = 2.94 > 2.52, so `budget.py` would refuse a node-level scale-out, which needs a recorded human cap decision first); the default shows Spark executor scaling only and the report must say so if no capacity change occurs.
+Session 1 (history): one run per size, each on 1 primary + 1 core `m5.xlarge` (capacity 2), 90 minutes of cluster time at most, 900 s idle auto-termination. G6 estimate per run = 2 x (0.192 + 0.048) x (5,400 + 900) / 3,600 = **USD 0.84**. `15a-emr-size-25.json` and `15a-emr-size-50.json` stay byte-identical to commit 7a02de2 as the ledger history of the two Session 1 runs (USD 1.68); they are not rerun. EMR capacity is fixed per run: a node-level scale-out would need `max_task_count` above 0, which the ledger cannot afford; the report must say if no capacity change occurs.
+
+### Session 2: size S on EMR, size L as local evidence only (P1, P21, P22, P24, P25, D3)
+
+**S run** (`15a-emr-size-100.json`, user decisions 2026-11-16 in `docs/agent-runs/phase-15/prompt.md`, "S run cap and D3 go-ahead"): 10,577 works (the Phase 6 slice), **75 minutes** at most, one **r5.xlarge primary** (`pipeline.primary_instance_type`; entity resolution runs on the primary with `PIPELINE_ER_XMX=12g`) and one **m5.xlarge core** node (`pipeline.instance_type`), no task nodes, 900 s idle auto-termination, budget USD 0.84. G6 estimate, the primary priced at its own type (`scripts/config/emr-pricing.conf`, us-east-2, retrieved 2026-11-16): (r5.xlarge 0.252 + 0.063 = 0.315/h + m5.xlarge 0.192 + 0.048 = 0.240/h) x (4,500 + 900) / 3,600 = 0.8325, rounded up to **USD 0.84**. At 75 minutes the step timeouts (`PIPELINE_STEP_WEIGHTS`) are 3.75 / 15 / 15 / 3.75 / 30 / 7.5 minutes (stage-in, Hadoop, ER, class origin, Spark, copy-out).
+
+**Ledger** (`check_manifests.py`): Session 1 history 0.84 + 0.84, plus S 0.84 and **one S retry** 0.84 = **USD 3.36 over 4 runs**, against `EMR_CUMULATIVE_CAP_USD=3.36` and `EMR_MAX_LIVE_RUNS=4` (P25). **The margin is zero** (USD 0.00 and 0 runs): any further EMR run, a longer cap, or a costlier node type is refused by the ledger and needs a new human decision. `scripts/lib/budget.py` reserves its own unrounded estimate (0.833 per S run, cumulative 3.35 per the coordinator's figures in `prompt.md`); this check rounds each run up to the cent. Record the EMR actuals right after each S run.
+
+**L: local evidence only.** The user dropped L on EMR on 2026-11-16 (P25 rule; `prompt.md`, "L, second size"). No EMR manifest exists for L, and `check_manifests.py` fails any 15A manifest other than the two history runs and S. The record is `inputs/15a/size-l-local-evidence.json`:
+
+- L slice (dataset-engineer, `datasets/phase15/dblp-l-slice-manifest.v1.json`): **48,187** inproceedings of `dblp-2026-10-03`, 33 venues (the 8 S venues plus 25 candidates, at most 2,500 per venue, 2005-2026), 76,623 distinct exact author strings, 27,964,881 bytes, sha256 `7e62bb428a6ef34dd7961f337b6a2d42978d7c2cbf1c566c7ce83eac3b21ea34`, nesting check S ⊂ L PASS. L/S = 4.66 x bytes, 4.56 x records, 4.47 x authorships (203,584 / 45,587), 4.17 x coauthor pairs (489,889 / 117,425), counted from the two XML files.
+- P6 local chain at L (user statement in `prompt.md`; run log `target/phase15/lanes/p6-progress.md`): Hadoop prep passes in about 132 s (131.8, 137.2 and 141.3 s in three runs); 210 works are dropped by the team limit (`OVERSIZE_TEAM`, `maxAuthorTeamSize` 16); the largest team is 79. Entity resolution runs out of memory (`java.lang.OutOfMemoryError: Java heap space`) at `-Xmx22g` after 963.5 s (about 16 min).
+- Spark at L with **ER bypassed: identity pass-through (no cross-source resolution), local only, not the EMR path** (`scripts/er_identity_bypass.py`, `scripts/run_spark_bypass.py`; the unchanged Spark job, the same template; summaries `target/phase15/p6/l-bypass/spark-{S,L}/summary.json`, sha256 in the evidence record):
+
+| | S (identity bypass) | L (identity bypass) |
+|---|---|---|
+| Spark wall time (local) | 459.84 s | 1,110.14 s |
+| canonical works / researchers | 10,578 / 21,819 | 48,188 / 76,623 |
+| all-years coauthor edges | 81,181 | 320,690 |
+| all-years components / largest | 1,045 / 17,179 | 2,811 / 65,597 |
+| component / k-core iterations (cap 50) | 17 / 16 | 15 / 26 |
+| stages / tasks (64 partitions) | 1,984 / 27,282 | 2,000 / 32,117 |
+| shuffle write | 12.57 GB | 58.59 GB |
+| sidecar CSV parts / largest (cap 16 MiB) | 57 / 8,506,349 B | 231 / 8,565,999 B |
+| hard invariants (pair-count mismatches, missing endpoints) | 0, 0 | 0, 0 |
+
+  At S the identity graph has the same per-window sizes as the real-ER S run (the real S ER produced 0 researcher links and 1 work link), so the bypass is close to real at S; at L it is a disclosed approximation, not an ER result.
+
+The one command still builds the L input tree (for local runs only) and checks it against the slice and the evidence record:
+
+```bash
+python3 -I experiments/scripts/build_l_input.py      # writes target/experiment-inputs/15a/size-l/ and size-l.subset.json; refuses an existing tree
+```
+
+Observed (`--output-root target/phase15/lanes/lane-C-l-input-check2`, 2026-11-16): exit 0, 48,187 publications, DBLP file byte-identical to the L slice, S ⊂ L rechecked on the files (10,577 keys), evidence record matches.
+
+`maxLocalSampleRecords` (P22) is 60,000: `SampleBound` is one record budget per Hadoop job across all inputs (XML elements for DBLP, non-blank lines for JSONL). The largest input is L (at most 50,000 records by the dataset-engineer's `TARGET_MAX`; 48,187 actual) plus the three committed one-line samples (openalex 1, crossref 1, orcid 1) = 50,003 at most, rounded up to 60,000. The same prep config is uploaded for S (S needs 10,577 + 3). `check_manifests.py` fails if the bound drops below the L slice count + 3. The matching ceiling `PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS` must be at least 60,000 (infra-engineer).
+
+Spark template (P24; used by S on EMR and by the local L runs): `inputs/15a/spark-emr-template.json` is the Phase 6 first-run config with `shufflePartitions` 64, which is the accepted 14C export config (`target/phase6-inputs/14c-runtime/spark-export.json`, sha256 `ee27421d...c1e1`) in every key except the four path keys (`/replaced-at-run-time/<key>`; `sc-render-spark-config.py` replaces them per run). The Phase 6 evidence file is not changed. The same value is used for L, because:
+
+- executors: `spark-12-10.conf` gives 1-core, 3g executors and `PIPELINE_MAX_EXECUTORS_PER_NODE=2` with 1 core node, so at most 2 tasks run at once;
+- data volume: the largest shuffle of the 64-partition S export read 865,231,386 bytes (`event-log-summary.json` of run `f6e63b4b`, stage 4177, 16 tasks after AQE coalescing, at most 60.6 MB per task); x 4.66 gives about 4.03 GB at L, so 64 partitions hold about 63 MB each before coalescing, under AQE's 64 MiB advisory size; 4 partitions would give about 1 GB per task;
+- task overhead: 320 of the 2,024 S stages kept all 64 tasks (AQE does not coalesce them); S at 64 ran 27,344 tasks against 5,237 at 4 partitions (run `f02acf56`; summed stage time 517 s against 277 s locally). These counts grow with the partition count, not with the data, and the Spark step has 30 of S's 75 minutes (`PIPELINE_STEP_WEIGHTS` spark-job=40), so a proportional value (about 300) would add tens of thousands of tasks on 2 slots;
+- loader cap: the Neptune CSV sidecar part count is `ceil(bytes / 8 MiB)` per dataset (`Phase7NeptuneExport`, 16 MiB hard limit), independent of `shufflePartitions`;
+- comparability: S and L differ only in input data (same logical and physical Spark config).
+
+The spark-engineer confirms these settings (P24). `componentMaxIterations` 50 and `kCoreMaxIterations` 50 fail a run when not converged (`require`); S needed 17 / 16 iterations and the identity-bypass L run 15 / 26. The local L run (1,110 s) confirms 64 partitions complete at L with all sidecar parts under the cap.
 
 ### The three sizes (real Phase 6 slice)
 
@@ -57,8 +106,8 @@ S3 contract (reconciled with the deployer grant). Everything for 15A lives in th
 |---|---|
 | `bin/`, `steps/` | uploaded by the infra/deploy tooling (not named in the manifests) |
 | jars | `emr/<run_prefix>/jars/` : `hadoop-submit.jar`, `hadoop-bundle.jar`, `entity-resolution.jar`, `spark-job.jar` (the job JAR is a node-local path in the pipeline; only its sha256 is in the manifest) |
-| config | `emr/<run_prefix>/config/` : `er-policy.json`, `er-config.json`, `spark-config-template.json` |
-| input of run N | `emr/<run_prefix>/input/size-N/datasets/samples/{dblp,openalex,crossref,orcid}/...` (the contents of `target/experiment-inputs/15a/size-N/`; sha256 in `size-N.subset.json`) |
+| config | `emr/<run_prefix>/config/` : `hadoop-config.json` (P1; the key the upload option `--hadoop-config` must write), `er-policy.json`, `er-config.json`, `spark-config-template.json` |
+| input of run N | `emr/<run_prefix>/input/size-N/datasets/samples/{dblp,openalex,crossref,orcid}/...` (N = 25, 50, 100 or l; the contents of `target/experiment-inputs/15a/size-N/`; sha256 in `size-N.subset.json`) |
 | outputs of run N | `s3://<artifacts>/pipeline/<run_prefix>/15a/size-N/<run-id>/...` (the `pipeline/` prefix is the one the EMR role may clean up) |
 | metric exports | `s3://<artifacts>/pipeline/<run_prefix>/15a/size-N/metrics/` (cluster logs stay at the cluster `log_uri`, `s3://<logs>/emr/`) |
 
@@ -70,8 +119,9 @@ Committed manifests carry **tokens only**, never bucket names, because bucket na
 
 ```bash
 python3 -I experiments/scripts/render_manifests.py --overwrite \
-    --sha hadoop-submit-jar=<hex> --sha hadoop-libjars=<hex> --sha er-jar=<hex> --sha job-jar=<hex> \
-    --sha er-policy=<hex> --sha er-config=<hex> --sha spark-config-template=<hex>
+    --sha hadoop-submit-jar=<hex> --sha hadoop-libjars=<hex> --sha er-jar=<hex> --sha job-jar=<hex>
+# the hadoop-config, er-policy, er-config and spark-config-template hashes come from the files in inputs/15a/config-sources.json;
+# a --sha for them must equal the file; --keep-jar-shas reuses the JAR hashes already in 15a-emr-size-100.json
 python3 -I experiments/scripts/check_manifests.py --final      # must print RESULT: OK (final: no placeholders)
 ```
 
@@ -81,18 +131,18 @@ python3 -I experiments/scripts/check_manifests.py --final      # must print RESU
 
 ```bash
 python3 -I experiments/scripts/check_manifests.py               # offline; exit 0 ok, 1 failed, 3 blocked by a pinned ceiling
-python3 -I -m unittest discover -s experiments/tests -v         # 51 tests
+python3 -I -m unittest discover -s experiments/tests -v         # 84 tests (48 + 23 + the 13 identity-bypass tests)
 # after the manifests are final and committed (dry run: no aws call, prints every EMR step; needs the cluster id of the Terraform cluster):
-scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-25.json --cluster-id <j-id>
-# execute only with the approval record and pre-spend receipt, one run at a time, in order 25, 50, 100:
-scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-25.json --cluster-id <j-id> --profile <profile> --approval <record> --prespend <receipt> --execute
+scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-100.json --cluster-id <j-id>
+# execute only with the approval record and pre-spend receipt (Session 2: size S, and at most one S retry):
+scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-100.json --cluster-id <j-id> --profile <profile> --approval <record> --prespend <receipt> --execute
 ```
 
 Raw results of a run: `target/experiment-runs/<experiment-id>-<run>/experiment-record.json`, `experiment-result.json` and the pipeline outputs listed in the pipeline run manifest. Archive with `scripts/archive-evidence.sh`. A failed run keeps its record; rerun is a new run with a new approval record (approvals are single use), and counts against the 3-run ledger.
 
-Known blocker (owner infra-engineer): `scripts/config/release.conf` pins `PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS=1000`, and `maxLocalSampleRecords` is a whole-step record bound in `HadoopPrepMain`, so the 2,648 to 10,577 publication inputs cannot run under it. The prep config sets 12,000 (no truncation at 100 percent: 10,577 plus the small samples). `check_manifests.py` reports it as `CHECK-BLOCKED` (exit 3). With a copy of the config pinned to 12,000 the real `run-bounded-pipeline.sh` dry run for the 100 percent manifest succeeds (`ESTIMATE-USD: 0.84`, no aws call).
+History (resolved for S by the 12,000 pin; for L see "Session 2" above, 60,000): `scripts/config/release.conf` pinned `PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS=1000`, and `maxLocalSampleRecords` is a whole-step record bound in `HadoopPrepMain`, so the 2,648 to 10,577 publication inputs cannot run under it. The prep config sets 12,000 (no truncation at 100 percent: 10,577 plus the small samples). `check_manifests.py` reports it as `CHECK-BLOCKED` (exit 3). With a copy of the config pinned to 12,000 the real `run-bounded-pipeline.sh` dry run for the 100 percent manifest succeeds (`ESTIMATE-USD: 0.84`, no aws call).
 
-## Local configuration files for the EMR upload (`--er-policy`, `--er-config`, `--spark-config-template`)
+## Local configuration files for the EMR upload (`--hadoop-config`, `--er-policy`, `--er-config`, `--spark-config-template`)
 
 Decision (user, 2026-11-10): use the files that already exist in the repository from the Phase 5/6 local runs; no new settings. `inputs/15a/config-sources.json` lists them and `tests/test_derive_14c_inputs.py` fails if one changes.
 
@@ -100,9 +150,10 @@ Decision (user, 2026-11-10): use the files that already exist in the repository 
 |---|---|---|
 | `--er-policy` | `modules/entity-resolution/src/main/resources/phase5-policy.v1.json` (policy `er-offline-uncalibrated-v2`, the version in the lineage of export `f6e63b4b`) | `2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f` |
 | `--er-config` | `docs/agent-runs/phase-06/evidence/6fg/local-er-config.json` (byte-identical to the ignored `target/phase6-inputs/6fg-runtime/er-config.json` of the Phase 6 run; LLM adjudication disabled) | `a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c` |
-| `--spark-config-template` | `docs/agent-runs/phase-06/evidence/6fg/local-spark-first-config.json` (byte-identical to the ignored `target/phase6-inputs/6fg-runtime/spark-first.json`; `sc-render-spark-config.py` replaces its four path keys per run) | `753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458` |
+| `--spark-config-template` | `experiments/inputs/15a/spark-emr-template.json` (P24, 2026-11-16; replaces the Phase 6 first-run file `753adaec...`, whose 4 shuffle partitions gave sidecar parts above the loader cap in Session 1) | `9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a` |
+| `--hadoop-config` (P1) | `experiments/inputs/15a/prep-config.json` (`maxLocalSampleRecords` 60,000, P22) | `5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57` |
 
-The same three values are the `--sha er-policy=`, `--sha er-config=` and `--sha spark-config-template=` arguments of `render_manifests.py`. `scripts/upload-emr-artifacts.sh` hashes the files itself, so its `EMR-RENDER` lines print these values when the three paths above are passed. Neither script takes a default path, so the paths are passed explicitly. Limitations: the template is the Phase 6 first-run config (4 shuffle partitions, local paths in the four replaced keys, which are uploaded to the artifacts bucket as text); the 14C export used a derived config with 64 shuffle partitions that is git-ignored and not part of this decision.
+`render_manifests.py` hashes these four files itself and pins them in every 15A manifest; `check_manifests.py` fails a manifest whose pin differs from the file. `scripts/upload-emr-artifacts.sh` hashes the files itself, so its `EMR-RENDER` lines print these values when the four paths above are passed. Neither script takes a default path, so the paths are passed explicitly. The four path keys of the template hold `/replaced-at-run-time/<key>`, so no local path is uploaded.
 
 ## Real 14C / 15B / 16B inputs (`inputs/14c/`)
 

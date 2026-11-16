@@ -1,7 +1,8 @@
 """Independent refusal-path tests for scripts/run-bounded-pipeline.sh (Subphase 13B, test-engineer).
 
 Expectations come from scripts/README.md ("Subphase 13B"), the script's --help, plan sections 7.1-7.3a and 9 and the
-user's Step 0 answers (G6 caps USD 3 per run / 3 runs / USD 2.52 cumulative since the 2026-11-09 caps = planned use decision, headroom floors, ceilings, approval record keys). Every refusal asserts the exit
+user's Step 0 answers (G6 caps USD 3 per run / 4 runs / USD 3.36 cumulative since the Phase 15 P25 decision of 2026-11-16, which raised the
+2026-11-09 caps = planned use values 3 runs / USD 2.52; headroom floors, ceilings, approval record keys). Every refusal asserts the exit
 code and the STEP marker / RESULT line, and that no cloud call happened before the refusal.
 """
 import datetime
@@ -124,14 +125,16 @@ class PipelineCeilingRefusals(Base):
         fx = self.fx()
         run = fx.dry()
         line = run.grep(r"^PLAN: ceilings:")[0]
-        for expected in ("maxLocalSampleRecords<=12000", "reducerCount<=8", "maxCandidateBlockSize<=256",
+        for expected in ("maxLocalSampleRecords<=60000", "reducerCount<=8", "maxCandidateBlockSize<=256",
                          "maxCandidatePairsPerBlock<=4096", "maxAuthorTeamSize<=64", "maxRecordBytes<=8388608",
                          "maxXmlEntityExpansion<=8388608"):
             self.assertIn(expected, line)
 
     def test_only_the_sample_record_ceiling_differs_from_phase4_and_the_smoke_script_keeps_1000(self):
-        """USD 25 replan: the pipeline's maxLocalSampleRecords ceiling is 12,000 (pipeline-specific); phase4-emr-smoke.sh keeps 1000 and
-        the other six ceilings are equal in the smoke script, the committed config and the fixture constants."""
+        """The pipeline's maxLocalSampleRecords ceiling is pipeline-specific: 12,000 under the USD 25 replan, 60,000 since Phase 15 P22
+        (one record budget for all four inputs: L slice <= 50,000 DBLP works + 3 other-source records = 50,003, about 20 percent
+        headroom). phase4-emr-smoke.sh keeps 1000 and the other six ceilings are equal in the smoke script, the committed config and
+        the fixture constants."""
         smoke = dict(re.findall(r"^readonly (SMOKE_MAX_[A-Z_]+)=(\d+)$", (S.REPO / "scripts/phase4-emr-smoke.sh").read_text(), re.M))
         conf = dict(re.findall(r"^(PIPELINE_CEILING_[A-Z_]+)=(\d+)$", (S.REPO / "scripts/config/release.conf").read_text(), re.M))
         pairs = {  # fixture field: (smoke constant, pipeline pin)
@@ -144,8 +147,9 @@ class PipelineCeilingRefusals(Base):
             "maxXmlEntityExpansion": ("SMOKE_MAX_XML_ENTITY_EXPANSION", "PIPELINE_CEILING_MAX_XML_ENTITY_EXPANSION"),
         }
         self.assertEqual(int(smoke["SMOKE_MAX_LOCAL_SAMPLE_RECORDS"]), 1000)
-        self.assertEqual(int(conf["PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS"]), 12000)
-        self.assertEqual(S.CEILINGS["maxLocalSampleRecords"], 12000)
+        self.assertEqual(int(conf["PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS"]), 60000)
+        self.assertEqual(S.CEILINGS["maxLocalSampleRecords"], 60000)
+        self.assertGreaterEqual(int(conf["PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS"]), 50000 + 3, "the largest L slice must fit")
         for field, (smoke_key, pin) in pairs.items():
             if field == "maxLocalSampleRecords":
                 continue
@@ -165,7 +169,9 @@ class PipelineCeilingRefusals(Base):
 
 
 class PipelineG6Refusals(Base):
-    """Step 0 answer 4: USD 3 per run, 3 live runs, USD 2.52 cumulative (planned use 3 x 0.84; it was 3.00, and 9.50 before the USD 25 replan), estimate printed, unconfirmed pricing refuses."""
+    """Step 0 answer 4 as amended: USD 3 per run, 4 live runs, USD 3.36 cumulative (Phase 15 P25, 4 x 0.84, including Session 1's EMR
+    spend; it was 3 runs / 2.52 under the 2026-11-09 caps = planned use, 3.00 before that, and 9.50 before the USD 25 replan), estimate
+    printed, unconfirmed pricing refuses."""
 
     def test_estimate_formula_is_instances_times_hourly_rate_times_runtime_plus_idle_tail_rounded_up(self):
         """13C finding B3, derived by hand from scripts/config/emr-pricing.conf (m5.xlarge EC2 0.192 + EMR 0.048 =
@@ -228,72 +234,101 @@ class PipelineG6Refusals(Base):
         self.assert_refused(fx.dry(budget_usd="0.59"))
         self.assertEqual(fx.dry(budget_usd="0.60").rc, 0, "a budget equal to the estimate is allowed")
 
-    def test_fourth_run_is_refused_on_execute_and_reported_in_a_dry_run(self):
+    # Phase 15 P25 (user, 2026-11-16, docs/agent-runs/phase-15/prompt.md line 131, verbatim: "P25: approved. Cap 4 runs and USD 3.36
+    # cumulative, including Session 1's EMR spend"). Before: 3 live runs / USD 2.52 (Phase 14B caps = planned use, 2026-11-09), so the
+    # former fourth-run refusal is now a fifth-run refusal and every cumulative boundary below moved from 2.52 to 3.36.
+    def assert_allowed(self, run):
+        self.assertEqual(run.rc, 0, run.describe())
+        self.assertIn("LEDGER-RESERVED", run.out, run.describe())
+
+    def test_fifth_run_is_refused_on_execute_and_reported_in_a_dry_run(self):
         fx = self.fx()
-        fx.write_ledger(["0.10", "0.10", "0.10"])
+        fx.write_ledger(["0.10", "0.10", "0.10", "0.10"])
         dry = fx.dry()
         self.assertEqual((dry.rc, dry.status), (0, "DRY-RUN"), dry.describe())
         self.assertIn("G6-STATUS: --execute would be refused", dry.out)
         run = fx.execute()
         self.assert_refused(run, step="g6-gate")
-        self.assertIn("3", run.result)
+        self.assertIn("4", run.result)
+        self.assertEqual(len(fx.reservations()), 4, "a refused run reserves nothing")
 
-    def test_two_recorded_runs_still_allow_a_third(self):
+    def test_three_recorded_runs_still_allow_a_fourth(self):
         fx = self.fx()
-        fx.write_ledger(["0.10", "0.10"])
-        run = fx.execute()
-        self.assertEqual(run.rc, 0, run.describe())
+        fx.write_ledger(["0.10", "0.10", "0.10"])
+        dry = fx.dry()
+        self.assertNotIn("G6-STATUS: --execute would be refused", dry.out, dry.describe())
+        self.assert_allowed(fx.execute())
+        self.assertEqual(len(fx.reservations()), 4, "the fourth run is reserved in the ledger")
+
+    def test_session_2_s_then_l_fit_after_session_1_and_a_fifth_run_does_not(self):
+        """P25 arithmetic, hand-derived from emr-pricing.conf (m5.xlarge 0.240 USD per instance-hour) and the 900 s idle tail: the
+        planned run is 1 primary + 1 core m5.xlarge for 90 minutes, 2 x 0.240 x (5400 + 900) / 3600 = 0.84. The ledger already holds
+        Session 1's 2 runs at 0.84 (1.68, prompt.md coordinator check). S: 1.68 + 0.84 = 2.52 (third run); L, or the one S retry:
+        2.52 + 0.84 = 3.36, exactly the cap and the fourth live run, allowed. Any fifth run is refused on both counts (4 runs recorded,
+        and 3.36 + 0.84 = 4.20 > 3.36). A Session 1 ledger one cent heavier (0.84 + 0.85) leaves L refused at 3.37."""
+        plan = dict(core_count=1, max_runtime_minutes=90)
+        self.assertIn("ESTIMATE-USD: 0.84", self.fx().dry(**plan).out)
+        for label, ledger, allowed in (("S after Session 1", ["0.84", "0.84"], True),
+                                       ("L after S", ["0.84", "0.84", "0.84"], True),
+                                       ("fifth run", ["0.84", "0.84", "0.84", "0.84"], False),
+                                       ("L one cent over", ["0.84", "0.85", "0.84"], False)):
+            with self.subTest(case=label):
+                fx = self.fx()
+                fx.write_ledger(ledger)
+                run = fx.execute(pipeline_over=plan, runtime="90")
+                if allowed:
+                    self.assert_allowed(run)
+                    self.assertEqual(len(fx.reservations()), len(ledger) + 1)
+                else:
+                    self.assert_refused(run, step="g6-gate")
+                    self.assertIn("cumulative", run.text)
+                    self.assertEqual(len(fx.reservations()), len(ledger))
 
     def test_cumulative_total_above_the_cap_is_refused_and_exactly_the_cap_is_allowed(self):
-        """Phase 14B caps = planned use (user, 2026-11-09): EMR_CUMULATIVE_CAP_USD is 2.52 = 3 runs x 0.84 (it was 3.00, and 9.50
-        before the USD 25 replan). The sum of the recorded estimates plus this run's estimate is refused only when ABOVE 2.52
-        (inclusive boundary). Hand-derived:
+        """Phase 15 P25: EMR_CUMULATIVE_CAP_USD is 3.36 = 4 runs x 0.84 (2.52 = 3 x 0.84 under the Phase 14B caps = planned use, 3.00
+        before that, 9.50 before the USD 25 replan). The sum of the recorded estimates plus this run's estimate is refused only when
+        ABOVE 3.36 (inclusive boundary). Hand-derived:
         default run: 2 instances x 0.240 x (3600 + 900) / 3600 = 0.60;
         mid run: 3 instances x 0.240 x (5400 + 900) / 3600 = 1.26;
-        big run: 4 x m5.2xlarge 0.480 x (4500 + 900) / 3600 = 2.88, which alone is above 2.52."""
-        # default run (0.60): 0.96 + 0.96 + 0.60 = 2.52 exactly -> allowed; 0.96 + 0.97 + 0.60 = 2.53 -> refused
+        big run: 4 x m5.2xlarge 0.480 x (4500 + 900) / 3600 = 2.88, within the per-run cap of 3.00 and, alone, now below 3.36."""
+        # default run (0.60): 1.38 + 1.38 + 0.60 = 3.36 exactly -> allowed; 1.38 + 1.39 + 0.60 = 3.37 -> refused
         exact = self.fx()
-        exact.write_ledger(["0.96", "0.96"])
-        run = exact.execute()
-        self.assertEqual(run.rc, 0, run.describe())
-        self.assertIn("LEDGER-RESERVED", run.out)
+        exact.write_ledger(["1.38", "1.38"])
+        self.assert_allowed(exact.execute())
         over = self.fx()
-        over.write_ledger(["0.96", "0.97"])
+        over.write_ledger(["1.38", "1.39"])
         run = over.execute()
         self.assert_refused(run, step="g6-gate")
         self.assertIn("cumulative", run.text)
-        # a ledger that the 3.00 cap accepted (1.20 + 1.20 + 0.60 = 3.00) is refused under 2.52
+        # the old 2.52 boundary + 1 cent (0.96 + 0.97 + 0.60 = 2.53), refused under 2.52, is allowed under 3.36
         old_world = self.fx()
-        old_world.write_ledger(["1.20", "1.20"])
-        self.assert_refused(old_world.execute(), step="g6-gate")
-        # mid run (1.26): 1.26 + 1.26 = 2.52 exactly -> allowed; 1.26 + 1.27 = 2.53 -> refused; an empty ledger is allowed (1.26 < 2.52)
+        old_world.write_ledger(["0.96", "0.97"])
+        self.assert_allowed(old_world.execute())
+        # mid run (1.26): 2.10 + 1.26 = 3.36 exactly -> allowed; 2.11 + 1.26 = 3.37 -> refused; an empty ledger is allowed (1.26 < 3.36)
         mid = dict(core_count=2, max_runtime_minutes=90)
         mid_groups = {"InstanceGroups": [
             {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 2, "RunningInstanceCount": 2}]}
-        for ledger, allowed in (([], True), (["1.26"], True), (["1.27"], False)):
-            with self.subTest(ledger=ledger, allowed=allowed):
-                fx = self.fx()
-                fx.update_scenario(groups=mid_groups)
-                if ledger:
-                    fx.write_ledger(ledger)
-                run = fx.execute(pipeline_over=mid, capacity="3", runtime="90")
-                if allowed:
-                    self.assertEqual(run.rc, 0, run.describe())
-                    self.assertIn("LEDGER-RESERVED", run.out)
-                else:
-                    self.assert_refused(run, step="g6-gate")
-                    self.assertIn("cumulative", run.text)
-        # big run (2.88) is within the per-run cap of 3.00 but above the cumulative 2.52, so even an empty ledger refuses it
+        # big run (2.88): an empty ledger is now allowed (it was refused under 2.52); 0.48 + 2.88 = 3.36 -> allowed; 0.49 + 2.88 = 3.37 -> refused
         big = dict(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=75)
         big_groups = {"InstanceGroups": [
             {"InstanceGroupType": "MASTER", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "CORE", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 3, "RunningInstanceCount": 3}]}
-        fx = self.fx()
-        fx.update_scenario(groups=big_groups)
-        run = fx.execute(pipeline_over=big, capacity="4", runtime="75")
-        self.assert_refused(run, step="g6-gate")
-        self.assertIn("cumulative", run.text)
+        for name, over_, groups, capacity, runtime, ledgers in (
+                ("mid", mid, mid_groups, "3", "90", (([], True), (["2.10"], True), (["2.11"], False))),
+                ("big", big, big_groups, "4", "75", (([], True), (["0.48"], True), (["0.49"], False)))):
+            for ledger, allowed in ledgers:
+                with self.subTest(run=name, ledger=ledger, allowed=allowed):
+                    fx = self.fx()
+                    fx.update_scenario(groups=groups)
+                    if ledger:
+                        fx.write_ledger(ledger)
+                    run = fx.execute(pipeline_over=over_, capacity=capacity, runtime=runtime)
+                    if allowed:
+                        self.assert_allowed(run)
+                    else:
+                        self.assert_refused(run, step="g6-gate")
+                        self.assertIn("cumulative", run.text)
 
     def test_unreadable_ledger_is_never_read_as_empty(self):
         fx = self.fx()
@@ -625,7 +660,7 @@ class PipelinePrespendRefusals(Base):
             "future": dict(snapshot_dt=now + datetime.timedelta(hours=2)),
             "monitoring false": dict(monitoring_confirmed_active=False),
             "monitoring string": dict(monitoring_confirmed_active="true"),
-            "headroom 2.99": dict(remaining_headroom_usd=2.99),
+            "headroom 1.99": dict(remaining_headroom_usd=1.99),
             "headroom 0": dict(remaining_headroom_usd=0),
             "headroom negative": dict(remaining_headroom_usd=-0.01),
             "headroom string": dict(remaining_headroom_usd="150"),
@@ -646,21 +681,22 @@ class PipelinePrespendRefusals(Base):
                 self.assertEqual((run.rc, S.last_step(run), run.status), (3, "prespend-receipt", "REFUSED"), run.describe())
                 self.assertEqual(run.calls, [], "no aws call may precede a failed pre-spend check")
 
-    def test_headroom_exactly_three_and_snapshot_within_a_day_pass(self):
-        """USD 25 replan: the pinned floor is 3 (it was 20); 3 is inclusive, 2.99 is refused (case above)."""
+    def test_headroom_exactly_two_and_snapshot_within_a_day_pass(self):
+        """Phase 15 option (i) (human, 2026-11-16): the pinned floor is 2 (3 under the USD 25 replan, 20 before); 2 is inclusive,
+        1.99 is refused (case above)."""
         fx = self.fx()
-        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=3, snapshot_dt=S.now_utc() - datetime.timedelta(hours=23)))
+        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=2, snapshot_dt=S.now_utc() - datetime.timedelta(hours=23)))
         self.assertEqual(run.rc, 0, run.describe())
 
     def test_a_headroom_the_old_floor_refused_now_passes_and_the_environment_cannot_move_the_floor(self):
-        """headroom 3.01 and 19.99 (refused under the old 20 floor) pass; PRESPEND_MIN_HEADROOM_USD in the
-        environment is a pinned key and cannot lower or raise the floor."""
-        for headroom in (3.01, 19.99):
+        """headroom 2.01 and 2.99 (refused under the former floor 3) and 19.99 (refused under the old 20 floor) pass;
+        PRESPEND_MIN_HEADROOM_USD in the environment is a pinned key and cannot lower or raise the floor."""
+        for headroom in (2.01, 2.99, 19.99):
             with self.subTest(headroom=headroom):
                 run = self.fx().execute(prespend_mods=dict(remaining_headroom_usd=headroom))
                 self.assertEqual(run.rc, 0, run.describe())
         fx = self.fx()
-        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=2.99),
+        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=1.99),
                          env_over={"PRESPEND_MIN_HEADROOM_USD": "0"})
         self.assertEqual((run.rc, S.last_step(run), run.status), (3, "prespend-receipt", "REFUSED"), run.describe())
         self.assertEqual(run.calls, [])
@@ -738,6 +774,55 @@ class PipelineClusterRefusals(Base):
         self.expect_cluster_refusal({"groups": self.groups(master="m5.2xlarge")})
         self.expect_cluster_refusal({"groups": self.groups(core_count=3)})
         self.expect_cluster_refusal({"groups": self.groups(task=1)})  # no task nodes approved
+
+    # Phase 15 D3 (human, prompt.md "D3 decision" and "S run cap and D3 go-ahead", 2026-11-16): r5.xlarge PRIMARY, m5.xlarge core.
+    # The run states --primary-instance-type r5.xlarge; check-cluster must then require exactly an r5.xlarge MASTER group and
+    # m5.xlarge CORE (and TASK) groups, and refuse the swaps before anything is reserved or submitted.
+    R5 = dict(primary_instance_type="r5.xlarge")
+
+    def test_d3_r5_primary_with_m5_core_is_accepted_and_estimated_per_group(self):
+        """Hand-derived: (0.315 + 0.240) x (3600 + 900) / 3600 = 0.69375 -> 0.70 (60 min, default idle cap)."""
+        fx = self.fx()
+        dry = fx.dry(**self.R5)
+        self.assertEqual(dry.rc, 0, dry.describe())
+        self.assertIn("ESTIMATE-USD: 0.70", dry.out)
+        fx.update_scenario(groups=self.groups(master="r5.xlarge"))
+        run = fx.execute(pipeline_over=self.R5)
+        self.assertEqual(run.rc, 0, run.describe())
+        self.assertIn("primary_type=r5.xlarge", run.out)
+
+    def test_d3_an_m5_primary_is_refused_when_the_run_states_r5(self):
+        run = self.expect_cluster_refusal({"groups": self.groups(master="m5.xlarge")}, pipeline_over=self.R5)
+        self.assertIn("MASTER group uses m5.xlarge, not the approved r5.xlarge", run.text)
+
+    def test_d3_an_r5_core_is_refused(self):
+        for over in (self.R5, {}):
+            with self.subTest(primary=over.get("primary_instance_type", "default")):
+                master = "r5.xlarge" if over else "m5.xlarge"
+                run = self.expect_cluster_refusal({"groups": self.groups(master=master, core="r5.xlarge")}, pipeline_over=over)
+                self.assertIn("CORE group uses r5.xlarge, not the approved m5.xlarge", run.text)
+
+    def test_d3_an_r5_primary_is_refused_when_the_run_does_not_state_it(self):
+        run = self.expect_cluster_refusal({"groups": self.groups(master="r5.xlarge")})
+        self.assertIn("MASTER group uses r5.xlarge, not the approved m5.xlarge", run.text)
+
+    def test_d3_the_75_minute_s_run_fills_the_ledger_to_exactly_3_36(self):
+        """0.555 x (75 x 60 + 900) / 3600 = 0.8325 -> 0.84. Session 1 (0.84 + 0.84) + S 0.84 + L 0.84 = 3.36: L is allowed with
+        zero margin; with Session 1 one cent heavier (0.84 + 0.85) L is refused at 3.37."""
+        plan = dict(self.R5, max_runtime_minutes=75)
+        self.assertIn("ESTIMATE-USD: 0.84", self.fx().dry(**plan).out)
+        for ledger, allowed in ((["0.84", "0.84", "0.84"], True), (["0.84", "0.85", "0.84"], False)):
+            with self.subTest(ledger=ledger):
+                fx = self.fx()
+                fx.update_scenario(groups=self.groups(master="r5.xlarge"))
+                fx.write_ledger(ledger)
+                run = fx.execute(pipeline_over=plan, runtime="75")
+                if allowed:
+                    self.assertEqual(run.rc, 0, run.describe())
+                    self.assertIn("LEDGER-RESERVED", run.out)
+                else:
+                    self.assertEqual((run.rc, run.status, S.last_step(run)), (3, "REFUSED", "g6-gate"), run.describe())
+                    self.assertIn("cumulative", run.text)
 
     def test_describe_cluster_without_instance_groups_refuses(self):
         # The groups come only from describe-cluster's Cluster.InstanceGroups (AWS CLI v2 has no list-instance-groups).

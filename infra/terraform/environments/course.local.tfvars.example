@@ -164,7 +164,8 @@ service_secret_bindings = {
 # query_health_check_grace_period_seconds = 300
 
 # RUNTIME, optional, Phase 15 P41 (Session 2 elasticity run R-b; docs/runbooks/session-2-plan.md section 5.3 step 2). All three default to
-# null, which keeps the earlier plan: no request-count policy and the service rate-limit defaults. The values come from the P35 rehearsal
+# null: no new resource and no new environment variable (no request-count policy; the service rate-limit defaults apply). When the ALB
+# exists and the dashboard is on, the dashboard gains the ALB panels regardless of these variables. The values come from the P35 rehearsal
 # record; do not guess them. Not secret. Changing one is a new runtime plan (the policy or the query-api task definition changes).
 #  - query_requests_per_target_target: target of the query-api target-tracking policy on ALBRequestCountPerTarget, in requests per
 #    query-api task per MINUTE, a whole number 1-100000. It is added beside the CPU policy (cpu_target_percent stays 60) and exists only
@@ -193,6 +194,9 @@ service_capacity = {
   embedding-worker = { cpu = 256, memory = 1024, min = 1, max = 2 }
 }
 # Neptune serverless is already pinned at 1-2.5 NCU by the module (minimum 1 NCU); NAT stays one gateway. No variable to set.
+# Phase 15 P34 (max 1 NCU) is NOT available: AWS's smallest allowed maximum capacity is 2.5 NCU (Amazon Neptune User Guide, "Capacity
+# scaling in a Neptune Serverless DB cluster", read 2026-11-16), and the root guard refuses neptune_max_ncu = 1. Do not set it.
+# Session 2 elasticity dashboard (P9): dashboard_enabled = true in the runtime plan shows at most 43 free native metrics (limit 50).
 
 # BOTH, optional: existing SNS topic ARNs for the CloudWatch alarms (empty = alarms without notification). No e-mail address.
 # alarm_notification_arns = ["arn:aws:sns:<region>:<12-digit-account-id>:<topic-name>"]
@@ -219,9 +223,10 @@ service_capacity = {
 #     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-ceiling-check.py",        sha256 = "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c", dest = "/opt/scholarchain-spike/bin/sc-ceiling-check.py" },
 #     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-class-origin-verify.py",  sha256 = "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79", dest = "/opt/scholarchain-spike/bin/sc-class-origin-verify.py" },
 #     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-render-spark-config.py",  sha256 = "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c", dest = "/opt/scholarchain-spike/bin/sc-render-spark-config.py" },
-#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-step.sh",                 sha256 = "ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-step.sh",                 sha256 = "b79f5c1f50f1bf95a2d57c891f82df65d92aee50ab6888e8c3f2a12771b9ff2d", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
 #   ]
 #   # Task nodes and managed scaling stay off (G3) unless the caps in infra/terraform/README.md are changed deliberately.
+#   # Phase 15 D3: primary_instance_type defaults to "r5.xlarge" and instance_type (core and task) to "m5.xlarge"; leave both unset.
 # }
 #
 # EMR: the reviewed control-plane policy of the EMR service role as ONE JSON string (see README, "EMR service policy"). No

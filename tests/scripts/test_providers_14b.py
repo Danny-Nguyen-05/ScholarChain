@@ -131,10 +131,10 @@ class ReceiptsNeedEveryProvidersSpend(unittest.TestCase):
             with self.subTest(ceiling=bad):
                 self.assertEqual(verify(receipt(), "--min-headroom", "3", "--ceiling-usd", bad)[0], 2)
 
-    def test_release_conf_pins_the_ceiling_at_25_and_the_floor_at_3(self):
+    def test_release_conf_pins_the_ceiling_at_25_and_the_floor_at_2(self):
         values = conf_values()
         self.assertEqual(D(values["PRESPEND_PROJECT_CEILING_USD"]), D(25))
-        self.assertEqual(D(values["PRESPEND_MIN_HEADROOM_USD"]), D(3))
+        self.assertEqual(D(values["PRESPEND_MIN_HEADROOM_USD"]), D(2))  # Phase 15 option (i), floor 2 (was 3)
         self.assertEqual(len(re.findall(r"^PRESPEND_PROJECT_CEILING_USD=", RELEASE_CONF.read_text(), re.M)), 1)
 
     def test_the_receipt_output_never_contains_a_provider_key(self):

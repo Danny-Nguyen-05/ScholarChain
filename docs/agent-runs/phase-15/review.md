@@ -281,7 +281,7 @@ What I checked: I read the frozen diff `target/phase15/p41/r1/p41-tracked.diff` 
 | Default plan unchanged | met for the default (runtime off) | With all three null and no ALB: count 0, the merges add `{}`, and the panel list is `[]`. The owner reported 0 differing planned addresses (agent-reported). See F2 for the deployed runtime with the dashboard on |
 | Tests use hand-derived values, boundaries and the precondition | met, with small gaps | Header derivations at root 5-18 and module 4-11. Boundaries 0/1/max/max+1 for all three; fractional target and rate. Missing: fractional burst, and the ACM path (F3) |
 | README and tfvars.example match the code | met, with one wording nit (F2) | README:880-919 and the README:267 ECS row; `course.local.tfvars.example:166-180` are comments only, with no values |
-| No hardcoded account IDs, ARNs or endpoints | met | The production code adds none. Every 12-digit match in the two test files is `111122223333` or a `…000000000001` UUID tail (mock values) |
+| No hardcoded account IDs, ARNs or endpoints | met | The production code adds none. Every 12-digit match in the two test files is `[synthetic AWS-docs example account ID; redacted by the coordinator because the repository's account-ID scan rejects 12-digit literals]` or a `…[12-digit mock UUID tail, redacted by the coordinator]` (mock values) |
 | Ownership | met, from the records | `infra/terraform/**` was written by the infra-engineer (owner-report:1283 and 1288). The coordinator wrote only `docs/agent-runs/phase-15/**`. `check-snapshot-status.txt` lists exactly the P41 files. Authorship is not verifiable from git before the commit |
 | Records honest | met, with stale lines (F1) | test-report.md:88-102 labels agent-reported counts. Run 1's FAIL is recorded at test-report.md:106-116 (exit 4, `scripts/tests` 7 failures, log sha256, and the lost per-suite log). The repair is in repairs.md:72-79 |
 
@@ -357,3 +357,115 @@ NEXT GATE: run 2 passes, then the coordinator records it and this verdict in `re
 ````
 
 Coordinator: F1 fixed in `owner-report.md` before the commit. F2 and F3 are routed to the elasticity bundle (`repairs.md`). The commit waits for run 2's RESULT line, as the reviewer requires.
+
+
+## Work order 4 — pipeline bundle (P5-P8, P17-P19 preparation, P25, P26, D1-D3) with the shared elasticity Terraform edits (P9, F2, F3)
+
+### Review 1 — code-reviewer agent `a8da8cb63244f0cbe` (Opus 5.5, high), launched by the coordinator after the clean-snapshot gate (run 20261116T193009Z-41305); verbatim
+
+STATUS: COMPLETE. **Verdict: APPROVE.** There are no blockers. Findings 1 to 3 are should-fix and must be routed before the Session 2 go/no-go (Wed 2026-11-18 18:00 CST). They are documentation gaps or human decisions, not code defects that could spend money.
+
+OWNER: code-reviewer (read-only)
+
+WORK ORDER: independent review of the Phase 15 pipeline bundle and the elasticity Terraform edits. Branch phase-15, HEAD 7a02de2, frozen diff `target/phase15/pipeline/r1/tracked.diff` and `untracked.txt`.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+COMMANDS RUN: Read, Grep and Glob only. I made no shell, AWS, Anthropic or Voyage calls. I read no tfvars, state, `.env` or secrets.
+
+TEST RESULTS: not run by me. I read `target/phase15/pipeline/r1/check.log`:
+- `RESULT: PARTIAL passed=6 skipped: sbt` (line 122).
+- tests/scripts: "479 executed, 3 skipped" (line 107). See finding 5.
+
+VALIDATION RESULTS: checked against the user decisions in prompt.md.
+
+What holds:
+- **Step timeouts:** 225 + 900 + 900 + 225 + 1800 + 450 = 4500 s, exactly the 75-min cap.
+- **Per-run estimate:** (0.315 + 0.240) × 5400/3600 = 0.8325, rounded up to 0.84. budget.py, check_manifests.py, the S manifest and emr-pricing.conf (r5 0.252/0.063) all agree.
+- **Ledger:** 1.68 + 0.84 + 0.84 = 3.36 against the cap of 3.36. The cap is inclusive and `release.conf` pins 4 runs / 3.36.
+- **Other release values:** ER_XMX 12g, maxLocalSampleRecords 60000 (the prep config agrees), PRESPEND floor 2, primary r5.xlarge in Terraform (validated to m5 or r5) and in pipeline check-cluster (MASTER only).
+- **Runbook figures:** 19.54 / 22.98, gate 3.57 ≤ 23.00, Gate 1 2.85, credit ≥ 6.73, 0.58/h, the 5.8 h stop, no ×1.11 column, maxAuthorTeamSize 16.
+- **sc-step.sh:**
+  - `hadoop_run_id()` builds a correct UUID v4 (version nibble 4, variant 8–b).
+  - The D2 plain path resolves to `file:///` through `HadoopIO.runPath` (HadoopIO.scala:39-45).
+  - The copy-out bash globs and the awscli filters behave the same, and the copy-out manifest is checked before anything is written.
+- **Concurrency:**
+  - Every ledger call and counter is under one lock, rejections are re-sorted into manifest order, and duplicates are settled after all first occurrences.
+  - The batcher serializes `embed` under its own lock.
+  - IngestThroughputSpec and Phase15IngestBatchingSpec are real tests, not tautologies.
+- **Security:** the only 12-digit literals are the synthetic `111122223333` and `000000000000`. No e-mail addresses or keys found.
+- **Records:** prompt.md and repairs.md are append-only. The redaction at review.md:284 is disclosed as E3 and changes no human decision.
+
+## Findings (most severe first)
+
+**1. should-fix (high): recording the S actual can block the approved S retry.**
+- Paths:
+  - `scripts/lib/budget.py:266-280` (`ledger_totals`, the tail per cluster) and `:303`.
+  - `docs/runbooks/session-2-plan.md:424-428` (step 5a comes before step 6).
+- How `--record-actual` counts:
+  - It measures from the cluster's `CreationDateTime`, so boot time and the operator's time writing the approval record count too.
+  - It then adds a pending 900 s tail of 0.14.
+  - The retry still reserves its full 0.84.
+- Arithmetic: the retry is admitted only if the measured cost is at most 3.36 − 1.68 − 0.84 − 0.14 = 0.70. At 0.555/h that is about **75.6 min from cluster creation**.
+- Consequence: if S fails late, for example at the Spark timeout around minute 60-75, the retry is refused (fail-closed). This is the most likely failure, since that path has never run on EMR.
+- The arithmetic is right: the tail covers the up-to-15-min gap before the retry. But the two human rules ("record actuals right after each S run" and "S + one retry") conflict, and nothing discloses it.
+- The project-level EMR block (3.33 h, including the 20-min cold start) is about 0.3 h looser than what the ledger leaves for Session 2 (1.68 / 0.555 = 3.03 h).
+- Fix:
+  - documentation-engineer: state this condition in 5.2 steps 5a and 6.
+  - human: decide the order. Either reserve the retry before recording S's actual, or raise the ledger cap by about 0.15-0.20 inside the 1.93 block.
+  - test-engineer: add a hand-derived test for "S times out, actual recorded, retry on the same cluster".
+
+**2. should-fix: the P18 precondition is missing from the stage-a procedure.**
+- Path: `docs/runbooks/session-2-plan.md` 5.2 step 1 (lines 416-419). "state list" appears nowhere in the runbooks.
+- The user's P18 rule says stage a is planned only after `terraform state list` shows exactly the two guards; anything else means stop. owner-report.md:2032 states this precondition, but the runbook does not.
+- Owner: documentation-engineer. Fix: add the command (addresses only), the expected two addresses and the stop rule.
+
+**3. should-fix: experiments/README.md:35 contradicts budget.py.**
+- The README says budget.py "reserves its own unrounded estimate (0.833 per S run, cumulative 3.35)".
+- budget.py actually rounds up to the cent, so the ledger reserves 0.84 per run and reaches 3.36/3.36 with zero margin, as session-2-plan.md:256 correctly says.
+- Owner: experiment-engineer. Fix: correct the sentence.
+
+**4. note: stale text** (each fix is "update the wording"):
+- `scripts/config/release.conf:236-237` still says "exactly 2 more 90-minute runs (S and L) fit … no L retry". Owner: infra-engineer.
+- `release.conf:60-61` still says 22.97 / 2.03; the current figures are 22.98 / 2.02. Owner: infra-engineer.
+- `scripts/README.md:315` still describes 90-min m5 runs. Owner: infra-engineer.
+- `session-2-plan.md:442` still says "two full 90-minute S runs". Owner: documentation-engineer.
+- The G6 comments say 0.795 × 3.25 = "2.58", but the estimate rounds up to 2.59. Locations: `infra/terraform/modules/emr/variables.tf:60`, `tests/phase15_emr_primary.tftest.hcl:270`, `infra/terraform/README.md:572`. In the same README, "3.36" should read 3.37. Owner: infra-engineer.
+
+**5. note: the D1/D2 test was not exercised by the clean gate.**
+- `tests/scripts/test_hadoop_prep_args_15.py` skips itself when the built JARs or the P6 classpath are missing. The clean snapshot has neither, so its 3 tests were most likely the 3 skipped ones. Their pass rests on owner-report.md:3509 (agent-reported).
+- Owner: coordinator. Fix: name the skipped tests in test-report.md:147, or re-run the test on the built tree and record the observed result.
+
+**6. note: the 8 GiB copy-out ceiling is sized for L.**
+- `release.conf` (PIPELINE_MAX_COPYOUT_BYTES) sets 8 GiB on an L-based justification. EMR now runs S only, and the S copy-out is about 1.1 GB.
+- Owner: infra-engineer, with the human. Fix: consider 2 GiB, or record why 8 GiB is kept.
+
+**7. note: dashboard panels removed under P9.**
+- `infra/terraform/tests/phase12c.tftest.hcl:118-130`: the run named `dynamodb_native_failure_and_latency_panels` now asserts that those panels are removed.
+- Dropping the Phase 12C N12 panels was an agent's choice under P9.
+- Owner: infra-engineer. Fix: rename the run, and get the human's acknowledgement (repairs E4).
+
+**8. note: r5 rates added under an earlier pricing confirmation.**
+- `scripts/config/emr-pricing.conf`: the new r5 rates sit under the existing `EMR_PRICING_CONFIRMED_BY_HUMAN=true`. The user's go-ahead covers updating the file.
+- Owner: human. Fix: have the human restate both rates in the Session 2 approval record.
+
+**9. note: the untracked-file count does not match.**
+- test-report.md:147 says the untracked tar holds 101 files, but `untracked.txt` lists 41. I could not list the tar.
+
+ASSUMPTIONS: The Session 1 ledger holds two reserves of 0.84 each. Who wrote which file is taken from the owner reports; git cannot show authorship before a commit. All files sit in their owners' territories.
+
+RISKS: The EMR-only behaviour has not run live: YARN with file:// outputs, copy-out throughput from EFS within 450 s, and Spark finishing in 30 min. The final sbt check was still running and is unverified by me.
+
+MANUAL ACTION REQUIRED: Human decision on finding 1 (record-then-retry order, or a ledger margin). Human acknowledgement of findings 7 and 8.
+
+BLOCKED-ON OWNER: none for approval. Repairs:
+- documentation-engineer: findings 1 and 2, plus the session-2-plan.md:442 wording.
+- experiment-engineer: finding 3.
+- infra-engineer: findings 4, 6 and 7.
+- test-engineer: the scenario test in finding 1.
+- coordinator: finding 5.
+
+BLOCKED-ON EVIDENCE: the final sbt check result, and an observed (not skipped) run of test_hadoop_prep_args_15.
+
+NEXT GATE: the final sbt check must pass. Then commit under the standing consent, and route the should-fix items before the go/no-go.

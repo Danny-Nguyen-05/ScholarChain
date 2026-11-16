@@ -171,3 +171,109 @@ Consequence: from now on, after the bundle's gates pass (`sbt check` and the cle
 Standing commit consent (user, chat, 2026-11-16), verbatim: "Alright after the reviewer approved i give you permission to commit it and continue for me. Clear?" From now on, a bundle is committed by the coordinator right after the code-reviewer agent's APPROVE, and work continues to the next item. Limits: no commit on REQUEST-CHANGES; push to `origin/phase-15` after every approved commit (user, chat, 2026-11-16: "Yes a"), no force-push; human-owned records (approval and gate records, pin refreshes) stay the user's.
 
 Recorded consequences: P41 is finished first. The pipeline bundle comes next, then the elasticity bundle (P42, P35), then P15, P20 and the human's approval record. There is one review per bundle. Go/no-go is Wed 2026-11-18 18:00 CST; if it fails, Session 2 moves to Sat 2026-11-21 / Sun 2026-11-22.
+
+Relaunch, Neptune and P34 decisions (user, chat, 2026-11-16 about 08:40 CST), verbatim:
+"1. Relaunch: Yes, now, with the original briefs updated for current HEAD. Keep lane D's files and lane A's tftest file, but treat them as unreviewed drafts: re-run their tests. Each lane writes its work to disk as it goes, not only at the end. Tell me what interrupted the run at 23:17. If it was the machine sleeping, I'll run caffeinate.
+2. Neptune: (a), lower the hold from 150,000 to 90,000. Condition: use the P35 measured rate (or the planning rate until P35 runs) and state how many minutes the level-50 hold lasts. It must cover scale-out plus at least 3 minutes of steady state at the scaled-out task count. If it doesn't, come back to me before choosing (c).
+3. P34 as planned is impossible. Set min 1 / max 2.5 NCU. Correct the plan text (P34, F23, 5.3, 6.4 and every 0.1608/h ceiling claim). If a max=1 Terraform change or test exists, revert it. Recompute the gate thresholds at the real rate. List every number that changed."
+
+Coordinator actions and findings:
+- The interruption at 23:17:01 CST on 2026-11-15 (05:17:01Z) was a user interrupt in the main session. All six lane transcripts end with "[Request interrupted by user]" at that second, during the Stop-hook loop. It was not machine sleep. The six lanes were relaunched at about 08:40 CST, with progress files under `target/phase15/lanes/` (git-ignored). The surviving draft `infra/terraform/tests/phase15_stagea.tftest.hcl` belongs to lane B (the original brief), not lane A, so lane B re-checks it.
+- No max=1 Neptune change exists. `phase12b.tf:22` still requires min >= 1 and max exactly 2.5, and `tests/phase15_elasticity.tftest.hcl` pins that max 1 is refused. Nothing to revert.
+- Coordinator error corrected: the earlier figure "+0.37, worst case 22.13" used R-c's 3.5 h Neptune cap. R-b's Neptune window is about 5 h planned and 7 h at cap (back-solved from the 6.4 rows), so the correct cap increase at 0.402/h is +1.69, and the project worst case is 23.45. Decision 2(a) was taken on the wrong figure, and its hold condition is not met at the planning rate (90,000 at 250 requests/s = 6.0 min, against an estimated 9.5 min for scale-out plus 3 min). Per the user's rule, (a) is NOT applied and the choice goes back to the user.
+
+R-b option decision (user, chat, 2026-11-16), verbatim:
+"(i), with conditions:
+1. Tax: Session 1's Bills page showed tax 0.00. Confirm whether tax applies to this account. If not, drop the ×1.11 row; if it does, come back to me, since 25.44 is over the hard ceiling.
+2. The 5.8 h Neptune window is a hard stop: run the R-b load early in the window. At 5.8 h, destroy Neptune whether R-b has finished or not, and keep whatever elasticity data was captured. Put the clock times in the runbook.
+3. Pre-R-b check: before applying R-b, spend to date (with its read time) + R-b cap must be ≤ 25.00; otherwise skip R-b.
+4. Update the plan to floor 2 / project ≤ 23.00, list every changed number, and give me the exact wording for the P19 approval record.
+Noted on the interrupt: I'll queue messages instead of stopping the session."
+
+Coordinator notes:
+- Tax cannot be confirmed from the repository. The Bills page showed "Taxes by service" USD 0.00 with net USD 0.00 after credits, which shows that no tax was charged on a zero net, not that the account is untaxed. The x1.11 column stays, marked pending the human's read of the Billing tax settings.
+- R-c is dropped: the 5.8 h Neptune hard stop cannot hold R-c's Neptune window.
+- The P21 partial file `target/phase6-inputs/6fg-dblp/dblp-2026-10-03.xml.gz.partial` (882,900,992 bytes) was written by the first lane-D run from 05:15:29Z, after the human's P21 approval at 05:13:55Z. That run read the approval in prompt.md, although its brief predated the approval. The interrupt at 05:17:01Z cut it off. The relaunched lane D made the one complete download (1,107,081,001 bytes, sha256 matches the pin). So the archive was fetched one and a fraction times, not once.
+
+Tax-settings read (user, screenshot in chat, 2026-11-16): Billing → Tax settings → Tax registrations shows one entry, seller Amazon Web Services, Inc., with no TRN and no TRN status. The business address is in a US city that levies a local tax on cloud services. The account ID and address are deliberately not recorded here. Coordinator assessment: tax applying is NOT ruled out.
+- AWS promotional-credit terms say credits are not applied against transaction taxes.
+- The Bills page notes that its estimates exclude taxes unless listed.
+- The local cloud-tax rate was 11% in 2025, and secondary sources report 15% from 2026-01-01 (unverified).
+Per the user's condition 1 ("if it does, come back to me"), the decision goes back to the user, and the x1.11 column is not dropped.
+
+Tax decision (user, chat, 2026-11-16), verbatim: "the portion of your bill deducted/covered by AWS credits is not taxed. Since they are credits so tax is 0"
+
+Consequence: condition 1 of option (i) is answered by the human. The x1.11 column is dropped, and option (i) stands at floor 2 (project <= 23.00, worst case 22.97). Recorded limit: this holds while AWS credits cover the spend. Spend beyond the credit balance would be taxable, so the pre-R-b check (spend to date + R-b cap <= 25.00) stays.
+
+P19 section 4a fixes (user, chat, 2026-11-16), verbatim:
+"Good work. Fixes to section 4a before I sign:
+1. Item 5: update to the corrected clock (destroy target T_N0 + 5 h 15 min, absolute stop + 5 h 30 min, so deletion ends inside 5.8 h) and the recomputed latest load start. The current draft's + 5 h 48 min ends past 5.8 h.
+2. Item 2: add a line for my read of the remaining AWS credit balance (with its UTC time), which must be ≥ the Session 2 AWS cap; otherwise this approval is void.
+3. Item 4: the pre-R-b check is spend to date + 3.57 ≤ 23.00 (floor 2), not 25.00. Above 23.00, R-b is skipped unless I record a new decision.
+4. S fails twice: don't drop R-b. Use the P6 local S export for chunks and vectors (same Voyage cap), load them, and run R-b. The report states that the vectors came from the local run. Check that this path is in the runbook and that the P6 output is kept for it. If it's not feasible, tell me why.
+5. Keep item 8: it covers the Session 2 Voyage key."
+
+Hadoop team-size option and P18 (user, chat, 2026-11-16), verbatim:
+"Hadoop: before I accept "keep 16", size one middle option. Keep the 16-author / 128-pair cap on coauthor-PAIR records only (so the pairs limit and ER blocking stay unchanged), but still emit the team/authorship records for every work, up to 80 authors (linear, not quadratic). Then large works stay in the graph and max team size is correct.
+Tell me: which files and owners change, whether the 64 infra ceiling applies to team records or only pairs, whether ER or Spark contracts change, and how long it takes including tests and the P6 re-run.
+If it touches ER/Spark contracts or costs more than ~2 h, fall back to keep 16 and disclose. In that case:
+- the report and benchmark state the cap and its effects (works dropped, 12.9% of L pairs, components and bridges);
+- the max-team-size benchmark questions show the system's 16 next to the true 71/79 from the Hadoop statistics, marked as a known limitation, not a pass.
+P6: the reject-file check for "0 dropped by the limit" is fine; also record the count of works dropped (63 S / 210 L) as evidence.
+P18: agreed. Plan stage a against the leftover state after `terraform state list` (addresses only, no state file reads) shows exactly the two guards. Anything else: stop and report."
+
+Outcome of the user's team-size rule (coordinator, 2026-11-16): the hadoop-engineer's read-only sizing found that the middle option breaks two hard Spark invariants:
+- the pair-count check (Phase6CJobs.scala:451-460 and 635-642);
+- the unconditional W_r = T_r check (Phase6DEJobs.scala:541-554).
+It also changes the core prep-config contract and the infra ceilings, at about 12-16 h of effort. By the user's rule ("If it touches ER/Spark contracts or costs more than ~2 h, fall back to keep 16 and disclose"), maxAuthorTeamSize stays 16. The disclosure is required in the report and the benchmark:
+- the cap and its effects (works dropped: 63 S / 210 L; 12.9% of L's pairs; components and bridges);
+- the max-team-size questions show the system's 16 next to the true 71 / 79 from Hadoop's largestTeam, marked as a known limitation, not a pass.
+P6 records the dropped-work counts (OVERSIZE_TEAM 63 S / 210 L) as evidence, alongside the reject-file check for zero maxLocalSampleRecords drops.
+
+L, second size, D1-D3 and budget (user, chat, 2026-11-16), verbatim:
+"L: drop on EMR (P25 rule). Report the measured local evidence: L Hadoop passes in 132 s, 210 works dropped by the team limit, max team 79; ER runs out of memory at 22g after 16 min. Both EMR runs go to S and its retry.
+Second size: if Spark can run on L locally with ER bypassed (identity pass-through, disclosed as such) with a small change, run it and record Spark time and graph size at L next to S. If the bypass isn't small, stop at Hadoop-only L evidence. Don't touch the EMR path for this.
+D1/D2: add a test that feeds the exact arguments sc-step.sh builds into the Hadoop job's parser, plus the S run without workarounds as proof.
+D3: tell me which node ER runs on, the instance type, what else runs there (YARN containers, daemons), and the free memory at 10g. My rule: 10g minimum, since it's the measured pass; go higher only if ER runs alone on that node with ≥2 GB headroom. Otherwise come back to me.
+Budget: recompute the worst case with L dropped. Tell me whether floor 3 is back within reach.
+Also: what came of the Hadoop team-record middle option (pairs capped at 16, team/authorship records kept up to 80)?"
+
+S run cap (user, chat, 2026-11-16), verbatim: "Agreed on all items. Floor 2 stays. One change: cap each S run at 60 min if the per-step timeouts (Hadoop, ER 18 min, Spark, copy-out) plus cluster start-up fit inside 60 with margin. Show the sum. If they don't fit, keep 90. Update the worst case (expect ~22.47) and the P19 draft numbers to match."
+
+Outcome (coordinator, from scripts/config/release.conf:297-307):
+- The per-step timeouts are fixed shares of the run cap (PIPELINE_STEP_WEIGHTS stage-in 5, hadoop-prep 20, entity-resolution 20, spark-class-origin 5, spark-job 40, copy-out 10, which sums to 100%).
+- At the 90-min cap the timeouts are 4.5 + 18 + 18 + 4.5 + 36 + 9 = 90 min. The four named steps alone are 81 min. Cluster start-up (the plan's 20-min cold start) comes on top, for about 110 min. That does not fit inside 60.
+- At a 60-min cap the timeouts would shrink to 3 + 12 + 12 + 3 + 24 + 6. That leaves the Spark step 24 min against the spark-engineer's S estimate on EMR of 14-20 min (a 4-min margin at the high end) on a path never run on EMR.
+- Per the user's rule, the cap stays at 90 min. The worst case stays USD 22.97 and the P19 draft numbers are unchanged.
+
+P0 pre-checks (user, chat, 2026-11-16, before the Tuesday modify):
+- Cost Explorer screenshot, Nov 13-16 by service, credits excluded: total USD 15.39; Nov 13 2.31, Nov 14 12.16, Nov 15 0.92 (Neptune 0.63), Nov 16 0.00.
+- Read-only Switch Role check: `aws sts get-caller-identity --profile scholarchain-billing-deployer` returned an Arn ending `assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator`. The coordinator checked the account hash against the A3 pin `32c67ff8…bf3e`: it MATCHES. The account ID is not recorded here.
+
+P26(c) Voyage tier (user, chat, 2026-11-16), verbatim: "Voyage Usage tier 1, payment method is already set, don't know how to check requests per minutes and tokens per minutes"
+Coordinator: the configured model is voyage-4-lite (modules/rag, scripts/config). Voyage docs, Rate Limits page (docs.voyageai.com/docs/rate-limits, read 2026-11-16): Tier 1 voyage-4-lite / voyage-3.5-lite = 16M TPM, 2000 RPM. The Embeddings API reference gives the voyage-4-lite per-request cap: at most 1,000 texts and 1M tokens. The batched ingest (batchSize 100, about 12K tokens per request, about 100 requests for 10,000 items) is far inside these limits. P26(c) passes, provided the human's dashboard shows no project-level limit below the organization's.
+
+Cost Explorer, 2026-10-01 to 2026-11-16, credits excluded (user screenshot, chat, 2026-11-16): total USD 15.75, average daily 0.34, 20 services. Spend sits on Nov 4 (small), Nov 13-15, and 0 on Nov 16. This matches the plan's C11 AWS figure of 15.75, so no new spend has appeared since the Nov 15 read.
+
+D3 decision (user, chat, 2026-11-16), verbatim: "D3: none of the three. Use r5.xlarge for the primary node only (32 GiB, same 4 vCPU as m5.xlarge), with the ER heap at 10g, or 12g if the headroom stays ≥2 GB. Rationale: an OOM kill at 0.5–1 GiB free would likely repeat on the retry and burn both EMR runs. Confirm the r5.xlarge EC2 + EMR hourly rate for us-east-2 from the pricing page, and confirm EMR supports it on our release. Then recompute the worst case with the 60-min S cap. It must stay ≤ 23.00. If it doesn't, come back to me before changing anything. The Terraform/script change goes through the infra-engineer with terraform test and review as usual. Make the P19 draft numbers match."
+
+Coordinator checks (2026-11-16):
+- Rates (public AWS price lists, read 2026-11-16 about 11:49 CST): EMR offer file us-east-2 (publicationDate 2026-11-13T18:02:09Z) gives r5.xlarge 0.063 and m5.xlarge 0.048. The EC2 on-demand Linux us-east-2 file gives r5.xlarge 0.252 (32 GiB, 4 vCPU) and m5.xlarge 0.192. So the primary r5.xlarge costs 0.315/h and the core m5.xlarge 0.240/h, for a cluster rate of 0.555/h (was 0.48).
+- EMR support: "Supported instance types with Amazon EMR", US East (Ohio): r5.xlarge minimum emr-5.13.0 / emr-6.0.0 / emr-7.0.0, so it is supported on the pinned emr-7.8.0.
+- ER heap: on a 32 GiB primary, 12g (P6 RSS 13.9 GB) plus about 2.5-4 GiB of daemons leaves about 14 GiB free, at least 2 GB, so the user's rule gives 12g.
+- The 60-min cap was rejected earlier by the user's rule (prompt.md "S run cap"). Worst case by run cap (EMR block = 2 runs x (cap + 15 min idle) + 20 min cold start, at 0.555/h exact, or 0.58/h with the plan's rounding margin):
+  - 90 min: 3.83 h, block 2.13-2.22 (was 1.92), project at caps 23.18-23.27, ABOVE 23.00;
+  - 75 min: 3.33 h, block 1.85-1.93, project 22.90-22.98;
+  - 60 min: 2.83 h, block 1.57-1.64, project 22.62-22.69.
+  The script ledger per run (budget.py method, x(cap + 15 min)) is 0.971 at 90, 0.833 at 75 and 0.694 at 60. The cumulative total with Session 1's 1.68 is 3.62, 3.35 and 3.07 against the 3.36 cap.
+- At the user's 90-min cap the worst case exceeds 23.00, so nothing is changed: the decision goes back to the user.
+
+S run cap and D3 go-ahead (user, chat, 2026-11-16), verbatim: "75 min. Go ahead: r5.xlarge primary, ER heap 12g, S run cap 75 min with the step timeouts you listed, budget.py and the pricing file updated, terraform test and review as usual. Then update the P19 numbers. The margins are thin (22.98 / 23.00; ledger 3.35 / 3.36). Record the EMR actuals right after each S run so the pre-R-b check uses real numbers, not the cap."
+
+## EMR ledger cap after the pipeline-bundle review (2026-11-16)
+
+Coordinator question (finding 1 of the pipeline-bundle review 1, `review.md` work order 4): `--record-actual` measures S from cluster creation (boot included) and adds a 900 s idle tail of 0.14, while the retry still reserves 0.84. At the 3.36 cap the retry is admitted only if S's recorded cost is at most 0.70 (about 75 min from cluster creation), so a late S failure would refuse the approved retry. Options: raise the cap 3.36 → 3.53 (Session 1's 1.68 plus the 3.33 h EMR block at 0.555/h; the 1.93 block is already inside the 22.98 project cap, so no project figure changes), or keep 3.36 and disclose.
+
+User answer, verbatim: "Raise cap to 3.53 (Recommended)"
+
+Coordinator defaults applied (not asked; outside the money, security and pipeline-correctness rule): review findings 7 (Phase 12C DynamoDB dashboard panels removed under P9) accepted, test run renamed and disclosed; finding 8, both r5 rates restated in the P19 draft for the user's approval record; finding 6, the 8 GiB copy-out ceiling kept with the reason recorded.

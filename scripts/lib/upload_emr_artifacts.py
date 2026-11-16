@@ -17,13 +17,16 @@ reads; the final contract of the deployer's operator-pipeline grant: create-only
   config/er-policy.json                   --er-policy FILE
   config/er-config.json                   --er-config FILE
   config/spark-config-template.json       --spark-config-template FILE
+  config/hadoop-config.json               --hadoop-config FILE (Phase 15 P1: the Hadoop prep config; manifest pipeline.hadoop_config
+                                          s3://<artifacts>/emr/<run_prefix>/config/hadoop-config.json, sha pin name hadoop-config)
   input/<label>/datasets/samples/...      one Phase 4 layout input dataset per --input-dataset LABEL=DIR (labels size-25, size-50, size-100 in
                                           Phase 15A); run-bounded-pipeline.sh --input-prefix s3://<artifacts>/emr/<run>/input/<label>
 Pipeline output is NOT uploaded here: --output-prefix s3://<artifacts>/pipeline/<run>/15a/size-N is written by the EMR instance role.
 
 Subcommands (exit 0 ok, 1 refused with an "UPLOAD-REFUSED: <reason>" line on stdout, 2 usage)
   scan      --repo-root R --run-prefix P --out PLAN.json --bootstrap F --steps-dir D --step-manifest F --artifact-manifest F
-            [--er-policy F] [--er-config F] [--spark-config-template F] --input-dataset LABEL=DIR... --max-input-bytes N
+            [--er-policy F] [--er-config F] [--spark-config-template F] [--hadoop-config F] --input-dataset LABEL=DIR...
+            --max-input-bytes N
   list      --plan PLAN.json [--only-file F | --skip-file F]   rows "<index>TAB<local path>TAB<key>TAB<base64 sha256>"
   approval  --file F --plan-sha X --account-id ID --region R   check the human approval record
   hints     --plan PLAN.json --bucket B --step-manifest F   print the s3 URIs and sha256 values to copy into emr_config and the pipeline flags
@@ -56,7 +59,8 @@ JAR_NAMES = {
     "entity-resolution-job-jar": "entity-resolution.jar",
     "spark-job-jar": "spark-job.jar",
 }
-CONFIG_OPTIONS = (("er_policy", "er-policy.json"), ("er_config", "er-config.json"), ("spark_config_template", "spark-config-template.json"))
+CONFIG_OPTIONS = (("er_policy", "er-policy.json"), ("er_config", "er-config.json"), ("spark_config_template", "spark-config-template.json"),
+                  ("hadoop_config", "hadoop-config.json"))
 LABEL_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,19}$")
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._=+@-]{0,199}$")
 SAMPLE_FILES = (
@@ -317,7 +321,8 @@ def cmd_approval(args):
 PIPELINE_NAMES = {
     "hadoop-submit-jar": "hadoop-submit-jar", "hadoop-dependency-bundle": "hadoop-libjars", "entity-resolution-job-jar": "er-jar", "spark-job-jar": "job-jar",
 }
-CONFIG_PIPELINE = {"er-policy.json": "er-policy", "er-config.json": "er-config", "spark-config-template.json": "spark-config-template"}
+CONFIG_PIPELINE = {"er-policy.json": "er-policy", "er-config.json": "er-config", "spark-config-template.json": "spark-config-template",
+                   "hadoop-config.json": "hadoop-config"}
 
 
 def cmd_hints(args):
@@ -395,6 +400,7 @@ def main(argv=None):
     p.add_argument("--er-policy")
     p.add_argument("--er-config")
     p.add_argument("--spark-config-template")
+    p.add_argument("--hadoop-config")
     p.add_argument("--input-dataset", action="append")
     p.add_argument("--max-input-bytes", type=int, required=True)
     p.set_defaults(fn=cmd_scan)

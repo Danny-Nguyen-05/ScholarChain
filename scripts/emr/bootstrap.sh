@@ -18,7 +18,8 @@
 #      four EMR step programs (sc-step.sh, sc-ceiling-check.py, sc-class-origin-verify.py, sc-render-spark-config.py, all in
 #      scripts/emr/) are installed this way into STEP_BIN; every EMR step runs sc-step.sh from there after verifying it
 #      against the sha256 the pipeline computed from the repository file (EMR allows only 10,280 characters per step argument)
-#   9. install the EFS mount helper and mount the access point (G1 option ii: EFS staging plus S3 copy steps)
+#   9. install the EFS mount helper and mount the access point (G1 option ii: EFS staging plus S3 copy steps), with a bounded retry
+#      (Phase 15 P7: at most 10 attempts, 15 s apart)
 #  10. primary only: prepare the run directories on EFS and install the --artifact files that live on EFS
 # ANY mismatch or failure exits nonzero, which makes EMR fail the bootstrap and terminate the cluster (fail closed).
 #
@@ -37,7 +38,7 @@
 # Everything environment-specific is injectable for local PATH-shim tests:
 #   SC_RUNTIME_DEST  SC_JOB_JAR_PATH  SC_STEP_BIN  SC_MNT  SC_PROC_UPTIME  SC_PROC_MOUNTS  SC_INSTANCE_JSON  SC_WORK
 #   SC_FALLBACK_DEADLINE_MINUTES  SC_JVM_DIR  SC_ALT_JRE  SC_JAVA_HOME_FILE
-# Commands are looked up on PATH: sudo aws sha256sum tar shutdown mount dnf base64.
+# Commands are looked up on PATH: sudo aws sha256sum tar shutdown mount dnf base64 sleep.
 set -euo pipefail
 
 RUNTIME_DEST="${SC_RUNTIME_DEST:-/opt/scholarchain-runtime}"
@@ -298,8 +299,25 @@ done
 # 9. EFS ---------------------------------------------------------------------
 sudo dnf install -y amazon-efs-utils || die 5 "could not install amazon-efs-utils"
 sudo mkdir -p "${MNT}"
-sudo mount -t efs -o "tls,iam,accesspoint=${AP_ID}" "${EFS_ID}:/" "${MNT}" ||
-  die 5 "EFS mount failed"
+# Phase 15 P7 (Session 1 finding S1-F2, BOOTSTRAP_FAILURE "EFS mount failed"): the node can bootstrap before the EFS mount target and
+# its DNS name are ready. Bounded retry: at most EFS_MOUNT_ATTEMPTS mounts with EFS_MOUNT_RETRY_SECONDS between them (9 x 15 s = 135 s of
+# waiting; the shutdown timer armed before any download still bounds the whole node). Each attempt is logged
+# (file system and access point ids only, no credential); after the last failure the bootstrap fails loudly with exit 5.
+EFS_MOUNT_ATTEMPTS=10
+EFS_MOUNT_RETRY_SECONDS=15
+attempt=1
+while true; do
+  log "EFS mount attempt ${attempt}/${EFS_MOUNT_ATTEMPTS}: ${EFS_ID} access point ${AP_ID} at ${MNT}"
+  if sudo mount -t efs -o "tls,iam,accesspoint=${AP_ID}" "${EFS_ID}:/" "${MNT}"; then
+    break
+  fi
+  if [[ "${attempt}" -ge "${EFS_MOUNT_ATTEMPTS}" ]]; then
+    die 5 "EFS mount failed after ${EFS_MOUNT_ATTEMPTS} attempts (${EFS_MOUNT_RETRY_SECONDS} s apart): is the mount target of ${EFS_ID} available in this subnet?"
+  fi
+  log "EFS mount attempt ${attempt} failed; retrying in ${EFS_MOUNT_RETRY_SECONDS} s"
+  sleep "${EFS_MOUNT_RETRY_SECONDS}"
+  attempt=$((attempt + 1))
+done
 grep -q " ${MNT} " "${PROC_MOUNTS}" || die 5 "${MNT} is not a mount point after mount; refusing to use a local directory"
 log "EFS mounted at ${MNT}"
 

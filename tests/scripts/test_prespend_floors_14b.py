@@ -1,7 +1,8 @@
 """Phase 14B replan, repair round 2: the pre-spend headroom rules of scripts/deploy.sh (test-engineer, independent).
 
-Requirement (user decisions): the receipt's remaining headroom must be at least USD 3 for every stage that can spend
-(base-apply, push, runtime-apply; 2.99 is refused, 3.00 is accepted). The teardown-only stage `cleanup-prepare` has NO headroom floor:
+Requirement (user decisions): the receipt's remaining headroom must be at least USD 2 for every stage that can spend
+(base-apply, push, runtime-apply; 1.99 is refused, 2.00 is accepted). The floor was 3 (2.99 refused, 3.00 accepted) until the human's
+Phase 15 R-b option (i) decision of 2026-11-16 (floor 2, project <= 23.00; docs/agent-runs/phase-15/prompt.md). The teardown-only stage `cleanup-prepare` has NO headroom floor:
 the user's words are "cleanup-prepare has no headroom floor, so negative headroom is accepted. The receipt must still exist, match
 its hash, be fresh, confirm monitoring and carry every numeric field. Cleanup must never be blocked by overspend." So for
 cleanup-prepare a headroom of -5.00, -0.01 or 0 is accepted and the stage prints
@@ -109,16 +110,16 @@ class StageListIsAsExpected(FloorBase):
         self.assertNotIn("prespend-receipt", run.steps(), run.describe())
 
 
-class SpendingStagesKeepTheThreeDollarFloor(FloorBase):
-    def test_headroom_below_three_is_refused_by_every_spending_stage(self):
+class SpendingStagesKeepTheTwoDollarFloor(FloorBase):
+    def test_headroom_below_two_is_refused_by_every_spending_stage(self):
         for stage in SPENDING:
-            for headroom in (2.99, 1, 0, -0.01):
+            for headroom in (1.99, 1, 0, -0.01):
                 with self.subTest(stage=stage, headroom=headroom):
-                    self.assert_floor_refusal(self.deploy(stage, self.receipt(remaining_headroom_usd=headroom)), 3.0)
+                    self.assert_floor_refusal(self.deploy(stage, self.receipt(remaining_headroom_usd=headroom)), 2.0)
 
-    def test_headroom_of_exactly_three_and_above_passes_the_prespend_step(self):
+    def test_headroom_of_exactly_two_and_above_passes_the_prespend_step(self):
         for stage in SPENDING:
-            for headroom in (3, 3.0, 3.00, 3.01, 19.99, 20.25):
+            for headroom in (2, 2.0, 2.00, 2.01, 2.99, 3.00, 19.99, 20.25):  # 2.99 was refused under the former floor 3
                 with self.subTest(stage=stage, headroom=headroom):
                     self.assert_past_prespend(self.deploy(stage, self.receipt(remaining_headroom_usd=headroom)))
 
@@ -167,7 +168,7 @@ class CleanupPrepareHasNoHeadroomFloor(FloorBase):
         self.assert_past_prespend(self.deploy("cleanup-prepare", receipt))
         for stage in SPENDING:
             with self.subTest(stage=stage):
-                self.assert_floor_refusal(self.deploy(stage, receipt), 3.0)
+                self.assert_floor_refusal(self.deploy(stage, receipt), 2.0)
 
     def test_headroom_that_is_not_a_finite_number_is_still_refused(self):
         cases = {
@@ -252,8 +253,8 @@ class VerifyPrespendFlags(FloorBase):
         self.assertIn(no_floor_line("-5.00"), out)
 
     def test_floor_mode_refuses_below_and_accepts_at_the_floor(self):
-        self.assertEqual(self.verify(self.receipt(remaining_headroom_usd=2.99), "--min-headroom", "3")[0], 1)
-        self.assertEqual(self.verify(self.receipt(remaining_headroom_usd=3.0), "--min-headroom", "3")[0], 0)
+        self.assertEqual(self.verify(self.receipt(remaining_headroom_usd=1.99), "--min-headroom", "2")[0], 1)
+        self.assertEqual(self.verify(self.receipt(remaining_headroom_usd=2.0), "--min-headroom", "2")[0], 0)
 
     def test_no_floor_mode_still_needs_a_finite_headroom_number(self):
         for label, value in (("missing", ...), ("null", None), ("string", "-5"), ("NaN", float("nan")), ("Infinity", float("inf"))):
@@ -275,10 +276,11 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
     def test_the_other_pins_are_unchanged(self):
         conf = (S.REPO / "scripts/config/release.conf").read_text()
         values = dict(re.findall(r"^([A-Z_]+)=(\S+)", conf, re.M))
-        self.assertEqual(float(values["PRESPEND_MIN_HEADROOM_USD"]), 3.0)
-        self.assertEqual(float(values["EMR_CUMULATIVE_CAP_USD"]), 2.52)
+        self.assertEqual(float(values["PRESPEND_MIN_HEADROOM_USD"]), 2.0)  # floor 2 since Phase 15 option (i) (was 3)
+        # Phase 15 P25 (user, 2026-11-16, prompt.md line 131): 4 runs / USD 3.36 cumulative (were 3 / 2.52); the per-run cap stays 3
+        self.assertEqual(float(values["EMR_CUMULATIVE_CAP_USD"]), 3.36)
         self.assertEqual(float(values["EMR_MAX_RUN_USD"]), 3.0)
-        self.assertEqual(int(values["EMR_MAX_LIVE_RUNS"]), 3)
+        self.assertEqual(int(values["EMR_MAX_LIVE_RUNS"]), 4)
         common = (S.REPO / "scripts/lib/common.sh").read_text()
         pinned = re.search(r'^SC_PINNED_KEYS="([^"]*)"', common, re.M).group(1).split()
         for key in ("PRESPEND_MIN_HEADROOM_USD", "PRESPEND_MAX_AGE_HOURS", "EMR_CUMULATIVE_CAP_USD", "PRESPEND_PROJECT_CEILING_USD"):
@@ -297,10 +299,10 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
         for value in ("0", "-100", "1000", "abc", ""):
             env = {OLD_KEY: value}
             for stage in SPENDING:
-                with self.subTest(stage=stage, value=value, headroom=2.99):
-                    self.assert_floor_refusal(self.deploy(stage, self.receipt(remaining_headroom_usd=2.99), env), 3.0)
-                with self.subTest(stage=stage, value=value, headroom=3):
-                    self.assert_past_prespend(self.deploy(stage, self.receipt(remaining_headroom_usd=3.00), env))
+                with self.subTest(stage=stage, value=value, headroom=1.99):
+                    self.assert_floor_refusal(self.deploy(stage, self.receipt(remaining_headroom_usd=1.99), env), 2.0)
+                with self.subTest(stage=stage, value=value, headroom=2):
+                    self.assert_past_prespend(self.deploy(stage, self.receipt(remaining_headroom_usd=2.00), env))
             with self.subTest(stage="cleanup-prepare", value=value, headroom=-5):
                 run = self.deploy("cleanup-prepare", self.receipt(remaining_headroom_usd=-5), env)
                 self.assert_past_prespend(run)
@@ -313,7 +315,7 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
         conf.write_text(conf.read_text() + "\n%s=100\n" % OLD_KEY)
         self.fx.git("add", "-A")
         self.fx.git("commit", "-q", "-m", "stray old key")
-        self.assert_floor_refusal(self.deploy("runtime-apply", self.receipt(remaining_headroom_usd=0)), 3.0)
+        self.assert_floor_refusal(self.deploy("runtime-apply", self.receipt(remaining_headroom_usd=0)), 2.0)
         self.assert_past_prespend(self.deploy("cleanup-prepare", self.receipt(remaining_headroom_usd=-5)))
 
     def test_environment_cannot_lower_the_spending_floor_or_pretend_a_floor_on_cleanup(self):
@@ -321,7 +323,7 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
         for stage in SPENDING:
             with self.subTest(stage=stage, direction="cannot relax a spending stage"):
                 run = self.deploy(stage, receipt, {"PRESPEND_MIN_HEADROOM_USD": "0"})
-                self.assert_floor_refusal(run, 3.0)
+                self.assert_floor_refusal(run, 2.0)
                 self.assertIn("CONFIG-IGNORED", run.out)
         with self.subTest(direction="cannot raise cleanup-prepare"):
             run = self.deploy("cleanup-prepare", receipt, {"PRESPEND_MIN_HEADROOM_USD": "50"})

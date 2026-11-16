@@ -1,0 +1,9 @@
+#!/usr/bin/env -S python3 -I
+# Phase 15 P6 local stand-in for `aws` on the EMR node (see scripts/lib/p6_local.py). Never calls AWS.
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))), "lib"))
+import p6_local  # noqa: E402
+
+sys.exit(p6_local.MAINS["aws"](sys.argv[1:]))

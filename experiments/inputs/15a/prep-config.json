@@ -6,7 +6,7 @@
   "maxAuthorTeamSize": 16,
   "maxCandidateBlockSize": 32,
   "maxCandidatePairsPerBlock": 128,
-  "maxLocalSampleRecords": 12000,
+  "maxLocalSampleRecords": 60000,
   "maxRecordBytes": 1048576,
   "maxXmlEntityExpansion": 1048576,
   "outputRoot": "target/phase15-runs/15a",

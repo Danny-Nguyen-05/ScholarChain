@@ -471,7 +471,7 @@ run "emr_enabled_with_the_four_step_programs_of_the_example_is_accepted" {
         { uri = "s3://scholarchain-course-111122223333-artifacts/steps/sc-ceiling-check.py", sha256 = "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c", dest = "/opt/scholarchain-spike/bin/sc-ceiling-check.py" },
         { uri = "s3://scholarchain-course-111122223333-artifacts/steps/sc-class-origin-verify.py", sha256 = "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79", dest = "/opt/scholarchain-spike/bin/sc-class-origin-verify.py" },
         { uri = "s3://scholarchain-course-111122223333-artifacts/steps/sc-render-spark-config.py", sha256 = "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c", dest = "/opt/scholarchain-spike/bin/sc-render-spark-config.py" },
-        { uri = "s3://scholarchain-course-111122223333-artifacts/steps/sc-step.sh", sha256 = "ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
+        { uri = "s3://scholarchain-course-111122223333-artifacts/steps/sc-step.sh", sha256 = "b79f5c1f50f1bf95a2d57c891f82df65d92aee50ab6888e8c3f2a12771b9ff2d", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
     ] }
     emr_service_policy_json = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:DescribeInstances\"],\"Resource\":[\"*\"]}]}"
   }

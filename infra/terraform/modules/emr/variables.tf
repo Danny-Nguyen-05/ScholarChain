@@ -23,7 +23,12 @@ variable "config" {
     # Step scripts and config the bootstrap verifies and installs (item 8). dest must be under an allowed directory.
     extra_artifacts = optional(list(object({ uri = string, sha256 = string, dest = string })), [])
 
-    instance_type = optional(string, "m5.xlarge")
+    # instance_type is the core (and task) node type. The primary (master) node has its own type: Phase 15 D3 (human decision,
+    # docs/agent-runs/phase-15/prompt.md, "D3 decision" and "S run cap and D3 go-ahead", 2026-11-16): r5.xlarge (32 GiB, 4 vCPU),
+    # because the entity-resolution step is a single JVM on the PRIMARY node (scripts/emr/sc-step.sh) that needs a 12g heap
+    # (P6: 8g OOM, RSS 13.9 GB at 12g), which a 16 GiB m5.xlarge primary cannot hold with headroom. Spark executors run on core.
+    instance_type         = optional(string, "m5.xlarge")
+    primary_instance_type = optional(string, "r5.xlarge")
     # G3: task nodes and managed scaling are OFF unless tfvars turn them on, within the caps below.
     max_task_nodes               = optional(number, 0)
     task_node_count              = optional(number, 0)
@@ -48,6 +53,13 @@ variable "config" {
   validation {
     condition     = var.config.instance_type == "m5.xlarge"
     error_message = "Only m5.xlarge keeps the smallest cluster (primary + core) inside the USD 3 per-run cap at the maximum runtime plus idle tail (G6); m5.2xlarge would not."
+  }
+  validation {
+    # D3: exactly the reviewed pair. Primary m5.xlarge or r5.xlarge; the core (and task) type stays pinned to m5.xlarge above.
+    # G6 at r5.xlarge: the largest allowed cluster (r5 primary 0.315 + core and one task m5 0.240 each, USD per hour) costs
+    # 0.795 x (180 min + 900 s) = USD 2.58, inside the USD 3 per-run cap; tests/phase15_emr_primary.tftest.hcl derives it.
+    condition     = contains(["m5.xlarge", "r5.xlarge"], var.config.primary_instance_type)
+    error_message = "D3: the primary instance type must be r5.xlarge (the reviewed default) or m5.xlarge; no other type has a reviewed rate and cap check."
   }
   validation {
     condition     = floor(var.config.max_task_nodes) == var.config.max_task_nodes && var.config.max_task_nodes >= 0 && var.config.max_task_nodes <= 1

@@ -258,8 +258,8 @@ class ExperimentExecuteTests(ExperimentFixture):
         self.refused(self.experiment(*args), "pricing is not confirmed by the human")
         # ledger
         self.set_pricing(confirmed=True)
-        self.write_ledger(["0.50", "0.50", "0.50"])
-        self.refused(self.experiment(*args), "3 live EMR runs")
+        self.write_ledger(["0.50", "0.50", "0.50", "0.50"])  # Phase 15 P25: the live-run limit is 4
+        self.refused(self.experiment(*args), "4 live EMR runs")
         # a stale pre-spend receipt
         self.write_ledger([])  # a fresh, initialised ledger
         args = self.ready()
