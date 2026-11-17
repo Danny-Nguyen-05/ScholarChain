@@ -494,6 +494,18 @@ class JavaHomeSeparatorTests(BootstrapCase):
         self.assertEqual((keys.count(self.AM), keys.count(self.EX)), (1, 1))
         self.assertEqual(len(keys), len(lines) + 2)
 
+    def test_the_real_decision_12_10_conf_pins_one_task_retry_and_one_application_attempt(self):
+        """Phase 15: spark.task.maxFailures is 2 (one retry of a transient task failure) and spark.yarn.maxAppAttempts stays 1."""
+        with open(os.path.join(SCRIPTS_DIR, "config", "spark-12-10.conf"), encoding="utf-8") as handle:
+            settings = {}
+            for line in handle:
+                if line.strip() and not line.startswith("#"):
+                    key, _, value = line.rstrip("\n").partition(" ")
+                    self.assertNotIn(key, settings, "duplicate key " + key)
+                    settings[key] = value
+        self.assertEqual(settings.get("spark.task.maxFailures"), "2")
+        self.assertEqual(settings.get("spark.yarn.maxAppAttempts"), "1")
+
 
 class EfsMountRetryTests(BootstrapCase):
     """Phase 15 P7 (Session 1 finding S1-F2, BOOTSTRAP_FAILURE "EFS mount failed"): the EFS mount is retried at most 10 times, 15 s apart

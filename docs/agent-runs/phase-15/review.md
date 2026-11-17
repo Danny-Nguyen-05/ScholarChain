@@ -917,3 +917,105 @@ BLOCKED-ON EVIDENCE: Observed test results, because no shell was available in th
 NEXT GATE: Coordinator full check (A1.7), then the user-approved frozen commit, then Tuesday's I1, then I2/I3.
 
 Coordinator note on review 2 (2026-11-16): verdict APPROVE. Nits 1, 2 (incident record) and 5 (session-2-plan.md) were applied by their owners as wording and line-number corrections and are not sent back for review; nits 3 and 4 are kit-only (`target/phase15/p0/**`, ignored, outside the frozen tree) and go to the infra-engineer. The full check (`scripts/check.sh`, A1.7, includes the sbt gate = P20) runs next on the main checkout.
+
+
+### Review (spark.task.maxFailures 1 -> 2) — code-reviewer agent `aec1cdbebd9bfadfb` (Opus 5.5, high), branch phase-15-maxfail; verbatim
+
+STATUS: DONE. Verdict: **APPROVE.** I found no code defect. Two record and hand-off corrections should be made before merge (findings 1 and 2); neither blocks the code.
+
+OWNER: code-reviewer (read-only).
+
+WORK ORDER: Phase 15, spark.task.maxFailures 1 -> 2, worktree /Users/danny/Documents/UIC/CS441/ScholarChain-wt/phase15-maxfail (branch phase-15-maxfail, base 9e881a2).
+
+FILES CREATED: none. FILES MODIFIED: none.
+
+COMMANDS RUN: Read, Grep and Glob only. I had no shell, so `git diff` was **not run**. I reviewed the diff by comparing each named file in the worktree against the same file in the clean main checkout at 9e881a2. I made no AWS, Anthropic or Voyage call, and read no tfvars, state, .env or secret directory.
+
+TEST RESULTS: I ran no tests. The pass counts come from the infra-engineer's report (owner-report.md:5460-5472) and were not observed by me.
+
+VALIDATION RESULTS
+
+1. Correctness and consistency: PASS
+- Conf and module match key for key: 22 keys, only maxFailures changed. Conf: scripts/config/spark-12-10.conf:37-38. Module: infra/terraform/modules/emr/variables.tf:172-173.
+  - The equality assert (phase13c.tftest.hcl:167) and the count assert (:171, 22 keys) still hold by inspection.
+- The new validation (variables.tf:195-198) is valid HCL. It uses the same `lookup(..., null)` pattern as :192 and does not overlap the 12-10 key set (:180-192), the codec rule, the forbidden-key rule or the value-format rule.
+  - The module call (phase12b.tf:128-146) has no count and passes no `spark_defaults`, so the validation runs on every plan against the default map.
+- Nothing else forces the value to 1:
+  - sc-step.sh:220-234 adds only tags, stagingDir, JAVA_HOME and maxExecutors, then the 22 SPARK_CONF pairs from pipeline.py:336.
+  - p6_local.py:346-392 passes `--conf` values through and switches to `local-cluster[...]`, which honours spark.task.maxFailures. Plain `local[N]` would not.
+  - sc-render-spark-config.py renders only the application JSON. experiments/ and run-bounded-pipeline.sh contain no maxFailures.
+- The spark-job step uses Phase6Main (sc-step.sh:37, :349). Phase6Main builds its own session (Phase6Main.scala:101-121) with no maxFailures, so the spark-submit value applies.
+- The class-origin step uses Phase12Readiness (sc-step.sh:38, :326). Its session builder (Phase12Readiness.scala:107-117) overrides the value to 1, which is fine for that single-task probe.
+
+2. Retry safety: PASS
+- No accumulators anywhere in modules/spark/src/main.
+- Every UDF is pure ID, validation or CSV encoding:
+  - Phase6CJobs.scala:146-190
+  - Phase6DEJobs.scala:51-65
+  - Phase6FGJobs.scala:209-224
+  - Phase6Export.scala:333-378
+  - Phase7NeptuneExport.scala:35-46
+- Task-side writes go only through DataFrameWriter: Phase6Export.scala:190/197-200, Phase6Main.scala:78-81, Phase7NeptuneExport.scala:162-167, and Phase6CMain.scala:215, which is not on the EMR path.
+  - Phase7CsvFileFormat (:244-268) extends TextFileFormat and so uses the FileFormat commit protocol.
+- Spark's own RDD checkpoints write to an attempt temp file and then rename, so they are retry-safe.
+- These Files.* calls run on the driver only: Phase7NeptuneExport.scala:170-190, Phase6Plans, and Phase6Main's metadata and markers. `rejectSink` (Phase6CReaders.scala:410) is a driver-side buffer.
+- The only executor-side file write is the Phase12Readiness probe (:206-219). It stays at 1 and its file name includes the attempt ID.
+- No AWS SDK calls in modules/spark/src/main.
+- Speculation is not enabled anywhere:
+  - No `speculation` or `configurations_json` in infra/terraform or scripts.
+  - modules/emr/main.tf:54+ has no configurations block.
+  - bootstrap.sh:258-281 only adds the JAVA_HOME keys to the Terraform-rendered text.
+  - No `fileoutputcommitter.algorithm.version` override.
+- Note: stage retry after a fetch failure already happened at maxFailures=1, so recompute determinism was already being relied on.
+
+3. Tests: PASS, with one gap
+- A regression to 1 would fail each of these:
+  - phase13c.tftest.hcl:179 checks for "spark.task.maxFailures 2\n" and the absence of "spark.task.maxFailures 1". The module validation would also stop the plan first.
+  - test_emr_bootstrap.py:497-507 reads the real conf.
+  - test_pipeline.py:112-113: the fixture copies the real conf (pipeline_helpers.py:74-78).
+  - A mismatch between conf and module also fails phase13c:167 and tests/infra/emr_module_checks.py:236-255.
+- No test pins the old conf sha (1376ea43…); it appears only in docs/agent-runs (phase-13 evidence and phase-15 owner-report). No test pins the variables.tf sha.
+- The billing tests use synthetic `source_freeze` rows (test_budget_verification.py:76, test_budget_execution.py:359).
+- No test under tests/** asserts maxFailures=1.
+
+4. Records accuracy
+- Executor 0 stderr lines 74802-74805 are verified: at 23:36:46, "Dropping block broadcast_681_piece0 from memory" / "Writing ... to disk", then the same for broadcast_681.
+- Executor 1 stderr line 59820 is verified: "Read broadcast_681_piece0 from the disk of a same host executor is successful." at 23:37:10. Lines 59821-59839 are the AIOOBE at TorrentBroadcast.scala:206, reached via ReliableCheckpointRDD.readCheckpointFile.
+- spark-job.stderr.log:87481 is verified, as is "failed 1 times" at :87529.
+- Phase 12D citations are verified:
+  - build/owner-report.md:71 gives the v2 failure (2 of 2) and :88 the instruction to use v1.
+  - report.md:58 gives the v2/v1 result.
+  - spikes/emr-spark-isolated/main.tf:77-81 (the comment continues to :82).
+- The "1 failure in 4 same-host disk reads" figure is verified: 4 occurrences under target/phase15, 1 failure.
+- SPARK-43221 fix versions (3.5.6/4.0.0/4.1.0) are **unverified by me** because I worked offline. They match both recorded independent reads.
+
+FINDINGS
+1. **Medium (hand-off accuracy).** scripts/billing/reviewed-pins.json:80-82 also pins `infra/terraform/README.md` (121366 bytes, 0cd78c97…). This diff changes that file at README.md:545, so after merge two `source_freeze` rows are stale, not one. The records name only variables.tf: prompt.md:334, owner-report.md:5482 and :5487. Verification fails closed, and the drift command (scripts/billing/README.md:184) would list both rows. Fix owner: the orchestrator, by correcting the records to name both pins. Alternatives: the human refreshes both rows, or the infra-engineer drops the README edit.
+2. **Low (records consistency).** The run counts disagree:
+   - owner-report.md:5437 says "over 12 local S runs".
+   - test-report.md:155 says 6 local S runs reached a full spark-job.
+   - target/phase15/p6/work holds 8 run directories and 16 Spark applications.
+   - owner-report.md:5402 says "4-of-12 reads that succeeded", but 3 of 4 succeeded.
+   Fix owner: the orchestrator.
+3. **Low (test coverage).** The new pin validation (variables.tf:195-198) has no negative test in the repo; it was proven only in a scratch copy (owner-report.md:5453, :5469). A `run` block with `module { source = "./modules/emr" }` and `expect_failures = [var.spark_defaults]` could cover it. Fix owner: infra-engineer, optional.
+4. **Info.**
+   - pipeline.py:67-77 (SPARK_REQUIRED) does not pin maxFailures or maxAppAttempts. Conf drift is caught only by the Terraform equality test, as before this change.
+   - test-report.md:154 still says the EMR value is 1 at variables.tf:169. That was true at 9e881a2 but is stale after the merge.
+   - Phase 12D's own report disclaims a root cause (build/owner-report.md:71, :97). The misattribution correction is still accurate for the decision records (report.md:58, spike main.tf:78-81).
+   - infra/terraform/README.md:544 says "36 tests" for test_emr_bootstrap.py; the file has 41. This was already stale before the change.
+
+ASSUMPTIONS: The changed files are exactly the ones the caller listed; I could not confirm this with `git diff`. Spark 3.5.4 behaviour is from my own knowledge: builder options override spark-submit settings, local-cluster honours the value, and checkpoint writes use an attempt temp file then rename.
+
+RISKS: A retry can hit SPARK-43221 again, so the risk is reduced, not removed (already disclosed). The changed spark_defaults text alters `bootstrap_args`, so a live cluster would be replaced on apply; any plan or apply stays behind the human gate.
+
+MANUAL ACTION REQUIRED: After merge, the human refreshes both source_freeze rows (variables.tf and README.md). The acceptance gates the human set remain: the full check and one local S run with counters equal to the reference run.
+
+BLOCKED-ON OWNER: none. BLOCKED-ON EVIDENCE: none.
+
+NEXT GATE: The orchestrator applies the record corrections (findings 1 and 2), then runs the clean-snapshot check.sh and sbt check, then the local S run, then the human's merge, pin-refresh and commit decision.
+
+**Coordinator notes on this review (2026-11-17).**
+- **Finding 1, accepted.** `infra/terraform/README.md` is also in the P0 source freeze. After the merge the human refreshes **two** `source_freeze` rows: `infra/terraform/modules/emr/variables.tf` and `infra/terraform/README.md`. The README edit is kept, because the runbook A2 one-liner refreshes every drifted row in one pass. The corrected hand-off is in the owner-report errata.
+- **Finding 2, accepted.** Counts corrected in the owner-report errata.
+- **Finding 3, deferred.** Optional. The validation is proven in a scratch copy, and the regression-to-1 case is already caught by `phase13c.tftest.hcl:179` and the two Python tests.
+- **Finding 4, info.** The `test-report.md:154` row describes the state at 9e881a2 and stays as history; the new rows record the change.
