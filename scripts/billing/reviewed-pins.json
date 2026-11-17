@@ -78,8 +78,8 @@
     },
     {
       "path": "infra/terraform/README.md",
-      "bytes": 121366,
-      "sha256": "0cd78c97cad1a49ce69b6068e5cd280a94633cb203f759cba8cee6033f9ce84c"
+      "bytes": 121446,
+      "sha256": "7f3de0d45daed8b1c59c94c5eeb59e921d48194bcb543a930efb0a623227f108"
     },
     {
       "path": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
@@ -208,8 +208,8 @@
     },
     {
       "path": "infra/terraform/modules/emr/variables.tf",
-      "bytes": 15367,
-      "sha256": "5acb9afec8514de2d398db21f38aa7d170bf15fee69b6dfe4d05a24b3146eb19"
+      "bytes": 16283,
+      "sha256": "620a35845d21095a77fe540b4c3064570bb5b08a2f91a009378424ef2e30cdc5"
     },
     {
       "path": "infra/terraform/modules/emr/versions.tf",
