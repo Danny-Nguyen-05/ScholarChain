@@ -293,3 +293,29 @@ Coordinator question: the P35 local rehearsal (run p35-local-1, evidence under `
 User answer, verbatim: "T = 3,000 (Recommended)"
 
 Coordinator defaults applied (not asked; the user's Q16 formula fixes them): `r_S2` = 3,500 (at least 2 x the local level-50 peak of 1,737 served requests per second per task, rounded up) and `b_S2` = 7,000 (2 x `r_S2`), both user-set tfvars (`query_semantic_rate_limit_per_second`, `query_semantic_rate_limit_burst`). The per-run request caps (198,600) bind the R-b cost, so these values do not change it. `query_requests_per_target_target` = 3000 is also a user-set tfvar.
+
+## P0 budget modify moved to 2026-11-16 and the modify incident (2026-11-16)
+
+User request, verbatim: "Can we do the p0 budget change now instead of waiting for tomorrow?"
+
+Coordinator check before answering: no `scripts/billing/**` or `infra/terraform/billing-bootstrap/**` change since d5e74aa, template hash 946352f3…af28 unchanged, main checkout clean at a975775, P0 kit tests 18 OK. Only the date changed (D=20261116). The user ran every AWS step.
+
+User request on the gate record, verbatim: "I want you to fill those for me". Coordinator action: filled only the factual blanks of `docs/agent-runs/phase-14/budget-modify-gate-20261116.md` (plan and input hashes, commits C and C2, operation, window 19:50-20:50, packet and backup paths); the user had already filled the date and author, then removed the DRAFT line, signed and committed it (C3 2611cc6).
+
+Coordinator kit fix during the window (not tracked; `target/phase15/p0/p0_gate.py`): the hidden and visible prompts opened `/dev/tty` in text mode "r+", which raises `io.UnsupportedOperation` on a terminal (`P0_GATE_REFUSED: UNEXPECTED_UnsupportedOperation`, nothing written). Replaced with an unbuffered binary reader and a separate writer; tested in a real pty (hidden input not echoed, 5-line STS paste parsed) and the kit's 18 tests OK.
+
+Outcome: the modify apply printed `Apply complete! Resources: 0 added, 1 changed, 0 destroyed.`, then the wrapper stopped with `MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED` (exit 2). The user's read-only console check showed USD 25, custom 2026-10-01 to 2027-01-01, three actual-cost alerts at > $18, > $20 and > $22, one verified recipient, spend $15.75, excluded charge types Credit and Refund.
+
+User decision, verbatim: "yes you can start the incident write-up and the wrapper fix tonight"
+
+## Frozen session commit moved to tonight (2026-11-16)
+
+Coordinator question: make tonight's reviewed billing-fix commit (the P0 incident fix touches only `scripts/billing/**`, the incident record and records) the frozen session commit, so P20 (the post-review sbt check) and P6 S on the frozen commit run tonight and the user can set the final private tfvars; P15 rebuild, the credit-balance read, the approval record and the go/no-go stay on Wednesday. Any later code change voids the freeze and repeats the frozen steps.
+
+User answer, verbatim: "Yes"
+
+## P15 moved to tonight (2026-11-16)
+
+User request, verbatim: "The p15 parts on wednesday. Can you do it also tonight? Just ask"
+
+Coordinator plan (no account ID needed): after the billing-bundle review, run A1.4 (`sbt packageEmr`, the upload script's dry run with a syntactically valid placeholder bucket and run prefix, first proving on two different placeholders that the printed `EMR-RENDER` hashes do not depend on them, then `render_manifests.py` and `check_manifests.py --final`), the A2 drift check (read-only; any drift goes to the user, who owns `reviewed-pins.json`), and A1.7 (full `scripts/check.sh`, `RESULT: PASS gates=7`, which is also P20), then commit: that commit is the frozen code commit. A12 (images, built on the final HEAD) stays after the P0 verification records are committed, because B0 requires HEAD to equal the A12 HEAD; any record commit after the images would require a rebuild.

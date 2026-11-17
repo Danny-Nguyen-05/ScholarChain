@@ -821,4 +821,377 @@ class ModifiedFeatures(Fixture):
         self.assertIn('SCAN_ARGUMENTS', str(output.call_args_list))
 
 
+class IncidentLinkageFeatures(Fixture):
+    """Read-only verification of a modify whose apply completed but whose wrapper stopped before its receipts.
+
+    Layout mirrors modify-20261116-01: preservation receipt with exactly two artifacts, the pre-apply backup,
+    no post-apply backup, no modify receipts, empty stderr, the primary state unchanged since the incident.
+    """
+    APPLY_LINE = b'Apply complete! Resources: 0 added, 1 changed, 0 destroyed.'
+
+    def setUp(self):
+        super().setUp()
+        self.post_state = b'post-modify opaque synthetic state, not Terraform data'
+        # Terraform's own .backup: the same size as the initial state, other bytes.
+        self.tf_backup_bytes = bytes(reversed(self.opaque))
+        for name, value in (('INITIAL_STATE_SHA256', b.digest(self.opaque)), ('INITIAL_STATE_BYTES', len(self.opaque))):
+            patch = mock.patch.object(b, name, value); patch.start(); self.addCleanup(patch.stop)
+        self.modify_plan = 'c'*64
+        self.policy.pins['modify'] = {'plan_sha256': self.modify_plan, 'plan_bytes': 10, 'public_input_sha256': 'd'*64,
+                                      'config': [{'copy_relative': 'config/main.tf', 'sha256': 'e'*64, 'bytes': 1}]}
+        self.mop = self.primary/'operations'/'modify-fixture'; self.mop.mkdir(mode=0o700)
+        self.folder = self.backups/'modify-fixture'; self.folder.mkdir(mode=0o700)
+        self.state = self.primary/'billing.execution.tfstate'
+        self.tf_backup = self.primary/'billing.execution.tfstate.backup'
+        self.write(self.state, self.post_state)
+        self.write(self.tf_backup, self.tf_backup_bytes)
+        self.modify_gate = {'operation': 'modify-fixture', 'option': 'M', 'plan_sha256': self.modify_plan,
+                            'actor_arn': b.CALLER, 'account': b.ACCOUNT, 'profile': b.PROFILE, 'region': b.REGION,
+                            'window_start': '2026-11-03T16:00:00Z', 'window_end': '2026-11-03T16:55:00Z'}
+        self.modify_gate_name = 'approval-20261103-modify.json'
+        raw_gate = (json.dumps(self.modify_gate) + '\n').encode()
+        self.write(self.primary/self.modify_gate_name, raw_gate)
+        self.modify_gate_sha = b.digest(raw_gate)
+        # Incident operation folder as the wrapper left it.
+        self.write(self.mop/'modify.started', b'')
+        self.write(self.mop/'modify-apply.stdout', b'aws_budgets_budget.project[0]: Modifying...\n'
+                   b'aws_budgets_budget.project[0]: Modifications complete after 1s\n\n' + self.APPLY_LINE + b'\n')
+        self.write(self.mop/'modify-apply.stderr', b'')
+        for name in ('modify-show.stdout', 'modify-pre-budget.stdout', 'modify-pre-subscribers-100.stdout'):
+            self.write(self.mop/name, b'{}')
+        # Backup folder as the wrapper left it.
+        self.write(self.folder/'pre-apply.billing.execution.tfstate', self.opaque)
+        self.write(self.folder/'pre-apply.backup.receipt.json', self.canonical({
+            'gate_sha256': self.modify_gate_sha, 'operation': 'modify-fixture', 'plan_sha256': self.modify_plan,
+            'actor_arn': b.CALLER, 'sha256': b.digest(self.opaque), 'bytes': len(self.opaque), 'equal': True,
+            'fsync_completed': True}))
+        self.write(self.folder/'recovery-000.opaque', self.post_state)
+        self.write(self.folder/'recovery-001.opaque', self.tf_backup_bytes)
+        self.install_preservation()
+        self.values = usd25_values()
+        self.mgate = {'operation': 'verify-usd25-fixture', 'option': 'M', 'plan_sha256': self.modify_plan,
+            'proposal_sha256': self.policy.pins['proposal_sha256'], 'source_commit': self.gate['source_commit'],
+            'wrapper_files': self.gate['wrapper_files'], 'human_record_sha256': self.policy.pins['human_record_sha256'],
+            'g1_affirmation': 'Synthetic affirmation, no actual approval.', 'actor_arn': b.CALLER, 'account': b.ACCOUNT,
+            'profile': b.PROFILE, 'region': b.REGION, 'window_start': self.gate['window_start'], 'window_end': self.gate['window_end'],
+            'timezone': 'America/Chicago', 'login_at': self.gate['login_at'], 'human_sts_observed_at': self.gate['human_sts_observed_at'],
+            'human_sts': {'Account': b.ACCOUNT, 'Arn': b.CALLER}, 'permissions': sorted(v.MODIFIED_PERMISSIONS),
+            'retention_accepted': True, 'verification_review_approved': True, 'aws_cli_sha256': b.hash_file(self.aws),
+            'public_packet_root': 'docs/agent-runs/phase-14/evidence/14b/budget-modify-verify-fixture',
+            'modify_operation': 'modify-fixture', 'modify_gate_filename': self.modify_gate_name,
+            'modify_gate_sha256': self.modify_gate_sha, 'modify_linkage': 'incident',
+            'preservation_receipt_sha256': self.pres_sha,
+            'state_backup_sha256': b.digest(self.post_state), 'state_backup_bytes': len(self.post_state)}
+        self.mex = self.modified()
+
+    @staticmethod
+    def canonical(value):
+        return (json.dumps(value, sort_keys=True, indent=2) + '\n').encode()
+
+    def install_preservation(self, mutate=None):
+        """Write the preservation receipt (as the wrapper does) and remember its pin."""
+        art = lambda source, blob: {'source': source, 'sha256': b.digest(blob), 'bytes': len(blob), 'equal': True,
+                                    'fsync_completed': True}
+        receipt = {'artifacts': [art('billing.execution.tfstate', self.post_state),
+                                 art('billing.execution.tfstate.backup', self.tf_backup_bytes)],
+                   'incident_required': True}
+        if mutate: mutate(receipt)
+        target = self.folder/'preservation.receipt.json'
+        if target.exists(): target.unlink()
+        self.write(target, self.canonical(receipt))
+        self.pres_sha = b.hash_file(target)
+
+    def modified(self, gate=None):
+        gate = gate or self.mgate
+        self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+        return v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(
+            self.gatepath, b.hash_file(self.gatepath), gate['operation'])
+
+    def reload(self, **gate_changes):
+        self.mgate.update(preservation_receipt_sha256=self.pres_sha); self.mgate.update(**gate_changes)
+        self.mex = self.modified()
+
+    def fresh(self):
+        self.tearDown(); self.setUp()
+
+    def snapshot(self):
+        """Bytes of every file in the incident op folder, the backup folder and both state files."""
+        files = [*self.mop.iterdir(), *self.folder.iterdir(), self.state, self.tf_backup, self.primary/self.modify_gate_name]
+        return {str(x): x.read_bytes() for x in files}
+
+    def refuses(self, code, damage=None, **gate_changes):
+        self.fresh()
+        if damage: damage()
+        self.mgate['operation'] = 'verify-usd25-incident'
+        self.reload(**gate_changes)
+        with self.assertRaisesRegex(b.Blocked, code): self.mex.verify()
+        self.assertEqual(self.calls, [], code)  # refused before any AWS call
+        self.assertFalse(self.mex.op.exists(), code)  # and before reserving the verify namespace
+
+    def test_happy_path_reads_the_new_shape_and_mutates_nothing(self):
+        before = self.snapshot()
+        result = self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+        self.assertEqual([x['argv'][2] for x in self.calls], ['describe-budget', 'list-tags-for-resource', 'describe-notifications-for-budget', *['describe-subscribers-for-notification']*3])
+        self.assertEqual([json.loads(c['argv'][c['argv'].index('--notification')+1]) for c in self.calls if '--notification' in c['argv']],
+                         [b.expected_notification(t, 'ABSOLUTE_VALUE') for t in (18, 20, 22)])
+        self.assertEqual((result['stage'], result['option']), ('verify', 'M'))
+        self.assertEqual(result['linkage']['mode'], 'incident')
+        self.assertEqual(result['linkage']['modify_operation'], 'modify-fixture')
+        self.assertEqual(result['linkage']['preservation_receipt_sha256'], self.pres_sha)
+        self.assertIsNone(result['linkage']['incident_cause_recorded'])  # the real incident predates the recorded cause
+        self.assertTrue(result['linkage']['state_unchanged_since_incident'])
+        for key in ('cost_scope_match', 'budget_fields_match', 'tags_match', 'private_recipients_match'):
+            self.assertTrue(result['result'][key], key)
+        self.assertEqual((result['result']['notification_count'], result['result']['email_subscribers_each']), (3, 1))
+        for private in (ADDRESS, b.digest(ADDRESS.encode())):
+            self.assertNotIn(private, json.dumps(result))
+        self.assertEqual(self.snapshot(), before)  # incident evidence is never touched
+        self.assertEqual(self.mex.verified(), b.hash_file(self.mex.op/'verify.receipt.json'))
+        with self.assertRaises(FileExistsError): self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+
+    def test_recorded_cause_in_a_newer_preservation_receipt_is_accepted_and_reported(self):
+        self.install_preservation(lambda r: r.update(cause='TERRAFORM_BACKUP_NOT_INITIAL'))
+        self.reload()
+        self.assertEqual(self.mex.verify()['linkage']['incident_cause_recorded'], 'TERRAFORM_BACKUP_NOT_INITIAL')
+
+    def test_scan_after_incident_verification_matches_the_scan_receipt_contract(self):
+        self.mex.verify()
+        root = Path(self.mgate['public_packet_root']); self.public(self.repo/root/'file.txt', b'safe public suffixes')
+        rows = [{'path': str(root/'file.txt'), 'bytes': 20, 'sha256': b.digest(b'safe public suffixes')}]
+        freeze = self.repo/Path(str(root) + '.freeze.json'); self.public(freeze, json.dumps({'root': str(root), 'files': rows}).encode())
+        receipt = self.mex.scan(freeze, b.hash_file(freeze), b.hash_file(self.mex.op/'verify.receipt.json'))
+        self.assertEqual((receipt['matches'], receipt['files_scanned'], len(receipt)), (0, 1, 10))
+        self.assertEqual(len(self.calls), 6)
+
+    def test_gate_has_exactly_30_fields_and_selects_the_path_explicitly(self):
+        self.assertEqual(len(v.INCIDENT_GATE_FIELDS), 30)
+        self.assertEqual(set(self.mgate), v.INCIDENT_GATE_FIELDS)
+        self.assertEqual(v.INCIDENT_GATE_FIELDS - v.MODIFIED_GATE_FIELDS, {'modify_linkage', 'preservation_receipt_sha256'})
+        self.assertEqual(v.MODIFIED_GATE_FIELDS - v.INCIDENT_GATE_FIELDS, {'modify_receipt_sha256'})
+        for field in sorted(self.mgate):
+            with self.subTest(missing=field):
+                gate = dict(self.mgate); del gate[field]
+                self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+                with self.assertRaisesRegex(b.Blocked, 'VERIFICATION_GATE_SCHEMA'):
+                    v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), self.mgate['operation'])
+        self.assertEqual(self.calls, [])
+
+    def test_linkage_field_missing_or_unknown_is_refused_and_never_defaults_to_the_normal_path(self):
+        for value in ('normal', 'Incident', 'incident ', '', None, True, ['incident']):
+            with self.subTest(value=value):
+                self.write(self.gatepath, (json.dumps({**self.mgate, 'modify_linkage': value}) + '\n').encode())
+                with self.assertRaisesRegex(b.Blocked, 'MODIFY_LINKAGE_UNKNOWN'):
+                    v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), self.mgate['operation'])
+        # Field missing: the incident pins without it do not form a normal gate either.
+        gate = dict(self.mgate); del gate['modify_linkage']
+        self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+        with self.assertRaisesRegex(b.Blocked, 'VERIFICATION_GATE_SCHEMA'):
+            v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), self.mgate['operation'])
+        # Mixing both pins is refused too.
+        self.write(self.gatepath, (json.dumps({**self.mgate, 'modify_receipt_sha256': 'a'*64}) + '\n').encode())
+        with self.assertRaisesRegex(b.Blocked, 'VERIFICATION_GATE_SCHEMA'):
+            v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), self.mgate['operation'])
+        self.assertEqual(self.calls, [])
+
+    def test_the_normal_path_cannot_verify_an_incident_and_the_incident_path_cannot_verify_a_clean_modify(self):
+        normal = {k: v_ for k, v_ in self.mgate.items() if k not in ('modify_linkage', 'preservation_receipt_sha256')}
+        normal['modify_receipt_sha256'] = 'a'*64
+        self.mex = self.modified(normal)
+        with self.assertRaises((b.Blocked, OSError)): self.mex.verify()  # no modify.receipt.json exists
+        self.assertEqual(self.calls, [])
+        # A clean modify (receipts present, post-apply backup present) is refused by the incident path.
+        for name in ('modify.receipt.json', 'modify-apply.receipt.json'):
+            self.refuses('INCIDENT_MODIFY_RECEIPT_PRESENT', lambda n=name: self.write(self.mop/n, b'{}'))
+
+    def test_preservation_receipt_must_be_the_pinned_two_artifact_incident_record(self):
+        self.refuses('PRESERVATION_RECEIPT_HASH', lambda: self.write(self.folder/'preservation.receipt.json', b'{"tampered": true}'))
+        self.refuses('PRESERVATION_RECEIPT_HASH', preservation_receipt_sha256='0'*64)
+        def repin(mutate, code):
+            self.refuses(code, lambda: self.install_preservation(mutate))
+        art = lambda source: {'source': source, 'sha256': '1'*64, 'bytes': 5, 'equal': True, 'fsync_completed': True}
+        repin(lambda r: r.update(incident_required=False), 'PRESERVATION_RECEIPT_SCHEMA')
+        repin(lambda r: r.update(incident_required='true'), 'PRESERVATION_RECEIPT_SCHEMA')
+        repin(lambda r: r.update(extra=1), 'PRESERVATION_RECEIPT_SCHEMA')
+        repin(lambda r: r.update(cause='has spaces and /paths'), 'PRESERVATION_RECEIPT_SCHEMA')
+        repin(lambda r: r['artifacts'].append(art('config/errored.tfstate')), 'PRESERVATION_RECEIPT_ARTIFACTS')  # extra preserved artifact
+        repin(lambda r: r['artifacts'].pop(), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        repin(lambda r: r['artifacts'].reverse(), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        repin(lambda r: r['artifacts'][1].update(source='billing.execution.tfstate.lock.info'), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        repin(lambda r: r['artifacts'][0].update(equal=False), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        repin(lambda r: r['artifacts'][1].update(fsync_completed=False), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        repin(lambda r: r['artifacts'][0].update(preserved=False), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        repin(lambda r: r['artifacts'][0].update(bytes=str(len(self.post_state))), 'PRESERVATION_RECEIPT_ARTIFACTS')
+
+    def test_extra_files_in_the_backup_folder_or_a_post_apply_backup_are_refused(self):
+        self.refuses('INCIDENT_BACKUP_FILE_SET', lambda: self.write(self.folder/'recovery-002.opaque', b'extra'))
+        self.refuses('INCIDENT_BACKUP_FILE_SET', lambda: self.write(self.folder/'post-apply.billing.execution.tfstate', self.post_state))
+        self.refuses('INCIDENT_BACKUP_FILE_SET', lambda: (self.folder/'recovery-001.opaque').unlink())
+
+    def test_pre_apply_backup_must_be_the_initial_state_by_receipt_and_by_file_hash(self):
+        self.refuses('PRE_BACKUP_NOT_INITIAL', lambda: self.write(self.folder/'pre-apply.billing.execution.tfstate', b'x'*len(self.opaque)))
+        self.refuses('PRE_BACKUP_NOT_INITIAL', lambda: self.write(self.folder/'pre-apply.billing.execution.tfstate', b'short'))
+        def bad_receipt(**kw):
+            def write():
+                value = json.loads((self.folder/'pre-apply.backup.receipt.json').read_text()); value.update(kw)
+                self.write(self.folder/'pre-apply.backup.receipt.json', self.canonical(value))
+            return write
+        self.refuses('PRE_BACKUP_NOT_INITIAL', bad_receipt(sha256=b.digest(b'other')))
+        self.refuses('PRE_BACKUP_NOT_INITIAL', bad_receipt(bytes=1))
+        self.refuses('PRE_BACKUP_NOT_INITIAL', bad_receipt(equal=False))
+        self.refuses('PRE_BACKUP_NOT_INITIAL', bad_receipt(operation='modify-other'))
+        self.refuses('PRE_BACKUP_NOT_INITIAL', bad_receipt(gate_sha256='0'*64))
+        self.refuses('PRE_BACKUP_NOT_INITIAL', bad_receipt(extra=1))
+
+    def test_recovery_copy_must_equal_the_gate_pin_and_the_current_state(self):
+        self.refuses('RECOVERY_NOT_GATE_PINNED', state_backup_sha256=b.digest(b'another state'))
+        self.refuses('RECOVERY_NOT_GATE_PINNED', state_backup_bytes=len(self.post_state) + 1)
+        self.refuses('RECOVERY_NOT_GATE_PINNED', lambda: self.write(self.folder/'recovery-000.opaque', b'y'*len(self.post_state)))
+        self.refuses('RECOVERY_NOT_GATE_PINNED', lambda: self.write(self.folder/'recovery-001.opaque', b'y'*len(self.tf_backup_bytes)))
+
+    def test_state_changed_since_the_incident_is_refused(self):
+        self.refuses('STATE_CHANGED_SINCE_INCIDENT', lambda: self.write(self.state, b'z'*len(self.post_state)))  # same size
+        self.refuses('STATE_CHANGED_SINCE_INCIDENT', lambda: self.write(self.state, self.post_state + b'!'))
+        self.refuses('STATE_CHANGED_SINCE_INCIDENT', lambda: self.write(self.tf_backup, b'z'*len(self.tf_backup_bytes)))
+        self.refuses('STATE_CHANGED_SINCE_INCIDENT', lambda: self.write(self.state, self.opaque))  # back to the initial state
+        self.fresh(); self.state.unlink(); self.mgate['operation'] = 'verify-usd25-incident'; self.reload()
+        with self.assertRaises((b.Blocked, OSError)): self.mex.verify()
+        self.assertEqual(self.calls, [])
+        self.fresh(); self.tf_backup.unlink(); self.mgate['operation'] = 'verify-usd25-incident'; self.reload()
+        with self.assertRaises((b.Blocked, OSError)): self.mex.verify()
+        self.assertEqual(self.calls, [])
+
+    def test_extra_state_files_and_locks_are_refused(self):
+        self.refuses('UNEXPECTED_STATE_OR_LOCK', lambda: self.write(self.primary/'config/errored.tfstate', b'x'))
+        self.refuses('UNEXPECTED_STATE_OR_LOCK', lambda: self.write(self.primary/'billing.execution.tfstate.backup.old', b'x'))
+        self.refuses('TERRAFORM_LOCK_PRESENT', lambda: self.write(self.primary/'.billing.execution.tfstate.lock.info', b''))
+        self.refuses('TERRAFORM_LOCK_PRESENT', lambda: self.write(self.policy.config/'.terraform.tfstate.lock.info', b''))
+
+    def test_termination_stderr_apply_line_and_post_readback_evidence_are_enforced(self):
+        self.refuses('INCIDENT_TERMINATION_PRESENT', lambda: self.write(self.mop/'modify-apply.termination.json', b'{}'))
+        self.refuses('INCIDENT_APPLY_STDERR', lambda: self.write(self.mop/'modify-apply.stderr', b'Error: something'))
+        self.refuses('INCIDENT_APPLY_STDERR', lambda: self.write(self.mop/'modify-apply.stderr', b'\n'))
+        self.refuses('INCIDENT_APPLY_NOT_COMPLETE', lambda: self.write(self.mop/'modify-apply.stdout', b'Apply complete! Resources: 0 added, 2 changed, 0 destroyed.\n'))
+        self.refuses('INCIDENT_APPLY_NOT_COMPLETE', lambda: self.write(self.mop/'modify-apply.stdout', b'x ' + self.APPLY_LINE + b'\n'))
+        self.refuses('INCIDENT_APPLY_NOT_COMPLETE', lambda: self.write(self.mop/'modify-apply.stdout', b''))
+        self.refuses('INCIDENT_APPLY_NOT_COMPLETE', lambda: self.write(self.mop/'modify-apply.stdout', (self.APPLY_LINE + b'\n') * 2))
+        self.refuses('INCIDENT_POST_READBACK_PRESENT', lambda: self.write(self.mop/'modify-post-budget.stdout', b'{}'))
+        self.refuses('MODIFY_JOURNAL_SHAPE', lambda: self.write(self.mop/'modify.started', b'x'))
+
+    def test_modify_gate_linkage_is_enforced_as_on_the_normal_path(self):
+        self.refuses('MODIFY_GATE_HASH', lambda: self.write(self.primary/self.modify_gate_name, b'tampered'))
+        self.refuses('MODIFY_GATE_HASH', modify_gate_sha256='0'*64)
+        def regate(**changes):
+            def write():
+                raw = (json.dumps({**self.modify_gate, **changes}) + '\n').encode()
+                self.write(self.primary/self.modify_gate_name, raw)
+                self.mgate.update(modify_gate_sha256=b.digest(raw))
+            return write
+        self.refuses('MODIFY_GATE_CONTEXT', regate(plan_sha256='0'*64))
+        self.refuses('MODIFY_GATE_CONTEXT', regate(operation='modify-other'))
+        self.refuses('MODIFY_GATE_CONTEXT', regate(option='B'))
+        self.refuses('MODIFY_GATE_CONTEXT', regate(actor_arn='wrong'))
+
+    def test_modify_gate_window_must_precede_the_verification_window(self):
+        def later_modify_gate():
+            raw = (json.dumps({**self.modify_gate, 'window_start': '2026-11-03T19:00:00Z'}) + '\n').encode()
+            self.write(self.primary/self.modify_gate_name, raw)
+            self.modify_gate_sha = b.digest(raw)
+        self.refuses('MODIFY_GATE_WINDOW', lambda: (later_modify_gate(), self.mgate.update(modify_gate_sha256=self.modify_gate_sha)))
+
+    def test_gate_identity_pins_and_scope_are_refused_like_the_normal_path(self):
+        cases = [('operation', 'verify-fixture'), ('option', 'B'), ('plan_sha256', '0'*64), ('proposal_sha256', '0'*64),
+                 ('human_record_sha256', '0'*64), ('permissions', sorted(v.PERMISSIONS)), ('retention_accepted', False),
+                 ('verification_review_approved', False), ('public_packet_root', 'docs/agent-runs/phase-14/evidence/14b/other'),
+                 ('modify_operation', 'verify-fixture'), ('modify_gate_filename', '../approval-x.json'),
+                 ('preservation_receipt_sha256', 'nothex'), ('state_backup_sha256', b.INITIAL_STATE_SHA256),
+                 ('state_backup_bytes', 0), ('state_backup_bytes', True), ('actor_arn', 'wrong'), ('timezone', 'UTC')]
+        for field, value in cases:
+            with self.subTest(field=field, value=value):
+                gate = {**self.mgate, field: value}
+                self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+                with self.assertRaises(b.Blocked):
+                    v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(
+                        self.gatepath, b.hash_file(self.gatepath), value if field == 'operation' else gate['operation'])
+        self.assertEqual(self.calls, [])
+
+    def test_dirty_checkout_or_wrapper_drift_blocks_before_any_request(self):
+        (self.repo/'scripts/billing/README.md').write_text('edited after the gate was written')
+        with self.assertRaises(b.Blocked): self.mex.verify()
+        self.assertEqual(self.calls, [])
+
+    def test_live_shape_must_be_usd25_after_the_incident_linkage_passes(self):
+        self.values = responses()  # the pre-modify shape: USD 200 and 50/80/100 percent
+        with self.assertRaises(b.Blocked): self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+        self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+        cases = {'amount_26': (lambda vals: vals[0]['Budget']['BudgetLimit'].update(Amount='26'), 'BUDGET_AMOUNT'),
+                 'top_alert_25': (lambda vals: vals[2]['Notifications'][2].update(Threshold=25), 'NOTIFICATION_THRESHOLD'),
+                 'percentage_alerts': (lambda vals: vals[2]['Notifications'][0].update(ThresholdType='PERCENTAGE'), 'NOTIFICATION_DRIFT'),
+                 'two_alerts': (lambda vals: vals[2]['Notifications'].pop(), 'NOTIFICATION_COUNT'),
+                 'wrong_recipient': (lambda vals: vals[4]['Subscribers'][0].update(Address='other@example.invalid'), 'SUBSCRIBER_DRIFT')}
+        for index, (name, (mutate, code)) in enumerate(cases.items()):
+            with self.subTest(name=name):
+                self.values = usd25_values(); mutate(self.values); self.calls = []
+                self.mgate['operation'] = f'verify-usd25-live-{index}'; self.mex = self.modified()
+                with self.assertRaisesRegex(b.Blocked, code): self.mex.verify()
+                self.assertEqual(len(self.calls), 6)
+                self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+
+    def test_cost_scope_must_exclude_exactly_credits_and_refunds(self):
+        legacy = lambda vals: (vals[0]['Budget'].pop('Metrics'), vals[0]['Budget'].pop('FilterExpression'),
+                               vals[0]['Budget'].update(CostFilters={}, CostTypes=dict(b.COST_TYPES)))
+        self.values = usd25_values(); legacy(self.values)  # the legacy flag form with exactly the pinned set passes
+        self.assertTrue(self.mex.verify()['result']['cost_scope_match'])
+        for index, key in enumerate(('IncludeCredit', 'IncludeRefund', 'UseBlended', 'UseAmortized', 'IncludeTax')):
+            with self.subTest(key=key):
+                self.values = usd25_values(); legacy(self.values)
+                self.values[0]['Budget']['CostTypes'][key] = not self.values[0]['Budget']['CostTypes'][key]
+                self.calls = []; self.mgate['operation'] = f'verify-usd25-cost-{index}'; self.mex = self.modified()
+                with self.assertRaisesRegex(b.Blocked, 'COST_TYPES'): self.mex.verify()
+                self.assertEqual(len(self.calls), 6); self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+        for index, values in enumerate((['Credit'], ['Credit', 'Refund', 'Tax'], ['Credit', 'Credit'])):
+            with self.subTest(values=values):
+                self.values = usd25_values()
+                self.values[0]['Budget']['FilterExpression']['Not']['Dimensions']['Values'] = values
+                self.calls = []; self.mgate['operation'] = f'verify-usd25-expr-{index}'; self.mex = self.modified()
+                with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'): self.mex.verify()
+                self.assertEqual(len(self.calls), 6)
+
+    def test_state_change_between_reads_and_receipt_blocks_without_success_receipt(self):
+        self.after = lambda index: self.write(self.state, b'changed during verification') if index == 5 else None
+        with self.assertRaises(b.Blocked): self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+        self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+
+    def test_cli_verify_modified_selects_the_incident_path_from_the_gate_alone(self):
+        argv = ['verify-modified', '--gate', str(self.gatepath), '--gate-sha256', b.hash_file(self.gatepath),
+                '--operation', self.mgate['operation']]
+        out = io.StringIO()
+        with mock.patch.object(v, 'production_policy', return_value=self.policy), \
+             mock.patch.object(b, 'PrivateRunner', return_value=self.runner), \
+             mock.patch.object(v.Verification.__init__, '__defaults__', (None, lambda: self.clock)), \
+             redirect_stdout(out):
+            self.assertEqual(v.main(argv), 0)
+        payload = json.loads(out.getvalue())
+        self.assertEqual((payload['stage'], payload['option'], payload['linkage']['mode']), ('verify', 'M', 'incident'))
+        self.assertTrue(payload['result']['cost_scope_match'])
+        self.assertNotIn(ADDRESS, out.getvalue()); self.assertNotIn('Traceback', out.getvalue())
+        # Only the existing read-only modes exist; nothing that applies or modifies was added.
+        with mock.patch('builtins.print') as output:
+            self.assertEqual(v.main(['modify', *argv[1:]]), 2)
+        self.assertIn('CLI_ARGUMENTS', str(output.call_args_list))
+
+    def test_incident_path_runs_no_infrastructure_command_and_only_the_four_read_operations(self):
+        self.mex.verify()
+        self.assertEqual({c['argv'][2] for c in self.calls}, {'describe-budget', 'list-tags-for-resource',
+                         'describe-notifications-for-budget', 'describe-subscribers-for-notification'})
+        self.assertTrue(all(Path(c['argv'][0]) == self.aws for c in self.calls))
+        source = (ROOT/'budget_verification.py').read_text()
+        body = source[source.index('    def incident_linkage'):source.index('def production_policy')]
+        for banned in ('subprocess', 'modify_apply_argv', 'show_argv', 'unlink', 'rename', 'write_bytes', 'save_json', 'create_file'):
+            self.assertNotIn(banned, body)
+
+
 if __name__=='__main__':unittest.main(verbosity=2)

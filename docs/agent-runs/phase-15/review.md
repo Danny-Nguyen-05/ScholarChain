@@ -663,3 +663,257 @@ BLOCKED-ON EVIDENCE: the full clean-snapshot check.sh and `sbt check` (JDK 17) r
 NEXT GATE: the full check.sh and `sbt check`, then the commit after the human's explicit yes.
 
 Coordinator check of review 3's blocked-on evidence: `git diff HEAD --numstat` shows `docs/agent-runs/phase-15/prompt.md` 16 added, 0 deleted and `review.md` 123 added, 0 deleted at the time of this review, so both are append-only. Nit 5 fixed: `evidence/p35/rehearsal/container-id.txt` copied and `COPIED.sha256` regenerated. Notes 1-4 routed to the documentation-engineer (wording only, no figure changed); the coordinator checks them against this review before the full check.
+
+
+## P0 modify incident repair (modify-20261116-01): billing wrapper fix, incident-linkage verification, kit, incident record
+
+### Review 1 — code-reviewer agent `a0a155023aecd65d2` (Opus 5.5, high), launched by the coordinator; verbatim
+
+STATUS: DONE. Verdict: **APPROVE**. Nothing blocks. Fix the should-fix items as listed below; the most important is to run an extended I1 before the freeze commit (finding 1).
+
+OWNER: code-reviewer (read-only)
+
+WORK ORDER: Independent review of the modify-20261116-01 repair: the `scripts/billing/**` working-tree diff, the offline kit `target/phase15/p0/{p0_gate.py, tests/test_p0_kit.py, p0-steps.md}` and `docs/incidents/2026-11-16-p0-budget-modify-backup-check.md`.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+COMMANDS RUN: none. This session had only Read/Grep/Glob, no shell. I could not run `git diff HEAD`, so I reviewed the current files in full plus the owner reports. I could not read the HEAD version of `modify()` either (see 4b).
+
+TEST RESULTS: Not re-run (no shell). I did not observe the owner-reported counts (execution 120 OK, verification 84 OK, publication 39 OK, kit 26 OK). I read the new tests instead.
+
+VALIDATION RESULTS (observed by reading):
+
+**The modify() fix is correct.**
+- `budget_execution.py:1114-1133` keeps three checks:
+  - the sorted post-apply state-file set is `[state]` or `[state, .backup]`;
+  - `file_meta` (regular file, 0600, uid) on `.backup`, with a new `is_symlink()` catch;
+  - `post != INITIAL` (`STATE_UNCHANGED_AFTER_APPLY`).
+- The pre-apply copy must still equal INITIAL (`:1110-1113`), and the post-apply live read is unchanged (`:1146-1149`).
+- Dropping the `.backup` byte-equality removes no protection that matters:
+  - The state is re-verified as INITIAL under the lease right before apply (`:1108`).
+  - A saved-plan apply rejects a stale prior state.
+  - The live post-verify checks the outcome.
+- I found no path where a bad apply passes silently.
+
+**Cause recording is safe.**
+- `failure_cause` (`:88-99`) returns only a fixed code or the exception type name.
+- The public codes are unchanged (`:952`, `:1140`).
+- The verifier's cause regex (`budget_verification.py:547`) accepts every value `failure_cause` can produce.
+
+**The real incident evidence should be accepted.**
+- I computed the canonical `save_json` byte counts by hand:
+  - preservation receipt with exactly two artifacts (`billing.execution.tfstate`, `billing.execution.tfstate.backup`) and no `cause` key: **490 B**;
+  - pre-apply receipt with the 8 keys the verifier requires (binding + sha256/bytes/equal/fsync_completed): **469 B**.
+- Both match the operator's sizes exactly, so the schema, source names and lack of `cause` match `:543-554` and `:562-568`.
+- Op folder:
+  - The `PrivateRunner` labels (`modify-pre-*`, `modify-show`, `modify-apply`) contain no `modify-post-*` (`:534`).
+  - The files are 0600 via `create_file`.
+  - `modify.started` is empty.
+  - The lease lock is removed in `finally`, so the `WRAPPER_ACTIVE` check passes.
+- Terraform writes warnings to stdout, so the empty stderr is consistent. The `Apply complete!` line is emitted once with `-no-color`.
+- The pins bind correctly:
+  - recovery-000 = 92a7…/40834 = current state;
+  - recovery-001 = the current `.backup`;
+  - the pre-apply receipt is bound to the modify gate hash and the unchanged `modify.plan_sha256` pin.
+- `reviewed-pins.json` is untouched (not in git status), and `source_freeze` has no `scripts/billing`, `docs/incidents` or `docs/runbooks` rows.
+
+**A linkage refusal does not use up the human's attempt.**
+- `verify()` runs `linkage()` before `self.op.mkdir` and before any AWS call (`budget_verification.py:282-284`). Tests assert this: `refuses()` checks no calls and no op dir (`test_budget_verification.py:922-929`).
+- Mixed or unknown gates are refused (`:417-419`; tests `:981-996`). The normal path is unchanged apart from the selector (`:456`).
+- The tests cover the real failure: a same-size, reversed-bytes `.backup` (`test_budget_execution.py:47`, `:1626-1641`), plus thorough refusal tests.
+
+**Kit.**
+- The incident builder matches `INCIDENT_GATE_FIELDS` and is validated by the wrapper's own `load_gate`. It reads nothing private.
+- Argument mixes are refused before git and before any prompt.
+- The `/dev/tty` fix is correct:
+  - `buffering=0` FileIO `readline` reads one byte at a time, so later pasted lines stay queued.
+  - The separate `"w"` writer avoids the seek error.
+  - `rstrip("\r\n")` is right.
+  - echo is restored in `finally`.
+- Neither the incident record nor p0-steps.md contains a 12-digit ID or an e-mail address.
+
+FINDINGS
+
+1. **should-fix**: `target/phase15/p0/p0-steps.md:202-213`. Step I1 does not check everything the verifier checks before AWS. A real-evidence mismatch would only show up inside the window, and if the evidence itself differs, only a code change can fix it.
+   - `ls "$RECV"` hides dotfiles, but `folder.iterdir()` (`budget_verification.py:559`) counts them. A Finder `.DS_Store` would cause a permanent `INCIDENT_BACKUP_FILE_SET`.
+   - Missing: current `.backup` hash and size == `recovery-001.opaque` (`:574-579`).
+   - Missing: pre-apply file == 271fe888…3f67 / 40818 (`:571`).
+   - Missing: the `modify-post-*` check (`:534`).
+   - Missing: `modify.started` size 0 (`:530`).
+   - Missing: the lock and extra state-file scan (`:581-586`).
+   - Suggested additions: `ls -A "$RECV"; ls -A "$OPDIR"`; `shasum -a 256 "$RECV/recovery-001.opaque" "$PRIMARY/billing.execution.tfstate.backup" "$RECV/pre-apply.billing.execution.tfstate"`; `stat -f%z "$OPDIR/modify.started"`; `find "$PRIMARY" \( -name '*.tfstate' -o -name '*.tfstate.*' -o -name '*.lock.info' -o -name terraform.tfstate.d \) | sed "s|$PRIMARY/||" | sort`. The last must print exactly `billing.execution.tfstate` and `billing.execution.tfstate.backup`.
+   - **Have the human run this extended I1 (offline) before the frozen commit**, so any surprise can still be fixed in code without voiding the freeze. Kit edits under ignored `target/` do not affect the freeze.
+   - Owner: kit writer (see finding 9).
+
+2. **should-fix**: `p0-steps.md:196,200`. `VWIN=2026-11-17THH:MM` with "Replace `HH:MM`" implies only the time changes. If the verify runs tonight (11-16), the date must change too. Otherwise the kit refuses with `SESSION_WINDOW_NOW_OUTSIDE…`, but only after all the prompts. The text should say "replace the date and time". Owner: kit writer.
+
+3. **should-fix**: `p0_gate.py:554-566` vs `:448-457`, `:579-592`. `check_linkage_args` only checks that the incident arguments are present.
+   - These format checks run only after all hidden and visible prompts:
+     - hex64 format;
+     - bytes > 0;
+     - not the INITIAL hash;
+     - the `modify-…` and `verify-usd25-…` regexes;
+     - the gate filename.
+   - The kit test `test_p0_kit.py:532-552` passes answers, which confirms the order.
+   - Nothing gets written, but a typo costs a full re-entry inside the window.
+   - Fix: move these pure checks into `check_linkage_args`. Owner: kit writer.
+
+4. **should-fix** (tracked file, so before the freeze commit): `docs/incidents/2026-11-16-p0-budget-modify-backup-check.md:45-61,117`.
+   - **(a)** The line citations (`:48-49`, `:132-138`, `:207-229`, `:283-285`, `:888-908`, `:1093-1117`) describe the code that ran (2611cc6) but don't say so. After the fix they point elsewhere: `preserve` is now `:902-925`, the modify try block `:1115-1140`, `opaque_copy` `:221-247`, `file_meta` `:146-152`, `modify_apply_argv` `:297-299`. Label them "at commit 2611cc6".
+   - **(b)** Line 61's caveat about `:1108` is moot: if `:1107` is reached, it fails deterministically. The real open alternative is a failure before `:1107`. I could not read HEAD to check whether the old file-set check (`:1100-1103`) was order-sensitive (unsorted `rglob`). If it was, `UNEXPECTED_POST_APPLY_STATE` is an equally consistent inferred cause. The current code sorts (`:1118-1121`), so the fix covers both cases. The record should state which it was.
+   - Owner: incident-responder.
+
+5. **nit**: `scripts/billing/README.md`.
+   - `:117` "The state was not changed afterwards" is asserted before verification. Rephrase as "must be unchanged; the incident linkage checks it".
+   - `:100` "no plan, gate, login or apply exists yet" now contradicts `:117`.
+   - `:107` cites `271fe888...3be1f`, but the hash ends `…3f67`. This is probably pre-existing.
+   - Owner: infra-engineer.
+
+6. **nit**: `budget_execution.py:949,1137`. `failure_cause(error)` is evaluated inside the preservation `try`, so if it ever raised, `preserve()` would be skipped. It cannot raise in practice. Harden it only if the file changes anyway. Owner: infra-engineer.
+
+7. **nit**: `p0-steps.md`.
+   - `:235` uses the relative path `operations/$VOP/verify.receipt.json`; it should be `"$PRIMARY/operations/$VOP/verify.receipt.json"`.
+   - `:9` lists the steps that contact AWS but omits I2 and I3.
+   - I2 `:221` prints the STS JSON, including the account ID, to the local terminal. This is the same as step 10 and is needed for the paste, but I2 should say not to send that output.
+   - Owner: kit writer.
+
+8. **nit**: `p0_gate.py:227-251`. Echo is turned back on between STS continuation lines. A terminal that delivers a paste in chunks could echo a later chunk to the screen (screen only, nothing persisted). Optionally keep echo off for the whole STS read. Owner: kit writer.
+
+9. **process**: The writer of `target/phase15/p0/**` is ambiguous. That path is ignored and not in the ownership map. `prompt.md:305` and the incident record (`:93`) name the coordinator, but the infra-engineer's report edited the kit. Record the assignment. Separately, the stale line refs in `docs/runbooks/phase-14-live-session.md` belong to the documentation-engineer (the infra-engineer already reported this as BLOCKED-ON).
+
+ASSUMPTIONS:
+- The operator-reported file sets, sizes and hashes are accurate.
+- No `terraform` command touched the state after the incident.
+- The new window is opened after the fix is committed and the checkout is clean.
+
+RISKS:
+- Real-evidence acceptance rests on my code reading plus the byte-count match; no test runs against the real files.
+- Hidden files in the backup folder (finding 1) and HEAD's file-set ordering (finding 4b) are unverified.
+
+MANUAL ACTION REQUIRED:
+- The human runs the extended I1 offline before the freeze commit.
+- The commit needs the user's explicit yes.
+
+BLOCKED-ON OWNER: none for this review. Repairs route as listed: incident-responder (4), infra-engineer (5, 6), kit writer (1-3, 7, 8), documentation-engineer (runbook refs).
+
+BLOCKED-ON EVIDENCE:
+- Observed test results (no shell was available).
+- The HEAD text of `budget_execution.py` around the old post-apply file-set check (4b).
+
+NEXT GATE: Should-fix repairs (tracked docs before the freeze, kit anytime), then the extended I1 offline, then coordinator `sbt check` and the user-approved commit, then the human's new window for I2/I3.
+
+Relevant paths:
+- /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_verification.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_verification.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/README.md
+- /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/VERIFICATION.md
+- /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase15/p0/p0_gate.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase15/p0/p0-steps.md
+- /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase15/p0/tests/test_p0_kit.py
+- /Users/danny/Documents/UIC/CS441/ScholarChain/docs/incidents/2026-11-16-p0-budget-modify-backup-check.md
+
+Coordinator notes on review 1 (2026-11-16):
+- Finding 4b resolved by the coordinator against HEAD 2611cc6: the old post-apply file-set check already sorted the `rglob` result (`found = sorted(...)`, compared with `sorted([state, tf_backup])`), and the preservation receipt lists only the state and its `.backup`, so `UNEXPECTED_POST_APPLY_STATE` is ruled out; `TERRAFORM_BACKUP_NOT_INITIAL` is the only consistent cause. Routed to the incident-responder with finding 4a.
+- Finding 9: the coordinator assigns `target/phase15/p0/**` (ignored kit) to the infra-engineer from this point; findings 1-3, 7 and 8 go to it with findings 5 and 6.
+- Finding 1 (extended I1 before the freeze): the user is offline overnight. The coordinator freezes tonight anyway; the extended I1 runs first thing on Tuesday. If it shows a difference that needs a code change, the freeze is redone on Tuesday (full check, commit, P6 S), still before Wednesday.
+
+
+### Review 2 — code-reviewer agent `a0a155023aecd65d2` (Opus 5.5, high), repairs of review 1 plus the runbook edits; verbatim
+
+STATUS: DONE. Review 2 verdict: **APPROVE**. Every review-1 repair checks out, nothing blocks, and none of the five new nits is a safety problem.
+
+OWNER: code-reviewer (read-only)
+
+WORK ORDER: Review 2 of the P0 modify-incident bundle. I re-checked only the repairs of review-1 findings 1-9, plus the documentation-engineer's first edits to `docs/runbooks/session-2-plan.md` and `docs/runbooks/phase-14-live-session.md`.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+COMMANDS RUN: none. This session had only Read and Grep, no shell, so I re-ran nothing.
+
+TEST RESULTS: The owner-reported counts (execution 121 OK, verification 84 OK, publication 39 OK, kit 32 OK) are not observed by me. I read the new tests instead: `test_budget_execution.py:1678-1684` and `test_p0_kit.py:533-566`, `:607-683` and `:685-781`.
+
+VALIDATION RESULTS (from reading the code):
+
+**I1 offline pre-check (`target/phase15/p0/p0-steps.md:205-238`).**
+- It mirrors the verifier's local checks in `budget_verification.py:incident_linkage`:
+  - **A:** backup-folder file set with `ls -A`, so dotfiles count.
+  - **C:** recovery-000 = current state = 92a7…/40834; recovery-001 = current `.backup`; pre-apply copy = INITIAL/40818.
+  - **D:** `modify.started` and stderr are 0 bytes; exactly one exact success line. Stripping CRs with `tr` gives the same answer as the verifier's `rstrip(b'\r')` here.
+  - **F:** 0700 directories; 0600 regular files with one link and your uid. This mirrors `secure_dir`, `file_meta` and `regular`.
+  - **G:** no symlink in any ancestor.
+  - **H:** the `find` matches the verifier's `rglob('*')` scan:
+    - the four name rules are equivalent;
+    - both match dotfiles;
+    - neither follows directory symlinks;
+    - both include directories;
+    - it covers `operations/`, `config/` and `tf-data/`.
+  - **B** is stricter than the verifier: any name outside the PrivateRunner labels, or any dotfile, is flagged. The real labels (`modify-pre-budget/tags/notifications/subscribers-50/80/100`, `modify-show`, `modify-apply`) all match, so B can only raise a safe false alarm (stop and ask the coordinator), never a false pass.
+- On the reported real evidence it should print `differences=0`.
+- It prints only names, known hashes, sizes, counts and `stat` fields. A DIFF line echoes only those values, never file contents, the account ID or the recipient.
+- It is safe to paste into an interactive zsh: the block has no `#` comments, `!` appears only inside single quotes or as `!=` (which zsh does not history-expand), and only a single `=` is used inside `[ ]`.
+
+**Kit code (`p0_gate.py`).**
+- `check_linkage_args` (`:588-632`) now holds all the pure checks, and `run()` calls it before `preflight_checkout` and before any prompt (`:639-640`). The kit test runs with no answers and with git and the loaders patched to fail.
+- `hold_echo_off` (`:234-251`) keeps echo off for the whole STS read (`read_sts`, `:299`) and restores it in `finally`. `ask_secret_default` skips its own toggle while echo is held, and now turns echo off before showing the prompt. A real-pty test covers this.
+- The I2 note about the STS output (`:264`), the I3 absolute path (`:272`), the AWS-contact line (`:9`) and the VWIN date wording (`:196-200`) are all fixed.
+
+**Finding 6 (`budget_execution.py`).**
+- `failure_cause` now runs in its own `try`, with fallback `"Exception"`, before the `try` around `preserve()`, in both the create path (`:948-956`) and the modify path (`:1140-1148`).
+- The new test confirms preservation still runs when the cause computation raises. The public codes are unchanged.
+
+**Finding 5 (`scripts/billing/README.md`).** All three places are fixed: `:100` (rewritten), `:107` (hash now ends `3f67`) and `:117` ("must be unchanged since the incident; the incident linkage checks it").
+
+**Finding 4 (incident record).**
+- The 2611cc6 citation convention is added (`:5`, `:45`).
+- 4b is resolved (`:61-63`): at 2611cc6 the file-set check was already sorted, so `UNEXPECTED_POST_APPLY_STATE` is ruled out.
+
+**Runbooks.**
+- `phase-14-live-session.md:297` now cites `:688-694`, which is correct (the `required` set is at 688-693 and the require at 694). The step-15 incident pointer is at `:310`.
+- `session-2-plan.md:47-53`, `:254`, `:259`, `:269`, `:459` and `:1017-1021` agree with `prompt.md:297-321` (P0 moved, console facts, frozen commit tonight, P15 moved to tonight, A12 after the P0 verification records) and with the incident record.
+- I saw no 12-digit ID or e-mail address in the passages I read.
+
+FINDINGS (all nits; none blocking)
+
+1. **nit**, `docs/incidents/2026-11-16-p0-budget-modify-backup-check.md:53,91`.
+   - The record says the modify try block is "now `:1115-1140`". After the finding-6 fix it is `:1119-1148`. `preserve` (`:902-925`) and the other "now" ranges are still right.
+   - `:5` says current locations are "in square brackets", but the record writes them as "; now `:…`" in parentheses.
+   - Owner: incident-responder.
+
+2. **nit**, same record `:95` and `:98`. The record still lists the kit update as "coordinator | Open" and "kit by coordinator". Per finding 9 the kit is now the infra-engineer's, and the update is done. Owner: incident-responder.
+
+3. **nit**, `target/phase15/p0/p0-steps.md:231-233`. Some verifier checks are not mirrored in I1.
+   - I1 counts matching lines but does not pin the structure the verifier checks:
+     - preservation receipt: key set, artifact order and `source` names (`budget_verification.py:543-554`);
+     - pre-apply receipt: `operation`, `plan_sha256`, `actor_arn` and key set (`:562-568`).
+   - The real receipts pass these checks: my review-1 hand computation matched the operator's 490 B and 469 B exactly. A cheap, content-free hardening is two size lines: `chk "E preservation receipt bytes" "$(siz "$PRS")" 490` and `chk "E pre-apply receipt bytes" "$(siz "$PRE")" 469`.
+   - Two more pre-AWS refusals in `verify()` are also not mirrored:
+     - a leftover `$PRIMARY/.billing-wrapper-active.lock` (`WRAPPER_ACTIVE`, `:281`);
+     - an existing `$PRIMARY/operations/$VOP` (`mkdir` at `:284`).
+   - Both refusals happen before any AWS call and do not use up the verify operation.
+   - The kit lives under ignored `target/`, so editing it does not affect the freeze. Owner: infra-engineer (kit).
+
+4. **nit**, `target/phase15/p0/p0_gate.py:630`. The variable `suffix` is assigned but never used. Owner: infra-engineer.
+
+5. **nit**, `docs/runbooks/session-2-plan.md`.
+   - `:269` says the packet-root regex is at `budget_verification.py` line 431. It is now `:446`.
+   - "API readback of `CostTypes`" (`:48`, `:269`, `:459`, `:1019`) is imprecise. The verifier records `cost_scope_match`, which either the legacy `CostTypes` or the equivalent FilterExpression excluding Credit and Refund can satisfy (VERIFICATION.md:122). The console's "excluded filters" wording suggests the second. Suggested wording: "API readback of the cost scope (credits and refunds excluded)".
+   - `:48` reads "The recorded API readback … is not yet recorded", which repeats itself.
+   - Owner: documentation-engineer.
+
+ASSUMPTIONS: Same as review 1: the operator-reported file sets, sizes and hashes are accurate, and the state has not changed since the incident.
+
+RISKS: I1 has only run on synthetic trees. Its first real run (Tuesday) is the true test; any DIFF stops the run before AWS, with nothing consumed.
+
+MANUAL ACTION REQUIRED: The commit needs the user's explicit yes. The human runs I1 offline before I2.
+
+BLOCKED-ON OWNER: none. Optional nit repairs route as listed: incident-responder (1, 2), infra-engineer (3, 4), documentation-engineer (5).
+
+BLOCKED-ON EVIDENCE: Observed test results, because no shell was available in this session.
+
+NEXT GATE: Coordinator full check (A1.7), then the user-approved frozen commit, then Tuesday's I1, then I2/I3.
+
+Coordinator note on review 2 (2026-11-16): verdict APPROVE. Nits 1, 2 (incident record) and 5 (session-2-plan.md) were applied by their owners as wording and line-number corrections and are not sent back for review; nits 3 and 4 are kit-only (`target/phase15/p0/**`, ignored, outside the frozen tree) and go to the infra-engineer. The full check (`scripts/check.sh`, A1.7, includes the sbt gate = P20) runs next on the main checkout.

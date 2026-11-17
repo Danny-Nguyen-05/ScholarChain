@@ -294,7 +294,7 @@ Plain words: the AWS Budget currently warns at 50/80/100% of USD 200. This chang
 10. **Steps 10 to 12, pins, gate record, gate JSON:**
     - Add the `modify` object to `scripts/billing/reviewed-pins.json` (README "Pins that become stale": `plan_sha256`, `plan_bytes`, `public_input_sha256`, and seven `config` rows with the repository file hash and byte size). Commit (commit C2).
     - Write the new modify human-gate record in your own words as a new committed file under `docs/agent-runs/phase-14/` (not under `evidence/14b/`): you approve this exact plan hash, the USD 25 target, the alerts at 10/15/20, the state backup and the time window. Commit it; this HEAD is the gate's `source_commit`.
-    - Save the gate JSON privately as `"$PRIMARY/approval-<yyyymmdd>-modify.json"` (mode 600, window at most 1 hour; the field list is in billing README step 12) and compute `shasum -a 256` of it. This **modify gate has 28 fields** (the `required` set in `load_modify_gate`, `scripts/billing/budget_execution.py:673-678`).
+    - Save the gate JSON privately as `"$PRIMARY/approval-<yyyymmdd>-modify.json"` (mode 600, window at most 1 hour; the field list is in billing README step 12) and compute `shasum -a 256` of it. This **modify gate has 28 fields** (the `required` set in `load_modify_gate`, `scripts/billing/budget_execution.py:688-694`).
 11. **Step 13, the apply, inside the gate window** (repeat step 4 first if the login is older than the gate allows):
     ```
     python3 -I scripts/billing/budget_execution.py modify --gate "$PRIMARY/approval-<yyyymmdd>-modify.json" --gate-sha256 <gate sha> --operation modify-<yyyymmdd>-01 2>&1 | tee target/phase14/evidence/14b/budget-modify-apply.log; echo "exit=$?"
@@ -307,6 +307,7 @@ Plain words: the AWS Budget currently warns at 50/80/100% of USD 200. This chang
     python3 -I scripts/billing/budget_verification.py verify-modified --gate <gate> --gate-sha256 <sha> --operation verify-usd25-<id> 2>&1 | tee target/phase14/evidence/14b/budget-modify-verify.log; echo "exit=$?"
     ```
     Success: `"stage": "verify"`, `"option": "M"`, `"notification_count": 3`, `"email_subscribers_each": 1`, `"private_recipients_match": true`, `"delivery_verified": false`. (The old Phase 12D `verify` mode now fails by design.)
+    - **Exception, operation `modify-20261116-01`:** its apply completed but the wrapper stopped before writing the post-apply backup and the receipts, so the 29-field gate and `modify_receipt_sha256` do not exist for it. Its verification is the read-only incident-linkage variant (the gate field `"modify_linkage": "incident"`; [VERIFICATION.md](../../scripts/billing/VERIFICATION.md), "Incident linkage"); see the [incident record](../incidents/2026-11-16-p0-budget-modify-backup-check.md).
 14. **Step 16 (optional):** Console > Billing and Cost Management > **Budgets**: one budget, USD 25, three actual-cost alerts at $10, $15 and $20.
 15. **Commit the wrapper's public packet and gate record** (it writes `public_packet_root` under `docs/agent-runs/phase-14/evidence/14b/`): `git add -A; git commit -m "Phase 14B: budget modify record"` before A4 and before the base plan. HEAD moves; that is fine because no plan exists yet.
 

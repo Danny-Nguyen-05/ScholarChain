@@ -42,7 +42,10 @@ if pathlib.Path(sys.argv[0]).name.startswith('terraform'):
    path.write_bytes(b'opaque recovery fixture');path.chmod(0o600)
   sys.exit(1)
  if scenario.get('write_tf_backup') and state.exists():
-  backup=state.with_name(state.name+'.backup');backup.write_bytes(b'unrelated bytes' if scenario.get('bad_tf_backup') else state.read_bytes());backup.chmod(0o600)
+  data=state.read_bytes()
+  # Terraform re-serializes its own .backup: same size, other bytes (observed live 2026-11-16).
+  if scenario.get('reserialized_tf_backup'):data=bytes(reversed(data))
+  backup=state.with_name(state.name+'.backup');backup.write_bytes(b'unrelated bytes' if scenario.get('bad_tf_backup') else data);backup.chmod(scenario.get('tf_backup_mode',0o600))
  if not scenario.get('apply_keeps_state'):
   state.write_bytes(b'opaque completed fixture state');state.chmod(0o600)
  (root/'applied').write_text('1')
@@ -563,6 +566,14 @@ class Features(Harness):
         self.assertTrue((self.policy.config/'errored.tfstate').exists())
         with self.assertRaises(b.Blocked):self.ex.apply()
         self.assertEqual(len(self.calls()),3)
+
+    def test_create_apply_failure_records_the_fixed_cause_in_the_preservation_receipt(self):
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        self.ex.p3_check()
+        with self.assertRaisesRegex(b.Blocked, '^APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'): self.ex.apply()
+        receipt = json.loads((self.backups/'initial-ab9f141e83058209/preservation.receipt.json').read_text())
+        self.assertEqual(receipt['cause'], 'APPLY_FAILED_PARTIAL_POSSIBLE')
+        self.assertTrue(receipt['incident_required'])
 
     def test_backup_fsync_failure_stops_no_readback_no_retry(self):
         self.ex.p3_check()
@@ -1601,15 +1612,82 @@ class ModifyFeatures(Harness):
         self.assertEqual(len(self.calls()), 8)
         with self.assertRaises(FileExistsError): self.mex.op.mkdir(mode=0o700)
 
-    def test_unchanged_state_or_foreign_terraform_backup_after_apply_is_an_incident(self):
-        for flag, operation in (('apply_keeps_state', 'modify-same-state'), ('bad_tf_backup', 'modify-bad-backup')):
-            with self.subTest(flag=flag):
-                ex = self.modify_execution({**self.mgate, 'operation': operation})
-                self.scenario[flag] = True; self.save_scenario()
-                with self.assertRaisesRegex(b.Blocked, 'INCIDENT_REQUIRED'): ex.modify()
-                self.assertFalse((ex.op/'modify.receipt.json').exists())
-                self.assertTrue((self.backups/operation/'preservation.receipt.json').exists())
-                self.fresh()
+    def preservation(self, operation='modify-fixture'):
+        return json.loads((self.backups/operation/'preservation.receipt.json').read_text())
+
+    def test_unchanged_state_after_apply_is_an_incident_with_the_cause_recorded(self):
+        self.scenario['apply_keeps_state'] = True; self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'): self.mex.modify()
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        self.assertFalse((self.mex.op/'modify-apply.receipt.json').exists())
+        self.assertEqual(self.preservation()['cause'], 'STATE_UNCHANGED_AFTER_APPLY')
+        self.assertTrue(self.preservation()['incident_required'])
+
+    def test_terraform_rewriting_its_backup_with_same_size_other_bytes_is_not_an_incident(self):
+        # Regression for modify-20261116-01: Terraform re-serializes its own .backup; the wrapper's
+        # pre-apply copy (verified equal to the initial state) is the authoritative backup.
+        self.scenario['reserialized_tf_backup'] = True; self.save_scenario()
+        tf_backup = self.policy.state.with_name(self.policy.state.name + '.backup')
+        receipt = self.mex.modify()
+        self.assertTrue(receipt['result']['applied'])
+        for stage in ('modify-apply', 'modify'):
+            self.assertTrue((self.mex.op/f'{stage}.receipt.json').exists())
+        self.assertFalse((self.backup_dir()/'preservation.receipt.json').exists())
+        self.assertEqual(b.hash_file(self.backup_dir()/'pre-apply.billing.execution.tfstate'), b.INITIAL_STATE_SHA256)
+        self.assertTrue((self.backup_dir()/'post-apply.billing.execution.tfstate').exists())
+        self.assertEqual(tf_backup.stat().st_size, b.INITIAL_STATE_BYTES)
+        self.assertNotEqual(b.hash_file(tf_backup), b.INITIAL_STATE_SHA256)
+        observed = json.loads((self.mex.op/'modify-apply.receipt.json').read_text())['result']['terraform_backup_observed']
+        self.assertEqual(observed, {'sha256': b.hash_file(tf_backup), 'bytes': b.INITIAL_STATE_BYTES, 'observed_only': True})
+
+    def test_terraform_backup_of_any_content_is_only_observed_but_its_type_and_mode_are_enforced(self):
+        self.scenario['bad_tf_backup'] = True; self.save_scenario()  # other size and bytes: still only observed
+        self.assertTrue(self.mex.modify()['result']['applied'])
+        observed = json.loads((self.mex.op/'modify-apply.receipt.json').read_text())['result']['terraform_backup_observed']
+        self.assertEqual(observed['bytes'], len(b'unrelated bytes'))
+        self.fresh()
+        self.scenario['tf_backup_mode'] = 0o644; self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'): self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'FILE_TYPE_MODE_OWNER')
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        self.fresh()
+        self.scenario['write_tf_backup'] = False; self.save_scenario()  # absent .backup: observed is None
+        self.assertTrue(self.mex.modify()['result']['applied'])
+        self.assertIsNone(json.loads((self.mex.op/'modify-apply.receipt.json').read_text())['result']['terraform_backup_observed'])
+
+    def test_preservation_receipt_records_only_a_fixed_cause_for_every_failure_kind(self):
+        # (a) the apply process exits non-zero; (b) a non-Blocked exception after the apply.
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        with self.assertRaises(b.Blocked): self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'APPLY_FAILED_PARTIAL_POSSIBLE')
+        self.fresh()
+        original = b.opaque_copy; count = []
+        def boom(*args, **kwargs):
+            count.append(1)
+            if len(count) == 2: raise PermissionError('/private-dir/with/a-private-value')
+            return original(*args, **kwargs)
+        # The second copy is the post-apply backup; the preservation copies after it run normally.
+        with mock.patch.object(b, 'opaque_copy', side_effect=boom), \
+             self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'):
+            self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'PermissionError')
+        text = (self.backup_dir()/'preservation.receipt.json').read_text()
+        self.assertNotIn('private-dir', text); self.assertNotIn('a-private-value', text)
+        self.assertEqual(set(json.loads(text)), {'artifacts', 'incident_required', 'cause'})
+
+    def test_a_failing_cause_computation_never_skips_the_preservation(self):
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        with mock.patch.object(b, 'failure_cause', side_effect=RuntimeError('boom')), \
+             self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'):
+            self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'Exception')
+        self.assertTrue((self.backup_dir()/'recovery-000.opaque').exists())
+
+    def test_failure_cause_is_a_fixed_identifier_never_a_message(self):
+        self.assertEqual(b.failure_cause(b.Blocked('SOME_FIXED_CODE')), 'SOME_FIXED_CODE')
+        self.assertEqual(b.failure_cause(b.Blocked('has a path /x and spaces')), 'Blocked')
+        self.assertEqual(b.failure_cause(KeyboardInterrupt()), 'KeyboardInterrupt')
+        self.assertEqual(b.failure_cause(OSError('/private/path')), 'OSError')
 
     def test_applied_but_old_shape_still_live_fails_the_post_verify_and_keeps_backups(self):
         self.scenario['responses_after'] = fixture_responses(); self.save_scenario()

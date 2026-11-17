@@ -36,6 +36,15 @@ MODIFIED_GATE_FIELDS = {'operation', 'option', 'plan_sha256', 'proposal_sha256',
                         'permissions', 'retention_accepted', 'verification_review_approved', 'aws_cli_sha256',
                         'public_packet_root', 'modify_operation', 'modify_gate_filename', 'modify_gate_sha256',
                         'modify_receipt_sha256', 'state_backup_sha256', 'state_backup_bytes'}
+# Incident linkage (a modify whose apply completed but whose wrapper stopped before the post-apply
+# backup and the modify receipts, e.g. modify-20261116-01). The gate selects it explicitly with
+# modify_linkage == 'incident' and pins the preservation receipt instead of the modify receipt.
+INCIDENT_LINKAGE = 'incident'
+INCIDENT_GATE_FIELDS = (MODIFIED_GATE_FIELDS - {'modify_receipt_sha256'}) | {'modify_linkage', 'preservation_receipt_sha256'}
+INCIDENT_APPLY_LINE = b'Apply complete! Resources: 0 added, 1 changed, 0 destroyed.'
+INCIDENT_BACKUP_FILES = {'pre-apply.billing.execution.tfstate', 'pre-apply.backup.receipt.json',
+                         'preservation.receipt.json', 'recovery-000.opaque', 'recovery-001.opaque'}
+INCIDENT_ARTIFACT_SOURCES = ('billing.execution.tfstate', 'billing.execution.tfstate.backup')
 MAX_FILES = 256
 MAX_TOTAL = 32 * 1024 * 1024
 EXCLUDED = ('Only this external fixed-schema receipt and the external freeze-input manifest; every existing packet file was scanned. '
@@ -402,7 +411,12 @@ class ModifiedVerification(Verification):
         raw = read_private(gate_path, self.p.uid)
         b.require(sha(gate_sha) and b.digest(raw) == gate_sha, 'GATE_HASH')
         g = b.parse_json(raw)
-        b.require(type(g) is dict and set(g) == MODIFIED_GATE_FIELDS, 'VERIFICATION_GATE_SCHEMA')
+        b.require(type(g) is dict, 'VERIFICATION_GATE_SCHEMA')
+        # The normal gate has no modify_linkage field. A present field must be exactly 'incident'; anything
+        # else is refused, never silently treated as the normal path.
+        incident = 'modify_linkage' in g
+        b.require(not incident or g['modify_linkage'] == INCIDENT_LINKAGE, 'MODIFY_LINKAGE_UNKNOWN')
+        b.require(set(g) == (INCIDENT_GATE_FIELDS if incident else MODIFIED_GATE_FIELDS), 'VERIFICATION_GATE_SCHEMA')
         m = b.Execution.modify_pins(self)
         b.require(g['option'] == 'M' and g['operation'] == operation, 'VERIFICATION_OPTION')
         b.require(g['plan_sha256'] == m['plan_sha256'] and g['proposal_sha256'] == self.p.pins['proposal_sha256'],
@@ -413,7 +427,8 @@ class ModifiedVerification(Verification):
                   and re.fullmatch(r'modify-[A-Za-z0-9_-]{1,56}', g['modify_operation']) is not None
                   and type(g['modify_gate_filename']) is str
                   and re.fullmatch(r'approval-[A-Za-z0-9_-]{1,96}\.json', g['modify_gate_filename']) is not None
-                  and sha(g['modify_gate_sha256']) and sha(g['modify_receipt_sha256'])
+                  and sha(g['modify_gate_sha256'])
+                  and sha(g['preservation_receipt_sha256' if incident else 'modify_receipt_sha256'])
                   and sha(g['state_backup_sha256']) and g['state_backup_sha256'] != b.INITIAL_STATE_SHA256
                   and type(g['state_backup_bytes']) is int and g['state_backup_bytes'] > 0, 'MODIFY_GATE_BINDING')
         b.require(g['actor_arn'] == b.CALLER and g['account'] == b.ACCOUNT and g['profile'] == b.PROFILE
@@ -438,6 +453,8 @@ class ModifiedVerification(Verification):
 
     def linkage(self):
         """Fixed metadata reads plus opaque state hashes; the modify must have applied cleanly."""
+        if self.gate.get('modify_linkage') == INCIDENT_LINKAGE:
+            return self.incident_linkage()
         p, g = self.p, self.gate
         old_op = p.primary/'operations'/g['modify_operation']
         for directory in (p.primary, p.backups, p.primary/'operations', old_op, p.config):
@@ -484,6 +501,94 @@ class ModifiedVerification(Verification):
         b.require(p.aws.resolve().is_file() and b.hash_file(p.aws.resolve()) == g['aws_cli_sha256'], 'AWS_CLI_HASH')
         return {'modify_operation': g['modify_operation'], 'modify_gate_sha256': g['modify_gate_sha256'],
                 'modify_receipt_sha256': g['modify_receipt_sha256'], 'state_backup_verified': True}
+
+    def incident_linkage(self):
+        """Read-only linkage to a modify whose apply completed but whose wrapper stopped before its receipts.
+
+        Evidence is the private preservation receipt (hash pinned in the gate), the pre-apply backup, the
+        opaque recovery copy of the state and the unchanged current state. It requires the ABSENCE of the
+        modify receipts, any termination record and any stderr, so a clean modify cannot use this path and
+        an interrupted or failed apply cannot pass as one. State files are hashed as opaque bytes only;
+        nothing is parsed from them, no value is returned from them, and no infrastructure command runs here.
+        """
+        p, g = self.p, self.gate
+        op_name = g['modify_operation']
+        old_op, folder = p.primary/'operations'/op_name, p.backups/op_name
+        for directory in (p.primary, p.backups, p.primary/'operations', old_op, folder, p.config):
+            b.secure_dir(directory, p.uid)
+        # The same modify gate linkage as the normal path.
+        raw_gate = read_private(p.primary/g['modify_gate_filename'], p.uid)
+        b.require(b.digest(raw_gate) == g['modify_gate_sha256'], 'MODIFY_GATE_HASH')
+        old_gate = b.parse_json(raw_gate)
+        b.require(type(old_gate) is dict and old_gate.get('operation') == op_name
+                  and old_gate.get('option') == 'M' and old_gate.get('plan_sha256') == g['plan_sha256']
+                  and old_gate.get('actor_arn') == b.CALLER and old_gate.get('account') == b.ACCOUNT
+                  and old_gate.get('profile') == b.PROFILE and old_gate.get('region') == b.REGION,
+                  'MODIFY_GATE_CONTEXT')
+        b.require(b.date(old_gate.get('window_start')) < b.date(g['window_start']), 'MODIFY_GATE_WINDOW')
+        # Incident operation folder: journal present, no modify receipts, no termination, empty stderr.
+        b.require(regular(old_op/'modify.started', p.uid).st_size == 0, 'MODIFY_JOURNAL_SHAPE')
+        names = sorted(x.name for x in old_op.iterdir())
+        b.require(not {'modify-apply.receipt.json', 'modify.receipt.json'} & set(names), 'INCIDENT_MODIFY_RECEIPT_PRESENT')
+        b.require(not any(x.endswith('.termination.json') for x in names), 'INCIDENT_TERMINATION_PRESENT')
+        b.require(not any(x.startswith('modify-post-') for x in names), 'INCIDENT_POST_READBACK_PRESENT')
+        b.require(regular(old_op/'modify-apply.stderr', p.uid).st_size == 0, 'INCIDENT_APPLY_STDERR')
+        # The success line, read in memory only and never echoed (exactly one exact line).
+        lines = [x.rstrip(b'\r') for x in read_private(old_op/'modify-apply.stdout', p.uid).split(b'\n')]
+        b.require(lines.count(INCIDENT_APPLY_LINE) == 1, 'INCIDENT_APPLY_NOT_COMPLETE')
+        # Preservation receipt: pinned hash, exactly the two expected equal+fsynced artifacts, incident flag.
+        raw = read_private(folder/'preservation.receipt.json', p.uid)
+        b.require(b.digest(raw) == g['preservation_receipt_sha256'], 'PRESERVATION_RECEIPT_HASH')
+        receipt = b.parse_json(raw)
+        b.require(type(receipt) is dict and {'artifacts', 'incident_required'} <= set(receipt)
+                  and set(receipt) <= {'artifacts', 'incident_required', 'cause'}
+                  and receipt['incident_required'] is True
+                  and ('cause' not in receipt or (type(receipt['cause']) is str
+                                                  and re.fullmatch(r'[A-Za-z0-9_]{1,80}', receipt['cause']) is not None)),
+                  'PRESERVATION_RECEIPT_SCHEMA')
+        arts = receipt['artifacts']
+        b.require(type(arts) is list and len(arts) == 2 and all(type(a) is dict for a in arts)
+                  and all(set(a) == {'source', 'sha256', 'bytes', 'equal', 'fsync_completed'} for a in arts)
+                  and tuple(a['source'] for a in arts) == INCIDENT_ARTIFACT_SOURCES
+                  and all(a['equal'] is True and a['fsync_completed'] is True and sha(a['sha256'])
+                          and type(a['bytes']) is int and a['bytes'] > 0 for a in arts), 'PRESERVATION_RECEIPT_ARTIFACTS')
+        state_art, tf_art = arts
+        b.require(state_art['sha256'] == g['state_backup_sha256'] and state_art['bytes'] == g['state_backup_bytes'],
+                  'RECOVERY_NOT_GATE_PINNED')
+        # Backup folder: exactly the five expected files, no post-apply backup.
+        b.require({x.name for x in folder.iterdir()} == INCIDENT_BACKUP_FILES, 'INCIDENT_BACKUP_FILE_SET')
+        # Pre-apply backup: receipt and recomputed file hash both equal the initial state.
+        pre = b.parse_json(read_private(folder/'pre-apply.backup.receipt.json', p.uid))
+        b.require(type(pre) is dict and set(pre) == {'gate_sha256', 'operation', 'plan_sha256', 'actor_arn',
+                                                     'sha256', 'bytes', 'equal', 'fsync_completed'}
+                  and pre['gate_sha256'] == g['modify_gate_sha256'] and pre['operation'] == op_name
+                  and pre['plan_sha256'] == g['plan_sha256'] and pre['actor_arn'] == b.CALLER
+                  and pre['sha256'] == b.INITIAL_STATE_SHA256 and pre['bytes'] == b.INITIAL_STATE_BYTES
+                  and type(pre['bytes']) is int and pre['equal'] is True and pre['fsync_completed'] is True,
+                  'PRE_BACKUP_NOT_INITIAL')
+        # Opaque hashes of the files themselves: the file contents, not the receipts, are authoritative.
+        for path, wanted, size, code in (
+                (folder/'pre-apply.billing.execution.tfstate', b.INITIAL_STATE_SHA256, b.INITIAL_STATE_BYTES, 'PRE_BACKUP_NOT_INITIAL'),
+                (folder/'recovery-000.opaque', g['state_backup_sha256'], g['state_backup_bytes'], 'RECOVERY_NOT_GATE_PINNED'),
+                (p.state, g['state_backup_sha256'], g['state_backup_bytes'], 'STATE_CHANGED_SINCE_INCIDENT'),
+                (folder/'recovery-001.opaque', tf_art['sha256'], tf_art['bytes'], 'RECOVERY_NOT_GATE_PINNED')):
+            b.require(regular(path, p.uid).st_size == size and b.hash_file(path) == wanted, code)
+        # The tool's own .backup is still the preserved copy (it may differ from the initial state bytes).
+        tf_backup = p.state.with_name(p.state.name + '.backup')
+        b.require(regular(tf_backup, p.uid).st_size == tf_art['bytes'] and b.hash_file(tf_backup) == tf_art['sha256'],
+                  'STATE_CHANGED_SINCE_INCIDENT')
+        # No lock and no state-like file other than the primary state and its .backup, under the primary tree.
+        for root in (p.primary, p.config):
+            for name in ('.billing.execution.tfstate.lock.info', 'billing.execution.tfstate.lock.info', '.terraform.tfstate.lock.info'):
+                b.require(not os.path.lexists(root/name), 'TERRAFORM_LOCK_PRESENT')
+        found = sorted(x for x in p.primary.rglob('*') if x.name.endswith('.tfstate') or '.tfstate.' in x.name
+                       or x.name.endswith('.lock.info') or x.name == 'terraform.tfstate.d')
+        b.require(found == sorted([p.state, tf_backup]), 'UNEXPECTED_STATE_OR_LOCK')
+        b.require(p.aws.resolve().is_file() and b.hash_file(p.aws.resolve()) == g['aws_cli_sha256'], 'AWS_CLI_HASH')
+        return {'mode': INCIDENT_LINKAGE, 'modify_operation': op_name, 'modify_gate_sha256': g['modify_gate_sha256'],
+                'preservation_receipt_sha256': g['preservation_receipt_sha256'],
+                'incident_cause_recorded': receipt.get('cause'), 'state_unchanged_since_incident': True,
+                'state_backup_verified': True}
 
 
 def production_policy():
