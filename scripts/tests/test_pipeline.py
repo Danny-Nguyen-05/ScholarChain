@@ -109,6 +109,8 @@ class DryRunTests(PipelineFixture):
             "spark.dynamicAllocation.enabled=true",
             "spark.dynamicAllocation.shuffleTracking.enabled=true",
             "spark.shuffle.service.enabled=false",
+            "spark.task.maxFailures=2",
+            "spark.yarn.maxAppAttempts=1",
             "spark.yarn.tags=${TAG}",
             "spark.hadoop.fs.defaultFS=file:///",
             "spark.yarn.appMasterEnv.JAVA_HOME=${JAVA_HOME}",

@@ -5335,3 +5335,165 @@ MANUAL ACTION REQUIRED: the human runs the updated I1 first thing Tuesday, befor
 BLOCKED-ON OWNER / EVIDENCE: none.
 
 NEXT GATE: coordinator full check on the main checkout, then the user-approved commit, then the human's offline I1 and the I2/I3 window.
+
+
+## P6 S on the frozen commit: transient spark-job failure, read-only diagnosis (spark-engineer)
+
+#### Agent report (2026-11-17T05:50:25.678Z, agent a0e3717)
+
+Diagnosis of the Phase 15 local P6 S spark-job transient (read-only; no tracked file edited, no sbt, no Spark job, no cloud call).
+
+**Evidence**
+- Spark is 3.5.4 (project/Versions.scala:36). I ran javap on spark-core_2.13-3.5.4.jar from target/phase12d-portable-runtime-20261103/official. TorrentBroadcast.$anonfun$readBlocks$1 calls `ChunkedByteBuffer.chunks()` and then `calcChecksum` (the checksum check). The "Index 0 out of bounds for length 0" is therefore `b.chunks(0)` on an EMPTY ChunkedByteBuffer. Remote `getRemoteBytes` returned a zero-chunk buffer for a broadcast piece (`ChunkedByteBuffer.fromManagedBuffer` or `fromFile` with zero length), instead of failing with "Failed to get broadcast_N_piece0".
+- Failure site: spark-job.stderr.log:87481 (lost task 0.0, stage 4297, executor 1), stack to line 87512, abort at 87513+. Stage 4297 is `checkpoint at Phase6DEJobs.scala:1007`. Line 1007 is the INITIAL `var frontier = sources...checkpoint(true)` in `distanceEstimates`, before the BFS loop's first iteration. It is not a loop `next.checkpoint`.
+- The stage reads ReliableCheckpointRDDs of `components`, `summaries` and `adjacency`. These are method parameters, strongly held on the driver. The broadcast needed is a per-checkpoint-RDD Hadoop-conf broadcast (`broadcastedConf`), and the log does not name its id.
+- ContextCleaner evidence: the last "Removed broadcast_N_piece0" events are at 23:37:04, lines 86474-86479 (ids 1625-1637, about 48 KiB, which look like conf-broadcast pieces from earlier dead checkpoint RDDs). Nothing is removed between those lines and the failure at 23:37:10. Cleaner deletions are batched, and no removal is near the failing task. Removed pieces would normally surface as a "Failed to get piece0" SparkException, not an empty chunk.
+- Task retries: spark.task.maxFailures=1 comes from scripts/config/spark-12-10.conf:34 (local) and infra/terraform/modules/emr/variables.tf:169 (EMR). Phase12Readiness.scala:113 also sets it.
+- Failure frequency: the failed run's stderr has 87,694 lines and 8 AIOOBE matches. The 5 other full local S runs (4 searched in the work dir plus the passing rerun) have 0 and about 117k lines each.
+
+**1. Root cause (confidence moderate-low on mechanism, high on what it is not)**
+- Most likely a transient Spark 3.5.4 TorrentBroadcast block-transfer race. During heavy broadcast churn (broadcast ids around 1670 in this job, with executors fetching pieces from the driver and from each other), a remote piece fetch yielded an empty buffer. The empty buffer is not validated before `chunks(0)`.
+- The ContextCleaner hypothesis is unlikely. The RDDs involved are live, the failure is not at a BFS loop reassignment, there is no nearby removal, and the symptom differs.
+- I could not prove the exact empty-buffer path from the bytecode alone.
+- The code in Phase6DEJobs.scala:980-1030 is not implicated.
+
+**2. EMR plausibility**
+- Plausible. The same code path runs on YARN: remote piece fetches between executors and the driver, and about the same number of broadcasts per S run. Networking differs, so the rate may differ. The local rate of about 1 in 6 is a tiny sample.
+- A transient broadcast error would abort a paid S run (maxFailures=1, maxAppAttempts=1), so the risk is not local-cluster-only.
+
+**3. Mitigations, ranked**
+1. `spark.task.maxFailures=2` (a retry re-fetches the piece, since the failed piece was never stored).
+   - Owner: infra-engineer, for infra/terraform/modules/emr/variables.tf:169. Also scripts/config/spark-12-10.conf (scripts/**, infra-engineer) and, if desired, Phase12Readiness.scala:113 (spark-engineer).
+   - Blast radius: every Spark step on EMR and local. Terraform plan diff and a human gate for the EMR variable, since the billing and plan pins were refreshed at 8d0e211 and would need refreshing again. Needs the infra owner's format/validate/plan checks, a reviewer, and a clean-snapshot check.
+   - Determinism: modules/spark/src/main has no accumulators (grep found none), so counters cannot double-count. Tasks are deterministic, so outputs are unchanged. Cost: a real deterministic failure now retries once, bounded by the 75-minute per-run cap.
+   - Fully reproducing 'passes with all 61 counters equal' needs one local run after the change.
+2. Leave the setting as is and accept roughly 1 in 6 local and an unknown EMR transient risk, with a documented rerun policy. It is cheaper locally, but costly if the failure lands on an EMR S run.
+3. Not recommended:
+   - `spark.broadcast.checksum=false` would skip the `chunks(0)` check and let empty pieces fail later in deserialization.
+   - Changing cleaner settings (`spark.cleaner.referenceTracking.*`) does not target this symptom.
+   - Code changes in Phase6DEJobs.scala would not address the cause and would need a spark-engineer change plus re-review and full check.
+
+**Recommended:** option 1, with maxFailures=2 in Terraform and the local conf, at the owner and gate noted above.
+
+**Housekeeping:** I accidentally unzipped a few Spark classes into the repo root and moved them out immediately. The repo is clean of them. `git status` shows only ` M docs/agent-runs/phase-15/test-report.md`, which I did not touch.
+
+
+## spark.task.maxFailures 1 -> 2: same-host disk read research (spark-engineer, time-boxed)
+
+#### Agent report (2026-11-17T14:31:49.871Z, agent a361d56)
+
+Verdict: the signature is a known bug in 3.5.4, SPARK-43221, fixed in 3.5.6, 4.0.0 and 4.1.0. No documented setting turns off same-host disk reads for broadcast blocks. One undocumented workaround is plausible but untested. I made no edits to either checkout. Scratch copies of the v3.5.4 sources are in /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/efc32638-2d79-4248-918e-efd62da545bc/scratchpad/spark-hostlocal/.
+
+**1. Code path and gates** (v3.5.4, `core/src/main/scala/org/apache/spark/storage/`)
+- `BlockManager.getRemoteBlock` (BlockManager.scala:1082-1117) asks the driver for `getLocationsAndStatus(blockId, myHost)`. If the returned `localDirs` is defined, it calls `readDiskBlockFromSameHostExecutor(blockId, localDirs, status.diskSize)` (:1102, defined at :1229). On success it logs "Read ... from the disk of a same host executor is successful."
+- The only gates are on the driver, in `BlockManagerMasterEndpoint.getLocationsAndStatus` (BlockManagerMasterEndpoint.scala:848-876): a location on the same host whose status has `storageLevel.useDisk`, and an `executorIdToLocalDirs` cache hit. The Guava cache is built with `maximumSize(spark.storage.localDiskByExecutors.cacheSize)` (:62-66).
+- `getRemoteBlock` never consults `spark.shuffle.readHostLocalDisk` or `spark.shuffle.useOldFetchProtocol`. Those two only decide whether `hostLocalDirManager` is created (BlockManager.scala:553-556), and that manager serves shuffle fetches only.
+- Neither key appears on https://spark.apache.org/docs/3.5.4/configuration.html (curl, 0 grep hits for "readHostLocalDisk" and "localDiskByExecutors"). Their definitions are in `internal/config/package.scala:1636-1663`, and the cacheSize doc string mentions disk-persisted RDD blocks.
+- No documented key disables the path for broadcast or RDD blocks.
+- Undocumented workaround, untested by me: `spark.storage.localDiskByExecutors.cacheSize=0`. Guava `maximumSize(0)` evicts every entry immediately, so `getIfPresent` would return `None`, `localDirs` would be `None`, and `getRemoteBlock` would take the `fetchRemoteManagedBuffer` network path. The config has no validator in 3.5.4 (package.scala:1654-1663). I did not verify how it affects shuffle host-local reads or dynamic allocation with shuffleTracking.
+
+**2. Encryption handling and the empty buffer**
+- Without IO encryption, `readDiskBlockFromSameHostExecutor` builds a `FileSegmentManagedBuffer(..., 0, file.length)`, which ignores the passed `blockSize` (BlockManager.scala:1241-1243).
+- With IO encryption on, it builds `EncryptedManagedBuffer(new EncryptedBlockData(file, blockSize, ...))` (:1233-1239). `EncryptedBlockData.toChunkedByteBuffer` loops `while (remaining > 0)` over `blockSize` (DiskStore.scala:238-256). With `blockSize == 0` it returns an empty `ChunkedByteBuffer` with no chunks. `file.exists()` is the only check (:1231).
+- `TorrentBroadcast.readBlocks` then runs `calcChecksum(b.chunks(0))` (TorrentBroadcast.scala:~203) and throws `ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0`. That matches your signature.
+- The size is wrong because the driver takes `status` from `locations.headOption` (BlockManagerMasterEndpoint.scala:851-857) but picks `localDirs` from any same-host location with `useDisk` (:861-871). Suppose the first location holds the piece in memory (`diskSize = 0`) while another executor on the same host holds it on disk. The reader gets `diskSize = 0` together with the other executor's dirs.
+- Eviction and removal races are not the cause. The mismatch is between the head location's status and the disk holder's dirs.
+- Your log lines fit this: executor 0 dropped `broadcast_681_piece0` to disk, and executor 1 then read it from disk and failed in `readBlocks`. I did not check the head-location detail against your logs.
+- The 4-of-12 reads that succeeded are consistent with the head location sometimes being the disk holder or having a non-zero `diskSize`.
+
+**3. JIRA**
+- SPARK-43221, "Host local block fetching should use a block status of a block stored on disk" (https://issues.apache.org/jira/browse/SPARK-43221). Status: Closed, Fixed. Fix versions: 3.5.6, 4.0.0, 4.1.0. Resolved 2025-03-12 by apache/spark PR #50122.
+- The report describes your trace, `ArrayIndexOutofBoundsException: 0` at `TorrentBroadcast.readBlocks`, with two executors on one node, one holding the block in memory and the other on disk. It does not mention IO encryption.
+- The fix rewrites `getLocationsAndStatus` to prefer a same-host location with `useDisk` and to return that location's own status (https://github.com/apache/spark/pull/50122.diff).
+- Other JQL searches turned up nothing relevant. SPARK-7703 and SPARK-26269 are unrelated.
+
+**4. Verdict**
+- (b) for config: there is no documented safe setting in 3.5.4. The only plausible switch is the undocumented `spark.storage.localDiskByExecutors.cacheSize=0` above, which needs a trial run before relying on it.
+- Cleaner options are a Spark version of 3.5.6 or later, or an in-memory-only (no spill) broadcast configuration, which I did not evaluate.
+- The bug needs the encrypted read path (`blockSize` is used only there), same-host executors, and a piece that is on disk on one executor while another location reports it in memory.
+- The 2-executors-on-one-core-node YARN layout on EMR is exposed in the same way.
+- Confidence: high on the code path, the mechanism and the JIRA match. Medium on the cacheSize=0 workaround, which is by code reading only.
+
+**authEngineVersion**
+- It plays no role. `readDiskBlockFromSameHostExecutor` opens the file directly (`new FileInputStream(file)` in `EncryptedBlockData.open`, DiskStore.scala:279-288). It decrypts with the IO-encryption key from `securityManager.getIOEncryptionKey()` (`spark.io.encryption`), not the network-crypto key, and bypasses the transport entirely.
+- `spark.network.crypto.*` and `authEngineVersion` affect only the network fetch fallback.
+- The old Phase 12D attribution to authEngineVersion=2 is therefore wrong. The same signature comes from SPARK-43221 with IO encryption on.
+
+#### Coordinator note: decision on the host-local read setting, and correction of the Phase 12D diagnosis (2026-11-17)
+
+- **Coordinator check.** The Apache JIRA REST API, read 2026-11-17, confirms SPARK-43221 "Host local block fetching should use a block status of a block stored on disk": status Closed, fix versions 3.5.6, 4.0.0 and 4.1.0, resolved 2025-03-12. The project runs Spark 3.5.4, which does not have the fix.
+- **Setting skipped.** No documented Spark 3.5.4 setting turns off same-host disk reads for broadcast blocks. The only candidate, `spark.storage.localDiskByExecutors.cacheSize=0`, is not on the 3.5.4 configuration page. It is supported by code reading only, and its effect on shuffle and dynamic allocation with shuffle tracking is unverified. Per the human's rule ("If it's unclear, skip it and note it as a known limitation"), it is not added. Only `spark.task.maxFailures=2` goes into this change.
+- **Known limitation.** Spark 3.5.4 has SPARK-43221. With `spark.io.encryption.enabled=true` and two executors on one host, a task can read a broadcast (or disk-persisted) block straight from another executor's disk using a size of 0. This happens when the driver's first location for the block holds it in memory while another same-host executor holds it on disk. The read then yields an empty buffer, and `TorrentBroadcast.readBlocks` throws `ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0`.
+  - The EMR layout (2 executors on the single core node) is exposed in the same way as local-cluster.
+  - `spark.task.maxFailures=2` lets the task retry. A retry can hit the same condition again, so the risk is reduced, not removed.
+  - The proper fixes are a Spark runtime of 3.5.6 or later, or the undocumented cache-size switch after a trial. Both are out of scope before Session 2.
+- **Correction of the Phase 12D diagnosis.** Phase 12D (`docs/agent-runs/phase-12/evidence/12d-spike-offline/build/owner-report.md` lines 70-97, `report.md` line 58, and the comment in `infra/terraform/spikes/emr-spark-isolated/main.tf` lines 77-81) attributed this signature to `spark.network.crypto.authEngineVersion=2` combined with IO encryption, and moved to version 1 as the fix. **That attribution was a misattribution.**
+  - Tonight's run failed with the same signature under `authEngineVersion=1` (`spark-12-10.conf`).
+  - The executor logs show the real trigger, a same-host encrypted disk read. In `target/phase15/p6/work/p6-S-20261117T053104Z/runtime/scholarchain-runtime/work/app-20261116233321-0000/`:
+    - `0/stderr` lines 74802-74805: executor 0 drops `broadcast_681_piece0` from memory and writes it to disk at 23:36:46.
+    - `1/stderr` line 59820: executor 1 logs "Read broadcast_681_piece0 from the disk of a same host executor is successful." at 23:37:10, and the next lines are the `ArrayIndexOutOfBoundsException`.
+  - The Phase 12D log has the same preceding line ("right after the log line `Read broadcast_N_piece0 from the disk of a same host executor is successful`").
+  - The same-host disk read does not go through the network transport. It opens the block file directly and decrypts it with the IO-encryption key, so `authEngineVersion` plays no part (spark-engineer research above, `BlockManager.readDiskBlockFromSameHostExecutor` and `DiskStore.EncryptedBlockData`, v3.5.4).
+  - The Phase 12D v1 passes (2 of 2) were consistent with the bug's rarity (1 failure in 4 same-host disk reads over 12 local S runs), not with a fix.
+  - The Phase 12 evidence files are historical records and are not rewritten. The spike root is historical and out of scope for this change. This note is the correction of record.
+
+
+## spark.task.maxFailures 1 -> 2: infra-engineer change (EMR module, local conf, tests)
+
+#### Agent report (2026-11-17T14:58:26.071Z, agent a659ff4)
+
+STATUS: DONE (offline, uncommitted, worktree only). All requested gates observed passing on the final file contents.
+OWNER: infra-engineer
+WORK ORDER: Phase 15, raise spark.task.maxFailures 1 -> 2 on EMR and the local/pipeline Spark config (human: "A, set it to 2 on EMR and locally"). Worktree /Users/danny/Documents/UIC/CS441/ScholarChain-wt/phase15-maxfail (branch phase-15-maxfail). Main checkout untouched (its git status was clean when I checked at the end). The coordinator's SPARK-43221 addition is applied.
+
+FILES CREATED: none in the repo (scratch only under the session scratchpad).
+
+FILES MODIFIED (all under ScholarChain-wt/phase15-maxfail/):
+- infra/terraform/modules/emr/variables.tf: "spark.task.maxFailures" = "2". "spark.yarn.maxAppAttempts" stays "1". New comment cites SPARK-43221 (host-local block fetch of a disk-stored broadcast piece with spark.io.encryption.enabled=true gives an empty buffer, so TorrentBroadcast.readBlocks throws ArrayIndexOutOfBoundsException; fixed in 3.5.6, not in our 3.5.4). It says app attempts stay 1 so a failed job is still bounded. No new Spark keys, and no authEngineVersion claim. NEW validation block on var.spark_defaults: spark.task.maxFailures must equal "2" and spark.yarn.maxAppAttempts must equal "1".
+  Why an exact pin and not a 1..4 range: this is a cost bound on paid runs, and the default map is the only source of truth (root exposes no override). The pin makes any change a conscious edit with a human decision, consistent with the other pinned decision 12-10 values. It sits in a separate validation so its message is distinct. I proved it in a scratch module copy outside the repo: a map with maxFailures "1" is refused, and a control with "2" is not refused. The module variable is not reachable from the root test, so there is no negative test in the repo tests.
+- scripts/config/spark-12-10.conf: spark.task.maxFailures 2, matching comment (SPARK-43221, appAttempts 1, "keep identical to the Terraform emr module"). Still 22 settings, same keys as the module.
+- infra/terraform/tests/phase13c.tftest.hcl: new assert in run "spark_settings_rendered_by_the_module_equal_scripts_config_spark_12_10_conf". The rendered spark_defaults_text must contain "spark.task.maxFailures 2\n" and "spark.yarn.maxAppAttempts 1\n" and not "spark.task.maxFailures 1". The existing exact-equality assert against the conf file is unchanged and still passes.
+- scripts/tests/test_emr_bootstrap.py: new test test_the_real_decision_12_10_conf_pins_one_task_retry_and_one_application_attempt. It parses spark-12-10.conf, rejects duplicate keys, and asserts maxFailures=="2" and maxAppAttempts=="1".
+- scripts/tests/test_pipeline.py: test_the_spark_step_carries_every_decision_12_10_setting gains the needles "spark.task.maxFailures=2" and "spark.yarn.maxAppAttempts=1". This checks that the printed spark-job step parameters carry them.
+- infra/terraform/README.md (Spark settings row): added "spark.task.maxFailures=2 (one task retry) with spark.yarn.maxAppAttempts=1". scripts/README.md had no maxFailures statement.
+
+COMMANDS RUN (AWS_* unset, AWS_CONFIG_FILE=/dev/null, AWS_SHARED_CREDENTIALS_FILE=/dev/null, AWS_EC2_METADATA_DISABLED=true; python3 -I):
+- terraform fmt -check infra/terraform/modules/emr/variables.tf infra/terraform/tests/phase13c.tftest.hcl -> rc=0
+- terraform -chdir=infra/terraform init -backend=false -input=false -lockfile=readonly -> success
+- terraform -chdir=infra/terraform validate -> "The configuration is valid."
+- terraform -chdir=infra/terraform test -> "Success! 333 passed, 0 failed."
+- python3 -I -m unittest discover -s scripts/tests -p test_emr_bootstrap.py -> Ran 41 tests, OK
+- python3 -I -m unittest discover -s scripts/tests -p test_pipeline.py -> Ran 69 tests, OK
+- python3 -I -m unittest discover -s tests/scripts -p test_pipeline_dryrun.py -> Ran 16 tests, OK
+- python3 -I -m unittest discover -s tests/infra -> Ran 468 tests, OK (see the first-run note below)
+- Scratch check of the new validation (module variable block copied to the scratchpad, terraform test): maxFailures "1" refused (2 passed); control with "2" -> the expect_failures run fails because no error occurred, as expected.
+All results above are from the final file contents, after the SPARK-43221 comment edit.
+
+TEST RESULTS: see COMMANDS RUN. Note on the first tests/infra run: 332 tests, 83 failures and 13 errors. All 96 were infra_support.InfraNotReady, because the fresh worktree had no .terraform/providers in infra/terraform/billing-bootstrap (4), infra/terraform/deployer (71) and infra/terraform/spikes/emr-spark-isolated (21). None involved the EMR module or the Spark conf. I ran init -backend=false -input=false -lockfile=readonly in those three roots (gitignored provider dirs only, no AWS call) and reran. The result was 468 tests, OK. This is an environment prerequisite, not a code issue. The coordinator's own clean-snapshot check.sh handles init itself.
+
+VALIDATION RESULTS: git grep maxFailures (excluding docs and target) now shows only the out-of-scope items listed under RISKS. No test under tests/** pins maxFailures=1, so there is no BLOCKED-ON for test-engineer. tests/scripts/test_pipeline_dryrun.py passes unchanged, as does the phase13c equality assert, which reads the conf and the module identically.
+New sha256:
+- scripts/config/spark-12-10.conf: 7520a0e796f11d8a8528c44a7e32ced57b52023305fdc47f29d55fa393e2fdd5 (was 1376ea432d71c5cacfd131b1bf7020bf55777dddac2c0d69a2f6b94e06d985fc)
+- infra/terraform/modules/emr/variables.tf: 620a35845d21095a77fe540b4c3064570bb5b08a2f91a009378424ef2e30cdc5 (was 5acb9afec8514de2d398db21f38aa7d170bf15fee69b6dfe4d05a24b3146eb19)
+
+ASSUMPTIONS: The SPARK-43221 characterization comes from the coordinator's message; I did not verify it online. The unchanged code properties (no accumulators, DataFrameWriter-only output, speculation off) come from the work order and were not re-audited.
+
+RISKS:
+1. scripts/billing/reviewed-pins.json (human-owned) pins infra/terraform/modules/emr/variables.tf at bytes 15367 / sha256 5acb9afe... (source_freeze row, line ~212). It is now stale for this branch (new sha above; I did not compute the new byte count). The pin refresh is a human step, so I did not edit it. The billing verification, which checks the source freeze, will refuse on this branch until the human refreshes that pin. It should be unaffected in the main checkout at 9e881a2. Any other pin of the conf or variables.tf that I did not find (only reviewed-pins.json matched a hash grep) would be the same kind of item.
+2. This branch changes the EMR module variable, so the next terraform plan will show a spark-defaults object/bootstrap-args change (the spark_defaults_text and its sha256 feed bootstrap_args). Per the human-gate rule that plan needs review and approval before any apply. I ran no plan against a real backend.
+3. Out of scope, left unchanged: infra/terraform/spikes/emr-spark-isolated/{main.tf:74, README.md:43, tests/spike.tftest.hcl:365} (historical spike pins maxFailures 1) and modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala:113 (spark-engineer single-task probe).
+4. Retry safety (no accumulators, committer-only writes) is the work order's premise and is not re-verified here.
+
+MANUAL ACTION REQUIRED: Human refreshes the scripts/billing/reviewed-pins.json source_freeze row for infra/terraform/modules/emr/variables.tf (and any wrapper_files/gate hashes derived from the new commit) before the next billing verification on this branch. Human reviews and commits; I did not commit. Any EMR plan or apply stays behind the recorded human gate.
+
+BLOCKED-ON OWNER: none.
+
+BLOCKED-ON EVIDENCE: none.
+
+NEXT GATE: Independent code review of this diff (git diff in the worktree for the 6 repo files above), then the coordinator's clean-snapshot check.sh and sbt check per the repair-round verify scope, then the human pin refresh and commit decision.
+
+#### Coordinator errata (after the maxFailures review, 2026-11-17)
+
+- **Counts.** `target/phase15/p6/work/` holds 12 `p6-S-*` run directories. 6 of them reached a full spark-job (4 at 7a02de2, 2 at 9e881a2). Across those runs there were 4 same-host disk reads ("Read … from the disk of a same host executor is successful"): 3 succeeded and 1 failed.
+  - This replaces "1 failure in 4 same-host disk reads over 12 local S runs" in the coordinator note above, and reads with the spark-engineer's "4-of-12 reads that succeeded", which should say 3 of 4.
+- **Pins hand-off.** This branch drifts **two** `source_freeze` rows in `scripts/billing/reviewed-pins.json`: `infra/terraform/modules/emr/variables.tf` and `infra/terraform/README.md`. After the merge, the human refreshes both (runbook A2). This replaces the single-file wording in `prompt.md` (coordinator sequencing note) and in the infra-engineer's report.

@@ -319,3 +319,23 @@ User answer, verbatim: "Yes"
 User request, verbatim: "The p15 parts on wednesday. Can you do it also tonight? Just ask"
 
 Coordinator plan (no account ID needed): after the billing-bundle review, run A1.4 (`sbt packageEmr`, the upload script's dry run with a syntactically valid placeholder bucket and run prefix, first proving on two different placeholders that the printed `EMR-RENDER` hashes do not depend on them, then `render_manifests.py` and `check_manifests.py --final`), the A2 drift check (read-only; any drift goes to the user, who owns `reviewed-pins.json`), and A1.7 (full `scripts/check.sh`, `RESULT: PASS gates=7`, which is also P20), then commit: that commit is the frozen code commit. A12 (images, built on the final HEAD) stays after the P0 verification records are committed, because B0 requires HEAD to equal the A12 HEAD; any record commit after the images would require a rebuild.
+
+## Spark task retries: spark.task.maxFailures 1 -> 2 (2026-11-17)
+
+Context: the P6 S run on the frozen commit 9e881a2 failed once in its spark-job step with a transient `ArrayIndexOutOfBoundsException` in `TorrentBroadcast.readBlocks`; the identical rerun passed with equal counters. The coordinator offered option A (`spark.task.maxFailures=2` on EMR and locally) or B (keep 1).
+
+User decision, verbatim:
+
+> A, set it to 2 on EMR and locally. Before changing it, check and report:
+> 1. Why maxFailures=1 was chosen originally (a commit message, plan or test). If it was deliberate, explain why 2 is still safe.
+> 2. A retried task can't duplicate or corrupt output: all writes go through Spark's output committer, speculation is off, and no task writes directly to S3 or DynamoDB from inside a partition.
+> Update any test that pins the value to 1. Then review, full check and one local S run with counters equal to the reference run. Move the frozen commit and note the new SHA for A12.
+
+Coordinator sequencing note: `infra/terraform/modules/emr/variables.tf` is in the P0 source freeze (`scripts/billing/reviewed-pins.json`), and the Tuesday P0 incident verification (I2/I3) refuses on source drift or a dirty checkout. The change is therefore built on branch `phase-15-maxfail` in a separate worktree, and merged into `phase-15` only after the human's I2/I3 verification and its records; the human then refreshes the source-freeze pin for that file (runbook A2).
+
+User approval and additions (2026-11-17), verbatim:
+
+> Good report. Approved as planned: maxFailures=2 on the separate branch; merge only after my I1–I3 records commit; then I refresh the variables.tf pin (A2).
+> Two additions:
+> 1. Spark-engineer, 30 min max: is there a documented Spark setting that turns off reading another executor's blocks straight from its disk on the same host (for broadcast blocks, not only shuffle), or a known Spark issue for this with IO encryption on? If it's clearly documented and safe, add it with maxFailures=2 and cover both in the same local S run. If it's unclear, skip it and note it as a known limitation.
+> 2. In the report, correct the Phase 12D diagnosis: the authEngineVersion=2 cause was a misattribution. Cite tonight's executor log as the real trigger.

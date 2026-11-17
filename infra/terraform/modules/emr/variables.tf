@@ -165,8 +165,11 @@ variable "spark_defaults" {
     "spark.executor.memory" = "3g"
     "spark.driver.cores"    = "1"
     "spark.driver.memory"   = "3g"
-    # Bounded, predictable failure behaviour.
-    "spark.task.maxFailures"    = "1"
+    # Bounded failure behaviour: one task retry (maxFailures 2) absorbs a transient task failure, notably SPARK-43221 (host-local
+    # block fetch of a broadcast piece stored on disk with spark.io.encryption.enabled=true yields an empty buffer, so
+    # TorrentBroadcast.readBlocks throws ArrayIndexOutOfBoundsException; fixed in Spark 3.5.6, not in our 3.5.4), which otherwise
+    # aborts a paid run. Application attempts stay 1, so a failed job is still bounded (no second full application run).
+    "spark.task.maxFailures"    = "2"
     "spark.yarn.maxAppAttempts" = "1"
     "spark.ui.enabled"          = "false"
     # Class-origin evidence in the driver and executor stdout.
@@ -188,6 +191,10 @@ variable "spark_defaults" {
       "spark.shuffle.service.enabled"                   = "false"
     } : lookup(var.spark_defaults, k, null) == v])
     error_message = "Decision 12-10 requires: yarn.jars on the local runtime, populateHadoopClasspath=false, defaultFS file:///, spark.authenticate, AES-CTR (authEngineVersion=1, no SASL fallback), IO encryption and G2 shuffle tracking without an external shuffle service."
+  }
+  validation {
+    condition     = lookup(var.spark_defaults, "spark.task.maxFailures", null) == "2" && lookup(var.spark_defaults, "spark.yarn.maxAppAttempts", null) == "1"
+    error_message = "Failure bounds are pinned: spark.task.maxFailures must be 2 (one task retry for a transient task failure) and spark.yarn.maxAppAttempts must be 1 (a failed job is not rerun as a whole). Changing either is a cost-bound change that needs a recorded human decision."
   }
   validation {
     condition     = !strcontains(lower(lookup(var.spark_defaults, "spark.hadoop.io.compression.codecs", "lzo")), "lzo") && contains(keys(var.spark_defaults), "spark.hadoop.io.compression.codecs")
