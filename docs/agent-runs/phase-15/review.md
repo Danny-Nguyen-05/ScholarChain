@@ -1019,3 +1019,109 @@ NEXT GATE: The orchestrator applies the record corrections (findings 1 and 2), t
 - **Finding 2, accepted.** Counts corrected in the owner-report errata.
 - **Finding 3, deferred.** Optional. The validation is proven in a scratch copy, and the regression-to-1 case is already caught by `phase13c.tftest.hcl:179` and the two Python tests.
 - **Finding 4, info.** The `test-report.md:154` row describes the state at 9e881a2 and stays as history; the new rows record the change.
+
+
+### Review (Session 2 Anthropic exposure amendment) — code-reviewer agent `a0f68c513d058c2a6` (Opus 5.5, high); verbatim
+
+STATUS: COMPLETE. Verdict: **APPROVE**. Nothing blocks. There are 4 low-severity findings and 4 informational notes; the fixes are optional.
+OWNER: code-reviewer (read-only)
+WORK ORDER: Phase 15, independent review of the Session 2 Anthropic-exposure amendment (docs/runbooks/phase-14-live-session.md, docs/runbooks/session-2-plan.md). The human decision is in docs/agent-runs/phase-15/prompt.md:343-354. The agent report is in owner-report.md:5504-5596 and the coordinator note at :5598-5601.
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: none. I had no shell, so I ran no git diff. I worked only with the Read, Grep and Glob tools on the working tree.
+
+TEST RESULTS: none run.
+
+VALIDATION RESULTS
+
+1. Completeness: PASS. Neither runbook has an unmarked step that would send a valid-key POST /v1/query, create a real Anthropic key, set an Anthropic spend limit or revoke an Anthropic key.
+- Every `smoke-test.sh` occurrence is covered:
+  - :933 and :1123 pass `--checks healthz,readyz`.
+  - :1176 (B8.8) is marked at :1172.
+  - :1355 (B12.2) is covered by the B12 header at :1349.
+  - :1364 (B12.3) is marked at :1362.
+- Every `--llm` occurrence (:1274, :1292) is covered by the notes at :1266 and :1290.
+- `eval16b` (B11) is marked at :1316.
+- B3b.1 step 1 is marked at :849. C3 (:1442), C5b (:1474, :1482), C9 (:1500), E4 (:1554, :1556) and E6b (:1578) are marked. GO/NO-GO 5 (:1187) and GO/NO-GO 9 (:1371) are marked.
+- The B6.3 and B6.4 checks are safe:
+  - The 401 is returned before routing (ApiApplication.scala:170-171).
+  - The evidence 404 goes to EvidenceApi and never reaches the model.
+  - The `error-path` check sends only no-key and invalid-key requests (smoke-test.sh:24).
+- The plan's R-b load is safe:
+  - loadgen refuses `--llm` with a semantic manifest (load-tests/loadgen.py:915-916).
+  - The query route has weight 0 and LLM routes are skipped (load-profile.v1.json:32; loadgen.py:962).
+  - The semantic route only forwards to semantic-service (ApiApplication.scala:200-223).
+- GO/NO-GO 7 and 8 have no Session 2 mark, but they are checklists and send nothing.
+
+2. Code claims: all verified.
+- **The placeholder is accepted.**
+  - AwsConfig.scala:131-136 accepts 8-512 characters, each `> ' '` and `< DEL`. The value is trimmed first (:118).
+  - The caller is query-api only (:328-331).
+  - The second check is in the rag module (AnthropicLlm.scala:25-28: 1-512 visible ASCII). It is compatible.
+- **No startup call to Anthropic.**
+  - AwsPorts.scala:395-400 → RagProviderClients.anthropic (:185-195) → SynthesisClients.create (ProviderSelection.scala:150-172) → AnthropicMessagesLlmClient. Its HttpClient is a `lazy val` (AnthropicLlm.scala:187). The only network call is in `complete()`.
+  - The query-api readiness gate (AwsComposition.scala:358-368) checks only 4 DynamoDB reads plus the graph-service and semantic-service `/readyz`.
+  - The only startup background work is RuntimeArtifactWarmup (AwsPorts.scala:451-457; RuntimeArtifactWarmup.scala:29-37), which reads the artifact store only.
+  - launchAws (ServiceMains.scala:97-129) does nothing else.
+  - The LLM is used only by the planner and synthesis agents (AwsComposition.scala:121,125 → QueryPlannerAgent.scala:246, AnswerSynthesisAgent.scala:90), which run only from POST /v1/query (ApiApplication.scala:180-199).
+  - No Dockerfile, script, sbt or Terraform file other than scripts/smoke-test.sh references /v1/query.
+- **Only query-api gets the secret** (phase14b-providers.tf:53,60; modules/runtime/compute.tf:152).
+- **Key entry method.** The amendment (:835) matches B3b.2 (:862-868) and infra/terraform/README.md:863: `read -rs KEY`, then builtin `printf '%s' "$KEY" | ... --secret-string file:///dev/stdin`, then `unset KEY`. The value never reaches argv, history or a file.
+
+3. Item 8 is consistent with the decision and with items 7 and 4a. The Voyage sentence contains every element of the Q12 key-handling approval (prompt.md:155-162).
+   - I could not compare it byte-for-byte with the previous item 8 because I had no git.
+
+4. No 12-digit number or e-mail address appears anywhere in either file (my own grep).
+- The anchor `session-2-plan.md:474` → `#b3b-entering-the-anthropic-and-voyage-api-keys-after-base-apply-before-runtime-apply` resolves to the heading at :829.
+- The cited plan sections exist: 5.2 ("B8.7 query smoke", :504), 5.3 ("Elasticity (B10, adapted)", :588), 5.5, 6.3, 6.6, 8 (16B "Session 2: none", :1103) and 9.1 (:1137).
+- Session 1 text is kept at B3b.1, B8.8, B10.3, B12.3 and C5b.
+- The 0.10 Anthropic cap (:845) matches R-c's answer cap (:651).
+- I could not confirm "no figure changed" or "nothing deleted" without a diff; this is unverified, not failed.
+
+5. Scope: the extra marks are correct against the plan.
+- B10.1: the plan's command has no `--llm` (:591).
+- B11: no 16B in Session 2 (:1103, :1019).
+- B12.1/B12.2: the plan has no ledger reserve. Its demo items are 9, 10, 12, 13 and 18-22, and items 14-16 are Session 1 evidence (:1011).
+- GO/NO-GO 9: B12 is not in the plan.
+- E4 and E6b: consistent.
+
+FINDINGS
+1. LOW. phase-14-live-session.md:1266 (B10 note).
+   - Problem: the note marks "the --llm commands of B10.1" but does not say that B10.1's first two lines are still needed (`export SCHOLARCHAIN_LOAD_BASE_URL`, `read -rs SCHOLARCHAIN_LOAD_API_KEY`). The plan's `loadgen.py run` reads them by default (loadgen.py:69-70) and plan 5.3 step 4 does not list them. If the operator skips them, loadgen refuses to start (safe), but time is lost in the Neptune window.
+   - Fix: add one sentence keeping the two env lines for Session 2.
+2. LOW. phase-14-live-session.md:1578 (E6b, Session 2 bullet).
+   - Problem: "means something sent a paid answer by mistake" is inaccurate, because with the placeholder nothing is billed. The operator also never sees an Anthropic "401": every non-200 becomes the closed code `llm-provider-rejected` (AnthropicLlm.scala:248).
+   - Fix: say "something attempted an Anthropic call (it was rejected, not billed); the sign is `llm-provider-rejected` in the query-api logs or job result".
+3. LOW. session-2-plan.md:57 and :1192, and phase-14-live-session.md:836-837 (citations).
+   - Problem: "AwsPorts.scala about 171-174" should be :174-195, plus rag AnthropicLlm.scala:187 (the lazy HttpClient, which is the actual no-network proof) and :25-28. The provenance bullet still says "cited as given, not re-read".
+   - Fix: the coordinator may record that this review re-read them, or leave it as is. This is not a correctness defect.
+4. LOW, optional and the human's call. session-2-plan.md:430-431 (item 8).
+   - Problem: "at least 8 characters" omits "printable ASCII, no spaces, at most 512" and the decision's "(put-secret-value from stdin, never in a file or the repo)". A placeholder with a space would make query-api refuse to start (AwsConfig.scala:133), which is a B6 Q5 failure. B3b (:836) and plan 5.1 (:474) carry the full rule, and item 8 matches the human's own ≥8 wording.
+   - Fix (optional): add the parenthetical so item 8 matches the decision verbatim.
+5. INFO. phase-14-live-session.md:9: the overview says "B12.1 to B12.3", but the B12 note (:1349) excludes only the paid-answer parts of B12.2. It also lists C3 as a "spend-limit and revocation step", though C3 only deletes the container. Wording only.
+6. INFO, outside this diff. docs/demo-script.md:139-146 (item 14): it contains a live `llm_budget.py reserve` and a valid-key POST /v1/query. The heading labels it "Session 1 evidence under plan R-b", so it does not tell the operator to run it in Session 2, but it has no explicit "not in Session 2" mark. Route to documentation-engineer if wanted.
+7. INFO, pre-existing. phase-14-live-session.md:187: the anchor is really broken, not a slug artefact. The heading at experiments/README.md:148 includes `--hadoop-config`. The correct fragment is `#local-configuration-files-for-the-emr-upload---hadoop-config---er-policy---er-config---spark-config-template`. Route to documentation-engineer separately.
+8. INFO, Session 1 history, no action. :99 ("You revoke both keys"), :650 ("this project's key") and :827/:877 ("both provider keys entered"; the placeholder fills the second container) remain. The overview at :9 governs them.
+
+ASSUMPTIONS: The working tree I read is the uncommitted amendment. The coordinator verified the tree after the agent's `git stash` breach; I could not re-check it.
+RISKS: That query-api starts and /readyz passes with the placeholder is code-read only. It will first be observed in the live B6 smoke, as both files already say. Graph-service readiness against an empty Neptune is outside this amendment.
+MANUAL ACTION REQUIRED:
+- Optional: route fixes 1-4 to documentation-engineer.
+- Coordinator: run `git diff --word-diff -- docs/runbooks/` to confirm that the Voyage sentence of item 8 and every figure (for example the 0.10 cap at :845) are unchanged, since I could not diff.
+- Then the human's commit decision.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: the git diff check named above (unverified, not failed); the live B6 observation of query-api starting with the placeholder.
+NEXT GATE: Human commit decision on the docs-only amendment, then session-2-approval.md naming that commit, then A12.
+
+**Coordinator notes on this review (2026-11-17).**
+- **The diff check the reviewer could not run.** Every number removed in `git diff -U0 -- docs/runbooks/` also appears in the added lines, so no figure was dropped. The removal of "the Anthropic key has a USD 1 spend limit" is intended. The old item 8 at HEAD (`session-2-plan.md:420-425`) and the new item 8 carry the same Voyage rules: Secrets Manager or the one process's environment, never a command-line argument, `set +x`, deleted at cleanup and revoked afterwards with UTC times recorded.
+- **Fixes 1-5 routed to the documentation-engineer.** For fix 4, item 8 is to carry the human's full placeholder rule.
+- **Findings 6 and 7 deferred**, outside this diff: `docs/demo-script.md` item 14 and the pre-existing broken anchor at runbook :187.
+
+**Coordinator check of the fix round (2026-11-17).**
+- The five low-severity fixes were checked by the coordinator directly, not by a second reviewer pass. The cited code lines exist and say what is claimed:
+  - `load-tests/loadgen.py:69-70` holds the default `SCHOLARCHAIN_LOAD_API_KEY` / `SCHOLARCHAIN_LOAD_BASE_URL` env names;
+  - `AnthropicLlm.scala:25-28` holds the 1-512 printable-ASCII key check, `:187` the lazy `HttpClient`, and `:248` the closed code `llm-provider-rejected` returned on any non-200.
+- Item 8 now carries the human's full placeholder rule.
+- `test_cap_pins_14b.py`: 15 tests OK, as reported.
+- No 12-digit number or e-mail address was added (grep count 0).

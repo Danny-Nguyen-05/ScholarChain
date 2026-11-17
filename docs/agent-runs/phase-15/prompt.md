@@ -339,3 +339,16 @@ User approval and additions (2026-11-17), verbatim:
 > Two additions:
 > 1. Spark-engineer, 30 min max: is there a documented Spark setting that turns off reading another executor's blocks straight from its disk on the same host (for broadcast blocks, not only shuffle), or a known Spark issue for this with IO encryption on? If it's clearly documented and safe, add it with maxFailures=2 and cover both in the same local S run. If it's unclear, skip it and note it as a known limitation.
 > 2. In the report, correct the Phase 12D diagnosis: the authEngineVersion=2 cause was a misattribution. Cite tonight's executor log as the real trigger.
+
+## Session 2 Anthropic exposure: runbook amendment and placeholder key (2026-11-17)
+
+Context: the coordinator's code trace showed that no planned Session 2 step calls Anthropic, but that runbook B10.3 (`--llm`) and the default six-check smoke (B8.8, B12.3) would send paid answers if followed verbatim. It also showed that query-api requires a non-empty Anthropic secret at startup and that synthesis-v2 (P36) is not implemented.
+
+User decision, verbatim:
+
+> Yes: documentation-engineer amendment, reviewed, docs-only commit. Mark B10.3 --llm and the default six-check smoke (B8.8, B12.3) as "not in Session 2" and point each to the plan's command.
+> Plus one change: in Session 2 the Anthropic secret holds a non-working placeholder (≥8 characters, not a real key), entered the same way as a real key (put-secret-value from stdin, never in a file or the repo). No real Anthropic key is created for Session 2. Any accidental Anthropic call then fails instead of spending. Check that:
+> 1. query-api starts and /readyz passes with the placeholder (no startup call to Anthropic);
+> 2. no planned step expects a successful Anthropic call.
+> Put this in the runbook, and give me the revised item 8 wording: the Voyage key rules stay; the Anthropic secret is a placeholder, so no spend limit or revocation is needed for Session 2.
+> After that commit, I write docs/agent-runs/phase-15/session-2-approval.md naming the amendment commit, then you run A12.

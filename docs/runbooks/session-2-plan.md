@@ -51,6 +51,12 @@
   - **Frozen code commit moved to tonight** (your answer "Yes"): the commit made tonight after the full check, the frozen code commit (recorded in test-report.md). P6 S runs on it tonight. Records-only commits may follow; the images are built after the last one. Any later code change voids the freeze and repeats the frozen steps;
   - schedule rows for Tue Nov 17 and Wed Nov 18 updated (section 6.7). The three user-set tfvars are unchanged: `query_requests_per_target_target` 3000, `query_semantic_rate_limit_per_second` 3500, `query_semantic_rate_limit_burst` 7000.
 
+- Amended 2026-11-17 (no Session 2 step can spend on Anthropic; your decision recorded verbatim in `docs/agent-runs/phase-15/prompt.md`, last section, "Session 2 Anthropic exposure: runbook amendment and placeholder key"):
+  - **Placeholder rule:** in Session 2 the Anthropic secret holds a non-working placeholder (at least 8 characters, not a real key), entered the same way as a real key (`put-secret-value` from stdin, never in a file or the repo). No real Anthropic key is created, so no Anthropic spend limit and no Anthropic revocation are needed. Item 8 of the section 4a record wording, the Keys bullet (section 5.1), the Q14 row (section 9.1), the Anthropic row of section 6.3 and the cleanup list in section 5.5 carry this. The Voyage key rules are unchanged. The Anthropic placeholder rule does not change any figure;
+  - **Not in Session 2:** the runbook's B10.3 `--llm` command and the default six-check smoke (B8.8 and B12.3) would send valid-key `POST /v1/query` requests, which call Anthropic. They are marked "not in Session 2" in the [Phase 14 runbook](phase-14-live-session.md); Session 2 runs this plan's commands instead (B6 smoke, B8.7 query smoke, and the section 5.3 load with the P42 semantic manifest and no `--llm`);
+  - **Why a placeholder is enough (coordinator's code trace, by code reading; not yet observed live):** query-api reads the Anthropic secret at startup and accepts any 8-512 printable ASCII characters with no spaces (`AwsConfig.scala` lines 131-136); building the Anthropic client makes no network call (`AwsPorts.scala` lines 174-195; the only network call is in `complete()`, on a lazy `HttpClient`, `modules/rag` `AnthropicLlm.scala` line 187; the rag-side key check, 1-512 visible ASCII, is at `AnthropicLlm.scala` lines 25-28) and `/readyz` checks only DynamoDB, graph-service and semantic-service. Anthropic is called only by `POST /v1/query` with a valid API key (planner `QueryPlannerAgent.scala` line 246, synthesis `AnswerSynthesisAgent.scala` line 90), which no planned Session 2 step sends. Whether query-api really starts and `/readyz` passes with the placeholder is **to be observed in the live B6 smoke**; if it does not, stop and tell the coordinator;
+  - the synthesis-v2 work item (P36) is not implemented; the Phase 14 gate holds because Session 2 sends no paid answers.
+
 Nothing in this file approves spending, an apply, a deployment or a cleanup, and nothing in it has been run against AWS, Anthropic or Voyage AI. Every live step still needs the human gates of the [Phase 14 runbook](phase-14-live-session.md): an approval record and pre-spend receipt (Procedure R) before each apply, and IAM windows recorded with their open and close times.
 
 **Who this is for:** you, the human who types every live command. The coordinator routes the offline fixes to their owners. Reviewers check each fix before any live step.
@@ -95,7 +101,7 @@ Amended 2026-11-16 (L dropped on EMR; D3 cluster r5.xlarge primary at 0.58 per c
 - Keep the Session 1 procedures:
   - Procedure R before every apply.
   - IAM window 1 at deploy and IAM window 2 at cleanup.
-  - New provider keys that go only into Secrets Manager, are deleted at cleanup and revoked afterwards.
+  - New provider keys that go only into Secrets Manager, are deleted at cleanup and revoked afterwards (Session 2, amended 2026-11-17: this applies to the Voyage key; the Anthropic secret holds a non-working placeholder, so there is no Anthropic key to revoke).
   - The commit freeze.
   - The two-pass destroy.
   - The next-day cost check (C11).
@@ -417,12 +423,16 @@ docs/runbooks/session-2-plan.md at commit ______________, with these limits:
 
 7. R-c is dropped. No Neptune graph load and no paid answers in Session 2.
 
-8. Provider keys, including the Session 2 Voyage key (stage-a ingest and
-   query smoke) and the Anthropic key. Each key goes only into Secrets Manager or the
-   environment of the one process that needs it, never as a command-line
-   argument; shell tracing is off (set +x); the Anthropic key has a USD 1
-   spend limit; every key is deleted at cleanup and revoked afterwards,
-   with UTC times recorded.
+8. Provider keys. The Session 2 Voyage key (stage-a ingest and query
+   smoke) goes only into Secrets Manager or the environment of the one
+   process that needs it, never as a command-line argument; shell tracing
+   is off (set +x); it is deleted at cleanup and revoked afterwards, with
+   UTC times recorded. The Anthropic secret holds a non-working
+   placeholder (8 to 512 printable ASCII characters, no spaces, not a real
+   key), entered the same way as a real key (put-secret-value from stdin,
+   never in a file or the repo). No real Anthropic key is created for
+   Session 2, so no Anthropic spend limit or revocation is needed, and any
+   accidental Anthropic call fails instead of spending.
 
 Signed: ______________________
 ```
@@ -431,7 +441,7 @@ Signed: ______________________
 
 Notes on the draft (not part of the wording):
 
-- Item 8 comes from your key-handling approval of 2026-11-16 (given for the Q12 Anthropic run). Your 4a review (answer 5) keeps it: it covers the Session 2 Voyage key.
+- Item 8 comes from your key-handling approval of 2026-11-16 (given for the Q12 Anthropic run). Your 4a review (answer 5) keeps it: it covers the Session 2 Voyage key. **Amended 2026-11-17:** the Voyage key rules are unchanged; the Anthropic part is replaced by your placeholder decision of 2026-11-17 (recorded verbatim in `docs/agent-runs/phase-15/prompt.md`, "Session 2 Anthropic exposure"): the old USD 1 Anthropic spend limit and the Anthropic revocation no longer apply to Session 2, because no real Anthropic key exists. The Q12 key-handling approval itself is Session 1 history.
 - Item 3's run rule is your P25 decision, verbatim. The fallback sentence after it is your 4a review answer 4 (section 5.2 step 7b). It replaces the earlier stage-a stop rule for an S failure.
 - Your 4a review of 2026-11-16 (answers 1-5) is applied here: item 5 already carried the corrected clock (target `T_N0` + 5 h 15 min, absolute + 5 h 30 min, latest loads 14:25 and 14:38 CST); items 2, 3, 4 and 8 changed.
 - Item 5's clock uses a pre-destroy duration of about 50 min, sized from Session 1 in section 5.5 (part measured, part estimate).
@@ -462,7 +472,7 @@ The step details live in the [Phase 14 runbook](phase-14-live-session.md); this 
   - A5 sign-in rehearsal.
   - A7 four service secrets (needed only if R-b runs).
   - Close the window.
-- **Keys:** create the new Voyage key (stage a ingest) and Anthropic key (needed only so ECS can start in R-b; the key containers must not be empty) just before entering them in Secrets Manager (B3b). The ingest reads the Voyage key from your shell (runbook B8.6 step 2b).
+- **Keys (amended 2026-11-17):** create the new Voyage key (stage a ingest) just before entering it in Secrets Manager (B3b). **No Anthropic key is created for Session 2.** The Anthropic container must still not be empty, because ECS cannot start query-api without a value, so you enter a non-working placeholder there (at least 8 and at most 512 printable ASCII characters, no spaces, not a real key, not derived from one), by the same method as a real key (B3b.2, from stdin, never in a file or the repo). Nothing in the Session 2 plan calls Anthropic, so the placeholder is never used; an accidental call fails at the provider instead of spending. The ingest reads the Voyage key from your shell (runbook B8.6 step 2b). See the [runbook's Session 2 amendment at B3b](phase-14-live-session.md#b3b-entering-the-anthropic-and-voyage-api-keys-after-base-apply-before-runtime-apply).
 - **AWS credit balance (your 4a review answer 2, 2026-11-16):** read the remaining AWS credit balance and record it with its UTC time. It must be at least the Session 2 AWS cap, **USD 6.73** (the R0 + R-b AWS part at caps under option (i): 7.15 - 0.42; 6.72 before D3), because tax 0 holds only on credit-covered spend. Otherwise the approval is void.
 - **Approval record:** written by you; names S on EMR (L dropped on EMR, P25 rule; the D3 cluster, ER heap 12g, 75-min S cap), the ledger raise (P25), the vector count, the R-b extension and its gates, the floor, the Neptune hard stop and the session hard stop. Draft wording for option (i): section 4a.
 
@@ -567,7 +577,7 @@ The step details live in the [Phase 14 runbook](phase-14-live-session.md); this 
 > Amended 2026-11-16 (conservative clock): the first option (i) clock was target `T_N0` + 5 h 30 min (16:20 CST), absolute `T_N0` + 5 h 48 min (16:38 CST) and latest new load start `T_N0` + 4 h 50 min (15:40 CST). It held only if billing started at least about 18 min after `T_N0`, and it left about 3 min for the pre-destroy steps.
 
 1. Write `T_N0` (UTC) in the session log when the Neptune base-apply starts. Base plan with `neptune_enabled = true`, `neptune_min_ncu = 1` and `neptune_max_ncu = 2.5` (unchanged from Session 1; the guard refuses max 1, so P34 is not possible) and `emr_config.enabled = false` (Neptune creates plus the reviewed `module.emr` deletes; P7). Procedure R, then `base-apply --skip-runtime-archive`. About 50 min; push (B3) in parallel.
-2. B3b keys (if not done), then B4 runtime plan and runtime-apply:
+2. B3b keys (if not done; Voyage key plus the Anthropic placeholder, amended 2026-11-17), then B4 runtime plan and runtime-apply:
    - no `neptune_tunnel_enabled = true`: it was needed only for R-c, which is dropped (option (i), 2026-11-16);
    - `dashboard_enabled = true` (P9); Container Insights off;
    - `service_capacity` query-api and semantic-service `min 1, max 2`;
@@ -579,7 +589,7 @@ The step details live in the [Phase 14 runbook](phase-14-live-session.md); this 
 4. **Elasticity (B10, adapted), started immediately after the B6 smoke passes** (option (i): the load runs early in the Neptune window; latest full-variant start 14:25 CST, latest load start of any kind 14:38 CST, as in the clock table above):
    - start the T3 poll;
    - open the dashboard;
-   - `loadgen.py run --manifest <P42 semantic manifest> --questions-file <fixed semantic questions>` (a fixed set of about 100-200 distinct questions, sent once each in the P42 warm-up pass before the ramp), without `--node-ids-file`, `--evidence-ids-file` or `--llm`.
+   - `loadgen.py run --manifest <P42 semantic manifest> --questions-file <fixed semantic questions>` (a fixed set of about 100-200 distinct questions, sent once each in the P42 warm-up pass before the ramp), without `--node-ids-file`, `--evidence-ids-file` or `--llm`. This is the command Session 2 runs in place of runbook B10.3 (whose `--llm` command is not in Session 2; amended 2026-11-17).
    - Each semantic request does real work: query-api forwards to semantic-service, which reads the cached query embedding and queries one S3 Vectors index (the one named by `SCHOLARCHAIN_SEMANTIC_INDEX`) of the about-10,000 R0 vectors. Voyage is called at most once per distinct question per semantic-service task (section 6.3a). A request that gets 429 from the rate limiter never reaches semantic-service, Voyage or S3 Vectors.
    - Wait at least 25 quiet minutes.
    - Collect, all in UTC: scaling activities; ALB `RequestCountPerTarget`, `HealthyHostCount`, `TargetResponseTime` p50/p95/p99 and 5XX; `AWS/ECS` CPU and memory for query-api and semantic-service; Neptune `ServerlessDatabaseCapacity`; from query-api's `/metrics` (through the ALB), the 429 counter `api_rate_limited_total`.
@@ -672,7 +682,7 @@ Amended 2026-11-16 (P34 impossible): the Neptune row was 0.40 / 1.04 (2.5 h at t
 2. Before-cleanup inventory.
 3. C1-C3 two-pass destroy (P5); the confirmed pass 1 meets the Neptune clock above.
 4. **IAM window 2:** C4 operator roles off, C5 secrets, **then P39 (N9): destroy the deployer stack** from a reviewed plan. Record the window's open and close times.
-5. C5b key revocation with UTC times.
+5. C5b key revocation with UTC times (Session 2, amended 2026-11-17: the Voyage key only; no Anthropic key exists to revoke).
 6. C6-C9: the after-cleanup inventory in a private window as the IAM user; **never run `aws login` while signed in as root**. Also confirm no `scholarchain-deployer` role remains.
 7. Next day: C11 and C11b (three bills).
 
@@ -833,7 +843,7 @@ From the provisional bill and the Session 1 timeline (no usage-type breakdown ye
 | S3 Vectors queries of the R-b load (added 2026-11-15) | 0.53 planned / 0.53 cap (at most 198,600 queries from the required per-level limits, plus at most 200 warm-up queries), at 2.67 per million queries | 6.3a |
 | Voyage cache misses of the R-b load (added 2026-11-15, your Q16 answer) | 0 planned (free tokens) / 0.02 cap (at most 800 calls x 1,000 tokens = 0.8M tokens = 0.016), carried in R-b's cap in addition to the session-wide Voyage cap below (conservative double count) | 6.3a |
 | Voyage | 0 planned (about 2.25M tokens inside the free allowance; R-b query embeddings bounded by cache misses, at most about 0.8M tokens, 6.3a) / 0.30 cap | 6.1, 6.3a |
-| Anthropic | 0 planned in R0 and R-b (no answers) / 0.10 cap | 6.1 |
+| Anthropic | 0 planned in R0 and R-b (no answers) / 0.10 cap (placeholder key: no spend possible) | 6.1 |
 | DynamoDB (ingest run ledger only) | about 0.01 | bill (Nov 13 load was 0.22 for 166,088 writes) |
 
 ### 6.3a S3 Vectors query cost and Voyage bound of the R-b load (added 2026-11-15, your Work order 2 answers)
@@ -1125,7 +1135,7 @@ Your words: "Plan approved with these answers: Q1 yes (keep USD 3 margin). Q3 ye
 | Q11 Budget alerts (P0) | **18 / 20 / 22** (yours) |
 | Q12 Tax column | Default taken: **column A primary**, B shown as a check; recheck after the December invoice. **Superseded 2026-11-16: tax 0 on credit-covered spend (your decision); column B dropped** |
 | Q13 Residual state (P18) | Default taken: **plan against the residual state** (no move-aside), proven by P18's test |
-| Q14 Keys | Default taken: **create both keys in the pre-session** (Voyage for the stage-a ingest; Anthropic because ECS cannot start with an empty key container; R-c also uses it) |
+| Q14 Keys | Default taken: **create both keys in the pre-session** (Voyage for the stage-a ingest; Anthropic because ECS cannot start with an empty key container; R-c also uses it). **Amended 2026-11-17 (your placeholder decision):** only the Voyage key is created; the Anthropic secret holds a non-working placeholder, so no Anthropic key, spend limit or revocation exists in Session 2 (R-c is dropped) |
 | Q15 Benchmark coverage | Default taken: **keep the 40-question benchmark** and document the topic gap |
 
 ### 9.2 Revision 3 questions: answered (human, 2026-11-15)
@@ -1180,4 +1190,5 @@ The original question table follows for the record:
 - 4a review fixes (2026-11-16): the fallback feasibility was checked read-only at HEAD `7a02de2` with `git show` (the working tree holds unreviewed lane drafts of some of the same files) over `EmbeddingManifestMain.scala`, `LiveEmbeddingIngestMain.scala`, `Phase6EmbeddingSource.scala` and `EmbeddingManifest.scala`, and with `grep -n` over `phase-14-live-session.md` and `14c-templates.md`. The latest-`T_N0` estimate uses the Session 1 cleanup log times and the schedule in 6.7. No P6 harness exists yet; the retention path is a proposal.
 - L-dropped and D3 pass (2026-11-16): the decisions come from `docs/agent-runs/phase-15/prompt.md` ("L, second size" to the end) and the coordinator's brief. The P6 and L figures come from the git-ignored lane logs `target/phase15/lanes/p6-progress.md`, `lane-A-p6-progress2.txt`, `lane-A-progress.md` and `l-bypass-progress.md`, read with `grep` and `sed`. The retention directory listing and its `SHA256SUMS` sha256 were checked with `ls` and `shasum`. The `--record-actual` lines were read with `grep -n` from the working-tree `scripts/run-bounded-pipeline.sh` and `scripts/lib/budget.py` (uncommitted D3 drafts). The arithmetic follows the plan's own rounding method, stated in section 6.4.
 - P35 pass (2026-11-16): the rehearsal figures come from `docs/agent-runs/phase-15/evidence/p35/rehearsal/results-summary.md`, `rehearsal/per-level-results.json`, `rehearsal/metrics-after.txt` and `loadgen/derived/summary.json`, and the agent report at the end of `docs/agent-runs/phase-15/owner-report.md`; the decision and the coordinator defaults (3500, 7000) from the last section of `docs/agent-runs/phase-15/prompt.md`. The live per-level estimates (about 300, 1,500, 7,500 and 15,000 per minute per task) follow from the 200 ms planning assumption (section 6.3a), not from a measurement. No AWS, Anthropic or Voyage call; the evidence directories were read-only.
+- Anthropic placeholder amendment (2026-11-17, docs-only work order): the decision comes from the last section of `docs/agent-runs/phase-15/prompt.md`, recorded verbatim by the coordinator. The code facts (`AwsConfig.scala` lines 131-136, `AwsPorts.scala` lines 174-195, `modules/rag` `AnthropicLlm.scala` lines 25-28, 187 and 248, `AwsComposition.scala` about lines 355-370, `QueryPlannerAgent.scala` line 246, `AnswerSynthesisAgent.scala` line 90, `infra/terraform/phase14b-providers.tf`, `modules/runtime/compute.tf` about lines 150-152) were re-read by the independent review of 2026-11-17 (`docs/agent-runs/phase-15/review.md`); the documentation-engineer did not re-read them. The runbook line numbers were read at HEAD `fa9ad7e`. No AWS, Anthropic or Voyage call; no Terraform or `sbt` run. Nothing here has been observed live.
 - Every Session 2 figure is an estimate until observed live.
