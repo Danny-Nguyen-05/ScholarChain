@@ -106,10 +106,13 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
     assert(specs.map(_.question) == lines, "question-specs.json and questions.txt disagree")
     assert(lines.distinct.size == 33)
     assert(specs.count(_.planner == "fallback") == 24)
-    assert(
-      specs.filter(_.planner == "llm").map(_.id) ==
-        Vector("q06", "q08", "q11", "q17", "q19", "q22", "q28", "q30", "q33")
-    )
+    // The route follows the question type, not a hard-coded id: community, temporal and evidence
+    // questions have no fallback grammar and need the model; every other type has one.
+    val modelTypes = Set("community", "temporal", "evidence")
+    assert(specs.filter(_.planner == "llm").map(_.kind).toSet == modelTypes)
+    assert(specs.forall(s => (s.planner == "llm") == modelTypes(s.kind)), "planner route per type")
+    assert(specs.count(_.planner == "llm") == 9)
+    assert(specs.map(_.id).distinct.size == 33)
   }
 
   /** Expected operation, ranking metric and measure by question type and params. */
@@ -217,7 +220,7 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
   }
 
   test("a model plan that changes the requested windows or invents a name is rejected") {
-    val temporal = specs.find(_.id == "q08").get
+    val temporal = specs.find(_.kind == "temporal").get
     val wrong = planJson(
       QueryOperation.TemporalComparison,
       Vector(temporal.name("researcher")),
@@ -229,7 +232,7 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
     val reordered = new QueryPlannerAgent(scripted(wrong), config, assets)
       .plan(temporal.question, "q12-wrong", provenance)
     assert(reordered.isInstanceOf[PlannerResult.Unsupported], reordered.toString)
-    val community = specs.find(_.id == "q06").get
+    val community = specs.find(_.kind == "community").get
     val invented =
       planJson(QueryOperation.CommunityComparison, Vector("Someone Else"), Vector("all-years"))
     val rejected = new QueryPlannerAgent(scripted(invented), config, assets)
