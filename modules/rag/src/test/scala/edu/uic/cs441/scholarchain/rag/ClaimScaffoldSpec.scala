@@ -396,6 +396,21 @@ class ClaimScaffoldSpec extends AnyFunSuite {
     assert(model.requests.head.systemPrompt.contains("selectedClaimIds"))
   }
 
+  test("the synthesis request and the recorded model usage carry the synthesis-v2 label") {
+    val (i, bundle) = coauthorCase
+    val model = new EchoModel
+    val p = propose(i.plan, bundle, model)
+    val sent = model.requests.head
+    assert(sent.promptVersion == "synthesis-v2")
+    assert(sent.schemaVersion == "scholarchain.runtime.synthesis.v2")
+    assert(sent.systemPrompt.startsWith("promptVersion: synthesis-v2\n"))
+    assert(ujson.read(sent.schemaJson)("$id").str == "scholarchain.runtime.synthesis.v2")
+    assert(p.usage.nonEmpty)
+    assert(p.usage.forall(_.promptVersion == "synthesis-v2"))
+    assert(p.usage.forall(_.schemaVersion == "scholarchain.runtime.synthesis.v2"))
+    assert(!p.usage.exists(_.promptVersion == "synthesis-v1"))
+  }
+
   test("unknown selected ids are ignored and counted; nothing is verified for them") {
     val (i, bundle) = coauthorCase
     val model = new ScriptedModel(s => {

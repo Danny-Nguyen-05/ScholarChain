@@ -3,7 +3,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "scholarchain.runtime.synthesis.v1"
+      "const": "scholarchain.runtime.synthesis.v2"
     },
     "claims": {
       "type": "array",
@@ -192,6 +192,6 @@
   ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "scholarchain.runtime.synthesis.v1",
+  "$id": "scholarchain.runtime.synthesis.v2",
   "title": "Typed answer proposal v1; never a verification decision"
 }

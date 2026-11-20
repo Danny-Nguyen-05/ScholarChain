@@ -269,9 +269,9 @@ No approved live execution, including an approved path with fake ports, is used 
 
 `QueryPlannerAgent` proposes only allowlisted `QueryOperation` values. It validates model JSON
 against `prompts/schemas/query-plan-v1.json` using the explicit bounded JSON Schema subset in
-`RuntimeJsonSchema`; unsupported schema keywords fail closed. `planner-v1` and `synthesis-v1`
+`RuntimeJsonSchema`; unsupported schema keywords fail closed. `planner-v1` and `synthesis-v2`
 prompts live in `prompts/runtime/`. Their schema IDs are `scholarchain.runtime.planner.v1` and
-`scholarchain.runtime.synthesis.v1`. Assets are loaded from an explicitly supplied prompts
+`scholarchain.runtime.synthesis.v2`. Assets are loaded from an explicitly supplied prompts
 directory and checked against configured versions. The synthesis schema/prompt are contracts
 only in 9A; synthesis, claim verification, workflow orchestration and benchmarks arrive later.
 
@@ -426,9 +426,9 @@ empty); `AnswerSynthesisAgent` expands each id from that request's exact scaffol
 claim before the unchanged verifier runs. Own claims plus selected scaffold claims are
 de-duplicated by `claimId` (the scaffold version wins when both appear), unknown ids are ignored
 and counted in `SynthesisProposal.ignoredSelectedIds`, and an empty `narrativeClaimIds` defaults to
-the selected ids. Verbatim copies in `claims` remain accepted. `synthesis-v1` was edited in place (the version is configured in core, not in this module).
+the selected ids. Verbatim copies in `claims` remain accepted. The synthesis prompt and schema were edited in place under the `synthesis-v1` label during Session 1 (review finding N1); that content is now `synthesis-v2` (`prompts/runtime/synthesis-v2.md`, `prompts/schemas/answer-synthesis-v2.json`, schema id `scholarchain.runtime.synthesis.v2`). The v1 files are removed: they would have been the edited content under the old label, and no single file replays the Session 1 answers (git history holds each revision). `SynthesisAssetVersions` is the registry: `RuntimePromptAssets.fromDirectory` refuses a configuration that pins `synthesis-v1` or its schema with `runtime-synthesis-version-retired`, and any other label with `runtime-asset-version-mismatch`. The version label is configured in core (`synthesisPromptVersion`, `synthesisSchemaVersion`) and must equal the registry. `SynthesisVersionSpec` pins the v2 files by sha256; change the content only with a new label, file name, pin and core value.
 
-Synthesis uses the versioned `synthesis-v1` prompt and `scholarchain.runtime.synthesis.v1` schema,
+Synthesis uses the versioned `synthesis-v2` prompt and `scholarchain.runtime.synthesis.v2` schema,
 with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage
 allows at most one malformed-output retry inside its total configured deadline. Tests and the CLI
 use scripted clients; no Bedrock request is made. Model output supplies only typed proposals and
