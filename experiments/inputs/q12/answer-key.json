@@ -1,0 +1,6170 @@
+{
+ "counts": {
+  "by_check_level": {
+   "abstain": 6,
+   "bounded": 2,
+   "exact": 22,
+   "structural": 3
+  },
+  "questions": 33
+ },
+ "method": {
+  "communities": "independent port of synchronous label propagation (modules/spark job06), validated against analytics-report.json",
+  "not_checked": [
+   "deltaAverageCoauthorsPerPaper",
+   "deltaMaximumCoauthorsOnOnePaper"
+  ],
+  "page_limit": 25,
+  "path_depth": 6,
+  "ranking_top": 100,
+  "windows": [
+   "all-years",
+   "through-2009",
+   "2010-2014",
+   "2015-2019",
+   "2020-2026",
+   "since-2015"
+  ]
+ },
+ "questions": [
+  {
+   "check_level": "exact",
+   "expected": {
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+      "name": "Ion Stoica",
+      "rank": 1,
+      "value": 247
+     },
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "name": "Arvind Krishnamurthy",
+      "rank": 2,
+      "value": 200
+     },
+     {
+      "id": "researcher:dblp:b0d4f383ca65d01198d074d31f0c8c22fd61ce8a1a0af64711d6420f08dca3a0",
+      "name": "Haibo Chen 0001",
+      "rank": 3,
+      "value": 165
+     },
+     {
+      "id": "researcher:dblp:c3acbb0bb6580e99d7082b4d7d25ff6bbe0a11e2fde8166b4fb62b605597aa3d",
+      "name": "Lidong Zhou",
+      "rank": 4,
+      "value": 159
+     },
+     {
+      "id": "researcher:dblp:9be161754c921809a9777211f09198e49ad56e85215d795e81f4ce3866cbace9",
+      "name": "Guihai Chen",
+      "rank": 5,
+      "value": 155
+     },
+     {
+      "id": "researcher:dblp:c6b1f56c095c2b86c20c2a5447b4a804a46ba25e287d3cd7483ab55c1b4a2761",
+      "name": "Kai Chen 0005",
+      "rank": 6,
+      "value": 143
+     },
+     {
+      "id": "researcher:dblp:fafbba2bb195cf9dd0130abdccf0357f138d5311b80a3e93d1b3378e000771fc",
+      "name": "Tianyin Xu",
+      "rank": 7,
+      "value": 137
+     },
+     {
+      "id": "researcher:dblp:9d138c53653a8c687d8f17cefa885190423aaa535647c14e3b5333c3791eb8e2",
+      "name": "Rachid Guerraoui",
+      "rank": 8,
+      "value": 136
+     },
+     {
+      "id": "researcher:dblp:9f0bd425e9855f277e5a3ed8669bc78c511be94271b455a0d95c3abfce9ef2fa",
+      "name": "Xin Jin 0008",
+      "rank": 9,
+      "value": 135
+     },
+     {
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
+      "name": "Aditya Akella",
+      "rank": 10,
+      "value": 128
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 11,
+      "value": 127
+     },
+     {
+      "id": "researcher:dblp:030531394d4220f8a04e0406627c976eb646981bb38613e7d23dc1fd3564a658",
+      "name": "Scott Shenker",
+      "rank": 12,
+      "value": 122
+     },
+     {
+      "id": "researcher:dblp:386bc62c8b380ce6a487caf6e3e1419562fa49debf955d8f45c2b289fbfd5954",
+      "name": "Hai Jin 0001",
+      "rank": 13,
+      "value": 121
+     },
+     {
+      "id": "researcher:dblp:a0c817bea0c9ba0a5386aa28ff9840390ec474274f7a60d230051d12ef3a4156",
+      "name": "Fan Yang 0024",
+      "rank": 14,
+      "value": 117
+     },
+     {
+      "id": "researcher:dblp:ee68955c4c52b96fefff0ebf29dd8a088770bde6dc52dd227e08aa51386be36f",
+      "name": "Ennan Zhai 0001",
+      "rank": 15,
+      "value": 113
+     },
+     {
+      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "name": "Amin Vahdat",
+      "rank": 16,
+      "value": 112
+     },
+     {
+      "id": "researcher:dblp:c93ab556b881f776264092d3d57a07df5d1ae1a7fa768b07042042f6739433d8",
+      "name": "Shan Lu 0001",
+      "rank": 17,
+      "value": 105
+     },
+     {
+      "id": "researcher:dblp:fd5a09b862c3e20512f2f6e36298a6561c12e730e1df0e92ac29f82741a5d5c8",
+      "name": "Junchen Jiang",
+      "rank": 18,
+      "value": 103
+     },
+     {
+      "id": "researcher:dblp:1bfa91c0ed451a3d052829b7508e7814fb40e71c9b3be1b7fa07f31383556622",
+      "name": "Mao Yang 0004",
+      "rank": 19,
+      "value": 97
+     },
+     {
+      "id": "researcher:dblp:3b9ecc7110d8221d5ba8519fcb5bbaa74bb3648e1dc4ed02d9a1f600b18df055",
+      "name": "Gregory R. Ganger",
+      "rank": 20,
+      "value": 97
+     },
+     {
+      "id": "researcher:dblp:6466ff79c42817f08efc14f98891a00f014335372646d91318768b8096bda8b0",
+      "name": "Yunhao Liu 0001",
+      "rank": 21,
+      "value": 97
+     },
+     {
+      "id": "researcher:dblp:052de9557a04f02820850b311376288c50c06ad1adbd45a59a3e16deea1ed06d",
+      "name": "Ying Zhang 0022",
+      "rank": 22,
+      "value": 95
+     },
+     {
+      "id": "researcher:dblp:b773031465332d89d6015764cc13c0f1624e8dd2cbd2f730cc3c3b276cc6cadc",
+      "name": "Chuanxiong Guo",
+      "rank": 23,
+      "value": 93
+     },
+     {
+      "id": "researcher:dblp:e430315579a6fff0ee1fb480a21b805fa04cf1d73e51a9efa84cd17b78a37aa7",
+      "name": "Peng Huang 0005",
+      "rank": 24,
+      "value": 93
+     },
+     {
+      "id": "researcher:dblp:391ed1f5885f568b1f6a06e58c199653930e59fbf1072888bceba710d3b6e771",
+      "name": "Chuan Wu 0001",
+      "rank": 25,
+      "value": 91
+     },
+     {
+      "id": "researcher:dblp:ec427815a14cc81279ba358757fcfb67df3527210f74116cc1c94ccfceae87b4",
+      "name": "Chunqiang Tang",
+      "rank": 26,
+      "value": 90
+     },
+     {
+      "id": "researcher:dblp:f3245c9f7e9dbe50758989d956d6133c66c22eccc6c14f041618d10760ef9e64",
+      "name": "Li Chen 0008",
+      "rank": 27,
+      "value": 90
+     },
+     {
+      "id": "researcher:dblp:6192f6014513cf1269185d3798dd740bb0c610d23a0b50e03680c6a9e6bb7e46",
+      "name": "Hans-Arno Jacobsen",
+      "rank": 28,
+      "value": 88
+     },
+     {
+      "id": "researcher:dblp:0cdc52813ebd4396b2ab3c9a158735cdf6b71b20477750a62ce3ea22f9db7256",
+      "name": "Zhihao Jia",
+      "rank": 29,
+      "value": 86
+     },
+     {
+      "id": "researcher:dblp:10e1d5d9e5f848ad4ede4cd3775c7d62ce7b5165d4280052e93075a9eb986f7f",
+      "name": "M. Frans Kaashoek",
+      "rank": 30,
+      "value": 86
+     },
+     {
+      "id": "researcher:dblp:f2fa3614b909eba3b843cc4fe6da92ab00030997458d7cb51dcbcfc932983da2",
+      "name": "Peter R. Pietzuch",
+      "rank": 31,
+      "value": 86
+     },
+     {
+      "id": "researcher:dblp:aa6f1fb79a901f359913e10902b1fc0fbcb1346eebc27e8c3019cf2e36bef66b",
+      "name": "Kui Ren 0001",
+      "rank": 32,
+      "value": 85
+     },
+     {
+      "id": "researcher:dblp:17f1a76897fad1558e8d32eb4792553bf5686ce089e8c061c8a1adcb5b2b28c1",
+      "name": "Minyi Guo",
+      "rank": 33,
+      "value": 84
+     },
+     {
+      "id": "researcher:dblp:5ebc622f66349c1af4be1553ffbfcb75f4c23623caf5f5b29d7e066fe8a2cfc1",
+      "name": "R\u00fcdiger Kapitza",
+      "rank": 34,
+      "value": 84
+     },
+     {
+      "id": "researcher:dblp:60209c898fa7c68dcce9f16881e35450b1ccb6242480b771bd8c89f57053842b",
+      "name": "Anne-Marie Kermarrec",
+      "rank": 35,
+      "value": 84
+     },
+     {
+      "id": "researcher:dblp:e04d8c5715e3f484ba4130c082e46f1f06710800fb9ad3174349fc3a90b40a4f",
+      "name": "Nickolai Zeldovich",
+      "rank": 36,
+      "value": 84
+     },
+     {
+      "id": "researcher:dblp:fb41f4f2c7739ec8306dca36f26d65087a71874e9d4e456df4b30c47ac08b2db",
+      "name": "Mosharaf Chowdhury",
+      "rank": 37,
+      "value": 84
+     },
+     {
+      "id": "researcher:dblp:338ca2e641b347c0fba450662926b65e8ff708df305295b0d1628cd2af01c5aa",
+      "name": "Srikanth Kandula",
+      "rank": 38,
+      "value": 83
+     },
+     {
+      "id": "researcher:dblp:42e4e2f7159775de68a0045a4882b307703ddb4217cfcc14f41a30286b243c4e",
+      "name": "Idit Keidar",
+      "rank": 39,
+      "value": 82
+     },
+     {
+      "id": "researcher:dblp:e3424d776ac8bd3505ff47bba7ef3519724f6da22de715098a4f74b6900a5beb",
+      "name": "Sylvia Ratnasamy",
+      "rank": 40,
+      "value": 82
+     },
+     {
+      "id": "researcher:dblp:4ad71ee41ae54e18f471dbee986444b8b02ccff937ab1b3f177e901af2eb577a",
+      "name": "Thomas Moscibroda",
+      "rank": 41,
+      "value": 81
+     },
+     {
+      "id": "researcher:dblp:1ca53a85caa5a3d913a3c7ec29268d10852291d6685e912da8bf432540a87987",
+      "name": "Vyas Sekar",
+      "rank": 42,
+      "value": 80
+     },
+     {
+      "id": "researcher:dblp:e8f91751bfaf7a70cad49c01398670b9c902c585af7f0f0702afe855cb2799a0",
+      "name": "Congcong Miao",
+      "rank": 43,
+      "value": 80
+     },
+     {
+      "id": "researcher:dblp:168157d3c070c5a1e16ac256dc177879652e367cbff490c103aefcafb3a79bb0",
+      "name": "Stefan Schmid 0001",
+      "rank": 44,
+      "value": 78
+     },
+     {
+      "id": "researcher:dblp:2b5ebc2d63486894a955a3cf5a3abe2589f3f29923eb5c6466574e9076f5c4d1",
+      "name": "Christos Kozyrakis",
+      "rank": 45,
+      "value": 78
+     },
+     {
+      "id": "researcher:dblp:4006bcacb653800569323bcc7b45e110a4be1f583f8aa332957299c18d3b6d64",
+      "name": "Thomas E. Anderson",
+      "rank": 46,
+      "value": 78
+     },
+     {
+      "id": "researcher:dblp:b6c2b48600fa0b8947cb8fbe01d853744c8a2ad8177bb116d4b5b648668f7561",
+      "name": "Ravi Netravali",
+      "rank": 47,
+      "value": 78
+     },
+     {
+      "id": "researcher:dblp:c9dd2b2ccab9ba62ec2bd5313ba85e4bad05c6a4eae7d5605d7071c9eb3eb694",
+      "name": "Haipeng Dai 0001",
+      "rank": 48,
+      "value": 78
+     },
+     {
+      "id": "researcher:dblp:2df1e8415a947343fdf29fc33f168997a9af197bb85623b5e4aae7f432dcf531",
+      "name": "Ang Chen 0001",
+      "rank": 49,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:b07888e08fa842f9a33bb3f676bf45d4fdba590ad8fdc1efffe4c2438e93e6e1",
+      "name": "Lorenzo Alvisi",
+      "rank": 50,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:d5efbf216a921f24fce7d9d8b0e3eb0bc9941f75911a0ad0822e3015077ce65d",
+      "name": "Asaf Cidon",
+      "rank": 51,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:fc4715137ccae2c7b649f922455c84f7d6e381533047cac4e5241b875065ee9a",
+      "name": "Pascal Felber",
+      "rank": 52,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:67bf9923bec49347dea90b4fb2236019a117ff4ddf8fdaa7b326db9dea8442eb",
+      "name": "Yibo Zhu 0001",
+      "rank": 53,
+      "value": 76
+     },
+     {
+      "id": "researcher:dblp:a54bd467d8f1694971ac07cdf0bd81d1fc22bbc67ed89b00485e3a97c17fca4f",
+      "name": "Daniel S. Berger",
+      "rank": 54,
+      "value": 76
+     },
+     {
+      "id": "researcher:dblp:7d1c7a0714f1cc8be58ef2e393752aa934e5b4b4b19a511e97701336477398f5",
+      "name": "Christof Fetzer",
+      "rank": 55,
+      "value": 75
+     },
+     {
+      "id": "researcher:dblp:8b7e240d4f826fd30a994a8754a0984cffd65ec39a70c2e8e94fb75de4fc6966",
+      "name": "Danyang Zhuo",
+      "rank": 56,
+      "value": 75
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "name": "Aurojit Panda",
+      "rank": 57,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:1b8aad214856e24ab297ee7e248c1dd6eccd8be4bf162d93ea119e0af9e5e777",
+      "name": "Marco Canini",
+      "rank": 58,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:59fa01fc92569a3ba97ff9659c4a975e0e72426100db45b04d895a6e5a43ad51",
+      "name": "Guyue Liu",
+      "rank": 59,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:730005c1eb61e7e4bd420c3750e5a595bd969362184a296e4fc7a6981b92f77e",
+      "name": "Cheng Li 0001",
+      "rank": 60,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:ea00df26b420cba73fa69ec1d7bf9ad79b5bfd1637846ddc59353e9064f71f7c",
+      "name": "Fabian Kuhn",
+      "rank": 61,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:790d8d1ba27b5dee79e8a2a708ec18d8298e7f97943fef0b97740d79ce109e41",
+      "name": "Mohammad Alizadeh",
+      "rank": 62,
+      "value": 73
+     },
+     {
+      "id": "researcher:dblp:bef64b42877a2f38b79bf6736f39d244a62e1a7850cf3eb3d1347e10b6c397c6",
+      "name": "Junfeng Yang",
+      "rank": 63,
+      "value": 73
+     },
+     {
+      "id": "researcher:dblp:8b009a065ac031fc963dfb956652ac4a47ccdabab7f2b17e600d19cac3e42a97",
+      "name": "Chenren Xu",
+      "rank": 64,
+      "value": 72
+     },
+     {
+      "id": "researcher:dblp:cddf74887890dc11122f01aabb69f615c2db27834a622d80b19c87c49a5b1b7e",
+      "name": "Ganesh Ananthanarayanan",
+      "rank": 65,
+      "value": 71
+     },
+     {
+      "id": "researcher:dblp:0e86f0f9157450172d9c38531d221f1335d5802a6507ca564d4a1873fb8fa5ac",
+      "name": "Yong Jiang 0001",
+      "rank": 66,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:126dd1e1778b6d07696df1f909dfb38f4bec2364f1c051eb54f88ccaf70cc73f",
+      "name": "Ratul Mahajan",
+      "rank": 67,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:26b33e0c524e8dffb78970fe499b44ed7fcb6778d3c2074f4e3df2e70125454f",
+      "name": "Jukka Suomela",
+      "rank": 68,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:38d1cd5c0101ee3dc76861da1a901217b25b2d19a33c6a89bee4255d2bd6c952",
+      "name": "Jiannong Cao 0001",
+      "rank": 69,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:6e6171cde4a22647a65394e926bf259e972d01794771dd0ed6f2a4bb37cb9b7d",
+      "name": "Rodrigo Fonseca",
+      "rank": 70,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:6e7dfdc8d926cf7a5240fed36fa734c31462cf31d37bcbc17de43f14a8ab8ae8",
+      "name": "Joseph E. Gonzalez",
+      "rank": 71,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:db05ca25332915af0ba04046a648bff360efc47479e3e3d73a6202ebf826cc62",
+      "name": "Xuanzhe Liu",
+      "rank": 72,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:e64ed0257a64642c3421051148b8536316f726eb3d7aad3490fcfa524e1da78c",
+      "name": "Wei Wang 0030",
+      "rank": 73,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:25d677854d752300df8c6ca7718e5c1813ca99bdd1f157bb5194aec38ffe2dcf",
+      "name": "Yuanyuan Zhou 0001",
+      "rank": 74,
+      "value": 69
+     },
+     {
+      "id": "researcher:dblp:577d3810c4aeab4414d3dcf1e20ee1e1d359e5cfd9c3fa6ad3a5fa0a9ffc02df",
+      "name": "David Mazi\u00e8res",
+      "rank": 75,
+      "value": 69
+     },
+     {
+      "id": "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
+      "name": "Harsha V. Madhyastha",
+      "rank": 76,
+      "value": 69
+     },
+     {
+      "id": "researcher:dblp:e6f5df81677ef4e3c83d651853bcfd284405d42dd7a308f3734656adf0b329ef",
+      "name": "Byung-Gon Chun",
+      "rank": 77,
+      "value": 69
+     },
+     {
+      "id": "researcher:dblp:a442d1806aa6a770964abcf9c138ba8baaa435245ea0b82ea0ad2fc7f44b8c1e",
+      "name": "Timothy Roscoe",
+      "rank": 78,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:c93c79c58e350d4a4d843083aa8f0d3707ab82bea1f3c4e9de655b6c72dd9099",
+      "name": "Jiesheng Wu",
+      "rank": 79,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:e758d2a0ac4ffcb7fbb14b17fd85a58505cf77f45a8c5dd1a196f7a563d2f68c",
+      "name": "Ricardo Bianchini",
+      "rank": 80,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:b5dec9a097b87b6074f84f41f196a8c49670359915fe4d972b7bc1377c1ef153",
+      "name": "Matei Zaharia",
+      "rank": 81,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:be33ed9b0fcf56a4c12d07821f2865074d0c83239e0dc9a97bc70e45036f50fd",
+      "name": "Keren Censor-Hillel",
+      "rank": 82,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:c947987eb6ba519fc2199f012a5d5426a4668cd46b5c7b5db7881eed9c4829de",
+      "name": "Dahlia Malkhi",
+      "rank": 83,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:f0bd6b79f99f554c0dd1e536656d487973795b5eaf0655346112def81551ac42",
+      "name": "Kang Chen 0001",
+      "rank": 84,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:06ab782800c2577f97c4798d371cc4137765cdded4d5bfad87662101125090d2",
+      "name": "Wei Lin 0016",
+      "rank": 85,
+      "value": 66
+     },
+     {
+      "id": "researcher:dblp:658a32ec268377bb3f6db58a3ce4ef42b6e2d3afe180f0a2771fb9f8da644815",
+      "name": "Indranil Gupta",
+      "rank": 86,
+      "value": 66
+     },
+     {
+      "id": "researcher:dblp:9b4d17ac699d8db43062ce071013e7db9f85609bf779aaa89c031d2a86e9e2ae",
+      "name": "Rachit Agarwal 0001",
+      "rank": 87,
+      "value": 66
+     },
+     {
+      "id": "researcher:dblp:c2d60622c5c8bfc454941f1c21b9e959f55c04c470d8ec07884bf69233ccd9cc",
+      "name": "Kaushik Veeraraghavan",
+      "rank": 88,
+      "value": 66
+     },
+     {
+      "id": "researcher:dblp:333d46532fb445350fce0136d77b16f6410f75ac8a02eb53ab7b3142c43eb96f",
+      "name": "Pierre Fraigniaud",
+      "rank": 89,
+      "value": 65
+     },
+     {
+      "id": "researcher:dblp:a71072335b0267635ce4215b4b3db02e3eaafa421643be5355e65052f1fa67be",
+      "name": "Hagit Attiya",
+      "rank": 90,
+      "value": 65
+     },
+     {
+      "id": "researcher:dblp:0ccd920c4ed8d21cf764e71ff6ddc0d10b6e862565a51618290ee413c7b020be",
+      "name": "Dongsheng Li 0001",
+      "rank": 91,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:214fdb2fb7c36e39489b8f6786ab7e6de6f3b5d3cd74ac89949aa5a05cba6981",
+      "name": "Alex C. Snoeren",
+      "rank": 92,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:aea36502b402941f2c3c1e87fd9df66aada8be33ae82e1987171e5cbf1a7575a",
+      "name": "Bo Li 0001",
+      "rank": 93,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:b1fa68af8a8e10e89fe212928e08d7c627691d0a4ab567b7dafc6c93005fce0b",
+      "name": "Mingwei Xu 0001",
+      "rank": 94,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:c4a1b5fa4058e1367c2cebcb9b6aab61ff99fdabe87e1a4dfb95434a5b5c39f3",
+      "name": "Song Guo 0001",
+      "rank": 95,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:e43931ad7c82b945b5f8dc30f14b0ba7d470ebe177f84cba3fdbb511b2a19159",
+      "name": "Etienne Rivi\u00e8re",
+      "rank": 96,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:f970a41981183ce7db10f2fb042b5a570d34dd288f5b758eeb65ddca5c1a72bd",
+      "name": "Zhenhua Li 0001",
+      "rank": 97,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:010e4fa92ef05ab353527705a509c21fac037d04d9e8d346682efb5d01973a35",
+      "name": "George Varghese",
+      "rank": 98,
+      "value": 63
+     },
+     {
+      "id": "researcher:dblp:3fa6f85072cedcb97c7764e222018e9da76cad437be2b93ceaf571f15be3bca7",
+      "name": "Seth Gilbert",
+      "rank": 99,
+      "value": 63
+     },
+     {
+      "id": "researcher:dblp:856d4717a9e53204b8fefdba0d52b122a2989e6e29ea319b0fbd3f53af39fe86",
+      "name": "Yang Wang 0009",
+      "rank": 100,
+      "value": 63
+     }
+    ],
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q01",
+   "params": {
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "distinctCoauthorCount",
+     "weightedDegree",
+     "componentId",
+     "communityId"
+    ],
+    "kinds": [
+     "ranking"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "breadth-all-years",
+   "type": "coauthor_breadth",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "global_maximum": 15,
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:0049325d2dc05ee6d9c59993ee9a9027824f10696b0213ecbd93878d816d7a2d",
+      "name": "Jianjun Chen 0001",
+      "rank": 1,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda",
+      "name": "Ziheng Jiang",
+      "rank": 2,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:00de330f7843893e1be16a22c7f1ee6689c6e5fa8880dc2c650f7f2b478443ba",
+      "name": "Xinqi Chen",
+      "rank": 3,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:01ecfe6c5198a7b24413d45ab829071a055fb55168f5bc92ba8cfa4c657993ad",
+      "name": "Shu Shi",
+      "rank": 4,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:0343896f16b504d3460de43f705ca5a684b00a2a28b681efc2ffd4862ab7f3f7",
+      "name": "Zhanghan Wang",
+      "rank": 5,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:03ae9cfef26bd8938f0f950ebf3b7094aaa92f849f347a6ca796d02a07925656",
+      "name": "Jinrong Jiang",
+      "rank": 6,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:051827e3c67db97915f487d512766dcdffd778f4c47c60f56bcf5fdcf0a31556",
+      "name": "Yibin Shen",
+      "rank": 7,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:052de9557a04f02820850b311376288c50c06ad1adbd45a59a3e16deea1ed06d",
+      "name": "Ying Zhang 0022",
+      "rank": 8,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:05522b3372bc495389973e2a87cf4299194ba45e01e592b4a649a0b88cf34200",
+      "name": "Yehong Zhang",
+      "rank": 9,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:058ae92f3ed98b898ea3bac9e635a003c1323b86d9273af6a62281314550f65a",
+      "name": "Erci Xu",
+      "rank": 10,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "name": "Aurojit Panda",
+      "rank": 11,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:06cd62e4a0c297ac02a7016555cf630794059517c56aad3a1df3e9d93e2dcf21",
+      "name": "Hebin Yu",
+      "rank": 12,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:07bd97608c89a8b9f2305b1f97eda3addfcd7cf4ba408fd8ab703d72772faf54",
+      "name": "Zilong Wang 0007",
+      "rank": 13,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:08988391a86601283f0797a778a6b507b974db6e0dd49ef7d9ccdc4b2b89a3bf",
+      "name": "Bo Shi",
+      "rank": 14,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:090f935c973a95f9e1b270617ed8ed301adeea5dba9a7f1cbbb45a0e131975a8",
+      "name": "Zekun He",
+      "rank": 15,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:0ee8256bd67f9339a6b1f021241bd861e282d408d2e42bdc9137a55263fc2948",
+      "name": "Yupeng Tang",
+      "rank": 16,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:12e616883dc29ecda40898ee48c4673e51c7a108462206d0656edcd6f81295d3",
+      "name": "Kaihuan Peng",
+      "rank": 17,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:13cb5ddfa1ca01ff872032cd7a56939ee81ad5bc2af5810828ef27a541f971de",
+      "name": "Kaiqiang Xu",
+      "rank": 18,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:159f0d61025da41a72fd8e20d3345a862c7a3c63c28c9ee4e0043e050525f295",
+      "name": "Wenhui Zhang",
+      "rank": 19,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:172b6ea222d3b007a1cd9f4b3a34049ae433c406e350d72816c582de92bcbe12",
+      "name": "Juntao Zhao 0002",
+      "rank": 20,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:18d7cf098408c3bd2ee150d40a91046f66d449cb510da51252755af78e9675e6",
+      "name": "Junlin Wei",
+      "rank": 21,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:19f9310ad0439b5abd20dbf812b5a23a02f0b429acb4610eef43a44114f7b225",
+      "name": "Wu Wang",
+      "rank": 22,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:2252e9fee351b3b18b899f1ba99b821dc75dea79fc3d0a0ef4d9a7bb3ddaf4e2",
+      "name": "Jianxi Ye",
+      "rank": 23,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:23ca34176100a7fa196d78fd567165386e14fe7031cd4e2b109b36f3f29e66b6",
+      "name": "Yue Yu 0001",
+      "rank": 24,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:25d0143eab5d1b014405cd1c994f156207ba3275a80d2592f8eb9058d373243d",
+      "name": "Feng Qian",
+      "rank": 25,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:25e153386a92c3350783027845f7062e042de6835e90baaef11e611fedc5ea46",
+      "name": "Qirui Yang",
+      "rank": 26,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:26e91460043932653f45ca2b5497ee24237b01f66486433a9db18d457c631b8e",
+      "name": "Bowen Liu 0002",
+      "rank": 27,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:2753e2239b81c5830d2b51a248aa3913e1bb7a77fbd1b8908cd42d50f26300df",
+      "name": "Hui Zhang",
+      "rank": 28,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:298537def4d83325cd16b3827a630a4fccba371d0901c006ce8936e31b074536",
+      "name": "Lingjun Zhu",
+      "rank": 29,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:2b97685211dbdf67594e1c81fef4cce2708f481b4fb46a632b9713206c37b592",
+      "name": "Jie Ji",
+      "rank": 30,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:2c4f134875b8ec15fa0300d3259abb34b02ad53bace668f21133e8e740b66e77",
+      "name": "Ning Luo",
+      "rank": 31,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:2e7d401abbfb1d22a58c5bc335239094e331679834b51951f192b7537b982417",
+      "name": "Kai Xu",
+      "rank": 32,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:307b28428c7479cb59d0a59a2d5eebb3d65e43587de576b92ef3966c0e781670",
+      "name": "William Tsai",
+      "rank": 33,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:30d0cdbaaaf9a52999d1170eb14a7e4e43e170c1728be5ca7305712ee1a49345",
+      "name": "Yuanzhe Hu",
+      "rank": 34,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:32b20f7df506d5f950f5b83c2cbe37c0daea208b8d64aab66eb4e316c915e81b",
+      "name": "Changhong Wang 0005",
+      "rank": 35,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:348ecf355349a3d955e3182bc4506c8bbdbc7329c3f53319305a275b5523d96c",
+      "name": "Lisa Hsu",
+      "rank": 36,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3721114525d77e5d679662d31c68d2a7fb2d10b00464c52dcb6832bfed88687b",
+      "name": "Mateusz Kozlowski",
+      "rank": 37,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:391ed1f5885f568b1f6a06e58c199653930e59fbf1072888bceba710d3b6e771",
+      "name": "Chuan Wu 0001",
+      "rank": 38,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:393f2bfb54cbf655025b9684fb9bac4a105fc362f582b2dccae3e6b4b927d93d",
+      "name": "Xuebin Chi",
+      "rank": 39,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3ad8cdf964ed8697ff28a58630e1bed3b18aa622c676d9082a6be6e706aa56a5",
+      "name": "Borui Wan",
+      "rank": 40,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3bb2dfe1d14dea964f329bc47a93b1d1a6b25127ca320d1d614084f58b72661a",
+      "name": "Junda Feng",
+      "rank": 41,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3d3386e0cd1e08f0ed83d6ce7d6c4bf1d8ae2a7a29024cdf75c6ecb54291957d",
+      "name": "Tyler Narmore",
+      "rank": 42,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3d928be8f922910a3e7ebc4a9fef1aa2ab6daf03069348e321031aa0f6658a8b",
+      "name": "Maoxue Yu",
+      "rank": 43,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3ed9e91a298bdd7c2e329066249307a789d5f097a0784f910a5af0285a43dcbd",
+      "name": "Xin Liu 0086",
+      "rank": 44,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:3f2103e1ede1af294227f4133e36d5227ca0c5f7b3da1315f4cbefabe9e6e2e3",
+      "name": "Zhixiang Wei",
+      "rank": 45,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:409d96fab46b3c01e7ec98c3c9fc5bbe6c60dc09c3b6d0ca5659739dccea081a",
+      "name": "Wenxue Li 0004",
+      "rank": 46,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:42d4a1c24c24f42487fa796737560a643240ab63513c24fede011069579af2a6",
+      "name": "Lilong Huang",
+      "rank": 47,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:44cff971d15ea4131042039c5b2167e529306279642b1c2401ca3fbe91bd7354",
+      "name": "Yadong Liu",
+      "rank": 48,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4b226ae33880eefd8b108496667af2ffd613635d43a4ff60d3e64bedbc842d45",
+      "name": "Lei Zuo 0004",
+      "rank": 49,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4b9410ccad5fff0bd57fadedcc2d7ea9a658822fb35437737d278c8edafb86f0",
+      "name": "Han Tian",
+      "rank": 50,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4d8a40a033426e8c0b13ffe5dc6573996fa736d826d9eef180ea557685de55da",
+      "name": "Mark Jung",
+      "rank": 51,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4db0902ceb7caf83db433853926e2f7a9807a6418057ff4b866902a7a8f125d8",
+      "name": "Yijun Sun",
+      "rank": 52,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4dc99ad10ed86f442f8bd3a0cbc3377e494e1fd7c3ebc7306f8320910eda8b1c",
+      "name": "Cheng Zhao 0001",
+      "rank": 53,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4e1f2e25e1cc91cf13b93d3d631f040570094560304800b31d1565344741708e",
+      "name": "Kaihua Jiang",
+      "rank": 54,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4f458a2f4833c9fceaade82ae2cfcf042d90d1f410281445636bcbf84249276b",
+      "name": "Ruili Fang",
+      "rank": 55,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:4fac4837453cf070a8ea39f8f916151b96afe5354ebdf0fcaa0d642042385881",
+      "name": "Haoyuan Zhang",
+      "rank": 56,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5066d425faf1ec7e0e3ebb9f464871a05082a9a82819214a7752e56147df2c9c",
+      "name": "Wayne Gao",
+      "rank": 57,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:51aae31200aaa6be279973f4372b2fd15ebbe59d623600e66202ad73691c495d",
+      "name": "Fan Lai 0001",
+      "rank": 58,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:53047c6f35eed39c35e07cf62d3eb11db955a2f5e7bcfdb7e0953d6af4d1aa25",
+      "name": "Dong Wu",
+      "rank": 59,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:53379c8d42438a26e48f8d9d1c696868a591003ca5fa8bea920ae0a8bca9c152",
+      "name": "Xingyi Li 0004",
+      "rank": 60,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:53de89ff66b97ccb3a78322d89620834371dbe16017fe068343441c349e785e2",
+      "name": "Qi Lu",
+      "rank": 61,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:54e8b869f46012b1bf49baec6a628d6856c5bbd758d2badd0119e4d49d437d88",
+      "name": "Xiaofei Pang",
+      "rank": 62,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5514f01c407721c2fef55d81e9b8deb0a9de87924480da99e8453548880bc1ca",
+      "name": "Haonan Wu",
+      "rank": 63,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5546c6d1a4a8c3aa5937afc2867341b04f6aee044242be9483521411e5459208",
+      "name": "Ashish Raniwala",
+      "rank": 64,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5602cbfad094e0096b4038d409db0ca430ee785491fd57aaa8690783cf6a84dc",
+      "name": "Weiqi Chen",
+      "rank": 65,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:570ed8936cae41630fbf602237d3ab3082b020e5ae65aac5cc0b8eba583a26cb",
+      "name": "Paul Rivera",
+      "rank": 66,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:57722e16ade33c3fc24995ae587a82ec30ee8c180114604c1055f1d9f58c12d7",
+      "name": "Hong Xu 0001",
+      "rank": 67,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:57ea9c406ba78e616314c58ea81b0385367284f2bb94b08ef2c533084d3a3642",
+      "name": "Xiang Li 0067",
+      "rank": 68,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:59fa01fc92569a3ba97ff9659c4a975e0e72426100db45b04d895a6e5a43ad51",
+      "name": "Guyue Liu",
+      "rank": 69,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5adf2234984aae828b4bc4b99289b39ded0eb9c23aed740aafa5982574d7cee6",
+      "name": "Zhizhen Zhong",
+      "rank": 70,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5c8f42eabb86c52c60824445161e1d7258ceea8ec1b8ee248883fb1e7b459066",
+      "name": "Jiaji Zhu",
+      "rank": 71,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5cfec44c42006cb4e37ca8616a569b072beb7249260b0f9f7601b89d7a9a60fd",
+      "name": "Yun Wang 0039",
+      "rank": 72,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5d5042501df9bfc18d1a0fb61bc2269d65b06109f477fc16e4c4e523dc93cf2c",
+      "name": "Zhengwei Qi",
+      "rank": 73,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5e0e04eb8dfa8a016b558b35b8badd64244b1ab36786fbba9b9c14e13a490df1",
+      "name": "Ioannis Manousakis",
+      "rank": 74,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5ecc246c11de8696a17210b3d939b0c21c2fc2d460ff4f67793d77dc417fa7b5",
+      "name": "Guangtao Xue",
+      "rank": 75,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 76,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:647a850e022152198f9eddfa6ca73af8f132aaeb93287ae0bbfded348b75e250",
+      "name": "Zhibai Huang",
+      "rank": 77,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:650637114df3d3ce069d967909ac3fc0d7ea832560be9303f5ca60c08ce39312",
+      "name": "Wei Jia",
+      "rank": 78,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:652be2f7f1ad53f72166a3b09883f0ad5c3b7e266945c7fbaab47c14031a11c4",
+      "name": "Zuocheng Shi",
+      "rank": 79,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:6639ae82db9ef35e95632bb081c5450de3278921535e060c22837e540bcf7e35",
+      "name": "Yangrui Chen",
+      "rank": 80,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:682d99a2c8164de7be5e0783ffa06d6692c3a54cbf8ff28af0ebcd282c185e68",
+      "name": "Yuxi Hu 0001",
+      "rank": 81,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:683e79bf91cb17fdaa193b2030bac5fc9adf0bee23d584e45888a18efadbf569",
+      "name": "Hao Lu",
+      "rank": 82,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:696f7962dc0146ec6a921ba9084b639b841212cc92f64b331a15e7655cc2d833",
+      "name": "Jialing He",
+      "rank": 83,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:69d61fbed3ae813710473098919ae34950a40d9db7e439b4a09cf7544de05971",
+      "name": "Jianyu Jiang",
+      "rank": 84,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:69daac827a77a85fb89bef831d746a110ca6fbbba62492bd9101657aaa33ab3f",
+      "name": "Yinben Xia",
+      "rank": 85,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:6a9e24170bfffeb35ef0bbd0ed458ffcd4f543317695063a66cf6f6e684e33d2",
+      "name": "Chang Yu",
+      "rank": 86,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:6aa5a449a04f2a83b198871e4c9ca7d540c3bdfbb763aa46d6842293a067a309",
+      "name": "Kaijie Guo",
+      "rank": 87,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:6b57380dc00e392bf95cb722d87ae1bc651099809032927875e1562559cfebf8",
+      "name": "Luke Marshall",
+      "rank": 88,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:6dbf35172da8777d796a57f8266730a3d5c77c06ed3fc01f34a0ae14c2e320f4",
+      "name": "Xiaolu Zhang",
+      "rank": 89,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:6e1a8e58ebd9b48ca8f1f67f421f04841e3f09c7caa6dfcee62a7585fd37995c",
+      "name": "Liang Chen",
+      "rank": 90,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:70a040f63575d9e91fa93b82065d2b26918e340e241133178977b422fc746340",
+      "name": "Zuquan Song",
+      "rank": 91,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:72829823c77d27ad59825acf3db7ef820da5c3d82539fb80f1e4e98746f890df",
+      "name": "Xianneng Zou",
+      "rank": 92,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:73fa4f12897adcbfc9fcbe1f4bc85f7a1a37637b36b05f95f9d598811f3baa55",
+      "name": "Qihang Liu",
+      "rank": 93,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:755b7294a2cb56c23c6aacdd78c858bc1f319f3fc681481f7b653503c4cfc980",
+      "name": "Kapil Karkra",
+      "rank": 94,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:77f185e0e26a721cf3fdc3bc9f1396a1d16387e452bec8b7ec08e17b7ff9a564",
+      "name": "Yachen Wang",
+      "rank": 95,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:792f417f5e380c52e4701cda4eb0604d8b00774f7e35fa622efeedb2d63e2439",
+      "name": "Yanghua Peng",
+      "rank": 96,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:79633d558773b99aeff1aceb21001b2df405ec55382b0f9ac500af2bd38a00f9",
+      "name": "Xinlei Zhang",
+      "rank": 97,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:7d49f803f33bf900196add77043a0bceeb0863840fbd4176217cb8c22789fabc",
+      "name": "Xudong Liao",
+      "rank": 98,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:7e53ec242f4cbae1d2d3c2eef0a46d23e81fdff823172cd0f6bc99da5c01ac64",
+      "name": "Lukasz Lasek",
+      "rank": 99,
+      "value": 15
+     },
+     {
+      "id": "researcher:dblp:80a99784cf0a6a8ca8aa6e4ece15833442c0a292fcd923e94f57c41ff22bba6c",
+      "name": "Jialun Lyu",
+      "rank": 100,
+      "value": 15
+     }
+    ],
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q02",
+   "params": {
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the largest team size?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "maximumCoauthorsOnOnePaper",
+     "maxTeamWorkIds"
+    ],
+    "kinds": [
+     "ranking"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "team-all-years",
+   "type": "max_team_size",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "coauthors": [
+     {
+      "id": "researcher:dblp:0343896f16b504d3460de43f705ca5a684b00a2a28b681efc2ffd4862ab7f3f7",
+      "joint": 1,
+      "name": "Zhanghan Wang"
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "joint": 1,
+      "name": "Aurojit Panda"
+     },
+     {
+      "id": "researcher:dblp:3ed9e91a298bdd7c2e329066249307a789d5f097a0784f910a5af0285a43dcbd",
+      "joint": 1,
+      "name": "Xin Liu 0086"
+     },
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "joint": 1,
+      "name": "Arvind Krishnamurthy"
+     },
+     {
+      "id": "researcher:dblp:4d9240e88854613938c0787888ab2a6ba036dee0a9b8d8b21b52b2b8587335d0",
+      "joint": 1,
+      "name": "Luis Ceze"
+     },
+     {
+      "id": "researcher:dblp:650637114df3d3ce069d967909ac3fc0d7ea832560be9303f5ca60c08ce39312",
+      "joint": 1,
+      "name": "Wei Jia"
+     },
+     {
+      "id": "researcher:dblp:652be2f7f1ad53f72166a3b09883f0ad5c3b7e266945c7fbaab47c14031a11c4",
+      "joint": 1,
+      "name": "Zuocheng Shi"
+     },
+     {
+      "id": "researcher:dblp:6b5cc561b4e37f515abc3d2022d6effba0556114b6e43ac75eea366f79f4c3bd",
+      "joint": 1,
+      "name": "Eddie Q. Yan"
+     },
+     {
+      "id": "researcher:dblp:70a040f63575d9e91fa93b82065d2b26918e340e241133178977b422fc746340",
+      "joint": 1,
+      "name": "Zuquan Song"
+     },
+     {
+      "id": "researcher:dblp:755380d6cb74f343965a5b4975b847583b39d28cf93e6c728089357170768a53",
+      "joint": 1,
+      "name": "Lianmin Zheng"
+     },
+     {
+      "id": "researcher:dblp:8256f0d321b6436c55aecff3d9da83ab656633ad7fdcaa8e8f20e14246a9aefe",
+      "joint": 1,
+      "name": "Chenyuan Wang"
+     },
+     {
+      "id": "researcher:dblp:8292e096d3e3b5a91c114616e336d33cadf2c0fd8f3964fcd73bc38cccec6a0e",
+      "joint": 1,
+      "name": "Menghan Yu"
+     },
+     {
+      "id": "researcher:dblp:8598145ea276e5556e62322e750df9fbb1a082eea2ce3106558f27e4dfb38e5e",
+      "joint": 1,
+      "name": "Haibin Lin"
+     },
+     {
+      "id": "researcher:dblp:a046fd2dba07a81446b0721720875169434b85ccf15299b0e36086d942401b82",
+      "joint": 1,
+      "name": "Thierry Moreau"
+     },
+     {
+      "id": "researcher:dblp:a75d7db4f840d2f229b2bdacfd010e67cd103442fe8466f44d52baf33d75a327",
+      "joint": 1,
+      "name": "Yuwei Hu"
+     },
+     {
+      "id": "researcher:dblp:accb18961c19040ac42b6a8f10784365936ce9a5620a8473aaaea26868169292",
+      "joint": 1,
+      "name": "Sida Zhao"
+     },
+     {
+      "id": "researcher:dblp:ae6a55226433376db78a2c39b3094077394d8ca984fe652230591d851428b6f1",
+      "joint": 1,
+      "name": "Shuguang Wang"
+     },
+     {
+      "id": "researcher:dblp:c8460e8d6c50d2e950a33fd5aa1c7b16f63a5f701e7be48811d2234bc0029037",
+      "joint": 1,
+      "name": "Carlos Guestrin"
+     },
+     {
+      "id": "researcher:dblp:cab03755e990b6c04e48cd917aff926f96cbe4bab539718c8b5e961b01d65abd",
+      "joint": 1,
+      "name": "Jinkun Lin"
+     },
+     {
+      "id": "researcher:dblp:cdd4d8e3b6c257d9a75c8bde06e68cb53c62b57740cc8fcceb43ca08edce9748",
+      "joint": 1,
+      "name": "Leyuan Wang"
+     },
+     {
+      "id": "researcher:dblp:d8e95751b22124ea83ceff793728a0cb2a5b80bd074a9be69c80c586ea72db09",
+      "joint": 1,
+      "name": "Jinyang Li 0001"
+     },
+     {
+      "id": "researcher:dblp:d965c854613bb6bd48045c29cb7ad2c8be60057d05685bda98d935266e758d04",
+      "joint": 1,
+      "name": "Xiang Shi"
+     },
+     {
+      "id": "researcher:dblp:dc7c4d23237b5194450c7c92e7b8d6d058087737cabc1ab1334d6b9b640cd272",
+      "joint": 1,
+      "name": "Zherui Liu"
+     },
+     {
+      "id": "researcher:dblp:ef78888f5b72e0e6ae6689fb40aa31de33fb87db931c69658c1360d98f8b889c",
+      "joint": 1,
+      "name": "Meghan Cowan"
+     },
+     {
+      "id": "researcher:dblp:f9183d4040a5fbf8a652e13fd21e1999100a0f25bf089ad929e1de6ca01d8ed7",
+      "joint": 1,
+      "name": "Haichen Shen"
+     },
+     {
+      "id": "researcher:dblp:fae59cd344779499ca37127617455d9f1b187fcf08ec22645e69c2546732cb71",
+      "joint": 1,
+      "name": "Tianqi Chen 0001"
+     }
+    ],
+    "page_limit": 25,
+    "researcher": {
+     "id": "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda",
+     "name": "Ziheng Jiang"
+    },
+    "total": 26,
+    "truncated": true,
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q03",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda",
+     "name": "Ziheng Jiang"
+    },
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Who are the direct coauthors of \"Ziheng Jiang\"?",
+   "required_evidence": {
+    "kinds": [
+     "direct-coauthors"
+    ],
+    "rule": "cited coauthorIds are a subset of expected.coauthors; returnedCount equals min(total, page_limit)",
+    "subjects": [
+     "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda"
+    ]
+   },
+   "required_text": {
+    "coauthor_name_recall_min": 0.6,
+    "coauthor_names_expected": 25,
+    "names": [
+     "Ziheng Jiang"
+    ],
+    "note": "the count is total or the page size; at least 60 percent of the shown coauthors are named when the page is not truncated",
+    "numbers": [
+     [
+      [
+       26
+      ],
+      [
+       25
+      ]
+     ]
+    ]
+   },
+   "slot": "direct-hub",
+   "type": "direct_collab",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "a": {
+     "id": "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
+     "name": "Hucheng Zhou"
+    },
+    "b": {
+     "id": "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb",
+     "name": "Xuepeng Fan"
+    },
+    "hops": 1,
+    "max_hops": 6,
+    "paths": [
+     {
+      "ids": [
+       "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
+       "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb"
+      ],
+      "names": [
+       "Hucheng Zhou",
+       "Xuepeng Fan"
+      ]
+     }
+    ],
+    "shortest_path_count": 1,
+    "status": "Found",
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q04",
+   "params": {
+    "a": {
+     "id": "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
+     "name": "Hucheng Zhou"
+    },
+    "b": {
+     "id": "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb",
+     "name": "Xuepeng Fan"
+    },
+    "expected_hops": 1,
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "What is the shortest coauthor path between \"Hucheng Zhou\" and \"Xuepeng Fan\"?",
+   "required_evidence": {
+    "kinds": [
+     "path"
+    ],
+    "rule": "every cited path's ids are a real path in the window graph with hopCount == hops, first id a and last id b",
+    "subjects": [
+     "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
+     "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb"
+    ]
+   },
+   "required_text": {
+    "hop_words": 1,
+    "names": [
+     "Hucheng Zhou",
+     "Xuepeng Fan"
+    ],
+    "note": "the hop count appears as a digit or word; for 2 or more hops the interior names of at least one shortest path appear",
+    "numbers": [
+     [
+      [
+       1
+      ]
+     ]
+    ],
+    "path_names_any_of": [
+     []
+    ]
+   },
+   "slot": "path-1",
+   "type": "shortest_path",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "component_id": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
+    "is_largest": true,
+    "number_of_components_with_edges": 867,
+    "researcher": {
+     "id": "researcher:dblp:ed296dc9b5f441454a990a560c188a23834df88800e4a55fe400449a4f810aab",
+     "name": "Kunal Talwar"
+    },
+    "size": 17179,
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q05",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:ed296dc9b5f441454a990a560c188a23834df88800e4a55fe400449a4f810aab",
+     "name": "Kunal Talwar"
+    },
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "What is the component of \"Kunal Talwar\"?",
+   "required_evidence": {
+    "kinds": [
+     "metrics"
+    ],
+    "rule": "the metrics evidence componentId equals component_id",
+    "subjects": [
+     "researcher:dblp:ed296dc9b5f441454a990a560c188a23834df88800e4a55fe400449a4f810aab"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Kunal Talwar"
+    ],
+    "note": "the answer states the component size (digits with or without thousands separators) or the component id",
+    "numbers": [
+     [
+      [
+       17179
+      ]
+     ]
+    ]
+   },
+   "slot": "component-all",
+   "type": "component",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "community_id": "community:b739559aa31ec6dcb0bec2dae22fdf5e006dd599603c71d8ea1d0daaec137ec2",
+    "converged": false,
+    "cross_community_edge_count": 27,
+    "iterations": 20,
+    "members": [
+     "researcher:dblp:2bea45dec2c345139861be2bea6e77840e0b98a3265434621ece65a6093957be",
+     "researcher:dblp:2d96c63bbad7169c12c07f6753bd0e5893f28f8b139fcebd31fdff5da57b93b9",
+     "researcher:dblp:2e626239fe9d6cbb8e53c3116e3f43cc6c9466f8c64b4b5c8c623fb91f75a46d",
+     "researcher:dblp:57e21fb24ccbf1271865decf21daed4c6d3b617e514f49fbb80b2061bea41f06",
+     "researcher:dblp:6d521bf4f7ea26e2560a32ec29ccb090d474c3d47c20f70ca0f79df29f4e6c69",
+     "researcher:dblp:80376f53bb5deb4c99b3af3d1b5ee45695432c6bfc994a2cca46df2262832e0e",
+     "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390",
+     "researcher:dblp:ae1d870deed1ddb7e1ab4274c617e774d24b5ce7bfd92205f217de54601b97e4",
+     "researcher:dblp:d9671015e8c0b5ce814cab762a7bd7c448cb65cff157f479ecf4f3c7fb34af6b",
+     "researcher:dblp:ee3551b64bd49771a28f600940d4a4ee758c9ffc7f511e1ff3c0fa2586c7643f"
+    ],
+    "neighbor_community_ids": [
+     "community:102646c76ff0ba929916096b9a2d46d3e4c6439c2029e57a66e5da14b054d39a",
+     "community:2c929d407c5ddd83f901beb7cebf9ee05dc3d7ea4482fa274660ec2e2d70be4c",
+     "community:3061f83d53304d3f160067e1e5bf4e2bbddb80e3c6dd3c6855df65f6bedb2157",
+     "community:a734f6b4757678e56fc3d092b03907724351e128e080947b4c40d5f1a2357d29",
+     "community:bc91ac52e56a2b9b1eb63ccab90307d902a394d9ce46cc3145f1aaaffa91b9a7",
+     "community:cf6e54d37da7ff457cbc5879bb1632fdcca03c69776482dafa5fc95f4c95822d",
+     "community:d28ca1b9c70421c92bc4e3fc2c238e116b8449c14217447e57f97b5a75280741",
+     "community:f34fc9ba679d778ca6d169b2c4d48ce73331bc3f02af468e407594c04aa059a9"
+    ],
+    "qualification": "iteration-limited",
+    "researcher": {
+     "id": "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390",
+     "name": "Zhenliang Lu"
+    },
+    "size": 10,
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q06",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390",
+     "name": "Zhenliang Lu"
+    },
+    "window": "all-years"
+   },
+   "planner": "llm",
+   "question": "Compare communities of \"Zhenliang Lu\"",
+   "required_evidence": {
+    "kinds": [
+     "community"
+    ],
+    "rule": "evidence communityId == community_id, size == size, selectedMemberIds subset of members, neighborCommunityIds subset of neighbor_community_ids",
+    "subjects": [
+     "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Zhenliang Lu"
+    ],
+    "note": "the answer states the community size; communities are iteration-limited and the answer should say so",
+    "numbers": [
+     [
+      [
+       10
+      ]
+     ]
+    ]
+   },
+   "slot": "community-all",
+   "type": "community",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "measure": "CROSS_COMMUNITY_DEGREE",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "qualification": "community-derived: synchronous label propagation, iteration-limited at 20 (not converged); the answer should say so",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "name": "Arvind Krishnamurthy",
+      "rank": 1,
+      "value": 166
+     },
+     {
+      "id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+      "name": "Ion Stoica",
+      "rank": 2,
+      "value": 133
+     },
+     {
+      "id": "researcher:dblp:9be161754c921809a9777211f09198e49ad56e85215d795e81f4ce3866cbace9",
+      "name": "Guihai Chen",
+      "rank": 3,
+      "value": 112
+     },
+     {
+      "id": "researcher:dblp:9f0bd425e9855f277e5a3ed8669bc78c511be94271b455a0d95c3abfce9ef2fa",
+      "name": "Xin Jin 0008",
+      "rank": 4,
+      "value": 102
+     },
+     {
+      "id": "researcher:dblp:fafbba2bb195cf9dd0130abdccf0357f138d5311b80a3e93d1b3378e000771fc",
+      "name": "Tianyin Xu",
+      "rank": 5,
+      "value": 101
+     },
+     {
+      "id": "researcher:dblp:ee68955c4c52b96fefff0ebf29dd8a088770bde6dc52dd227e08aa51386be36f",
+      "name": "Ennan Zhai 0001",
+      "rank": 6,
+      "value": 98
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 7,
+      "value": 96
+     },
+     {
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
+      "name": "Aditya Akella",
+      "rank": 8,
+      "value": 95
+     },
+     {
+      "id": "researcher:dblp:c6b1f56c095c2b86c20c2a5447b4a804a46ba25e287d3cd7483ab55c1b4a2761",
+      "name": "Kai Chen 0005",
+      "rank": 9,
+      "value": 94
+     },
+     {
+      "id": "researcher:dblp:9d138c53653a8c687d8f17cefa885190423aaa535647c14e3b5333c3791eb8e2",
+      "name": "Rachid Guerraoui",
+      "rank": 10,
+      "value": 88
+     },
+     {
+      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "name": "Amin Vahdat",
+      "rank": 11,
+      "value": 85
+     },
+     {
+      "id": "researcher:dblp:b0d4f383ca65d01198d074d31f0c8c22fd61ce8a1a0af64711d6420f08dca3a0",
+      "name": "Haibo Chen 0001",
+      "rank": 12,
+      "value": 84
+     },
+     {
+      "id": "researcher:dblp:c3acbb0bb6580e99d7082b4d7d25ff6bbe0a11e2fde8166b4fb62b605597aa3d",
+      "name": "Lidong Zhou",
+      "rank": 13,
+      "value": 83
+     },
+     {
+      "id": "researcher:dblp:fd5a09b862c3e20512f2f6e36298a6561c12e730e1df0e92ac29f82741a5d5c8",
+      "name": "Junchen Jiang",
+      "rank": 14,
+      "value": 81
+     },
+     {
+      "id": "researcher:dblp:b773031465332d89d6015764cc13c0f1624e8dd2cbd2f730cc3c3b276cc6cadc",
+      "name": "Chuanxiong Guo",
+      "rank": 15,
+      "value": 79
+     },
+     {
+      "id": "researcher:dblp:6192f6014513cf1269185d3798dd740bb0c610d23a0b50e03680c6a9e6bb7e46",
+      "name": "Hans-Arno Jacobsen",
+      "rank": 16,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:ec427815a14cc81279ba358757fcfb67df3527210f74116cc1c94ccfceae87b4",
+      "name": "Chunqiang Tang",
+      "rank": 17,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:030531394d4220f8a04e0406627c976eb646981bb38613e7d23dc1fd3564a658",
+      "name": "Scott Shenker",
+      "rank": 18,
+      "value": 75
+     },
+     {
+      "id": "researcher:dblp:c93ab556b881f776264092d3d57a07df5d1ae1a7fa768b07042042f6739433d8",
+      "name": "Shan Lu 0001",
+      "rank": 19,
+      "value": 73
+     },
+     {
+      "id": "researcher:dblp:386bc62c8b380ce6a487caf6e3e1419562fa49debf955d8f45c2b289fbfd5954",
+      "name": "Hai Jin 0001",
+      "rank": 20,
+      "value": 71
+     },
+     {
+      "id": "researcher:dblp:f2fa3614b909eba3b843cc4fe6da92ab00030997458d7cb51dcbcfc932983da2",
+      "name": "Peter R. Pietzuch",
+      "rank": 21,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:f3245c9f7e9dbe50758989d956d6133c66c22eccc6c14f041618d10760ef9e64",
+      "name": "Li Chen 0008",
+      "rank": 22,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:3b9ecc7110d8221d5ba8519fcb5bbaa74bb3648e1dc4ed02d9a1f600b18df055",
+      "name": "Gregory R. Ganger",
+      "rank": 23,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:d5efbf216a921f24fce7d9d8b0e3eb0bc9941f75911a0ad0822e3015077ce65d",
+      "name": "Asaf Cidon",
+      "rank": 24,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:e430315579a6fff0ee1fb480a21b805fa04cf1d73e51a9efa84cd17b78a37aa7",
+      "name": "Peng Huang 0005",
+      "rank": 25,
+      "value": 66
+     },
+     {
+      "id": "researcher:dblp:a71072335b0267635ce4215b4b3db02e3eaafa421643be5355e65052f1fa67be",
+      "name": "Hagit Attiya",
+      "rank": 26,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:a54bd467d8f1694971ac07cdf0bd81d1fc22bbc67ed89b00485e3a97c17fca4f",
+      "name": "Daniel S. Berger",
+      "rank": 27,
+      "value": 63
+     },
+     {
+      "id": "researcher:dblp:338ca2e641b347c0fba450662926b65e8ff708df305295b0d1628cd2af01c5aa",
+      "name": "Srikanth Kandula",
+      "rank": 28,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:bef64b42877a2f38b79bf6736f39d244a62e1a7850cf3eb3d1347e10b6c397c6",
+      "name": "Junfeng Yang",
+      "rank": 29,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:391ed1f5885f568b1f6a06e58c199653930e59fbf1072888bceba710d3b6e771",
+      "name": "Chuan Wu 0001",
+      "rank": 30,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:4006bcacb653800569323bcc7b45e110a4be1f583f8aa332957299c18d3b6d64",
+      "name": "Thomas E. Anderson",
+      "rank": 31,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:67bf9923bec49347dea90b4fb2236019a117ff4ddf8fdaa7b326db9dea8442eb",
+      "name": "Yibo Zhu 0001",
+      "rank": 32,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:c9dd2b2ccab9ba62ec2bd5313ba85e4bad05c6a4eae7d5605d7071c9eb3eb694",
+      "name": "Haipeng Dai 0001",
+      "rank": 33,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:fb41f4f2c7739ec8306dca36f26d65087a71874e9d4e456df4b30c47ac08b2db",
+      "name": "Mosharaf Chowdhury",
+      "rank": 34,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:2df1e8415a947343fdf29fc33f168997a9af197bb85623b5e4aae7f432dcf531",
+      "name": "Ang Chen 0001",
+      "rank": 35,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:4ad71ee41ae54e18f471dbee986444b8b02ccff937ab1b3f177e901af2eb577a",
+      "name": "Thomas Moscibroda",
+      "rank": 36,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:0cdc52813ebd4396b2ab3c9a158735cdf6b71b20477750a62ce3ea22f9db7256",
+      "name": "Zhihao Jia",
+      "rank": 37,
+      "value": 59
+     },
+     {
+      "id": "researcher:dblp:38d1cd5c0101ee3dc76861da1a901217b25b2d19a33c6a89bee4255d2bd6c952",
+      "name": "Jiannong Cao 0001",
+      "rank": 38,
+      "value": 57
+     },
+     {
+      "id": "researcher:dblp:60209c898fa7c68dcce9f16881e35450b1ccb6242480b771bd8c89f57053842b",
+      "name": "Anne-Marie Kermarrec",
+      "rank": 39,
+      "value": 57
+     },
+     {
+      "id": "researcher:dblp:2b5ebc2d63486894a955a3cf5a3abe2589f3f29923eb5c6466574e9076f5c4d1",
+      "name": "Christos Kozyrakis",
+      "rank": 40,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:59fa01fc92569a3ba97ff9659c4a975e0e72426100db45b04d895a6e5a43ad51",
+      "name": "Guyue Liu",
+      "rank": 41,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:a442d1806aa6a770964abcf9c138ba8baaa435245ea0b82ea0ad2fc7f44b8c1e",
+      "name": "Timothy Roscoe",
+      "rank": 42,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:acea92bfbee56df5d4d8a6acce2505b189a78a9cabbf92994bc16a5bb9e5d136",
+      "name": "Jacob Nelson 0001",
+      "rank": 43,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:cddf74887890dc11122f01aabb69f615c2db27834a622d80b19c87c49a5b1b7e",
+      "name": "Ganesh Ananthanarayanan",
+      "rank": 44,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:5ebc622f66349c1af4be1553ffbfcb75f4c23623caf5f5b29d7e066fe8a2cfc1",
+      "name": "R\u00fcdiger Kapitza",
+      "rank": 45,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:790d8d1ba27b5dee79e8a2a708ec18d8298e7f97943fef0b97740d79ce109e41",
+      "name": "Mohammad Alizadeh",
+      "rank": 46,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:8b7e240d4f826fd30a994a8754a0984cffd65ec39a70c2e8e94fb75de4fc6966",
+      "name": "Danyang Zhuo",
+      "rank": 47,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:aa6f1fb79a901f359913e10902b1fc0fbcb1346eebc27e8c3019cf2e36bef66b",
+      "name": "Kui Ren 0001",
+      "rank": 48,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:b6c2b48600fa0b8947cb8fbe01d853744c8a2ad8177bb116d4b5b648668f7561",
+      "name": "Ravi Netravali",
+      "rank": 49,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:c2d60622c5c8bfc454941f1c21b9e959f55c04c470d8ec07884bf69233ccd9cc",
+      "name": "Kaushik Veeraraghavan",
+      "rank": 50,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
+      "name": "Harsha V. Madhyastha",
+      "rank": 51,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:d81aa319558f21e734a6f0b1991129a75dbf906266841a3ad0da923c8ecc9463",
+      "name": "Irene Zhang",
+      "rank": 52,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:126dd1e1778b6d07696df1f909dfb38f4bec2364f1c051eb54f88ccaf70cc73f",
+      "name": "Ratul Mahajan",
+      "rank": 53,
+      "value": 52
+     },
+     {
+      "id": "researcher:dblp:aea36502b402941f2c3c1e87fd9df66aada8be33ae82e1987171e5cbf1a7575a",
+      "name": "Bo Li 0001",
+      "rank": 54,
+      "value": 52
+     },
+     {
+      "id": "researcher:dblp:df5de791729defddcb0b4cb1698b64a400733f045e8b4d748170d67de8b8b23f",
+      "name": "Sameh Elnikety",
+      "rank": 55,
+      "value": 52
+     },
+     {
+      "id": "researcher:dblp:e758d2a0ac4ffcb7fbb14b17fd85a58505cf77f45a8c5dd1a196f7a563d2f68c",
+      "name": "Ricardo Bianchini",
+      "rank": 56,
+      "value": 52
+     },
+     {
+      "id": "researcher:dblp:ec8d2d0f817bfee4094cb792a287830dad1cf545fb8c0e59e092d0f0dfb3f226",
+      "name": "Baochun Li",
+      "rank": 57,
+      "value": 52
+     },
+     {
+      "id": "researcher:dblp:577d3810c4aeab4414d3dcf1e20ee1e1d359e5cfd9c3fa6ad3a5fa0a9ffc02df",
+      "name": "David Mazi\u00e8res",
+      "rank": 58,
+      "value": 51
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "name": "Aurojit Panda",
+      "rank": 59,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:4c8a019f3420710dd6431909efe0cf7e401e8a916e029313a9d6ed226ee20cf5",
+      "name": "Wyatt Lloyd",
+      "rank": 60,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:8b009a065ac031fc963dfb956652ac4a47ccdabab7f2b17e600d19cac3e42a97",
+      "name": "Chenren Xu",
+      "rank": 61,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:ad45de202c8e492890245f69b254cf45bfabb0765bfab4e92e2109df8f4a874f",
+      "name": "Malte Schwarzkopf",
+      "rank": 62,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:c4a1b5fa4058e1367c2cebcb9b6aab61ff99fdabe87e1a4dfb95434a5b5c39f3",
+      "name": "Song Guo 0001",
+      "rank": 63,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:1ca53a85caa5a3d913a3c7ec29268d10852291d6685e912da8bf432540a87987",
+      "name": "Vyas Sekar",
+      "rank": 64,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:730005c1eb61e7e4bd420c3750e5a595bd969362184a296e4fc7a6981b92f77e",
+      "name": "Cheng Li 0001",
+      "rank": 65,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:856d4717a9e53204b8fefdba0d52b122a2989e6e29ea319b0fbd3f53af39fe86",
+      "name": "Yang Wang 0009",
+      "rank": 66,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:b4c181d47f6c3d033a720d3d0ab701fee36ae6f3ffda455d8b3944365e18531c",
+      "name": "Ittai Abraham",
+      "rank": 67,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:f0ce4a7a67d8fcb2be51dfe9ac02c74d851870e66265f0b16dc62c892ee0c5a9",
+      "name": "Simon Peter 0001",
+      "rank": 68,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:0e97797c75e5588a93a7cbf0992535c8fbc70e75df852c8e2d24e449dc4806d5",
+      "name": "Siddhartha Sen 0001",
+      "rank": 69,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:1b8aad214856e24ab297ee7e248c1dd6eccd8be4bf162d93ea119e0af9e5e777",
+      "name": "Marco Canini",
+      "rank": 70,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:360cb7f908bb641780e660f313ce67dea7c35eb2d7ac75191d413b410bcee3a4",
+      "name": "Vijay Chidambaram",
+      "rank": 71,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:6466ff79c42817f08efc14f98891a00f014335372646d91318768b8096bda8b0",
+      "name": "Yunhao Liu 0001",
+      "rank": 72,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:6e6171cde4a22647a65394e926bf259e972d01794771dd0ed6f2a4bb37cb9b7d",
+      "name": "Rodrigo Fonseca",
+      "rank": 73,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:b5dec9a097b87b6074f84f41f196a8c49670359915fe4d972b7bc1377c1ef153",
+      "name": "Matei Zaharia",
+      "rank": 74,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:bcb8192a06715ae8dbb755334f4234dad3f7343a5bed19ab4f98f8bc0dae4d18",
+      "name": "Wencong Xiao",
+      "rank": 75,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:626a22d74aa3c5e253d794886f68cfd761bc669438376da4cc2730857b489d4c",
+      "name": "Dan R. K. Ports",
+      "rank": 76,
+      "value": 47
+     },
+     {
+      "id": "researcher:dblp:7032c4d5703b67c6e545c34ac41952490cf301404c03aff40a9923768fb63856",
+      "name": "Shivaram Venkataraman",
+      "rank": 77,
+      "value": 47
+     },
+     {
+      "id": "researcher:dblp:7d0b477bae95e26502a9c61a68a7c71b493ca0d15fd4319ff03d19772fadb88b",
+      "name": "Roger Wattenhofer",
+      "rank": 78,
+      "value": 47
+     },
+     {
+      "id": "researcher:dblp:84e54ec7848dc01bbca11af655e1a4f0819c54a478ad8a326d59e6d454122ae2",
+      "name": "Youngjin Kwon",
+      "rank": 79,
+      "value": 47
+     },
+     {
+      "id": "researcher:dblp:4b10b3b9549f681d5bd632fda48c4e2b589251a2bdd6c7e5c8f616126dc3ba7c",
+      "name": "Boon Thau Loo",
+      "rank": 80,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:9d2e8bb635ec8c534c1a4fe0ef0c966d55382cccc2993a89e8859dd30dbdb582",
+      "name": "Gong Zhang 0001",
+      "rank": 81,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:b90875bdea981049d1b7d2a086d421126ca2bf262f199630d9e7a524719fb1f8",
+      "name": "Hongqiang Harry Liu",
+      "rank": 82,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:e3bb869c950dc890254edeeb1889fc1b7d9d1bfac889d0ccd1c6aa75be932264",
+      "name": "Changhoon Kim",
+      "rank": 83,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:c947987eb6ba519fc2199f012a5d5426a4668cd46b5c7b5db7881eed9c4829de",
+      "name": "Dahlia Malkhi",
+      "rank": 84,
+      "value": 45
+     },
+     {
+      "id": "researcher:dblp:e8f91751bfaf7a70cad49c01398670b9c902c585af7f0f0702afe855cb2799a0",
+      "name": "Congcong Miao",
+      "rank": 85,
+      "value": 45
+     },
+     {
+      "id": "researcher:dblp:fc4715137ccae2c7b649f922455c84f7d6e381533047cac4e5241b875065ee9a",
+      "name": "Pascal Felber",
+      "rank": 86,
+      "value": 45
+     },
+     {
+      "id": "researcher:dblp:1670675c83b15cce550f3325c80f5723480d75e414aa047adbddb255752ba56d",
+      "name": "David E. Culler",
+      "rank": 87,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:1df0276b0b78dcf3266d218be361b088ad5049584c81c01d81b2290266c5ebd6",
+      "name": "Maurice Herlihy",
+      "rank": 88,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:658a32ec268377bb3f6db58a3ce4ef42b6e2d3afe180f0a2771fb9f8da644815",
+      "name": "Indranil Gupta",
+      "rank": 89,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:8598145ea276e5556e62322e750df9fbb1a082eea2ce3106558f27e4dfb38e5e",
+      "name": "Haibin Lin",
+      "rank": 90,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:a0d95206e7148800809d8080c33f5b1a2af25855f5a56df01a24adc1690dc424",
+      "name": "Jidong Zhai",
+      "rank": 91,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:b07888e08fa842f9a33bb3f676bf45d4fdba590ad8fdc1efffe4c2438e93e6e1",
+      "name": "Lorenzo Alvisi",
+      "rank": 92,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:b1fa68af8a8e10e89fe212928e08d7c627691d0a4ab567b7dafc6c93005fce0b",
+      "name": "Mingwei Xu 0001",
+      "rank": 93,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:f0bd6b79f99f554c0dd1e536656d487973795b5eaf0655346112def81551ac42",
+      "name": "Kang Chen 0001",
+      "rank": 94,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:41b7eba6d32ded237682c370b27cabc828c560cdfb0e775cfd4b5241d2e881bf",
+      "name": "Ming Wu 0007",
+      "rank": 95,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:669c99ee591bb8066906676bc4ea0b3e1ac07f23f7b5029b994a46ad77811129",
+      "name": "Xiang-Yang Li 0001",
+      "rank": 96,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:c48859c1762e8be8139250af7accf4f951c40c22701aee17903b0ad3b2b4f522",
+      "name": "Shlomi Dolev",
+      "rank": 97,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:db05ca25332915af0ba04046a648bff360efc47479e3e3d73a6202ebf826cc62",
+      "name": "Xuanzhe Liu",
+      "rank": 98,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:201da2c252b9c74a5045d7fb45599574f09feb8ed88c6a2027cfaba094e67b88",
+      "name": "Youyou Lu",
+      "rank": 99,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:2d1b1f80df5525f1923856322193e980905d9e52cd6083ccfffc770b3fee46c9",
+      "name": "Jialin Li 0001",
+      "rank": 100,
+      "value": 42
+     }
+    ],
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q07",
+   "params": {
+    "measure": "CROSS_COMMUNITY_DEGREE",
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers are the strongest bridges?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "crossCommunityDegree",
+     "crossCommunityWeight",
+     "communitiesConnected",
+     "participationCoefficient",
+     "communityId"
+    ],
+    "kinds": [
+     "bridge"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "bridge-all-years",
+   "type": "bridge",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "communityJaccardOverlap": 0.08333333333333333,
+    "componentSize": {
+     "from": 1830,
+     "to": 2631
+    },
+    "currentCommunityId": "community:cf26997b91f3c8a3595f7259a777d820672c1566bf413654fa717138eb1c9664",
+    "deltaCommunitiesConnected": -1,
+    "deltaComponentSize": 801,
+    "deltaCrossCommunityDegree": -2,
+    "deltaCrossCommunityWeight": -2,
+    "deltaDistinctCoauthors": 1,
+    "deltaParticipationCoefficient": -0.33371913580246915,
+    "distinctCoauthors": {
+     "from": 8,
+     "to": 9
+    },
+    "enteredLargestComponent": false,
+    "from": "through-2009",
+    "fromPresent": true,
+    "leftLargestComponent": false,
+    "not_checked": [
+     "deltaAverageCoauthorsPerPaper",
+     "deltaMaximumCoauthorsOnOnePaper"
+    ],
+    "previousCommunityId": "community:5d8a2f1f2240e4c16227271128747d679f506d55f6a5b3c857f4ae4699eb3c76",
+    "researcher": {
+     "id": "researcher:dblp:2689304c3e338281998662302a23b2bb01a83d6e7acf876ad717cc94fb844190",
+     "name": "Tobias Distler"
+    },
+    "to": "2010-2014",
+    "toPresent": true
+   },
+   "expected_outcome": "answer",
+   "id": "q08",
+   "params": {
+    "from": "through-2009",
+    "researcher": {
+     "id": "researcher:dblp:2689304c3e338281998662302a23b2bb01a83d6e7acf876ad717cc94fb844190",
+     "name": "Tobias Distler"
+    },
+    "to": "2010-2014"
+   },
+   "planner": "llm",
+   "question": "Did \"Tobias Distler\" change from through-2009 to 2010-2014?",
+   "required_evidence": {
+    "kinds": [
+     "temporal"
+    ],
+    "rule": "evidence values equal the expected deltas and ids",
+    "subjects": [
+     "researcher:dblp:2689304c3e338281998662302a23b2bb01a83d6e7acf876ad717cc94fb844190"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Tobias Distler"
+    ],
+    "note": "the answer states the change in distinct coauthors (absolute value) or both window values",
+    "numbers": [
+     [
+      [
+       1
+      ],
+      [
+       8,
+       9
+      ]
+     ]
+    ]
+   },
+   "slot": "temporal-1",
+   "type": "temporal",
+   "window": null
+  },
+  {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "ABSTAINED outcome with no verified ranking claim",
+     "HTTP 422 unsupported-query refusal"
+    ],
+    "filter": "topic",
+    "forbidden": "any ranking of researchers presented as filtered by the topic",
+    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "Cognitive Computing and Networks",
+    "window": "all-years"
+   },
+   "expected_outcome": "abstain",
+   "id": "q09",
+   "params": {
+    "thin_data": true,
+    "topic": "Cognitive Computing and Networks",
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors topic \"Cognitive Computing and Networks\"?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "topic-1",
+   "type": "topic",
+   "window": "all-years"
+  },
+  {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "ABSTAINED outcome with no verified ranking claim",
+     "HTTP 422 unsupported-query refusal"
+    ],
+    "filter": "institution",
+    "forbidden": "any ranking of researchers presented as filtered by the institution",
+    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "University of Louisiana at Lafayette",
+    "window": "all-years"
+   },
+   "expected_outcome": "abstain",
+   "id": "q10",
+   "params": {
+    "institution": "University of Louisiana at Lafayette",
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "thin_data": true,
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors institution \"University of Louisiana at Lafayette\"?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "institution-1",
+   "type": "institution",
+   "window": "all-years"
+  },
+  {
+   "check_level": "structural",
+   "expected": {
+    "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
+    "distinctCoauthorCount": 12,
+    "publicationCount": 3,
+    "researcher": {
+     "id": "researcher:dblp:975ac15cd6ccae22ccb3a6c804d08a15025567b24d1c7089deaf9507c2202dbf",
+     "name": "Zhihao Qu"
+    },
+    "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q11",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:975ac15cd6ccae22ccb3a6c804d08a15025567b24d1c7089deaf9507c2202dbf",
+     "name": "Zhihao Qu"
+    },
+    "window": "all-years"
+   },
+   "planner": "llm",
+   "question": "Explain the research collaboration of \"Zhihao Qu\"",
+   "required_evidence": {
+    "any_kind": true,
+    "kinds": [
+     "semantic",
+     "metrics"
+    ],
+    "subjects": [
+     "researcher:dblp:975ac15cd6ccae22ccb3a6c804d08a15025567b24d1c7089deaf9507c2202dbf"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Zhihao Qu"
+    ],
+    "note": "the explanation names the researcher; stated counts must match expected"
+   },
+   "slot": "evidence-1",
+   "type": "evidence",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+      "name": "Ion Stoica",
+      "rank": 1,
+      "value": 186
+     },
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "name": "Arvind Krishnamurthy",
+      "rank": 2,
+      "value": 169
+     },
+     {
+      "id": "researcher:dblp:b0d4f383ca65d01198d074d31f0c8c22fd61ce8a1a0af64711d6420f08dca3a0",
+      "name": "Haibo Chen 0001",
+      "rank": 3,
+      "value": 150
+     },
+     {
+      "id": "researcher:dblp:9be161754c921809a9777211f09198e49ad56e85215d795e81f4ce3866cbace9",
+      "name": "Guihai Chen",
+      "rank": 4,
+      "value": 148
+     },
+     {
+      "id": "researcher:dblp:9f0bd425e9855f277e5a3ed8669bc78c511be94271b455a0d95c3abfce9ef2fa",
+      "name": "Xin Jin 0008",
+      "rank": 5,
+      "value": 134
+     },
+     {
+      "id": "researcher:dblp:fafbba2bb195cf9dd0130abdccf0357f138d5311b80a3e93d1b3378e000771fc",
+      "name": "Tianyin Xu",
+      "rank": 6,
+      "value": 130
+     },
+     {
+      "id": "researcher:dblp:c6b1f56c095c2b86c20c2a5447b4a804a46ba25e287d3cd7483ab55c1b4a2761",
+      "name": "Kai Chen 0005",
+      "rank": 7,
+      "value": 124
+     },
+     {
+      "id": "researcher:dblp:ee68955c4c52b96fefff0ebf29dd8a088770bde6dc52dd227e08aa51386be36f",
+      "name": "Ennan Zhai 0001",
+      "rank": 8,
+      "value": 113
+     },
+     {
+      "id": "researcher:dblp:386bc62c8b380ce6a487caf6e3e1419562fa49debf955d8f45c2b289fbfd5954",
+      "name": "Hai Jin 0001",
+      "rank": 9,
+      "value": 111
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 10,
+      "value": 107
+     },
+     {
+      "id": "researcher:dblp:a0c817bea0c9ba0a5386aa28ff9840390ec474274f7a60d230051d12ef3a4156",
+      "name": "Fan Yang 0024",
+      "rank": 11,
+      "value": 106
+     },
+     {
+      "id": "researcher:dblp:c3acbb0bb6580e99d7082b4d7d25ff6bbe0a11e2fde8166b4fb62b605597aa3d",
+      "name": "Lidong Zhou",
+      "rank": 12,
+      "value": 106
+     },
+     {
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
+      "name": "Aditya Akella",
+      "rank": 13,
+      "value": 97
+     },
+     {
+      "id": "researcher:dblp:fd5a09b862c3e20512f2f6e36298a6561c12e730e1df0e92ac29f82741a5d5c8",
+      "name": "Junchen Jiang",
+      "rank": 14,
+      "value": 97
+     },
+     {
+      "id": "researcher:dblp:052de9557a04f02820850b311376288c50c06ad1adbd45a59a3e16deea1ed06d",
+      "name": "Ying Zhang 0022",
+      "rank": 15,
+      "value": 92
+     },
+     {
+      "id": "researcher:dblp:f3245c9f7e9dbe50758989d956d6133c66c22eccc6c14f041618d10760ef9e64",
+      "name": "Li Chen 0008",
+      "rank": 16,
+      "value": 90
+     },
+     {
+      "id": "researcher:dblp:ec427815a14cc81279ba358757fcfb67df3527210f74116cc1c94ccfceae87b4",
+      "name": "Chunqiang Tang",
+      "rank": 17,
+      "value": 88
+     },
+     {
+      "id": "researcher:dblp:b773031465332d89d6015764cc13c0f1624e8dd2cbd2f730cc3c3b276cc6cadc",
+      "name": "Chuanxiong Guo",
+      "rank": 18,
+      "value": 87
+     },
+     {
+      "id": "researcher:dblp:1bfa91c0ed451a3d052829b7508e7814fb40e71c9b3be1b7fa07f31383556622",
+      "name": "Mao Yang 0004",
+      "rank": 19,
+      "value": 86
+     },
+     {
+      "id": "researcher:dblp:17f1a76897fad1558e8d32eb4792553bf5686ce089e8c061c8a1adcb5b2b28c1",
+      "name": "Minyi Guo",
+      "rank": 20,
+      "value": 83
+     },
+     {
+      "id": "researcher:dblp:0cdc52813ebd4396b2ab3c9a158735cdf6b71b20477750a62ce3ea22f9db7256",
+      "name": "Zhihao Jia",
+      "rank": 21,
+      "value": 82
+     },
+     {
+      "id": "researcher:dblp:391ed1f5885f568b1f6a06e58c199653930e59fbf1072888bceba710d3b6e771",
+      "name": "Chuan Wu 0001",
+      "rank": 22,
+      "value": 82
+     },
+     {
+      "id": "researcher:dblp:c93ab556b881f776264092d3d57a07df5d1ae1a7fa768b07042042f6739433d8",
+      "name": "Shan Lu 0001",
+      "rank": 23,
+      "value": 82
+     },
+     {
+      "id": "researcher:dblp:e430315579a6fff0ee1fb480a21b805fa04cf1d73e51a9efa84cd17b78a37aa7",
+      "name": "Peng Huang 0005",
+      "rank": 24,
+      "value": 80
+     },
+     {
+      "id": "researcher:dblp:e8f91751bfaf7a70cad49c01398670b9c902c585af7f0f0702afe855cb2799a0",
+      "name": "Congcong Miao",
+      "rank": 25,
+      "value": 80
+     },
+     {
+      "id": "researcher:dblp:3b9ecc7110d8221d5ba8519fcb5bbaa74bb3648e1dc4ed02d9a1f600b18df055",
+      "name": "Gregory R. Ganger",
+      "rank": 26,
+      "value": 79
+     },
+     {
+      "id": "researcher:dblp:b6c2b48600fa0b8947cb8fbe01d853744c8a2ad8177bb116d4b5b648668f7561",
+      "name": "Ravi Netravali",
+      "rank": 27,
+      "value": 78
+     },
+     {
+      "id": "researcher:dblp:9d138c53653a8c687d8f17cefa885190423aaa535647c14e3b5333c3791eb8e2",
+      "name": "Rachid Guerraoui",
+      "rank": 28,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:aa6f1fb79a901f359913e10902b1fc0fbcb1346eebc27e8c3019cf2e36bef66b",
+      "name": "Kui Ren 0001",
+      "rank": 29,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:fb41f4f2c7739ec8306dca36f26d65087a71874e9d4e456df4b30c47ac08b2db",
+      "name": "Mosharaf Chowdhury",
+      "rank": 30,
+      "value": 77
+     },
+     {
+      "id": "researcher:dblp:67bf9923bec49347dea90b4fb2236019a117ff4ddf8fdaa7b326db9dea8442eb",
+      "name": "Yibo Zhu 0001",
+      "rank": 31,
+      "value": 76
+     },
+     {
+      "id": "researcher:dblp:a54bd467d8f1694971ac07cdf0bd81d1fc22bbc67ed89b00485e3a97c17fca4f",
+      "name": "Daniel S. Berger",
+      "rank": 32,
+      "value": 76
+     },
+     {
+      "id": "researcher:dblp:8b7e240d4f826fd30a994a8754a0984cffd65ec39a70c2e8e94fb75de4fc6966",
+      "name": "Danyang Zhuo",
+      "rank": 33,
+      "value": 75
+     },
+     {
+      "id": "researcher:dblp:c9dd2b2ccab9ba62ec2bd5313ba85e4bad05c6a4eae7d5605d7071c9eb3eb694",
+      "name": "Haipeng Dai 0001",
+      "rank": 34,
+      "value": 75
+     },
+     {
+      "id": "researcher:dblp:2df1e8415a947343fdf29fc33f168997a9af197bb85623b5e4aae7f432dcf531",
+      "name": "Ang Chen 0001",
+      "rank": 35,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:59fa01fc92569a3ba97ff9659c4a975e0e72426100db45b04d895a6e5a43ad51",
+      "name": "Guyue Liu",
+      "rank": 36,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:d5efbf216a921f24fce7d9d8b0e3eb0bc9941f75911a0ad0822e3015077ce65d",
+      "name": "Asaf Cidon",
+      "rank": 37,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:1b8aad214856e24ab297ee7e248c1dd6eccd8be4bf162d93ea119e0af9e5e777",
+      "name": "Marco Canini",
+      "rank": 38,
+      "value": 72
+     },
+     {
+      "id": "researcher:dblp:730005c1eb61e7e4bd420c3750e5a595bd969362184a296e4fc7a6981b92f77e",
+      "name": "Cheng Li 0001",
+      "rank": 39,
+      "value": 72
+     },
+     {
+      "id": "researcher:dblp:8b009a065ac031fc963dfb956652ac4a47ccdabab7f2b17e600d19cac3e42a97",
+      "name": "Chenren Xu",
+      "rank": 40,
+      "value": 72
+     },
+     {
+      "id": "researcher:dblp:6192f6014513cf1269185d3798dd740bb0c610d23a0b50e03680c6a9e6bb7e46",
+      "name": "Hans-Arno Jacobsen",
+      "rank": 41,
+      "value": 71
+     },
+     {
+      "id": "researcher:dblp:0e86f0f9157450172d9c38531d221f1335d5802a6507ca564d4a1873fb8fa5ac",
+      "name": "Yong Jiang 0001",
+      "rank": 42,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:1ca53a85caa5a3d913a3c7ec29268d10852291d6685e912da8bf432540a87987",
+      "name": "Vyas Sekar",
+      "rank": 43,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:6466ff79c42817f08efc14f98891a00f014335372646d91318768b8096bda8b0",
+      "name": "Yunhao Liu 0001",
+      "rank": 44,
+      "value": 70
+     },
+     {
+      "id": "researcher:dblp:790d8d1ba27b5dee79e8a2a708ec18d8298e7f97943fef0b97740d79ce109e41",
+      "name": "Mohammad Alizadeh",
+      "rank": 45,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:c93c79c58e350d4a4d843083aa8f0d3707ab82bea1f3c4e9de655b6c72dd9099",
+      "name": "Jiesheng Wu",
+      "rank": 46,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:e64ed0257a64642c3421051148b8536316f726eb3d7aad3490fcfa524e1da78c",
+      "name": "Wei Wang 0030",
+      "rank": 47,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:030531394d4220f8a04e0406627c976eb646981bb38613e7d23dc1fd3564a658",
+      "name": "Scott Shenker",
+      "rank": 48,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:f0bd6b79f99f554c0dd1e536656d487973795b5eaf0655346112def81551ac42",
+      "name": "Kang Chen 0001",
+      "rank": 49,
+      "value": 67
+     },
+     {
+      "id": "researcher:dblp:6e7dfdc8d926cf7a5240fed36fa734c31462cf31d37bcbc17de43f14a8ab8ae8",
+      "name": "Joseph E. Gonzalez",
+      "rank": 50,
+      "value": 65
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "name": "Aurojit Panda",
+      "rank": 51,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:f2fa3614b909eba3b843cc4fe6da92ab00030997458d7cb51dcbcfc932983da2",
+      "name": "Peter R. Pietzuch",
+      "rank": 52,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:c2d60622c5c8bfc454941f1c21b9e959f55c04c470d8ec07884bf69233ccd9cc",
+      "name": "Kaushik Veeraraghavan",
+      "rank": 53,
+      "value": 63
+     },
+     {
+      "id": "researcher:dblp:c4a1b5fa4058e1367c2cebcb9b6aab61ff99fdabe87e1a4dfb95434a5b5c39f3",
+      "name": "Song Guo 0001",
+      "rank": 54,
+      "value": 63
+     },
+     {
+      "id": "researcher:dblp:168157d3c070c5a1e16ac256dc177879652e367cbff490c103aefcafb3a79bb0",
+      "name": "Stefan Schmid 0001",
+      "rank": 55,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:2b5ebc2d63486894a955a3cf5a3abe2589f3f29923eb5c6466574e9076f5c4d1",
+      "name": "Christos Kozyrakis",
+      "rank": 56,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:9b4d17ac699d8db43062ce071013e7db9f85609bf779aaa89c031d2a86e9e2ae",
+      "name": "Rachit Agarwal 0001",
+      "rank": 57,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:acea92bfbee56df5d4d8a6acce2505b189a78a9cabbf92994bc16a5bb9e5d136",
+      "name": "Jacob Nelson 0001",
+      "rank": 58,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:bcb8192a06715ae8dbb755334f4234dad3f7343a5bed19ab4f98f8bc0dae4d18",
+      "name": "Wencong Xiao",
+      "rank": 59,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:db05ca25332915af0ba04046a648bff360efc47479e3e3d73a6202ebf826cc62",
+      "name": "Xuanzhe Liu",
+      "rank": 60,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:b1fa68af8a8e10e89fe212928e08d7c627691d0a4ab567b7dafc6c93005fce0b",
+      "name": "Mingwei Xu 0001",
+      "rank": 61,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:d1c278920a969dfad833ef7c1fa79a08641d7512e5d662a97536190cd221a66c",
+      "name": "Natacha Crooks",
+      "rank": 62,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:fc4715137ccae2c7b649f922455c84f7d6e381533047cac4e5241b875065ee9a",
+      "name": "Pascal Felber",
+      "rank": 63,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:01765ee0e3fa41275c3cc9bdc893fc97e1d7890a01dd552c4aa8deb805edcd52",
+      "name": "Yiming Zhang 0003",
+      "rank": 64,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:0601873b66f751782c9dc78a228ce2e8b21e7868c5706639c88851d59d22c05e",
+      "name": "Feng Qian 0001",
+      "rank": 65,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:5467f20cfd22e71c2781a2ef9ef08244e1953877c17b47027aec84864947eb5c",
+      "name": "Sanidhya Kashyap",
+      "rank": 66,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:8598145ea276e5556e62322e750df9fbb1a082eea2ce3106558f27e4dfb38e5e",
+      "name": "Haibin Lin",
+      "rank": 67,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:0ccd920c4ed8d21cf764e71ff6ddc0d10b6e862565a51618290ee413c7b020be",
+      "name": "Dongsheng Li 0001",
+      "rank": 68,
+      "value": 59
+     },
+     {
+      "id": "researcher:dblp:1a74080f758616b80de5b9714ac6c06b35a6732faec65d0488280a2d73a0e1c7",
+      "name": "Quanlu Zhang",
+      "rank": 69,
+      "value": 59
+     },
+     {
+      "id": "researcher:dblp:26b33e0c524e8dffb78970fe499b44ed7fcb6778d3c2074f4e3df2e70125454f",
+      "name": "Jukka Suomela",
+      "rank": 70,
+      "value": 58
+     },
+     {
+      "id": "researcher:dblp:7032c4d5703b67c6e545c34ac41952490cf301404c03aff40a9923768fb63856",
+      "name": "Shivaram Venkataraman",
+      "rank": 71,
+      "value": 58
+     },
+     {
+      "id": "researcher:dblp:c4196aa3371a42f8b21c15b626ff694cf46f5dbce49400dc72ba6af29704d1be",
+      "name": "Chen Tian 0001",
+      "rank": 72,
+      "value": 58
+     },
+     {
+      "id": "researcher:dblp:d5a03c522e615348bceb637cdafbea1ed7ca620e260a457bf6b2396fdd649fe5",
+      "name": "Yang Xu 0010",
+      "rank": 73,
+      "value": 58
+     },
+     {
+      "id": "researcher:dblp:355659dd171ca028da515ed9cf3d372d96be1f93fe28179787f75b36abc868cc",
+      "name": "Ke Xu 0002",
+      "rank": 74,
+      "value": 57
+     },
+     {
+      "id": "researcher:dblp:9d2e8bb635ec8c534c1a4fe0ef0c966d55382cccc2993a89e8859dd30dbdb582",
+      "name": "Gong Zhang 0001",
+      "rank": 75,
+      "value": 57
+     },
+     {
+      "id": "researcher:dblp:e3424d776ac8bd3505ff47bba7ef3519724f6da22de715098a4f74b6900a5beb",
+      "name": "Sylvia Ratnasamy",
+      "rank": 76,
+      "value": 57
+     },
+     {
+      "id": "researcher:dblp:f970a41981183ce7db10f2fb042b5a570d34dd288f5b758eeb65ddca5c1a72bd",
+      "name": "Zhenhua Li 0001",
+      "rank": 77,
+      "value": 57
+     },
+     {
+      "id": "researcher:dblp:5195b111f32752a500f35a3ee60c08a8c039022c0cc37466d859d6a41bb805d7",
+      "name": "Pramod Bhatotia",
+      "rank": 78,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:5a2873ca5c5fd392133f1f07dbf22bb15ff326ae7e9198f94652cecb673fa753",
+      "name": "Lingxiao Ma",
+      "rank": 79,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:5ebc622f66349c1af4be1553ffbfcb75f4c23623caf5f5b29d7e066fe8a2cfc1",
+      "name": "R\u00fcdiger Kapitza",
+      "rank": 80,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:a0d95206e7148800809d8080c33f5b1a2af25855f5a56df01a24adc1690dc424",
+      "name": "Jidong Zhai",
+      "rank": 81,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:f44416859a5b8e0ea02d8590723682a97a3da35542b46b632f87b6105d6e3ae3",
+      "name": "Jilong Xue",
+      "rank": 82,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:058ae92f3ed98b898ea3bac9e635a003c1323b86d9273af6a62281314550f65a",
+      "name": "Erci Xu",
+      "rank": 83,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:333d46532fb445350fce0136d77b16f6410f75ac8a02eb53ab7b3142c43eb96f",
+      "name": "Pierre Fraigniaud",
+      "rank": 84,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:78bde9b4c4776dcb0860bf10ef1dc2d721808e2683fed47794854836457c285e",
+      "name": "Guoqing Harry Xu",
+      "rank": 85,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:ad45de202c8e492890245f69b254cf45bfabb0765bfab4e92e2109df8f4a874f",
+      "name": "Malte Schwarzkopf",
+      "rank": 86,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:b90875bdea981049d1b7d2a086d421126ca2bf262f199630d9e7a524719fb1f8",
+      "name": "Hongqiang Harry Liu",
+      "rank": 87,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:4ad71ee41ae54e18f471dbee986444b8b02ccff937ab1b3f177e901af2eb577a",
+      "name": "Thomas Moscibroda",
+      "rank": 88,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:7d1c7a0714f1cc8be58ef2e393752aa934e5b4b4b19a511e97701336477398f5",
+      "name": "Christof Fetzer",
+      "rank": 89,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:80463ce39d602db1393c8776ded6fbc7b1c93a3df52bae21e7abe0b64bf6dcdb",
+      "name": "Baris Kasikci",
+      "rank": 90,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:84e54ec7848dc01bbca11af655e1a4f0819c54a478ad8a326d59e6d454122ae2",
+      "name": "Youngjin Kwon",
+      "rank": 91,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:be33ed9b0fcf56a4c12d07821f2865074d0c83239e0dc9a97bc70e45036f50fd",
+      "name": "Keren Censor-Hillel",
+      "rank": 92,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:06ab782800c2577f97c4798d371cc4137765cdded4d5bfad87662101125090d2",
+      "name": "Wei Lin 0016",
+      "rank": 93,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+      "name": "Jie Zhang 0048",
+      "rank": 94,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:28dc7363917168d0d88fdf3f155ad556cccfff9c58bc31a978a05596eb3a2b44",
+      "name": "Yuqing Yang 0001",
+      "rank": 95,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:4006bcacb653800569323bcc7b45e110a4be1f583f8aa332957299c18d3b6d64",
+      "name": "Thomas E. Anderson",
+      "rank": 96,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:42e4e2f7159775de68a0045a4882b307703ddb4217cfcc14f41a30286b243c4e",
+      "name": "Idit Keidar",
+      "rank": 97,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:87b4fad15a6a266252b61c5a6a63916fca99cdc6a3c19dd542fe6647e3a98ac6",
+      "name": "Dan Li 0001",
+      "rank": 98,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:cddf74887890dc11122f01aabb69f615c2db27834a622d80b19c87c49a5b1b7e",
+      "name": "Ganesh Ananthanarayanan",
+      "rank": 99,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:d9a5b45495103f0a7d2664b28672e8f089bbd5c075bf4d5805417beb8be4e03b",
+      "name": "Alexey Tumanov",
+      "rank": 100,
+      "value": 53
+     }
+    ],
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q12",
+   "params": {
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors since 2015?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "distinctCoauthorCount",
+     "weightedDegree",
+     "componentId",
+     "communityId"
+    ],
+    "kinds": [
+     "ranking"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "breadth-since-2015",
+   "type": "coauthor_breadth",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "bounded",
+   "expected": {
+    "global_maximum_all_years": 15,
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "rule": "each cited value <= the researcher's all-years maximum <= global_maximum_all_years; each cited max-team work must have team size value + 1 in the AUTHORED edges (a work lies in a window entirely)",
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q13",
+   "params": {
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the maximum team size since 2015?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "maximumCoauthorsOnOnePaper",
+     "maxTeamWorkIds"
+    ],
+    "kinds": [
+     "ranking"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "team-since-2015",
+   "type": "max_team_size",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "coauthors": [
+     {
+      "id": "researcher:dblp:04ba867244413d5ed493ed7488d8a7b38c6206f76cd89079e4d3d300e19bae7f",
+      "joint": 1,
+      "name": "Chris Lewis"
+     },
+     {
+      "id": "researcher:dblp:0522aa6efd2c44d669a01e5859d92458c27ac051e9340c932ef350c68da246b1",
+      "joint": 1,
+      "name": "Alireza Ghaffarkhah"
+     },
+     {
+      "id": "researcher:dblp:13ad1e6e88c37b936003b977a30b40840b8f57acd8d790fce3b3e7f4e132da55",
+      "joint": 1,
+      "name": "Steve Lacy"
+     },
+     {
+      "id": "researcher:dblp:1c24af6e5c471de7daeb009280e8bebe2e160a92b6b85d91657f62d4c2526fe4",
+      "joint": 1,
+      "name": "Henri Bahini"
+     },
+     {
+      "id": "researcher:dblp:2f7d7989305131ca50577088a20755525da1afd760c5fad4e42df52913791882",
+      "joint": 1,
+      "name": "Yazhou Zu"
+     },
+     {
+      "id": "researcher:dblp:479dfb9aa520e7a79301d0a8554e92cc9b5c2f7db9f70e43cf10f40e44cab860",
+      "joint": 1,
+      "name": "Aaron Wisner"
+     },
+     {
+      "id": "researcher:dblp:64faec6cc41f81128d50181c124477f742320d73a933e63c3b690c7825a9c913",
+      "joint": 1,
+      "name": "Dayou Du"
+     },
+     {
+      "id": "researcher:dblp:7829a211b0050af102e79cfb44e6c37120aae48c552661f3c51d5dd37e229ff6",
+      "joint": 1,
+      "name": "Brian Towles"
+     },
+     {
+      "id": "researcher:dblp:952199647ffb9500eedb54074a88677d07624a83e21f28b9df5850a1d22b9d6f",
+      "joint": 1,
+      "name": "Hoang-Vu Dang"
+     },
+     {
+      "id": "researcher:dblp:a8bea1f596ac9e1a77e11f6979d70c6423aed6408a89e6d1bcfb610d5553ba69",
+      "joint": 1,
+      "name": "Safeen Huda"
+     },
+     {
+      "id": "researcher:dblp:c36754ae1629895c2cea69040d8f82c9a48a41c4c36b506c8bffd9349eced574",
+      "joint": 1,
+      "name": "Arash Rezaei"
+     },
+     {
+      "id": "researcher:dblp:c8a9af8d8efbb8789366c33cc4da2820179b9b1014bf6c5eecd63104538f55cf",
+      "joint": 1,
+      "name": "Adekunle Bello"
+     },
+     {
+      "id": "researcher:dblp:dd72e261878ef747da6af687254b18af2e9c58e78abf584ff546b283b4758c55",
+      "joint": 1,
+      "name": "Hang Wang"
+     },
+     {
+      "id": "researcher:dblp:f3366d3a07ab2253c64ca66c7ba8ef09df89d18dda344499cd9d8e4bf6cfd990",
+      "joint": 1,
+      "name": "Steven Hand 0001"
+     }
+    ],
+    "page_limit": 25,
+    "researcher": {
+     "id": "researcher:dblp:02d9306a4203caac1712339b21650680e204ea2d941b4febdac6912b5895e7a7",
+     "name": "Alexander Kolbasov"
+    },
+    "total": 14,
+    "truncated": false,
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q14",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:02d9306a4203caac1712339b21650680e204ea2d941b4febdac6912b5895e7a7",
+     "name": "Alexander Kolbasov"
+    },
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Who are the direct coauthors of \"Alexander Kolbasov\"?",
+   "required_evidence": {
+    "kinds": [
+     "direct-coauthors"
+    ],
+    "rule": "cited coauthorIds are a subset of expected.coauthors; returnedCount equals min(total, page_limit)",
+    "subjects": [
+     "researcher:dblp:02d9306a4203caac1712339b21650680e204ea2d941b4febdac6912b5895e7a7"
+    ]
+   },
+   "required_text": {
+    "coauthor_name_recall_min": 0.6,
+    "coauthor_names_expected": 14,
+    "names": [
+     "Alexander Kolbasov"
+    ],
+    "note": "the count is total or the page size; at least 60 percent of the shown coauthors are named when the page is not truncated",
+    "numbers": [
+     [
+      [
+       14
+      ]
+     ]
+    ]
+   },
+   "slot": "direct-all",
+   "type": "direct_collab",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "a": {
+     "id": "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
+     "name": "Ioannis Zarkadas"
+    },
+    "b": {
+     "id": "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0",
+     "name": "Maithem Munshed"
+    },
+    "hops": 2,
+    "max_hops": 6,
+    "paths": [
+     {
+      "ids": [
+       "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
+       "researcher:dblp:96fff726c78c33ef369609af839ee6cd0edaf415dce32bb97d5c7f25b1649fd7",
+       "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0"
+      ],
+      "names": [
+       "Ioannis Zarkadas",
+       "Amy Tai",
+       "Maithem Munshed"
+      ]
+     }
+    ],
+    "shortest_path_count": 1,
+    "status": "Found",
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q15",
+   "params": {
+    "a": {
+     "id": "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
+     "name": "Ioannis Zarkadas"
+    },
+    "b": {
+     "id": "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0",
+     "name": "Maithem Munshed"
+    },
+    "expected_hops": 2,
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "What is the shortest coauthor path between \"Ioannis Zarkadas\" and \"Maithem Munshed\" since 2015?",
+   "required_evidence": {
+    "kinds": [
+     "path"
+    ],
+    "rule": "every cited path's ids are a real path in the window graph with hopCount == hops, first id a and last id b",
+    "subjects": [
+     "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
+     "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0"
+    ]
+   },
+   "required_text": {
+    "hop_words": 2,
+    "names": [
+     "Ioannis Zarkadas",
+     "Maithem Munshed"
+    ],
+    "note": "the hop count appears as a digit or word; for 2 or more hops the interior names of at least one shortest path appear",
+    "numbers": [
+     [
+      [
+       2
+      ]
+     ]
+    ],
+    "path_names_any_of": [
+     [
+      "Amy Tai"
+     ]
+    ]
+   },
+   "slot": "path-2",
+   "type": "shortest_path",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "component_id": "component:7a6742355660b7b042fd2e96e784c9887d3be5ed9929ceb44e968d8276abd5bd",
+    "is_largest": false,
+    "number_of_components_with_edges": 459,
+    "researcher": {
+     "id": "researcher:dblp:982bec09febf3c2ab988d719a5e94865442658f56213c3956a3232f013a4978b",
+     "name": "Frank Sherwood"
+    },
+    "size": 14,
+    "window": "through-2009"
+   },
+   "expected_outcome": "answer",
+   "id": "q16",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:982bec09febf3c2ab988d719a5e94865442658f56213c3956a3232f013a4978b",
+     "name": "Frank Sherwood"
+    },
+    "window": "through-2009"
+   },
+   "planner": "fallback",
+   "question": "What is the component of \"Frank Sherwood\" in window through-2009?",
+   "required_evidence": {
+    "kinds": [
+     "metrics"
+    ],
+    "rule": "the metrics evidence componentId equals component_id",
+    "subjects": [
+     "researcher:dblp:982bec09febf3c2ab988d719a5e94865442658f56213c3956a3232f013a4978b"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Frank Sherwood"
+    ],
+    "note": "the answer states the component size (digits with or without thousands separators) or the component id",
+    "numbers": [
+     [
+      [
+       14
+      ]
+     ]
+    ]
+   },
+   "slot": "component-through-2009",
+   "type": "component",
+   "window": "through-2009"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "community_id": "community:a85d3a2402639c722b3a49356aef9d4a5d9d2f1098f9292ab0223b86a9ce399d",
+    "converged": false,
+    "cross_community_edge_count": 65,
+    "iterations": 20,
+    "members": [
+     "researcher:dblp:1f9f47f1ffa19351413e82704508b654da39b27eb11748240acccf424d88679b",
+     "researcher:dblp:21f25f04a4a5f4ae7ee7b27b8414884a2f66030bf2177b6c7fa7251a9a0049b6",
+     "researcher:dblp:30e55b07e9837da3b51e9f3de75091ded1eda1c975205cb72b5dfb44f0616bfd",
+     "researcher:dblp:7822b782d3a51111ece126415158167846793e296bc6ed908e8664551a72bdad",
+     "researcher:dblp:7d4a6cf87d2cb11f32798296281a0ba26341545cfdc0b34ad60e047a49e41343",
+     "researcher:dblp:8207a8801391b8b3eccc503a99b8da0dd8f95e97b9e1df466b36813eb463cb9a",
+     "researcher:dblp:8247ea767afeaeaaac42f1680de3a4c196a9cf789ff87bb4e2b098609df88bfe",
+     "researcher:dblp:8723318eac64f94c77673c33135f07637bf2c563d299bfcba291abdea669ab1c",
+     "researcher:dblp:91558bd6bce4080f13f4bae29a36ba96c56b486beda691026069dd76909a0765",
+     "researcher:dblp:c8ed8fabc3bde513ad8c2375bf45610bb4b88f4f57d62e93efd3312bbde1ca3f",
+     "researcher:dblp:d057172f39ec46838a4ca9cc7971959397b98875b43c57229cad0de2556fd315",
+     "researcher:dblp:e334bea0293f967947ad98efbd4d4cf99ae0088e64c271bb39de7d4ab0168205",
+     "researcher:dblp:e4c67400e8b6bc96c034dece694605c99c9df3a83ce37e1f885a8f6d761684bd",
+     "researcher:dblp:ea07d3d51515b9689343ca797143e5d1913f6e568bb6f0b29a7248dfa0c2e721",
+     "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2"
+    ],
+    "neighbor_community_ids": [
+     "community:1a6afa1e300e00ce793b9b1758fa573002debbb80158c5023754e182cc629232",
+     "community:53b667c7389c5fb5c834ef5a0fd82945bbe2409bf2c3d7c03feb384d6d0f91a1",
+     "community:67e553a384912ef594c667c299980a2a7d26e1532d4ef64d13682c7f66fa5a21",
+     "community:b2e1a6e12ab5f3ae3ffb07afe5a24485073853006908b887a540ea6ff7af375a",
+     "community:f137a37b82af923975206df6886c66f10e9924eccdfa0a5652d30e765972a867"
+    ],
+    "qualification": "iteration-limited",
+    "researcher": {
+     "id": "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2",
+     "name": "Lichao Liu"
+    },
+    "size": 15,
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q17",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2",
+     "name": "Lichao Liu"
+    },
+    "window": "since-2015"
+   },
+   "planner": "llm",
+   "question": "Compare communities of \"Lichao Liu\" since 2015",
+   "required_evidence": {
+    "kinds": [
+     "community"
+    ],
+    "rule": "evidence communityId == community_id, size == size, selectedMemberIds subset of members, neighborCommunityIds subset of neighbor_community_ids",
+    "subjects": [
+     "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Lichao Liu"
+    ],
+    "note": "the answer states the community size; communities are iteration-limited and the answer should say so",
+    "numbers": [
+     [
+      [
+       15
+      ]
+     ]
+    ]
+   },
+   "slot": "community-since-2015",
+   "type": "community",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "measure": "CROSS_COMMUNITY_DEGREE",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "qualification": "community-derived: synchronous label propagation, iteration-limited at 20 (not converged); the answer should say so",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "name": "Arvind Krishnamurthy",
+      "rank": 1,
+      "value": 153
+     },
+     {
+      "id": "researcher:dblp:9be161754c921809a9777211f09198e49ad56e85215d795e81f4ce3866cbace9",
+      "name": "Guihai Chen",
+      "rank": 2,
+      "value": 106
+     },
+     {
+      "id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+      "name": "Ion Stoica",
+      "rank": 3,
+      "value": 105
+     },
+     {
+      "id": "researcher:dblp:9f0bd425e9855f277e5a3ed8669bc78c511be94271b455a0d95c3abfce9ef2fa",
+      "name": "Xin Jin 0008",
+      "rank": 4,
+      "value": 103
+     },
+     {
+      "id": "researcher:dblp:b0d4f383ca65d01198d074d31f0c8c22fd61ce8a1a0af64711d6420f08dca3a0",
+      "name": "Haibo Chen 0001",
+      "rank": 5,
+      "value": 99
+     },
+     {
+      "id": "researcher:dblp:ee68955c4c52b96fefff0ebf29dd8a088770bde6dc52dd227e08aa51386be36f",
+      "name": "Ennan Zhai 0001",
+      "rank": 6,
+      "value": 98
+     },
+     {
+      "id": "researcher:dblp:fafbba2bb195cf9dd0130abdccf0357f138d5311b80a3e93d1b3378e000771fc",
+      "name": "Tianyin Xu",
+      "rank": 7,
+      "value": 95
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 8,
+      "value": 80
+     },
+     {
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
+      "name": "Aditya Akella",
+      "rank": 9,
+      "value": 75
+     },
+     {
+      "id": "researcher:dblp:b773031465332d89d6015764cc13c0f1624e8dd2cbd2f730cc3c3b276cc6cadc",
+      "name": "Chuanxiong Guo",
+      "rank": 10,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:c6b1f56c095c2b86c20c2a5447b4a804a46ba25e287d3cd7483ab55c1b4a2761",
+      "name": "Kai Chen 0005",
+      "rank": 11,
+      "value": 74
+     },
+     {
+      "id": "researcher:dblp:fd5a09b862c3e20512f2f6e36298a6561c12e730e1df0e92ac29f82741a5d5c8",
+      "name": "Junchen Jiang",
+      "rank": 12,
+      "value": 73
+     },
+     {
+      "id": "researcher:dblp:ec427815a14cc81279ba358757fcfb67df3527210f74116cc1c94ccfceae87b4",
+      "name": "Chunqiang Tang",
+      "rank": 13,
+      "value": 72
+     },
+     {
+      "id": "researcher:dblp:386bc62c8b380ce6a487caf6e3e1419562fa49debf955d8f45c2b289fbfd5954",
+      "name": "Hai Jin 0001",
+      "rank": 14,
+      "value": 71
+     },
+     {
+      "id": "researcher:dblp:f3245c9f7e9dbe50758989d956d6133c66c22eccc6c14f041618d10760ef9e64",
+      "name": "Li Chen 0008",
+      "rank": 15,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:c93ab556b881f776264092d3d57a07df5d1ae1a7fa768b07042042f6739433d8",
+      "name": "Shan Lu 0001",
+      "rank": 16,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:d5efbf216a921f24fce7d9d8b0e3eb0bc9941f75911a0ad0822e3015077ce65d",
+      "name": "Asaf Cidon",
+      "rank": 17,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:67bf9923bec49347dea90b4fb2236019a117ff4ddf8fdaa7b326db9dea8442eb",
+      "name": "Yibo Zhu 0001",
+      "rank": 18,
+      "value": 63
+     },
+     {
+      "id": "researcher:dblp:6192f6014513cf1269185d3798dd740bb0c610d23a0b50e03680c6a9e6bb7e46",
+      "name": "Hans-Arno Jacobsen",
+      "rank": 19,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:a54bd467d8f1694971ac07cdf0bd81d1fc22bbc67ed89b00485e3a97c17fca4f",
+      "name": "Daniel S. Berger",
+      "rank": 20,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:aa6f1fb79a901f359913e10902b1fc0fbcb1346eebc27e8c3019cf2e36bef66b",
+      "name": "Kui Ren 0001",
+      "rank": 21,
+      "value": 62
+     },
+     {
+      "id": "researcher:dblp:8b7e240d4f826fd30a994a8754a0984cffd65ec39a70c2e8e94fb75de4fc6966",
+      "name": "Danyang Zhuo",
+      "rank": 22,
+      "value": 59
+     },
+     {
+      "id": "researcher:dblp:59fa01fc92569a3ba97ff9659c4a975e0e72426100db45b04d895a6e5a43ad51",
+      "name": "Guyue Liu",
+      "rank": 23,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:c9dd2b2ccab9ba62ec2bd5313ba85e4bad05c6a4eae7d5605d7071c9eb3eb694",
+      "name": "Haipeng Dai 0001",
+      "rank": 24,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:0cdc52813ebd4396b2ab3c9a158735cdf6b71b20477750a62ce3ea22f9db7256",
+      "name": "Zhihao Jia",
+      "rank": 25,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:2df1e8415a947343fdf29fc33f168997a9af197bb85623b5e4aae7f432dcf531",
+      "name": "Ang Chen 0001",
+      "rank": 26,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:acea92bfbee56df5d4d8a6acce2505b189a78a9cabbf92994bc16a5bb9e5d136",
+      "name": "Jacob Nelson 0001",
+      "rank": 27,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:b6c2b48600fa0b8947cb8fbe01d853744c8a2ad8177bb116d4b5b648668f7561",
+      "name": "Ravi Netravali",
+      "rank": 28,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:391ed1f5885f568b1f6a06e58c199653930e59fbf1072888bceba710d3b6e771",
+      "name": "Chuan Wu 0001",
+      "rank": 29,
+      "value": 52
+     },
+     {
+      "id": "researcher:dblp:8b009a065ac031fc963dfb956652ac4a47ccdabab7f2b17e600d19cac3e42a97",
+      "name": "Chenren Xu",
+      "rank": 30,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:fb41f4f2c7739ec8306dca36f26d65087a71874e9d4e456df4b30c47ac08b2db",
+      "name": "Mosharaf Chowdhury",
+      "rank": 31,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:c4a1b5fa4058e1367c2cebcb9b6aab61ff99fdabe87e1a4dfb95434a5b5c39f3",
+      "name": "Song Guo 0001",
+      "rank": 32,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:d1c278920a969dfad833ef7c1fa79a08641d7512e5d662a97536190cd221a66c",
+      "name": "Natacha Crooks",
+      "rank": 33,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:1b8aad214856e24ab297ee7e248c1dd6eccd8be4bf162d93ea119e0af9e5e777",
+      "name": "Marco Canini",
+      "rank": 34,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:3b9ecc7110d8221d5ba8519fcb5bbaa74bb3648e1dc4ed02d9a1f600b18df055",
+      "name": "Gregory R. Ganger",
+      "rank": 35,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:626a22d74aa3c5e253d794886f68cfd761bc669438376da4cc2730857b489d4c",
+      "name": "Dan R. K. Ports",
+      "rank": 36,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:7032c4d5703b67c6e545c34ac41952490cf301404c03aff40a9923768fb63856",
+      "name": "Shivaram Venkataraman",
+      "rank": 37,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:790d8d1ba27b5dee79e8a2a708ec18d8298e7f97943fef0b97740d79ce109e41",
+      "name": "Mohammad Alizadeh",
+      "rank": 38,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:bcb8192a06715ae8dbb755334f4234dad3f7343a5bed19ab4f98f8bc0dae4d18",
+      "name": "Wencong Xiao",
+      "rank": 39,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:fc4715137ccae2c7b649f922455c84f7d6e381533047cac4e5241b875065ee9a",
+      "name": "Pascal Felber",
+      "rank": 40,
+      "value": 47
+     },
+     {
+      "id": "researcher:dblp:9d2e8bb635ec8c534c1a4fe0ef0c966d55382cccc2993a89e8859dd30dbdb582",
+      "name": "Gong Zhang 0001",
+      "rank": 41,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "name": "Amin Vahdat",
+      "rank": 42,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:730005c1eb61e7e4bd420c3750e5a595bd969362184a296e4fc7a6981b92f77e",
+      "name": "Cheng Li 0001",
+      "rank": 43,
+      "value": 45
+     },
+     {
+      "id": "researcher:dblp:8598145ea276e5556e62322e750df9fbb1a082eea2ce3106558f27e4dfb38e5e",
+      "name": "Haibin Lin",
+      "rank": 44,
+      "value": 45
+     },
+     {
+      "id": "researcher:dblp:e8f91751bfaf7a70cad49c01398670b9c902c585af7f0f0702afe855cb2799a0",
+      "name": "Congcong Miao",
+      "rank": 45,
+      "value": 45
+     },
+     {
+      "id": "researcher:dblp:84e54ec7848dc01bbca11af655e1a4f0819c54a478ad8a326d59e6d454122ae2",
+      "name": "Youngjin Kwon",
+      "rank": 46,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:a0d95206e7148800809d8080c33f5b1a2af25855f5a56df01a24adc1690dc424",
+      "name": "Jidong Zhai",
+      "rank": 47,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:ad45de202c8e492890245f69b254cf45bfabb0765bfab4e92e2109df8f4a874f",
+      "name": "Malte Schwarzkopf",
+      "rank": 48,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:b1fa68af8a8e10e89fe212928e08d7c627691d0a4ab567b7dafc6c93005fce0b",
+      "name": "Mingwei Xu 0001",
+      "rank": 49,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:b5dec9a097b87b6074f84f41f196a8c49670359915fe4d972b7bc1377c1ef153",
+      "name": "Matei Zaharia",
+      "rank": 50,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:b90875bdea981049d1b7d2a086d421126ca2bf262f199630d9e7a524719fb1f8",
+      "name": "Hongqiang Harry Liu",
+      "rank": 51,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:cddf74887890dc11122f01aabb69f615c2db27834a622d80b19c87c49a5b1b7e",
+      "name": "Ganesh Ananthanarayanan",
+      "rank": 52,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:e430315579a6fff0ee1fb480a21b805fa04cf1d73e51a9efa84cd17b78a37aa7",
+      "name": "Peng Huang 0005",
+      "rank": 53,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:f0bd6b79f99f554c0dd1e536656d487973795b5eaf0655346112def81551ac42",
+      "name": "Kang Chen 0001",
+      "rank": 54,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:201da2c252b9c74a5045d7fb45599574f09feb8ed88c6a2027cfaba094e67b88",
+      "name": "Youyou Lu",
+      "rank": 55,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:4006bcacb653800569323bcc7b45e110a4be1f583f8aa332957299c18d3b6d64",
+      "name": "Thomas E. Anderson",
+      "rank": 56,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:c93c79c58e350d4a4d843083aa8f0d3707ab82bea1f3c4e9de655b6c72dd9099",
+      "name": "Jiesheng Wu",
+      "rank": 57,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
+      "name": "Harsha V. Madhyastha",
+      "rank": 58,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:f2fa3614b909eba3b843cc4fe6da92ab00030997458d7cb51dcbcfc932983da2",
+      "name": "Peter R. Pietzuch",
+      "rank": 59,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "name": "Aurojit Panda",
+      "rank": 60,
+      "value": 41
+     },
+     {
+      "id": "researcher:dblp:2b5ebc2d63486894a955a3cf5a3abe2589f3f29923eb5c6466574e9076f5c4d1",
+      "name": "Christos Kozyrakis",
+      "rank": 61,
+      "value": 41
+     },
+     {
+      "id": "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+      "name": "Jie Zhang 0048",
+      "rank": 62,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:17f1a76897fad1558e8d32eb4792553bf5686ce089e8c061c8a1adcb5b2b28c1",
+      "name": "Minyi Guo",
+      "rank": 63,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:338ca2e641b347c0fba450662926b65e8ff708df305295b0d1628cd2af01c5aa",
+      "name": "Srikanth Kandula",
+      "rank": 64,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:6832a57be780d694087f5e7786184ad74cd8e1c02a0647d6e8db07cc34f8eeeb",
+      "name": "Jiwu Shu",
+      "rank": 65,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:aea36502b402941f2c3c1e87fd9df66aada8be33ae82e1987171e5cbf1a7575a",
+      "name": "Bo Li 0001",
+      "rank": 66,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:c3acbb0bb6580e99d7082b4d7d25ff6bbe0a11e2fde8166b4fb62b605597aa3d",
+      "name": "Lidong Zhou",
+      "rank": 67,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:d5a03c522e615348bceb637cdafbea1ed7ca620e260a457bf6b2396fdd649fe5",
+      "name": "Yang Xu 0010",
+      "rank": 68,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:f01f60c51d802c9be43ed4fa6af7bc72811fb5eec778c2955621c225228e9286",
+      "name": "Zili Meng",
+      "rank": 69,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:0e86f0f9157450172d9c38531d221f1335d5802a6507ca564d4a1873fb8fa5ac",
+      "name": "Yong Jiang 0001",
+      "rank": 70,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:856d4717a9e53204b8fefdba0d52b122a2989e6e29ea319b0fbd3f53af39fe86",
+      "name": "Yang Wang 0009",
+      "rank": 71,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:1ca53a85caa5a3d913a3c7ec29268d10852291d6685e912da8bf432540a87987",
+      "name": "Vyas Sekar",
+      "rank": 72,
+      "value": 38
+     },
+     {
+      "id": "researcher:dblp:5ebc622f66349c1af4be1553ffbfcb75f4c23623caf5f5b29d7e066fe8a2cfc1",
+      "name": "R\u00fcdiger Kapitza",
+      "rank": 73,
+      "value": 38
+     },
+     {
+      "id": "researcher:dblp:b4c181d47f6c3d033a720d3d0ab701fee36ae6f3ffda455d8b3944365e18531c",
+      "name": "Ittai Abraham",
+      "rank": 74,
+      "value": 38
+     },
+     {
+      "id": "researcher:dblp:ec1d376fb6b860f4ebaf2a9cb956d01d9f9caf3a0ef6adce1092f877b5578b45",
+      "name": "Dongxiao Yu",
+      "rank": 75,
+      "value": 38
+     },
+     {
+      "id": "researcher:dblp:052de9557a04f02820850b311376288c50c06ad1adbd45a59a3e16deea1ed06d",
+      "name": "Ying Zhang 0022",
+      "rank": 76,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:2c264fd1c9fca16c7d5f5c12926cdcc6d562ad2d11d8d77f7069fde463224e46",
+      "name": "Jie Wu 0001",
+      "rank": 77,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:47e980703cdb216f1b8ccdb4bf2d64943f0e1e7eee302a0afc91d243635956aa",
+      "name": "Vincent Liu 0001",
+      "rank": 78,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:6e6171cde4a22647a65394e926bf259e972d01794771dd0ed6f2a4bb37cb9b7d",
+      "name": "Rodrigo Fonseca",
+      "rank": 79,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:9d138c53653a8c687d8f17cefa885190423aaa535647c14e3b5333c3791eb8e2",
+      "name": "Rachid Guerraoui",
+      "rank": 80,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:f5878e151d7f1e31d05c573e19c7ea15918c9a92cc214153dbbec0e28fc0a550",
+      "name": "Gianni Antichi",
+      "rank": 81,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:2d1b1f80df5525f1923856322193e980905d9e52cd6083ccfffc770b3fee46c9",
+      "name": "Jialin Li 0001",
+      "rank": 82,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:5870a0be3f925500a0398c0ca8f953637baded484a0f1be991e5d0db6b1b48ee",
+      "name": "Deke Guo",
+      "rank": 83,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:9b4d17ac699d8db43062ce071013e7db9f85609bf779aaa89c031d2a86e9e2ae",
+      "name": "Rachit Agarwal 0001",
+      "rank": 84,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:bef64b42877a2f38b79bf6736f39d244a62e1a7850cf3eb3d1347e10b6c397c6",
+      "name": "Junfeng Yang",
+      "rank": 85,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:c4196aa3371a42f8b21c15b626ff694cf46f5dbce49400dc72ba6af29704d1be",
+      "name": "Chen Tian 0001",
+      "rank": 86,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:cf2a1e0e4e5723d3807451a3ced3d882e9096e7aeada06fe6f81f61b2e16b541",
+      "name": "Dennis Cai",
+      "rank": 87,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:e37bc4a2ddf31d190e54a0fb5efd0b877595b1f5d877ec5009f8cd08228f58c1",
+      "name": "Chen Wang 0039",
+      "rank": 88,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:030531394d4220f8a04e0406627c976eb646981bb38613e7d23dc1fd3564a658",
+      "name": "Scott Shenker",
+      "rank": 89,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:360cb7f908bb641780e660f313ce67dea7c35eb2d7ac75191d413b410bcee3a4",
+      "name": "Vijay Chidambaram",
+      "rank": 90,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:5195b111f32752a500f35a3ee60c08a8c039022c0cc37466d859d6a41bb805d7",
+      "name": "Pramod Bhatotia",
+      "rank": 91,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:8674eb2cf2639fd35d2b00e8465f6c646b78ad1d5ac9678281e6896a39726a2d",
+      "name": "Haibing Guan",
+      "rank": 92,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:89908c5df8edbe026fe704e7a1436894608d056e083fb324c7e0f564d3b05341",
+      "name": "Xiaoliang Wang 0001",
+      "rank": 93,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:e64ed0257a64642c3421051148b8536316f726eb3d7aad3490fcfa524e1da78c",
+      "name": "Wei Wang 0030",
+      "rank": 94,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:4ad71ee41ae54e18f471dbee986444b8b02ccff937ab1b3f177e901af2eb577a",
+      "name": "Thomas Moscibroda",
+      "rank": 95,
+      "value": 34
+     },
+     {
+      "id": "researcher:dblp:b07888e08fa842f9a33bb3f676bf45d4fdba590ad8fdc1efffe4c2438e93e6e1",
+      "name": "Lorenzo Alvisi",
+      "rank": 96,
+      "value": 34
+     },
+     {
+      "id": "researcher:dblp:d81aa319558f21e734a6f0b1991129a75dbf906266841a3ad0da923c8ecc9463",
+      "name": "Irene Zhang",
+      "rank": 97,
+      "value": 34
+     },
+     {
+      "id": "researcher:dblp:d9a5b45495103f0a7d2664b28672e8f089bbd5c075bf4d5805417beb8be4e03b",
+      "name": "Alexey Tumanov",
+      "rank": 98,
+      "value": 34
+     },
+     {
+      "id": "researcher:dblp:a5c0a06ab2473515f857221cb91c0944dcd74428f3b22c88af223e47b533fd60",
+      "name": "Keqiu Li",
+      "rank": 99,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:a7b4952922112f80231c506be994bc403c0134ce2bae6c1fa8ba71f69cb11a0a",
+      "name": "Calton Pu",
+      "rank": 100,
+      "value": 33
+     }
+    ],
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q18",
+   "params": {
+    "measure": "CROSS_COMMUNITY_DEGREE",
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Which researchers are the strongest bridges since 2015?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "crossCommunityDegree",
+     "crossCommunityWeight",
+     "communitiesConnected",
+     "participationCoefficient",
+     "communityId"
+    ],
+    "kinds": [
+     "bridge"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "bridge-since-2015",
+   "type": "bridge",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "communityJaccardOverlap": 0.06666666666666667,
+    "componentSize": {
+     "from": 2631,
+     "to": 3965
+    },
+    "currentCommunityId": "community:d544c9f0e267838d6e0b87128a7018afa2a17ca22b2bd8b253fb953d485eeebd",
+    "deltaCommunitiesConnected": 0,
+    "deltaComponentSize": 1334,
+    "deltaCrossCommunityDegree": 2,
+    "deltaCrossCommunityWeight": 5,
+    "deltaDistinctCoauthors": 2,
+    "deltaParticipationCoefficient": 0.06624999999999992,
+    "distinctCoauthors": {
+     "from": 8,
+     "to": 10
+    },
+    "enteredLargestComponent": false,
+    "from": "2010-2014",
+    "fromPresent": true,
+    "leftLargestComponent": false,
+    "not_checked": [
+     "deltaAverageCoauthorsPerPaper",
+     "deltaMaximumCoauthorsOnOnePaper"
+    ],
+    "previousCommunityId": "community:2a9d3d0228fc8901b6f0dfb3300591ba40c37faf6fdff3cbbc2e90f6432326a6",
+    "researcher": {
+     "id": "researcher:dblp:8406961e35bc2142599a13cf7f94c64ccdd01a140689f439c53d63f76d15d00b",
+     "name": "Marcelo Pasin"
+    },
+    "to": "2015-2019",
+    "toPresent": true
+   },
+   "expected_outcome": "answer",
+   "id": "q19",
+   "params": {
+    "from": "2010-2014",
+    "researcher": {
+     "id": "researcher:dblp:8406961e35bc2142599a13cf7f94c64ccdd01a140689f439c53d63f76d15d00b",
+     "name": "Marcelo Pasin"
+    },
+    "to": "2015-2019"
+   },
+   "planner": "llm",
+   "question": "Did \"Marcelo Pasin\" change from 2010-2014 to 2015-2019?",
+   "required_evidence": {
+    "kinds": [
+     "temporal"
+    ],
+    "rule": "evidence values equal the expected deltas and ids",
+    "subjects": [
+     "researcher:dblp:8406961e35bc2142599a13cf7f94c64ccdd01a140689f439c53d63f76d15d00b"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Marcelo Pasin"
+    ],
+    "note": "the answer states the change in distinct coauthors (absolute value) or both window values",
+    "numbers": [
+     [
+      [
+       2
+      ],
+      [
+       8,
+       10
+      ]
+     ]
+    ]
+   },
+   "slot": "temporal-2",
+   "type": "temporal",
+   "window": null
+  },
+  {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "ABSTAINED outcome with no verified ranking claim",
+     "HTTP 422 unsupported-query refusal"
+    ],
+    "filter": "topic",
+    "forbidden": "any ranking of researchers presented as filtered by the topic",
+    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "Computability, Logic, AI Algorithms",
+    "window": "since-2015"
+   },
+   "expected_outcome": "abstain",
+   "id": "q20",
+   "params": {
+    "thin_data": true,
+    "topic": "Computability, Logic, AI Algorithms",
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors topic \"Computability, Logic, AI Algorithms\" since 2015?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "topic-2",
+   "type": "topic",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "ABSTAINED outcome with no verified ranking claim",
+     "HTTP 422 unsupported-query refusal"
+    ],
+    "filter": "institution",
+    "forbidden": "any ranking of researchers presented as filtered by the institution",
+    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "University of Louisiana at Lafayette",
+    "window": "since-2015"
+   },
+   "expected_outcome": "abstain",
+   "id": "q21",
+   "params": {
+    "institution": "University of Louisiana at Lafayette",
+    "metric": "CROSS_COMMUNITY_DEGREE",
+    "thin_data": true,
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Rank bridge researchers institution \"University of Louisiana at Lafayette\" since 2015",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "institution-2",
+   "type": "institution",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "structural",
+   "expected": {
+    "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
+    "distinctCoauthorCount": 20,
+    "publicationCount": 7,
+    "researcher": {
+     "id": "researcher:dblp:f2c1b8fdbdf4057567ea702b9f5570fd299c380484235c4eda1bc66ea352daf6",
+     "name": "Balaji Prabhakar"
+    },
+    "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q22",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:f2c1b8fdbdf4057567ea702b9f5570fd299c380484235c4eda1bc66ea352daf6",
+     "name": "Balaji Prabhakar"
+    },
+    "window": "all-years"
+   },
+   "planner": "llm",
+   "question": "Explain the research collaboration of \"Balaji Prabhakar\"",
+   "required_evidence": {
+    "any_kind": true,
+    "kinds": [
+     "semantic",
+     "metrics"
+    ],
+    "subjects": [
+     "researcher:dblp:f2c1b8fdbdf4057567ea702b9f5570fd299c380484235c4eda1bc66ea352daf6"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Balaji Prabhakar"
+    ],
+    "note": "the explanation names the researcher; stated counts must match expected"
+   },
+   "slot": "evidence-2",
+   "type": "evidence",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+      "name": "Ion Stoica",
+      "rank": 1,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:c3acbb0bb6580e99d7082b4d7d25ff6bbe0a11e2fde8166b4fb62b605597aa3d",
+      "name": "Lidong Zhou",
+      "rank": 2,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:030531394d4220f8a04e0406627c976eb646981bb38613e7d23dc1fd3564a658",
+      "name": "Scott Shenker",
+      "rank": 3,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "name": "Arvind Krishnamurthy",
+      "rank": 4,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:9d138c53653a8c687d8f17cefa885190423aaa535647c14e3b5333c3791eb8e2",
+      "name": "Rachid Guerraoui",
+      "rank": 5,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:e04d8c5715e3f484ba4130c082e46f1f06710800fb9ad3174349fc3a90b40a4f",
+      "name": "Nickolai Zeldovich",
+      "rank": 6,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:60209c898fa7c68dcce9f16881e35450b1ccb6242480b771bd8c89f57053842b",
+      "name": "Anne-Marie Kermarrec",
+      "rank": 7,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:622f8d32ebb4bc1ad5f81210a7adcfc3ccb91c99e79ac3975894a2e4b02bfd95",
+      "name": "David G. Andersen",
+      "rank": 8,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "name": "Amin Vahdat",
+      "rank": 9,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:41b7eba6d32ded237682c370b27cabc828c560cdfb0e775cfd4b5241d2e881bf",
+      "name": "Ming Wu 0007",
+      "rank": 10,
+      "value": 31
+     },
+     {
+      "id": "researcher:dblp:6466ff79c42817f08efc14f98891a00f014335372646d91318768b8096bda8b0",
+      "name": "Yunhao Liu 0001",
+      "rank": 11,
+      "value": 30
+     },
+     {
+      "id": "researcher:dblp:cab73fd0594f7198b2d669d25d5d50e8c8f2b304a7b40ae1e14d78e5b78db18d",
+      "name": "Yan Chen 0004",
+      "rank": 12,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:577d3810c4aeab4414d3dcf1e20ee1e1d359e5cfd9c3fa6ad3a5fa0a9ffc02df",
+      "name": "David Mazi\u00e8res",
+      "rank": 13,
+      "value": 28
+     },
+     {
+      "id": "researcher:dblp:7edc57af760a841677dd0a2f1cf37a30c8c7023133eb8d9b8bd54229ec7bd2e7",
+      "name": "Albert G. Greenberg",
+      "rank": 14,
+      "value": 28
+     },
+     {
+      "id": "researcher:dblp:a71072335b0267635ce4215b4b3db02e3eaafa421643be5355e65052f1fa67be",
+      "name": "Hagit Attiya",
+      "rank": 15,
+      "value": 28
+     },
+     {
+      "id": "researcher:dblp:02bd52be6ece791ac7083cf8c15c2637e48732405e4592a7f3803f6be44b195c",
+      "name": "Jennifer Rexford",
+      "rank": 16,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:509f25fe2374463a27b69a2becbe0541f812be1daa6ce450e876320430bbc0b3",
+      "name": "Mahesh Balakrishnan 0001",
+      "rank": 17,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:b6a28d69edd6c422c3d2b86a1a7a761396da71a287700594f64b3e162236aa0f",
+      "name": "Wouter Joosen",
+      "rank": 18,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:c48859c1762e8be8139250af7accf4f951c40c22701aee17903b0ad3b2b4f522",
+      "name": "Shlomi Dolev",
+      "rank": 19,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:25d677854d752300df8c6ca7718e5c1813ca99bdd1f157bb5194aec38ffe2dcf",
+      "name": "Yuanyuan Zhou 0001",
+      "rank": 20,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:338ca2e641b347c0fba450662926b65e8ff708df305295b0d1628cd2af01c5aa",
+      "name": "Srikanth Kandula",
+      "rank": 21,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
+      "name": "Aditya Akella",
+      "rank": 22,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:67f6ead19c61ce7dd2fb8d9b9686f9f6621a285e2fe7dcd238ec98ee753afb71",
+      "name": "Nick McKeown",
+      "rank": 23,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:7aaeea946f09f123aa869d7620ba826ec9caf61cb960e0de9f2776eb425d7092",
+      "name": "Yehuda Afek",
+      "rank": 24,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:04b97a28c1456d7704313753810ec6cd29d4387d9c1fcb0f270d05f9f8d7a294",
+      "name": "Yuan Yu",
+      "rank": 25,
+      "value": 24
+     },
+     {
+      "id": "researcher:dblp:126dd1e1778b6d07696df1f909dfb38f4bec2364f1c051eb54f88ccaf70cc73f",
+      "name": "Ratul Mahajan",
+      "rank": 26,
+      "value": 24
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 27,
+      "value": 24
+     },
+     {
+      "id": "researcher:dblp:010e4fa92ef05ab353527705a509c21fac037d04d9e8d346682efb5d01973a35",
+      "name": "George Varghese",
+      "rank": 28,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:0c31ebdc0a30484fc8e544ca10190a54cafa832ab1a684e4e9c023aa5919d701",
+      "name": "Rodrigo Rodrigues 0001",
+      "rank": 29,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:0e3136298880a0ee4cfaf45efdd889530e94dad5ec1da4568d2d19da04af9a72",
+      "name": "Dongsu Han",
+      "rank": 30,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:17cdfe96b50c54e6a561f33cd50f513394e62333ab7608b3e9a3e750e0d15dd1",
+      "name": "Bin Liu 0001",
+      "rank": 31,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:71871cdc2cff839f744b2ea750201f53b520c80167065ee4e35b1a2c4f2c1183",
+      "name": "Vijayan Prabhakaran",
+      "rank": 32,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:7d1c7a0714f1cc8be58ef2e393752aa934e5b4b4b19a511e97701336477398f5",
+      "name": "Christof Fetzer",
+      "rank": 33,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:bd97bbfa5d512f51cdb19319f7ac1b0db0bc2adcf8bab74682c882fc874fd35a",
+      "name": "Andrew Warfield",
+      "rank": 34,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:fc4715137ccae2c7b649f922455c84f7d6e381533047cac4e5241b875065ee9a",
+      "name": "Pascal Felber",
+      "rank": 35,
+      "value": 23
+     },
+     {
+      "id": "researcher:dblp:1df0276b0b78dcf3266d218be361b088ad5049584c81c01d81b2290266c5ebd6",
+      "name": "Maurice Herlihy",
+      "rank": 36,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:4c8a019f3420710dd6431909efe0cf7e401e8a916e029313a9d6ed226ee20cf5",
+      "name": "Wyatt Lloyd",
+      "rank": 37,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:6192f6014513cf1269185d3798dd740bb0c610d23a0b50e03680c6a9e6bb7e46",
+      "name": "Hans-Arno Jacobsen",
+      "rank": 38,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:6b5b12a0a5799bca1aad8b917288ac3cad2979f894edb2d79570f47e915cc184",
+      "name": "Antony I. T. Rowstron",
+      "rank": 39,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:817c5bb4e15db83c19fefab16943549c07376d472ac9e03ad2ab57fcfda8e8fc",
+      "name": "Michael J. Freedman",
+      "rank": 40,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:986b4addd6f76ec36a40d75c6e0983968b2876e2aa5f6a37a66e47c876f5fa09",
+      "name": "Ashok Anand",
+      "rank": 41,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:a88996cd4878c04b63b437c60dbee9f3269818669ddf60b9b6f3af8051caf15a",
+      "name": "Remzi H. Arpaci-Dusseau",
+      "rank": 42,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:bef64b42877a2f38b79bf6736f39d244a62e1a7850cf3eb3d1347e10b6c397c6",
+      "name": "Junfeng Yang",
+      "rank": 43,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:dd8697e2c4bcd22e443d39789d0a66fa6fb6b4fa92ec4e568bbc1e8a888c4361",
+      "name": "Xue Liu 0001",
+      "rank": 44,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:f5ddc9f6237b361d387cfeefb6d6395ed3d144239da160be410961f78f9dbb76",
+      "name": "Andrea C. Arpaci-Dusseau",
+      "rank": 45,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:fc92f03c5cb65d8b22dbac93af3e44eef33ecffb4b77e868940645ec606e5996",
+      "name": "Samuel Madden 0001",
+      "rank": 46,
+      "value": 22
+     },
+     {
+      "id": "researcher:dblp:36db6ee739c0d223715083953f0cde894f420be15510aecf60f8f468258db952",
+      "name": "Akshat Verma",
+      "rank": 47,
+      "value": 21
+     },
+     {
+      "id": "researcher:dblp:3fa6f85072cedcb97c7764e222018e9da76cad437be2b93ceaf571f15be3bca7",
+      "name": "Seth Gilbert",
+      "rank": 48,
+      "value": 21
+     },
+     {
+      "id": "researcher:dblp:4006bcacb653800569323bcc7b45e110a4be1f583f8aa332957299c18d3b6d64",
+      "name": "Thomas E. Anderson",
+      "rank": 49,
+      "value": 21
+     },
+     {
+      "id": "researcher:dblp:7f74a169cb7ce4560a1f1d38008d076ce157d44e003b60e83e65447f5a479bab",
+      "name": "Jingren Zhou 0001",
+      "rank": 50,
+      "value": 21
+     },
+     {
+      "id": "researcher:dblp:a24c0f08baf57cb86b272c9f2afc308d09bc0105030b74c6ae839f2207babe84",
+      "name": "Ding Yuan 0004",
+      "rank": 51,
+      "value": 21
+     },
+     {
+      "id": "researcher:dblp:b3176f7479de271a7c7efa76819b3378d31e2a0d5cd4890d1d3098a289c10784",
+      "name": "George Porter",
+      "rank": 52,
+      "value": 21
+     },
+     {
+      "id": "researcher:dblp:2355fb6ec88cf677735ca0085668369c2433a8f5aa160bfb205474e817c0c533",
+      "name": "Dhruba Borthakur",
+      "rank": 53,
+      "value": 20
+     },
+     {
+      "id": "researcher:dblp:754ebccd3c61bfd423036922177c0c09562bf797d833e563c74eb291d6cdab6f",
+      "name": "Emmett Witchel",
+      "rank": 54,
+      "value": 20
+     },
+     {
+      "id": "researcher:dblp:96f8ca706bab65dc9a3b606f2c67c1c64a7913262d3eb1729c5777d3cf0670ce",
+      "name": "Ramachandran Ramjee",
+      "rank": 55,
+      "value": 20
+     },
+     {
+      "id": "researcher:dblp:b5dec9a097b87b6074f84f41f196a8c49670359915fe4d972b7bc1377c1ef153",
+      "name": "Matei Zaharia",
+      "rank": 56,
+      "value": 20
+     },
+     {
+      "id": "researcher:dblp:cddf74887890dc11122f01aabb69f615c2db27834a622d80b19c87c49a5b1b7e",
+      "name": "Ganesh Ananthanarayanan",
+      "rank": 57,
+      "value": 20
+     },
+     {
+      "id": "researcher:dblp:d18c8943cf78929e317c3f94ceb6c262d68023a8e79b18caeade491c9a5e7b01",
+      "name": "Harry C. Li",
+      "rank": 58,
+      "value": 20
+     },
+     {
+      "id": "researcher:dblp:1354ee4e4d11c21e42c7125022e1f54379d367d870fffe47d420700d53264cda",
+      "name": "Karsten Schwan",
+      "rank": 59,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:237eb47224c83d7769d82bbd2e5c26dcf507e500ccee31a776c5d5a5851e6402",
+      "name": "Bernhard Haeupler",
+      "rank": 60,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:4ed6204a4cf0e7deb36d47f5eacbbbb0b0a858e5467a754588fb9e328ec976e8",
+      "name": "Rajesh Nishtala",
+      "rank": 61,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:661b8b07b443f3fd7a4c2c9b75ca37d487d7ca109b081d52780ceacdff713c08",
+      "name": "Ben Y. Zhao",
+      "rank": 62,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:669c99ee591bb8066906676bc4ea0b3e1ac07f23f7b5029b994a46ad77811129",
+      "name": "Xiang-Yang Li 0001",
+      "rank": 63,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:6eb88339bd4bebc3f39e138ecfdf40885949c95d14a9535558d70c66e47d2e1a",
+      "name": "Dan Alistarh",
+      "rank": 64,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:765f60d14b3593ba8e0b89856383f34dc4a1c4c1837206e9ff062e843bdaafb2",
+      "name": "Ken Birman",
+      "rank": 65,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:c6b1f56c095c2b86c20c2a5447b4a804a46ba25e287d3cd7483ab55c1b4a2761",
+      "name": "Kai Chen 0005",
+      "rank": 66,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:cb10c781aecbd7ec352bdc8ace203b7228c1b5a54e935a5f821d750752be15f6",
+      "name": "Vivien Qu\u00e9ma",
+      "rank": 67,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:d0893baef1aced0b13c6ebdd7a60c5c7e4f9cba3637f499d69b5b55b82b3dfd8",
+      "name": "Jack Li 0001",
+      "rank": 68,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:fddbfbd25d00d739d1799872c886cf966bd8d7e65c188b1cea1388f5c8957f38",
+      "name": "Mart\u00edn Casado",
+      "rank": 69,
+      "value": 19
+     },
+     {
+      "id": "researcher:dblp:3d642567e0e34fc22382d1474bac0909fc5fb9b16d1e1f3a164382eef10f4ff7",
+      "name": "S\u00e9bastien Tixeuil",
+      "rank": 70,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:4ad71ee41ae54e18f471dbee986444b8b02ccff937ab1b3f177e901af2eb577a",
+      "name": "Thomas Moscibroda",
+      "rank": 71,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:4b368f07947d08f0d3140dd883a80b5074884a688b5dbb377db4a78957eae2df",
+      "name": "Nuno M. Pregui\u00e7a",
+      "rank": 72,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:4d594595db3736accdaa516d2eeeddccd6916e2e292763eacd3c5544440d4038",
+      "name": "Huichen Dai",
+      "rank": 73,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:5f8d429e7d3a65f0b122594c76bd25b13d24372998743fca0ab172bc88dd0378",
+      "name": "Michael Walfish",
+      "rank": 74,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:672416ebb9485a152dbfb1618ae4c260a79a9c14c04817c9a0f47beebb8b34a8",
+      "name": "Zhengping Qian",
+      "rank": 75,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:71d61acfd82e8d46b354e26deeb5c1f89b5aa7eb862cdcf7dd1d52ab7f74d69f",
+      "name": "Y. Charlie Hu",
+      "rank": 76,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:8d177d5a3aa1f0d558f640a25e99223cf0dc266c885be8ca35a73f66aeb80930",
+      "name": "Lionel M. Ni",
+      "rank": 77,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:9f970a7e4aa9ef21a2dd97d7ba637b4b0a80101f9ead5bbb819e3e128cec1508",
+      "name": "Vimalkumar Jeyakumar",
+      "rank": 78,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:a442d1806aa6a770964abcf9c138ba8baaa435245ea0b82ea0ad2fc7f44b8c1e",
+      "name": "Timothy Roscoe",
+      "rank": 79,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:a5b1e202a210369de72cd866c4100a99aef3d512599ccb33de79af2b014c3cdd",
+      "name": "Antonio Fern\u00e1ndez Anta",
+      "rank": 80,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:a5fa136956003fa44a22cdb1920366768f4d9a37899264a674c0ba83aa5bfb6a",
+      "name": "Feng Zhao 0001",
+      "rank": 81,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:b07888e08fa842f9a33bb3f676bf45d4fdba590ad8fdc1efffe4c2438e93e6e1",
+      "name": "Lorenzo Alvisi",
+      "rank": 82,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:bf3d91090b1af42c8235f201b049b879affe96224a4b15fbd5ddfd1830b5eb24",
+      "name": "Michael J. Franklin",
+      "rank": 83,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:c40fbfa23eb80e7058790632021d4e57d040545914679555e40500de7c42f176",
+      "name": "Jacob R. Lorch",
+      "rank": 84,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:e430315579a6fff0ee1fb480a21b805fa04cf1d73e51a9efa84cd17b78a37aa7",
+      "name": "Peng Huang 0005",
+      "rank": 85,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:eda31e4eceea9f36f43df3fc39a15e6464367135e0827451595b6a25ddb9e73b",
+      "name": "Zhi-Li Zhang",
+      "rank": 86,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:f67be0312fbad989730a65b9e0f5189677baf53590fd4485a75b56c8d37a8094",
+      "name": "Hui Lei 0001",
+      "rank": 87,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:fb39d07b32287b5f2a9be31ffca6b7748d309f64c1efb362472b4eb7bfae33dd",
+      "name": "Calvin C. Newport",
+      "rank": 88,
+      "value": 18
+     },
+     {
+      "id": "researcher:dblp:1afc977a0a79e17b4b24e1a1b2e061eae7f12618808b8e89e10c45293efbf98a",
+      "name": "Jitendra Padhye",
+      "rank": 89,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:327d26bd9e3f12e4a2c67c6e7b9f2a065139d3f17fed9e0256c9d1024907ee87",
+      "name": "Romain Rouvoy",
+      "rank": 90,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:35cdf08d80722e0513224ee007590ae0997f3cba86390d82eb81bfc8a3628f79",
+      "name": "Stefan Saroiu",
+      "rank": 91,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:4b10b3b9549f681d5bd632fda48c4e2b589251a2bdd6c7e5c8f616126dc3ba7c",
+      "name": "Boon Thau Loo",
+      "rank": 92,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:6d3997a1b2177a851b8661cd1532e9b2b13c765ddd5dd5f750a7a6bf751ae702",
+      "name": "Fran\u00e7ois Ta\u00efani",
+      "rank": 93,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:6f9ea3b7b922b276f7dcf33e29f197b7cc3c3e086fb9847b18ed099cbb132942",
+      "name": "Wenbo He 0003",
+      "rank": 94,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:7d0b477bae95e26502a9c61a68a7c71b493ca0d15fd4319ff03d19772fadb88b",
+      "name": "Roger Wattenhofer",
+      "rank": 95,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:99501e0593b4aef2eb900c7de4a84ff4a23fe6b586d630c5ebf54fea92cde2de",
+      "name": "Michael Stumm",
+      "rank": 96,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:a7b4952922112f80231c506be994bc403c0134ce2bae6c1fa8ba71f69cb11a0a",
+      "name": "Calton Pu",
+      "rank": 97,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:a7e27c0848f675d9c5ded0750637fa19d406e5f03a1381a8971e7213d445721a",
+      "name": "Bryan Ford",
+      "rank": 98,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:b574222755ab98a964bdcd3c2505f589929fb5fefa9fb40857b26f4b684a0042",
+      "name": "Ankit Singla",
+      "rank": 99,
+      "value": 17
+     },
+     {
+      "id": "researcher:dblp:bc6380cf90e5bd843db62f2368e70bb67631430fef5ca0ab292b7f9f861f1915",
+      "name": "Marc Shapiro 0001",
+      "rank": 100,
+      "value": 17
+     }
+    ],
+    "window": "2010-2014"
+   },
+   "expected_outcome": "answer",
+   "id": "q23",
+   "params": {
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "window": "2010-2014"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors in window 2010-2014?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "distinctCoauthorCount",
+     "weightedDegree",
+     "componentId",
+     "communityId"
+    ],
+    "kinds": [
+     "ranking"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "breadth-2010-2014",
+   "type": "coauthor_breadth",
+   "window": "2010-2014"
+  },
+  {
+   "check_level": "bounded",
+   "expected": {
+    "global_maximum_all_years": 15,
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "rule": "each cited value <= the researcher's all-years maximum <= global_maximum_all_years; each cited max-team work must have team size value + 1 in the AUTHORED edges (a work lies in a window entirely)",
+    "window": "2020-2026"
+   },
+   "expected_outcome": "answer",
+   "id": "q24",
+   "params": {
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "window": "2020-2026"
+   },
+   "planner": "fallback",
+   "question": "Rank researchers by maximum team size in window 2020-2026",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "maximumCoauthorsOnOnePaper",
+     "maxTeamWorkIds"
+    ],
+    "kinds": [
+     "ranking"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "team-2020-2026",
+   "type": "max_team_size",
+   "window": "2020-2026"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "coauthors": [
+     {
+      "id": "researcher:dblp:1aa093b8af45184d62ae63b88ccad8bd1417ade452e8b47ed13790828568bd3f",
+      "joint": 1,
+      "name": "Meng-Jung Tsai"
+     },
+     {
+      "id": "researcher:dblp:1ad4b54b097480afe9a7d1d19046b60e3b8c99a4deed25c63df043f4d838d5ec",
+      "joint": 1,
+      "name": "Liqun Cheng"
+     },
+     {
+      "id": "researcher:dblp:1b89a49bbf6fdf512799ab028e3c5094bbf2a9bd22a367b9ef868e7a42351111",
+      "joint": 1,
+      "name": "Jan Kopanski"
+     },
+     {
+      "id": "researcher:dblp:26a54542729a9a37818e8f9e2e26808071a4b4c0ca7c7e239b6004d18853e873",
+      "joint": 1,
+      "name": "Neal Cardwell"
+     },
+     {
+      "id": "researcher:dblp:4eced99656538c6989ba85d2cf5c1baf997e2243a3c9845a2da05ceb9f3045f0",
+      "joint": 1,
+      "name": "Yuxue Jin"
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "joint": 1,
+      "name": "Minlan Yu"
+     },
+     {
+      "id": "researcher:dblp:878bde2e9f59046b91763518d59c8508f914c9132a8809cd6234c77ba3aacc0b",
+      "joint": 1,
+      "name": "Nandita Dukkipati"
+     },
+     {
+      "id": "researcher:dblp:a1e70898c61921bd71c8377034e4b5d1d69a271981ed4319247b6bcc8a3be073",
+      "joint": 1,
+      "name": "Charles J. Carver"
+     },
+     {
+      "id": "researcher:dblp:bafb0bc40032c0f68b4d2f3ec3ac672e337c15e50557402c98971a89dfbd8fd3",
+      "joint": 1,
+      "name": "Ramesh Govindan"
+     },
+     {
+      "id": "researcher:dblp:de4f18ea8f5de1e28fc8c1f07a4c15e2117f9a09cbd22c2d280cdffb5d402df2",
+      "joint": 1,
+      "name": "Hamid Hajabdolali Bazzaz"
+     },
+     {
+      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "joint": 1,
+      "name": "Amin Vahdat"
+     },
+     {
+      "id": "researcher:dblp:f98d7f73797774ea5a3ff0b29a5bcd65324f8c059b065291bb7a05379b327132",
+      "joint": 1,
+      "name": "Yingjie Bi"
+     },
+     {
+      "id": "researcher:dblp:fef49d10f1cf5e8677f018150e9231c088917f1bf7c733753f2ef34e2dbe4bf9",
+      "joint": 1,
+      "name": "Weiwu Pang"
+     }
+    ],
+    "page_limit": 25,
+    "researcher": {
+     "id": "researcher:dblp:40c2e4689f99a31a59553800cbe88bf0fed57b4dba8a852a1b73ada0af610927",
+     "name": "Chris DeForeest"
+    },
+    "total": 13,
+    "truncated": false,
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q25",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:40c2e4689f99a31a59553800cbe88bf0fed57b4dba8a852a1b73ada0af610927",
+     "name": "Chris DeForeest"
+    },
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Who are the direct coauthors of \"Chris DeForeest\" since 2015?",
+   "required_evidence": {
+    "kinds": [
+     "direct-coauthors"
+    ],
+    "rule": "cited coauthorIds are a subset of expected.coauthors; returnedCount equals min(total, page_limit)",
+    "subjects": [
+     "researcher:dblp:40c2e4689f99a31a59553800cbe88bf0fed57b4dba8a852a1b73ada0af610927"
+    ]
+   },
+   "required_text": {
+    "coauthor_name_recall_min": 0.6,
+    "coauthor_names_expected": 13,
+    "names": [
+     "Chris DeForeest"
+    ],
+    "note": "the count is total or the page size; at least 60 percent of the shown coauthors are named when the page is not truncated",
+    "numbers": [
+     [
+      [
+       13
+      ]
+     ]
+    ]
+   },
+   "slot": "direct-since",
+   "type": "direct_collab",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "a": {
+     "id": "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
+     "name": "Gefei Zuo"
+    },
+    "b": {
+     "id": "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a",
+     "name": "Sam Burnett"
+    },
+    "hops": 3,
+    "max_hops": 6,
+    "paths": [
+     {
+      "ids": [
+       "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
+       "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+       "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
+       "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a"
+      ],
+      "names": [
+       "Gefei Zuo",
+       "Arvind Krishnamurthy",
+       "Harsha V. Madhyastha",
+       "Sam Burnett"
+      ]
+     }
+    ],
+    "shortest_path_count": 1,
+    "status": "Found",
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q26",
+   "params": {
+    "a": {
+     "id": "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
+     "name": "Gefei Zuo"
+    },
+    "b": {
+     "id": "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a",
+     "name": "Sam Burnett"
+    },
+    "expected_hops": 3,
+    "support_include_id": "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "What is the shortest coauthor path between \"Gefei Zuo\" and \"Sam Burnett\"?",
+   "required_evidence": {
+    "kinds": [
+     "path"
+    ],
+    "rule": "every cited path's ids are a real path in the window graph with hopCount == hops, first id a and last id b",
+    "subjects": [
+     "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
+     "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a"
+    ]
+   },
+   "required_text": {
+    "hop_words": 3,
+    "names": [
+     "Gefei Zuo",
+     "Sam Burnett"
+    ],
+    "note": "the hop count appears as a digit or word; for 2 or more hops the interior names of at least one shortest path appear",
+    "numbers": [
+     [
+      [
+       3
+      ]
+     ]
+    ],
+    "path_names_any_of": [
+     [
+      "Arvind Krishnamurthy",
+      "Harsha V. Madhyastha"
+     ]
+    ]
+   },
+   "slot": "path-3",
+   "type": "shortest_path",
+   "window": "all-years"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "component_id": "component:34dffe46d937ecf9e76ed9e1a001cc5b07950f9f82197838e203ed4b431d0e06",
+    "is_largest": false,
+    "number_of_components_with_edges": 656,
+    "researcher": {
+     "id": "researcher:dblp:9706bf15b6147bd09ff1ad796f89d639e5e0fb2976c792563a6dd007b773338a",
+     "name": "Teruo Higashino"
+    },
+    "size": 17,
+    "window": "since-2015"
+   },
+   "expected_outcome": "answer",
+   "id": "q27",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:9706bf15b6147bd09ff1ad796f89d639e5e0fb2976c792563a6dd007b773338a",
+     "name": "Teruo Higashino"
+    },
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "What is the component of \"Teruo Higashino\" since 2015?",
+   "required_evidence": {
+    "kinds": [
+     "metrics"
+    ],
+    "rule": "the metrics evidence componentId equals component_id",
+    "subjects": [
+     "researcher:dblp:9706bf15b6147bd09ff1ad796f89d639e5e0fb2976c792563a6dd007b773338a"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Teruo Higashino"
+    ],
+    "note": "the answer states the component size (digits with or without thousands separators) or the component id",
+    "numbers": [
+     [
+      [
+       17
+      ]
+     ]
+    ]
+   },
+   "slot": "component-since-2015",
+   "type": "component",
+   "window": "since-2015"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "community_id": "community:34b9c3b75e2f48d8f7f1ad9c22730e7aeac586b2152c3075a59be1a5b2b34325",
+    "converged": false,
+    "cross_community_edge_count": 27,
+    "iterations": 20,
+    "members": [
+     "researcher:dblp:448efcb663c48ba73a02bef0e57f4cff8aebbf59f6fcc97b42eed477783f5175",
+     "researcher:dblp:54f1b7a7e4e9b969575a1f292a60fa22a57d1f1ba5e47bd707e84a0bdeb163e0",
+     "researcher:dblp:5e7c4e049c84be6f736d5d671560bf3ad66fb2f8edca7041f817c39dbb4ff067",
+     "researcher:dblp:78741cae5662cf10ac628fd3d9d95b21de178e64a35b91eaead44557967f1c66",
+     "researcher:dblp:79e6ed8912c3c50db9b4c4fbb88ab0f87834902c69e736286eb14baa83b57cad",
+     "researcher:dblp:92fa7ebd945d8f427e474096c1ca476de2ee3ceb04b71b62a2fc4cc0ea6b1cff",
+     "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26",
+     "researcher:dblp:e3f3f99185dde75027bbf3fe0a502c5f93a52225507677f2480f242f20bd0da8",
+     "researcher:dblp:f766cde0489e429678228c49474b717abdac96306bd8f94b06669c54fd3c9b62"
+    ],
+    "neighbor_community_ids": [
+     "community:17029effc346884187df414a560466a762e43b966f63ede9143175c27878a8e0"
+    ],
+    "qualification": "iteration-limited",
+    "researcher": {
+     "id": "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26",
+     "name": "Liang Mao"
+    },
+    "size": 9,
+    "window": "2020-2026"
+   },
+   "expected_outcome": "answer",
+   "id": "q28",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26",
+     "name": "Liang Mao"
+    },
+    "window": "2020-2026"
+   },
+   "planner": "llm",
+   "question": "Compare communities of \"Liang Mao\" in window 2020-2026",
+   "required_evidence": {
+    "kinds": [
+     "community"
+    ],
+    "rule": "evidence communityId == community_id, size == size, selectedMemberIds subset of members, neighborCommunityIds subset of neighbor_community_ids",
+    "subjects": [
+     "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Liang Mao"
+    ],
+    "note": "the answer states the community size; communities are iteration-limited and the answer should say so",
+    "numbers": [
+     [
+      [
+       9
+      ]
+     ]
+    ]
+   },
+   "slot": "community-2020-2026",
+   "type": "community",
+   "window": "2020-2026"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "measure": "CROSS_COMMUNITY_DEGREE",
+    "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
+    "qualification": "community-derived: synchronous label propagation, iteration-limited at 20 (not converged); the answer should say so",
+    "tie_break": "researcher id ascending",
+    "top": [
+     {
+      "id": "researcher:dblp:9be161754c921809a9777211f09198e49ad56e85215d795e81f4ce3866cbace9",
+      "name": "Guihai Chen",
+      "rank": 1,
+      "value": 98
+     },
+     {
+      "id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+      "name": "Ion Stoica",
+      "rank": 2,
+      "value": 92
+     },
+     {
+      "id": "researcher:dblp:b0d4f383ca65d01198d074d31f0c8c22fd61ce8a1a0af64711d6420f08dca3a0",
+      "name": "Haibo Chen 0001",
+      "rank": 3,
+      "value": 91
+     },
+     {
+      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+      "name": "Arvind Krishnamurthy",
+      "rank": 4,
+      "value": 89
+     },
+     {
+      "id": "researcher:dblp:ee68955c4c52b96fefff0ebf29dd8a088770bde6dc52dd227e08aa51386be36f",
+      "name": "Ennan Zhai 0001",
+      "rank": 5,
+      "value": 82
+     },
+     {
+      "id": "researcher:dblp:9f0bd425e9855f277e5a3ed8669bc78c511be94271b455a0d95c3abfce9ef2fa",
+      "name": "Xin Jin 0008",
+      "rank": 6,
+      "value": 71
+     },
+     {
+      "id": "researcher:dblp:fafbba2bb195cf9dd0130abdccf0357f138d5311b80a3e93d1b3378e000771fc",
+      "name": "Tianyin Xu",
+      "rank": 7,
+      "value": 71
+     },
+     {
+      "id": "researcher:dblp:ec427815a14cc81279ba358757fcfb67df3527210f74116cc1c94ccfceae87b4",
+      "name": "Chunqiang Tang",
+      "rank": 8,
+      "value": 68
+     },
+     {
+      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "name": "Minlan Yu",
+      "rank": 9,
+      "value": 64
+     },
+     {
+      "id": "researcher:dblp:a54bd467d8f1694971ac07cdf0bd81d1fc22bbc67ed89b00485e3a97c17fca4f",
+      "name": "Daniel S. Berger",
+      "rank": 10,
+      "value": 61
+     },
+     {
+      "id": "researcher:dblp:386bc62c8b380ce6a487caf6e3e1419562fa49debf955d8f45c2b289fbfd5954",
+      "name": "Hai Jin 0001",
+      "rank": 11,
+      "value": 60
+     },
+     {
+      "id": "researcher:dblp:fd5a09b862c3e20512f2f6e36298a6561c12e730e1df0e92ac29f82741a5d5c8",
+      "name": "Junchen Jiang",
+      "rank": 12,
+      "value": 56
+     },
+     {
+      "id": "researcher:dblp:b6c2b48600fa0b8947cb8fbe01d853744c8a2ad8177bb116d4b5b648668f7561",
+      "name": "Ravi Netravali",
+      "rank": 13,
+      "value": 55
+     },
+     {
+      "id": "researcher:dblp:0cdc52813ebd4396b2ab3c9a158735cdf6b71b20477750a62ce3ea22f9db7256",
+      "name": "Zhihao Jia",
+      "rank": 14,
+      "value": 54
+     },
+     {
+      "id": "researcher:dblp:c9dd2b2ccab9ba62ec2bd5313ba85e4bad05c6a4eae7d5605d7071c9eb3eb694",
+      "name": "Haipeng Dai 0001",
+      "rank": 15,
+      "value": 53
+     },
+     {
+      "id": "researcher:dblp:d5efbf216a921f24fce7d9d8b0e3eb0bc9941f75911a0ad0822e3015077ce65d",
+      "name": "Asaf Cidon",
+      "rank": 16,
+      "value": 51
+     },
+     {
+      "id": "researcher:dblp:8b7e240d4f826fd30a994a8754a0984cffd65ec39a70c2e8e94fb75de4fc6966",
+      "name": "Danyang Zhuo",
+      "rank": 17,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:f3245c9f7e9dbe50758989d956d6133c66c22eccc6c14f041618d10760ef9e64",
+      "name": "Li Chen 0008",
+      "rank": 18,
+      "value": 50
+     },
+     {
+      "id": "researcher:dblp:59fa01fc92569a3ba97ff9659c4a975e0e72426100db45b04d895a6e5a43ad51",
+      "name": "Guyue Liu",
+      "rank": 19,
+      "value": 49
+     },
+     {
+      "id": "researcher:dblp:c6b1f56c095c2b86c20c2a5447b4a804a46ba25e287d3cd7483ab55c1b4a2761",
+      "name": "Kai Chen 0005",
+      "rank": 20,
+      "value": 48
+     },
+     {
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
+      "name": "Aditya Akella",
+      "rank": 21,
+      "value": 47
+     },
+     {
+      "id": "researcher:dblp:acea92bfbee56df5d4d8a6acce2505b189a78a9cabbf92994bc16a5bb9e5d136",
+      "name": "Jacob Nelson 0001",
+      "rank": 22,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:b1fa68af8a8e10e89fe212928e08d7c627691d0a4ab567b7dafc6c93005fce0b",
+      "name": "Mingwei Xu 0001",
+      "rank": 23,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:e8f91751bfaf7a70cad49c01398670b9c902c585af7f0f0702afe855cb2799a0",
+      "name": "Congcong Miao",
+      "rank": 24,
+      "value": 46
+     },
+     {
+      "id": "researcher:dblp:8b009a065ac031fc963dfb956652ac4a47ccdabab7f2b17e600d19cac3e42a97",
+      "name": "Chenren Xu",
+      "rank": 25,
+      "value": 44
+     },
+     {
+      "id": "researcher:dblp:391ed1f5885f568b1f6a06e58c199653930e59fbf1072888bceba710d3b6e771",
+      "name": "Chuan Wu 0001",
+      "rank": 26,
+      "value": 43
+     },
+     {
+      "id": "researcher:dblp:2df1e8415a947343fdf29fc33f168997a9af197bb85623b5e4aae7f432dcf531",
+      "name": "Ang Chen 0001",
+      "rank": 27,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:aa6f1fb79a901f359913e10902b1fc0fbcb1346eebc27e8c3019cf2e36bef66b",
+      "name": "Kui Ren 0001",
+      "rank": 28,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:c93c79c58e350d4a4d843083aa8f0d3707ab82bea1f3c4e9de655b6c72dd9099",
+      "name": "Jiesheng Wu",
+      "rank": 29,
+      "value": 42
+     },
+     {
+      "id": "researcher:dblp:d5a03c522e615348bceb637cdafbea1ed7ca620e260a457bf6b2396fdd649fe5",
+      "name": "Yang Xu 0010",
+      "rank": 30,
+      "value": 40
+     },
+     {
+      "id": "researcher:dblp:17f1a76897fad1558e8d32eb4792553bf5686ce089e8c061c8a1adcb5b2b28c1",
+      "name": "Minyi Guo",
+      "rank": 31,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:626a22d74aa3c5e253d794886f68cfd761bc669438376da4cc2730857b489d4c",
+      "name": "Dan R. K. Ports",
+      "rank": 32,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:730005c1eb61e7e4bd420c3750e5a595bd969362184a296e4fc7a6981b92f77e",
+      "name": "Cheng Li 0001",
+      "rank": 33,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:aea36502b402941f2c3c1e87fd9df66aada8be33ae82e1987171e5cbf1a7575a",
+      "name": "Bo Li 0001",
+      "rank": 34,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:f01f60c51d802c9be43ed4fa6af7bc72811fb5eec778c2955621c225228e9286",
+      "name": "Zili Meng",
+      "rank": 35,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:fb41f4f2c7739ec8306dca36f26d65087a71874e9d4e456df4b30c47ac08b2db",
+      "name": "Mosharaf Chowdhury",
+      "rank": 36,
+      "value": 39
+     },
+     {
+      "id": "researcher:dblp:3b9ecc7110d8221d5ba8519fcb5bbaa74bb3648e1dc4ed02d9a1f600b18df055",
+      "name": "Gregory R. Ganger",
+      "rank": 37,
+      "value": 38
+     },
+     {
+      "id": "researcher:dblp:8598145ea276e5556e62322e750df9fbb1a082eea2ce3106558f27e4dfb38e5e",
+      "name": "Haibin Lin",
+      "rank": 38,
+      "value": 38
+     },
+     {
+      "id": "researcher:dblp:2b5ebc2d63486894a955a3cf5a3abe2589f3f29923eb5c6466574e9076f5c4d1",
+      "name": "Christos Kozyrakis",
+      "rank": 39,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:f5878e151d7f1e31d05c573e19c7ea15918c9a92cc214153dbbec0e28fc0a550",
+      "name": "Gianni Antichi",
+      "rank": 40,
+      "value": 37
+     },
+     {
+      "id": "researcher:dblp:0e86f0f9157450172d9c38531d221f1335d5802a6507ca564d4a1873fb8fa5ac",
+      "name": "Yong Jiang 0001",
+      "rank": 41,
+      "value": 36
+     },
+     {
+      "id": "researcher:dblp:89908c5df8edbe026fe704e7a1436894608d056e083fb324c7e0f564d3b05341",
+      "name": "Xiaoliang Wang 0001",
+      "rank": 42,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:f0bd6b79f99f554c0dd1e536656d487973795b5eaf0655346112def81551ac42",
+      "name": "Kang Chen 0001",
+      "rank": 43,
+      "value": 35
+     },
+     {
+      "id": "researcher:dblp:2d1b1f80df5525f1923856322193e980905d9e52cd6083ccfffc770b3fee46c9",
+      "name": "Jialin Li 0001",
+      "rank": 44,
+      "value": 34
+     },
+     {
+      "id": "researcher:dblp:47e980703cdb216f1b8ccdb4bf2d64943f0e1e7eee302a0afc91d243635956aa",
+      "name": "Vincent Liu 0001",
+      "rank": 45,
+      "value": 34
+     },
+     {
+      "id": "researcher:dblp:67bf9923bec49347dea90b4fb2236019a117ff4ddf8fdaa7b326db9dea8442eb",
+      "name": "Yibo Zhu 0001",
+      "rank": 46,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:a0d95206e7148800809d8080c33f5b1a2af25855f5a56df01a24adc1690dc424",
+      "name": "Jidong Zhai",
+      "rank": 47,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:c4196aa3371a42f8b21c15b626ff694cf46f5dbce49400dc72ba6af29704d1be",
+      "name": "Chen Tian 0001",
+      "rank": 48,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:c93ab556b881f776264092d3d57a07df5d1ae1a7fa768b07042042f6739433d8",
+      "name": "Shan Lu 0001",
+      "rank": 49,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:d1c278920a969dfad833ef7c1fa79a08641d7512e5d662a97536190cd221a66c",
+      "name": "Natacha Crooks",
+      "rank": 50,
+      "value": 33
+     },
+     {
+      "id": "researcher:dblp:201da2c252b9c74a5045d7fb45599574f09feb8ed88c6a2027cfaba094e67b88",
+      "name": "Youyou Lu",
+      "rank": 51,
+      "value": 32
+     },
+     {
+      "id": "researcher:dblp:338ca2e641b347c0fba450662926b65e8ff708df305295b0d1628cd2af01c5aa",
+      "name": "Srikanth Kandula",
+      "rank": 52,
+      "value": 32
+     },
+     {
+      "id": "researcher:dblp:4c29eeda2bc42880cb97b67ad4834ad795ebaa2906e6a527128fc3c6faf749ad",
+      "name": "Yuanchao Shu",
+      "rank": 53,
+      "value": 32
+     },
+     {
+      "id": "researcher:dblp:790d8d1ba27b5dee79e8a2a708ec18d8298e7f97943fef0b97740d79ce109e41",
+      "name": "Mohammad Alizadeh",
+      "rank": 54,
+      "value": 32
+     },
+     {
+      "id": "researcher:dblp:856d4717a9e53204b8fefdba0d52b122a2989e6e29ea319b0fbd3f53af39fe86",
+      "name": "Yang Wang 0009",
+      "rank": 55,
+      "value": 32
+     },
+     {
+      "id": "researcher:dblp:5ecc246c11de8696a17210b3d939b0c21c2fc2d460ff4f67793d77dc417fa7b5",
+      "name": "Guangtao Xue",
+      "rank": 56,
+      "value": 31
+     },
+     {
+      "id": "researcher:dblp:9d2e8bb635ec8c534c1a4fe0ef0c966d55382cccc2993a89e8859dd30dbdb582",
+      "name": "Gong Zhang 0001",
+      "rank": 57,
+      "value": 31
+     },
+     {
+      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
+      "name": "Aurojit Panda",
+      "rank": 58,
+      "value": 30
+     },
+     {
+      "id": "researcher:dblp:33fd76c721c34bff1129e9a603f18eae9ae8216ae564607a37d21e1e695f9eb4",
+      "name": "Jiaqi Zheng 0001",
+      "rank": 59,
+      "value": 30
+     },
+     {
+      "id": "researcher:dblp:e64ed0257a64642c3421051148b8536316f726eb3d7aad3490fcfa524e1da78c",
+      "name": "Wei Wang 0030",
+      "rank": 60,
+      "value": 30
+     },
+     {
+      "id": "researcher:dblp:f01a38d57e095b74f7a8ce062684b9ca979d3de7d70086b55dc208a255aa7a70",
+      "name": "Rui Han",
+      "rank": 61,
+      "value": 30
+     },
+     {
+      "id": "researcher:dblp:052de9557a04f02820850b311376288c50c06ad1adbd45a59a3e16deea1ed06d",
+      "name": "Ying Zhang 0022",
+      "rank": 62,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:298537def4d83325cd16b3827a630a4fccba371d0901c006ce8936e31b074536",
+      "name": "Lingjun Zhu",
+      "rank": 63,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:6832a57be780d694087f5e7786184ad74cd8e1c02a0647d6e8db07cc34f8eeeb",
+      "name": "Jiwu Shu",
+      "rank": 64,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:84e54ec7848dc01bbca11af655e1a4f0819c54a478ad8a326d59e6d454122ae2",
+      "name": "Youngjin Kwon",
+      "rank": 65,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:a5c0a06ab2473515f857221cb91c0944dcd74428f3b22c88af223e47b533fd60",
+      "name": "Keqiu Li",
+      "rank": 66,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:bd191fb1fee19c46a8e3831c434179e5c2fbee77ce54ad5c606fcab58c7b5743",
+      "name": "Ryan Beckett",
+      "rank": 67,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:cf2a1e0e4e5723d3807451a3ced3d882e9096e7aeada06fe6f81f61b2e16b541",
+      "name": "Dennis Cai",
+      "rank": 68,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:df5de791729defddcb0b4cb1698b64a400733f045e8b4d748170d67de8b8b23f",
+      "name": "Sameh Elnikety",
+      "rank": 69,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:f5cb554d02e577160663c9d24ef33112d64a3623d2869cf17c254d3736f7f800",
+      "name": "Wanchun Dou",
+      "rank": 70,
+      "value": 29
+     },
+     {
+      "id": "researcher:dblp:2d56c29b92e952cbbd25f67ba66f4bee422fc2c6c94c6972c1b71f4812ce999e",
+      "name": "Laiping Zhao",
+      "rank": 71,
+      "value": 28
+     },
+     {
+      "id": "researcher:dblp:cf0f9e6acf96a32c3e74b21ba6cfc89639604464eb671f79c7ec3fa943205150",
+      "name": "Chenxi Wang 0005",
+      "rank": 72,
+      "value": 28
+     },
+     {
+      "id": "researcher:dblp:058ae92f3ed98b898ea3bac9e635a003c1323b86d9273af6a62281314550f65a",
+      "name": "Erci Xu",
+      "rank": 73,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:28e8b19400b9aa2ee546276779064c104c78427a503b864295333a763eb6fab3",
+      "name": "Patrick P. C. Lee",
+      "rank": 74,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:432f77be5a90b9365fe3539fb73ab5d8e4ec439d686f6b83e5d3a85c96cca156",
+      "name": "Peng Sun 0006",
+      "rank": 75,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:4ffeffc2a28f4df9e1ab32c3b682f2a683e99c6b47e7629b97fd74d092a4c7e5",
+      "name": "Qiao Xiang",
+      "rank": 76,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:d81aa319558f21e734a6f0b1991129a75dbf906266841a3ad0da923c8ecc9463",
+      "name": "Irene Zhang",
+      "rank": 77,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:db4151c9702ab138e3fb6ec7f6b4f8addf4e24c709b8669bdd883cb46811576d",
+      "name": "Xinbing Wang",
+      "rank": 78,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:e430315579a6fff0ee1fb480a21b805fa04cf1d73e51a9efa84cd17b78a37aa7",
+      "name": "Peng Huang 0005",
+      "rank": 79,
+      "value": 27
+     },
+     {
+      "id": "researcher:dblp:019fe22aa1b222ccafec2496cc45f300f5f450a861e24f27961900658ea30c90",
+      "name": "Francis Y. Yan",
+      "rank": 80,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:06ab782800c2577f97c4798d371cc4137765cdded4d5bfad87662101125090d2",
+      "name": "Wei Lin 0016",
+      "rank": 81,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:0e017690fb296fdd93d575858cc1709c4f875bad7ce7c9d40fb39516754008eb",
+      "name": "Gopal Pandurangan",
+      "rank": 82,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+      "name": "Jie Zhang 0048",
+      "rank": 83,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:5467f20cfd22e71c2781a2ef9ef08244e1953877c17b47027aec84864947eb5c",
+      "name": "Sanidhya Kashyap",
+      "rank": 84,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:7032c4d5703b67c6e545c34ac41952490cf301404c03aff40a9923768fb63856",
+      "name": "Shivaram Venkataraman",
+      "rank": 85,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:91e8c82a0747c3a2f8609a2e7fa3d326381fc973aa2a84a5327175855b8a9fd4",
+      "name": "Yida Wang 0003",
+      "rank": 86,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:ac6a6b1623e3d079bfff5d0a5f90ed9679ec07ffb81fbcd7de05b8534cce7d64",
+      "name": "Valerio Schiavoni",
+      "rank": 87,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:bcb8192a06715ae8dbb755334f4234dad3f7343a5bed19ab4f98f8bc0dae4d18",
+      "name": "Wencong Xiao",
+      "rank": 88,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:e37bc4a2ddf31d190e54a0fb5efd0b877595b1f5d877ec5009f8cd08228f58c1",
+      "name": "Chen Wang 0039",
+      "rank": 89,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:fddb275a8bde20452d80b5630c35e3f6be36c4420fcc6ead35d7a9386462c6a3",
+      "name": "Yifan Qiao 0002",
+      "rank": 90,
+      "value": 26
+     },
+     {
+      "id": "researcher:dblp:359fce8ece41fb7e0163a20f4c3d9097b49d287d71a5c33a077ee893a517a6da",
+      "name": "Fengyuan Ren",
+      "rank": 91,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:3fa6f85072cedcb97c7764e222018e9da76cad437be2b93ceaf571f15be3bca7",
+      "name": "Seth Gilbert",
+      "rank": 92,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:4e2a9f8ec06732443e816e236ea8a129a836030a0dc581f9098b70fcb745c117",
+      "name": "Chen Chen 0067",
+      "rank": 93,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:6d2f059bba345b255dedd29a335d4b6de47d67a968f8dffd69216306885d08dd",
+      "name": "Rui Ning",
+      "rank": 94,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:c4a1b5fa4058e1367c2cebcb9b6aab61ff99fdabe87e1a4dfb95434a5b5c39f3",
+      "name": "Song Guo 0001",
+      "rank": 95,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:db05ca25332915af0ba04046a648bff360efc47479e3e3d73a6202ebf826cc62",
+      "name": "Xuanzhe Liu",
+      "rank": 96,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "name": "Amin Vahdat",
+      "rank": 97,
+      "value": 25
+     },
+     {
+      "id": "researcher:dblp:1166cb5caa4e2468dcd3daa18d7c2296ee629224ec64cb491efdb4454f9e8399",
+      "name": "Amy Ousterhout",
+      "rank": 98,
+      "value": 24
+     },
+     {
+      "id": "researcher:dblp:360cb7f908bb641780e660f313ce67dea7c35eb2d7ac75191d413b410bcee3a4",
+      "name": "Vijay Chidambaram",
+      "rank": 99,
+      "value": 24
+     },
+     {
+      "id": "researcher:dblp:5b66c0f5d1b7d593a6877f697b0e47f023daaa0e9c8898e7879a6d6b3b0c8294",
+      "name": "Anirudh Sivaraman",
+      "rank": 100,
+      "value": 24
+     }
+    ],
+    "window": "2020-2026"
+   },
+   "expected_outcome": "answer",
+   "id": "q29",
+   "params": {
+    "measure": "CROSS_COMMUNITY_DEGREE",
+    "window": "2020-2026"
+   },
+   "planner": "fallback",
+   "question": "Which researchers are the strongest bridges in window 2020-2026?",
+   "required_evidence": {
+    "fields_checked_per_entity": [
+     "crossCommunityDegree",
+     "crossCommunityWeight",
+     "communitiesConnected",
+     "participationCoefficient",
+     "communityId"
+    ],
+    "kinds": [
+     "bridge"
+    ]
+   },
+   "required_text": {
+    "mode": "ranking",
+    "note": "the text must name the rank-1 cited researcher and state that researcher's value"
+   },
+   "slot": "bridge-2020-2026",
+   "type": "bridge",
+   "window": "2020-2026"
+  },
+  {
+   "check_level": "exact",
+   "expected": {
+    "communityJaccardOverlap": 0.05555555555555555,
+    "componentSize": {
+     "from": 3965,
+     "to": 23
+    },
+    "currentCommunityId": "community:79d385cc3a4f9966e9b4dacb7f81ac36538c413e1739c352deaba8c20d7971e9",
+    "deltaCommunitiesConnected": -1,
+    "deltaComponentSize": -3942,
+    "deltaCrossCommunityDegree": -1,
+    "deltaCrossCommunityWeight": -1,
+    "deltaDistinctCoauthors": 12,
+    "deltaParticipationCoefficient": -0.18000000000000005,
+    "distinctCoauthors": {
+     "from": 10,
+     "to": 22
+    },
+    "enteredLargestComponent": false,
+    "from": "2015-2019",
+    "fromPresent": true,
+    "leftLargestComponent": true,
+    "not_checked": [
+     "deltaAverageCoauthorsPerPaper",
+     "deltaMaximumCoauthorsOnOnePaper"
+    ],
+    "previousCommunityId": "community:11d4b4be06193bbdd72e2f5c488990a885eee4f44fa43de8032972a0367b7618",
+    "researcher": {
+     "id": "researcher:dblp:044b72b416f5f986a31e2518075b99a3755dc444800dc9ff42e3ac335785c376",
+     "name": "Dinesh Bharadia"
+    },
+    "to": "2020-2026",
+    "toPresent": true
+   },
+   "expected_outcome": "answer",
+   "id": "q30",
+   "params": {
+    "from": "2015-2019",
+    "researcher": {
+     "id": "researcher:dblp:044b72b416f5f986a31e2518075b99a3755dc444800dc9ff42e3ac335785c376",
+     "name": "Dinesh Bharadia"
+    },
+    "to": "2020-2026"
+   },
+   "planner": "llm",
+   "question": "Did \"Dinesh Bharadia\" change from 2015-2019 to 2020-2026?",
+   "required_evidence": {
+    "kinds": [
+     "temporal"
+    ],
+    "rule": "evidence values equal the expected deltas and ids",
+    "subjects": [
+     "researcher:dblp:044b72b416f5f986a31e2518075b99a3755dc444800dc9ff42e3ac335785c376"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Dinesh Bharadia"
+    ],
+    "note": "the answer states the change in distinct coauthors (absolute value) or both window values",
+    "numbers": [
+     [
+      [
+       12
+      ],
+      [
+       10,
+       22
+      ]
+     ]
+    ]
+   },
+   "slot": "temporal-3",
+   "type": "temporal",
+   "window": null
+  },
+  {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "ABSTAINED outcome with no verified ranking claim",
+     "HTTP 422 unsupported-query refusal"
+    ],
+    "filter": "topic",
+    "forbidden": "any ranking of researchers presented as filtered by the topic",
+    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "Language and cultural evolution",
+    "window": "2020-2026"
+   },
+   "expected_outcome": "abstain",
+   "id": "q31",
+   "params": {
+    "thin_data": true,
+    "topic": "Language and cultural evolution",
+    "window": "2020-2026"
+   },
+   "planner": "fallback",
+   "question": "Rank researchers by distinct coauthors topic \"Language and cultural evolution\" in window 2020-2026",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "topic-3",
+   "type": "topic",
+   "window": "2020-2026"
+  },
+  {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "ABSTAINED outcome with no verified ranking claim",
+     "HTTP 422 unsupported-query refusal"
+    ],
+    "filter": "institution",
+    "forbidden": "any ranking of researchers presented as filtered by the institution",
+    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "University of Louisiana at Lafayette",
+    "window": "all-years"
+   },
+   "expected_outcome": "abstain",
+   "id": "q32",
+   "params": {
+    "institution": "University of Louisiana at Lafayette",
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "thin_data": true,
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the largest team size institution \"University of Louisiana at Lafayette\"?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "institution-3",
+   "type": "institution",
+   "window": "all-years"
+  },
+  {
+   "check_level": "structural",
+   "expected": {
+    "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
+    "distinctCoauthorCount": 13,
+    "publicationCount": 5,
+    "researcher": {
+     "id": "researcher:dblp:edae4f5d7eaa80d8fc58415c7b7a3b49916ec9644ec80540562689db14f74175",
+     "name": "Yinwei Dai"
+    },
+    "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
+    "window": "all-years"
+   },
+   "expected_outcome": "answer",
+   "id": "q33",
+   "params": {
+    "researcher": {
+     "id": "researcher:dblp:edae4f5d7eaa80d8fc58415c7b7a3b49916ec9644ec80540562689db14f74175",
+     "name": "Yinwei Dai"
+    },
+    "window": "all-years"
+   },
+   "planner": "llm",
+   "question": "Explain the research collaboration of \"Yinwei Dai\"",
+   "required_evidence": {
+    "any_kind": true,
+    "kinds": [
+     "semantic",
+     "metrics"
+    ],
+    "subjects": [
+     "researcher:dblp:edae4f5d7eaa80d8fc58415c7b7a3b49916ec9644ec80540562689db14f74175"
+    ]
+   },
+   "required_text": {
+    "names": [
+     "Yinwei Dai"
+    ],
+    "note": "the explanation names the researcher; stated counts must match expected"
+   },
+   "slot": "evidence-3",
+   "type": "evidence",
+   "window": "all-years"
+  }
+ ],
+ "schema": "scholarchain.q12-answer-key.v1",
+ "source": {
+  "files_read_listing_sha256": "98379ee35d535cf358a52fce5b5c4cfd3aade8a200bd7ab362372825d9d315f1",
+  "graph_helper_sha256": "b82a9db0158b12dd3088b92e203b93831cbf1e74963eff8da301c1239648e17c",
+  "question_specs_sha256": "665263ccb64e33ff37ef9e0381e25e0ba25cdc91610229935bd27bca4aa8ed54",
+  "run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
+  "seed": "q12-v1"
+ },
+ "tool": "experiments/scripts/q12_answer_key.py"
+}

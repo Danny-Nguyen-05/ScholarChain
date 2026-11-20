@@ -20,6 +20,8 @@ Run all commands from the repository root with `python3 -I`.
 | `inputs/15a/config-sources.json` | the repository files used for `--hadoop-config`, `--er-policy`, `--er-config`, `--spark-config-template` (paths and sha256) |
 | `inputs/14c/` | the real include list, smoke body, 40 questions and node IDs derived from export `f6e63b4b`, with a provenance file |
 | `scripts/derive_14c_inputs.py` | derives `inputs/14c/` from the local Phase 6 export (deterministic) |
+| `inputs/q12/`, `manifests/q12-benchmark.json` | the Q12 benchmark: 33 questions (3 x 11 types), include list, question specs, computed answer key and provenance, derived from the same export; see "Q12 benchmark" below |
+| `scripts/q12_graph.py`, `derive_q12_inputs.py`, `q12_answer_key.py`, `q12_score.py` | Q12 graph helpers (ports of modules/spark), input derivation, answer key and scorer (stdlib, offline); `tests/test_q12.py` |
 | `scripts/make_dblp_subsets.py` | builds the three input trees locally from the real Phase 6 slice (and, with `--tree-label`, the L tree) |
 | `scripts/build_l_input.py` | one command for the local size-L tree: builds `size-l/` from the dataset-engineer's L slice, rechecks S ⊂ L and the evidence record |
 | `inputs/15a/size-l-local-evidence.json` | size L, local evidence only (not an EMR run): slice facts, P6 numbers, identity-bypass Spark summaries |
@@ -192,6 +194,47 @@ One command asks the 40 questions of `inputs/14c/questions.txt` once each, in fi
 python3 -I load-tests/eval16b.py plan                                  # no network, no key; prints the bucket state and the cost estimate
 python3 -I load-tests/eval16b.py run --run-id <run-id>                 # needs SCHOLARCHAIN_LOAD_BASE_URL and SCHOLARCHAIN_LOAD_API_KEY in the shell
 ```
+
+## Q12 benchmark (`load-tests/evalq12.py`, `inputs/q12/`, `manifests/q12-benchmark.json`)
+
+The course requires a benchmark of at least 30 questions covering coauthor breadth, max team size, direct collaboration, shortest paths, components, communities, bridge researchers, temporal change, topics, institutions and evidence. User decision 2026-11-16: ask all **33** questions (3 per type) with real answers, run it after P3 and P4 are fixed, and score retrieval, claims and the answer text against the computed answer key. It runs against the **local** stack with a real Anthropic writer (key handling: the approved procedure in `docs/agent-runs/phase-15/prompt.md`; the key is only an environment variable of the one run process, shell tracing off, never a CLI argument). Nothing here has been run against a service.
+
+**What is asked.** `inputs/q12/questions.txt` (ids `q01`..`q33` in file order, round-robin over the types), derived by `scripts/derive_q12_inputs.py` from the plain-CSV sidecar of the Phase 6 export `run:ba7402d1-959a-4277-8c6e-e92878a38afa` (size S, seed `q12-v1`, selection rule in the script docstring and `provenance.json`). 24 questions are in the deterministic fallback grammar of `QueryPlannerAgent`; 9 (temporal, community comparison, named explain) need the planner LLM (`planner` field of `question-specs.json`). The researchers named in the questions, plus the middle researcher of the 3-hop path, are in `inputs/q12/include-ids.txt` (22 IDs, total all-years degree 389, below the 900 artifact budget); load them with the runtime artifact builder as for 14C.
+
+| Type | Questions | Key |
+|---|---|---|
+| coauthor breadth | most distinct coauthors: all-years, since 2015, 2010-2014 | exact (per-entity values and order; top-100 recorded) |
+| max team size | largest/maximum team size: all-years, since 2015, 2020-2026 | all-years exact; two windowed ones bounded (the CSV has no work years) |
+| direct collaboration | direct coauthors of a researcher with 26 coauthors (page of 25 truncates), one with 14, one since 2015 | exact (complete coauthor lists) |
+| shortest paths | hop distance 1, 2 (since 2015), 3 | exact (BFS, up to 25 shortest paths, depth 6) |
+| components | all-years giant component; through-2009 and since-2015 smaller components | exact (size, id) |
+| communities | "Compare communities of X": all-years, since 2015, 2020-2026 | exact via an independent port of the synchronous label propagation |
+| bridge researchers | strongest bridges (cross-community degree): all-years, since 2015, 2020-2026 | exact via the same port |
+| temporal change | "Did X change from W1 to W2?" for the three adjacent window pairs | exact except two deltas that need work years |
+| topics | rankings filtered by `topic "..."` | **thin data, abstain expected** |
+| institutions | rankings filtered by `institution "..."` | **thin data, abstain expected** |
+| evidence | "Explain the research collaboration of X" (the explain / SemanticExplanation form) | structural plus entity facts |
+
+**Thin data, stated plainly.** The export has 3 TOPIC nodes (all on one work that has no AUTHORED edge), 1 INSTITUTION node and 0 AFFILIATED_WITH edges, so no researcher has authoritative topic or institution metadata; the runtime rejects a filtered ranking (`unsupported-authoritative-filter-metadata`) and must abstain. For these 6 questions a verified abstention (or an HTTP 4xx refusal, recorded as such) is the **correct** answer and the key says so; abstention is scored correct nowhere else. **Evidence** is defined as the explain form because the user's type list has no other operation for it; in addition every question is scored on its evidence trail (cited evidence must resolve through `/v1/evidence/{id}`). The course README is not in this repository, so the type list is quoted from the user's decision, not from the README.
+
+**How the key is computed** (`q12_answer_key.py`, helpers in `q12_graph.py`; no Parquet reader is needed). Distinct coauthors, components (union-find), BFS paths, team sizes and coauthor lists come straight from the CSV sidecar. Communities, bridges and temporal changes are Parquet-only in the export, so they are computed by an independent Python port of `modules/spark` (synchronous label propagation of job06, bridge measures, the temporal deltas of Phase6FGJobs). The port is validated against `analytics-report.json` of the same export: for every one of the six windows the number of iterations (20), the final changed count (e.g. all-years 1,349), the largest community size and the maximum of all four bridge measures are identical, and the community id, component id, degree, bridge values and maximum team size of two researchers observed in the Session 1 answers (Ion Stoica, Atul Adya) are reproduced exactly. Not checked: `deltaAverageCoauthorsPerPaper` and `deltaMaximumCoauthorsOnOnePaper`.
+
+**Ranking population.** The runtime ranks only the researchers inside its bounded artifact (include list plus degree fill), so the recorded top-100 lists are corpus-wide. The scorer checks every cited value against the export (not against the top list), the descending order inside the answer, and the name and value of the rank-1 cited researcher in the text; agreement with the corpus-wide top-1 is reported as information only.
+
+**Cost.** 33 answers x USD 0.001365 (`manifests/llm-allocation.json`, estimate, not metered) = **USD 0.045045** from bucket 16b. Bucket 16b is at 0 remaining after Session 1, so the human-approved transfer `APPROVED_LLM_TRANSFER=15b->16b:33` must be applied first (`llm_budget.py transfer`; 15b keeps 27); no agent creates that approval. `evalq12.py run` charges bucket 16b itself before every request; do not also `reserve`. The explain and evidence fetches are GET requests and call no model. Confirm the ledger with `python3 -I load-tests/llm_budget.py status` before the run.
+
+```bash
+# derive (offline; the export is git-ignored under target/); refuses to overwrite without --overwrite
+python3 -I experiments/scripts/derive_q12_inputs.py --export-dir "<spark export dir>" --out-dir experiments/inputs/q12 --overwrite
+python3 -I experiments/scripts/q12_answer_key.py --export-dir "<spark export dir>" --specs experiments/inputs/q12/question-specs.json --out experiments/inputs/q12/answer-key.json --overwrite
+# after a re-derive, put the sha256 of questions.txt into manifests/q12-benchmark.json (questions.sha256); evalq12.py refuses a file that does not match it
+python3 -I load-tests/evalq12.py plan                                  # no network, no key; bucket state and the USD 0.045045 estimate
+set +x
+python3 -I load-tests/evalq12.py run --run-id <run-id>                 # SCHOLARCHAIN_LOAD_BASE_URL (loopback http) and SCHOLARCHAIN_LOAD_API_KEY in the shell
+python3 -I experiments/scripts/q12_score.py --key experiments/inputs/q12/answer-key.json --raw target/experiment-runs/q12-benchmark-<run-id>/raw --export-dir "<spark export dir>" --out-json <scores.json> --out-md <scores.md>
+```
+
+**Scoring** (`q12_score.py`; per question three pass/fail scores with the reasons, a per-type summary, JSON and Markdown). (i) retrieval: every evidence id cited by the claims or by `/v1/explain` resolves, the evidence names the required researchers and has the required kind, and every cited value is correct (with `--export-dir`: distinct coauthors, weighted degree, component and community ids, bridge measures, team sizes and max-team works, coauthor lists, path edges and shortestness, community members, temporal deltas; without it only the key-level checks run and the output says so). (ii) claims: attempted, verified and rejected from `/v1/explain`; passes when at least one claim was attempted, none rejected, all verified, and every verified claim's values match the key or the export. (iii) text: the answer's `summary` and `uncertainty` contain the key facts (numbers with or without thousands separators, researcher names with or without a DBLP homonym suffix, the hop count as a digit or a word with the interior names of a shortest path, the rank-1 name and value for rankings). A question passes only if all three pass. The raw run is `answers.jsonl` (answer, explain body and every cited evidence item per question), sealed with `raw.sha256`; the scorer is deterministic and can be re-run.
 
 ## 15B: ECS scale-out and scale-in on query-api
 
