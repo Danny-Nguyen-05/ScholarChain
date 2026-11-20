@@ -53,7 +53,7 @@
   },
   "command": {
     "plan": "python3 -I load-tests/evalq12.py plan",
-    "probe": "python3 -I load-tests/evalq12.py run --only q04 --run-id <probe-run-id>   (charges 1 answer of the 36; q04 is the direct-coauthor question with 28 coauthors: a 25-row page; one bounded live answer to check the 5 s synthesis deadline before the 33)",
+    "probe": "python3 -I load-tests/evalq12.py run --only q04 --run-id <probe-run-id>   (charges 1 answer of the 36; q04 is the direct-coauthor question with 28 coauthors: a 25-row page; one bounded live answer at the PACKAGED deadlines (planner 5000 ms, synthesis 5000 ms): if it shows planner or synthesis deadline outcomes, switch to the disclosed raised profile in run_settings and rerun the probe before the 33)",
     "run": "python3 -I load-tests/evalq12.py run --run-id <run-id>",
     "score": "python3 -I experiments/scripts/q12_score.py --key experiments/inputs/q12/answer-key.json --raw target/experiment-runs/q12-benchmark-<run-id>/raw --export-dir <spark export dir> --out-json <scores.json> --out-md <scores.md>",
     "raw_results": "target/experiment-runs/q12-benchmark-<run-id>/raw/ (answers.jsonl with the query answer, the /v1/explain body and every cited /v1/evidence item per question; events.jsonl, run-record.json, raw.sha256), sealed read-only",
@@ -61,13 +61,14 @@
   },
   "run_settings": {
     "retrieval_mode": "graph (the local stack has no vectors: Voyage keys revoked, S3 Vectors destroyed; the runtime-config default is fused, so the run must override it to graph)",
-    "deadline_overrides_ms": {"planner": 30000, "synthesis": 30000, "note": "the coordinator sets the planner and synthesis deadlines to 30,000 ms for the local run (the committed runtime config has plannerMs 5000 and synthesisMs 5000); record them with the run, they are service settings, not harness options"},
+    "deadline_profile_primary": {"name": "packaged", "plannerMs": 5000, "synthesisMs": 5000, "note": "the primary run uses the PACKAGED deadlines of the committed runtime config (planner 5000 ms, synthesis 5000 ms), which is faithful to the AWS deployment; no deadline override"},
+    "deadline_profile_raised": {"name": "raised", "plannerMs": 15000, "synthesisMs": 30000, "SCHOLARCHAIN_RUNTIME_SYNCHRONOUS_DEADLINE_MS": 60000, "SCHOLARCHAIN_SYNCHRONOUS_DEADLINE_MS": 70000, "SCHOLARCHAIN_WORKFLOW_TIMEOUT_MS": 70000, "use": "a disclosed profile, used ONLY if the q04 probe shows planner or synthesis deadline outcomes; it is service configuration, not a harness option"},
+    "deadline_evidence": "the run evidence must record which profile was used (packaged or raised) with the values, next to the run id, the stack commit and the include-list sha256; a run at the raised profile is reported as such, never as the packaged result",
     "record": "write these settings, the stack commit and the include-list sha256 into the run evidence next to the run id; the harness records the commit and the tree flag in run-record.json but cannot see the service's configuration",
     "consequence": "no semantic evidence exists in this mode; every Q12 type is answerable from graph and metric evidence or is a key-expected abstention (topic and institution)"
   },
   "method_note": "the runtime artifact is a bounded subset (the include list plus degree-fill up to the row cap), so ranking questions rank only the researchers inside it; the scorer verifies every cited value against the export and the descending order, and reports agreement with the corpus-wide top as information only",
   "open_items": [
-    "Phase14QuestionSetPlannerSpec equivalent for the 33 questions (rag-engineer): 27 questions are in the fallback grammar (the evidence type is now a fallback-grammar shortest-path form, so the spec's type-to-route rule and counts change from 24/9 to 27/6 and an `evidence` case with params a and b like shortest_path is needed); only temporal and community comparison (6) need the planner LLM",
     "no grading of free-form prose beyond the key facts (numbers, names, hop words); the scorer reports every failure reason"
   ]
 }
