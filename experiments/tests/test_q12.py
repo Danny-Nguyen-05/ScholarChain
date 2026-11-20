@@ -578,6 +578,25 @@ class ScoreTest(unittest.TestCase):
         self.assertTrue(passed["retrieval"]["pass"], passed["retrieval"]["reasons"])   # unverified evidence is reported, not failed
         self.assertEqual(passed["retrieval"]["unverified"], 2)
 
+    def test_unverified_evidence_is_shown_in_the_markdown(self):
+        q = self.q("component", researcher={"id": A2, "name": NAMES[A2]})
+        it = self.item("evidence:metric:1", "metrics", [A2], ["all-years"], componentId=g.analytics_id("component", "all-years", A1))
+        row = self.row(q, "Bob Two: 6 researchers.", [it])
+        row["answer"]["claims"][0]["evidenceIds"] += ["evidence:skipped:1"]
+        row["evidence_skipped_ids"] = ["evidence:skipped:1"]
+        result = score.score_question(q, row, self.deep)
+        per_type, totals = score.summarize([result])
+        doc = {"deep_checks": "export", "run_id": "r", "key_sha256": "0" * 64, "export_run_id": RUN, "per_type": per_type, "totals": totals,
+               "questions": [result], "unverified": {"items": 1, "questions": 1}}
+        md = score.markdown(doc)
+        self.assertIn("pass (unverified 1)", md)
+        self.assertIn("Unverified evidence items (not fetched or too large, neither failed nor passed): 1 across 1 questions", md)
+
+    def test_a_closed_error_code_with_a_trailing_newline_is_not_an_abstention(self):
+        topic = self.q("topic", topic="Topic One")
+        row = {"qid": "q01", "question": topic["question"], "status": 422, "error_code": "UNSUPPORTED_QUERY\n", "answer": None, "explain": None, "evidence": {}}
+        self.assertEqual(score.score_question(topic, row, self.deep)["outcome_kind"], "error")
+
     def test_text_accepts_absolute_values_and_a_component_id(self):
         comp_id = g.analytics_id("component", "all-years", A1)
         q = self.q("component", researcher={"id": A2, "name": NAMES[A2]})
@@ -612,7 +631,7 @@ class ScoreTest(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             rc = score.main(["--key", key_path, "--raw", raw, "--export-dir", self.root, "--out-json", out_json, "--out-md", out_md])
         self.assertEqual(rc, 0, out.getvalue())
-        self.assertIn("SCORED answer_expected=1 retrieval=1 claims=1 text=1 all=1 | abstain_expected=1 correct=1 | deep_checks=export", out.getvalue())
+        self.assertIn("SCORED answer_expected=1 retrieval=1 claims=1 text=1 all=1 | abstain_expected=1 correct=1 | unverified_evidence=0 | deep_checks=export", out.getvalue())
         with open(out_md) as handle:
             md = handle.read()
         self.assertIn("## Headline: the 1 answer-expected questions", md)

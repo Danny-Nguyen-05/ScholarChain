@@ -361,5 +361,16 @@ class Eval16bCase(unittest.TestCase):
         self.assertEqual(self.state.posts, [])
 
 
+    def test_the_16b_run_record_keeps_its_own_schema_and_the_failure_rule_is_unchanged(self):
+        # evalq12.py sets its own schema name and neutral expected refusals; eval16b itself is unchanged: 3 consecutive failures stop it
+        self.init_ledger()
+        self.state.mode = "503-leak"
+        rc, out, err = self.run_eval(questions=self.write_questions(6))
+        self.assertEqual(rc, 4)
+        self.assertEqual(len(self.answers()), 3)
+        self.assertEqual(self.record()["schema"], "scholarchain.eval16b-run-record.v1")
+        self.assertTrue(all("expected_refusal" not in row for row in self.answers()))
+
+
 if __name__ == "__main__":
     unittest.main()
