@@ -8,8 +8,8 @@
   },
   "plannerPromptVersion": "planner-v1",
   "plannerSchemaVersion": "scholarchain.runtime.planner.v1",
-  "synthesisPromptVersion": "synthesis-v1",
-  "synthesisSchemaVersion": "scholarchain.runtime.synthesis.v1",
+  "synthesisPromptVersion": "synthesis-v2",
+  "synthesisSchemaVersion": "scholarchain.runtime.synthesis.v2",
   "retrieval": {
     "graphLimit": 25,
     "vectorLimit": 10,

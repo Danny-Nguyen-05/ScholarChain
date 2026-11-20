@@ -29,6 +29,10 @@ class RuntimeContractSpec extends AnyFunSuite {
     assert(read[EvidenceBundle](resource("/wire/evidence-bundle.json")).runtime.isEmpty)
     assert(read[AnswerClaim](resource("/wire/answer-claim.json")).runtime.isEmpty)
   }
+  test("shipped runtime config pins the v2 synthesis prompt and schema versions") {
+    assert(config.synthesisPromptVersion == "synthesis-v2")
+    assert(config.synthesisSchemaVersion == "scholarchain.runtime.synthesis.v2")
+  }
   test("optional query payload converts without changing the legacy plan or researcher spelling") {
     val old = read[QueryPlan](resource("/wire/query-plan.json"))
     val options = read[RuntimeQueryOptions](resource("/wire/runtime-query-options.json"))
