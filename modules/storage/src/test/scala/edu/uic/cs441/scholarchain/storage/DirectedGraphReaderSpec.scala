@@ -139,9 +139,25 @@ class DirectedGraphReaderSpec extends AnyFunSuite {
   }
   private val noRetry = GraphReaderConfig(retry = RetryConfig(1, 0, 0))
   private def fake(edges: Vector[FakeGraphEdge] = all) = new InMemoryGraphReader(edges = edges)
+  // The local reader gets the window "" for every type except COAUTHORED_WITH, as the loader does.
+  private def local(edges: Vector[FakeGraphEdge] = all) = new LocalGraphReader(
+    Map.empty,
+    edges.map(e =>
+      new LocalEdge(
+        e.edgeId,
+        e.from,
+        e.to,
+        e.edgeType,
+        if (e.edgeType == "COAUTHORED_WITH") e.windowOf else "",
+        () => e.properties
+      )
+    ),
+    Map.empty
+  )
   private def readers: Vector[(String, () => DirectedGraphReader)] = Vector(
     "neptune" -> (() => neptune()._2),
-    "fake" -> (() => fake())
+    "fake" -> (() => fake()),
+    "local" -> (() => local())
   )
   private def page(
       r: DirectedGraphReader,
@@ -261,9 +277,10 @@ class DirectedGraphReaderSpec extends AnyFunSuite {
     }
   }
 
-  test("the fake and the Neptune mapping agree on every node, direction, window and type set") {
+  test("the fake, local and Neptune mapping agree on every node, direction, window and type set") {
     val (_, neptuneReader) = neptune()
     val fakeReader = fake()
+    val localReader = local()
     for {
       id <- Vector("A", "B", "C", "Z")
       direction <- EdgeDirection.values.toVector
@@ -279,6 +296,10 @@ class DirectedGraphReaderSpec extends AnyFunSuite {
         val a = page(neptuneReader, id, direction, window, types, limit, cursor)
         val b = page(fakeReader, id, direction, window, types, limit, cursor)
         assert(a == b, s"$id $direction $window $types $limit $cursor")
+        assert(
+          page(localReader, id, direction, window, types, limit, cursor) == a,
+          s"local: $id $direction $window $types $limit $cursor"
+        )
         val got = StorageResult.value(a).get
         collected ++= got.items
         cursor = got.cursor

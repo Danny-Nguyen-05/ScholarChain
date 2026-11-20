@@ -338,5 +338,112 @@ class LocalExportStoresSpec extends AnyFunSuite {
     assert(s.newAuditStore().get("query:none") != null)
   }
 
+  test("every local edge property map equals the validator's CSV projection of its source row") {
+    val s = stores()
+    val g = s.graphReader
+    val sourceRows = (rows("edges/type=coauthored_with") ++ rows("edges/type=authored") ++
+      rows("edges/type=has_topic") ++ rows("edges/type=published_in") ++
+      rows("edges/type=affiliated_with")).map(r => r("edgeId").str -> r).toMap
+    val ids = (people ++ works ++ Vector(topic1, topic2, venue, institution1, institution2))
+    val served = ids.flatMap(id =>
+      StorageResult
+        .value(g.directedEdges(id, "all-years", EdgeDirection.Out, Set.empty, 100, None))
+        .get
+        .items
+    )
+    assert(served.size == sourceRows.size && served.map(_.edgeId).toSet == sourceRows.keySet)
+    served.foreach { edge =>
+      val row = sourceRows(edge.edgeId)
+      val columns =
+        if (edge.edgeType == "COAUTHORED_WITH") GraphProjection.coauthorFromRow(row)
+        else GraphProjection.graphEdge(row)
+      assert(edge.properties == GraphProjection.properties(columns), edge.edgeId)
+      // the structural columns are the stored endpoints and type
+      assert(
+        columns.take(4).map(_._2.str) == Vector(edge.edgeId, edge.fromId, edge.toId, edge.edgeType)
+      )
+    }
+    // a coauthor edge, written out by hand from its row
+    val coauthor = served.find(_.edgeType == "COAUTHORED_WITH").get
+    val row = sourceRows(coauthor.edgeId)
+    assert(
+      coauthor.properties == Map(
+        "policyVersion" -> row("policyVersion").str,
+        "jointPublicationCount" -> "1",
+        "firstCollaborationYear" -> "2015",
+        "lastCollaborationYear" -> "2015",
+        "windowId" -> "all-years",
+        "representativeWorkIdsJson" -> row("representativeWorkIds").render(),
+        "evidenceTable" -> "edges/type=coauthored_with_support",
+        "evidenceEdgeId" -> coauthor.edgeId,
+        "contextJson" -> row("context").render()
+      )
+    )
+  }
+
+  test("the projection strips type suffixes, drops nulls and renders integers as decimals") {
+    val columns = GraphProjection.coauthor(
+      "e",
+      "a",
+      "b",
+      "p",
+      12L,
+      Some(2019),
+      None,
+      None,
+      Some(2020),
+      Some("w"),
+      Some("[]"),
+      None
+    )
+    assert(
+      GraphProjection.properties(columns) == Map(
+        "policyVersion" -> "p",
+        "jointPublicationCount" -> "12",
+        "firstCollaborationYear" -> "2019",
+        "windowEndYear" -> "2020",
+        "windowId" -> "w",
+        "representativeWorkIdsJson" -> "[]",
+        "evidenceTable" -> "edges/type=coauthored_with_support",
+        "evidenceEdgeId" -> "e"
+      )
+    )
+  }
+
+  test("hash verification can be turned off, and the pointer then says so") {
+    val changed = rows("metrics/type=bridges").head
+    val served = rows + ("metrics/type=bridges" -> rows("metrics/type=bridges").map { row =>
+      if (row == changed) {
+        val copy = ujson.read(row.render()).obj; copy("participationCoefficient") = 0.5
+        ujson.Obj.from(copy)
+      } else row
+    })
+    val unverified = load(served = served, options = LocalExportOptions(verifySourceHashes = false))
+      .fold(e => fail(e.toString), identity)
+    assert(unverified.provenance.tables.forall(!_.hashVerified))
+    assert(unverified.artifactPointer.sha256 != stores().artifactPointer.sha256)
+    // the same rows with verification on are refused
+    assert(load(served = served).left.map(_.code) == Left(LocalExportError.contentHashMismatch))
+  }
+
+  test("duplicate support rows, a repeated edge ID and dangling coauthor endpoints are refused") {
+    val supports = rows("edges/type=coauthored_with_support")
+    val duplicated = rows + ("edges/type=coauthored_with_support" -> (supports :+ supports.head))
+    val dup = load(data = duplicated)
+    assert(dup.left.map(_.code) == Left(LocalExportError.duplicateKey))
+    assert(dup.left.map(_.part) == Left("table:edges/type=coauthored_with_support"))
+    // researcher f is absent, with its authored edges, but its coauthor edge e-f remains
+    val withoutF = rows +
+      ("nodes/type=researcher" -> rows("nodes/type=researcher").filterNot(_("nodeId").str == f)) +
+      ("edges/type=authored" -> rows("edges/type=authored").filterNot(_("fromId").str == f))
+    val dangling = load(data = withoutF)
+    assert(dangling.left.map(_.code) == Left(LocalExportError.missingEndpoint))
+    assert(dangling.left.map(_.part) == Left("table:edges/type=coauthored_with"))
+    val repeated = rows + ("edges/type=has_topic" -> (rows("edges/type=has_topic") :+ rows(
+      "edges/type=has_topic"
+    ).head))
+    assert(load(data = repeated).left.map(_.code) == Left(LocalExportError.duplicateKey))
+  }
+
   private val RuntimeArtifactDistinct = RuntimeRankingMetric.DistinctCoauthorCount
 }

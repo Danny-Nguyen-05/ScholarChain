@@ -20,12 +20,28 @@ private[storage] final class LocalEdge(
   lazy val properties: Map[String, String] = build()
 }
 
-/** An indexed, immutable, in-memory counterpart of `NeptuneGraphReader`. It answers the same
-  * bounded reads with the same ordering and bounds: the window constrains COAUTHORED_WITH only,
-  * stored endpoints are returned as written, order is edge ID within the outgoing then incoming
-  * phase, shortest paths use only COAUTHORED_WITH edges of the requested window and return the
-  * paths of the minimal length in node-ID order. Nothing is inferred; a node is parsed and checked
-  * from its stored row on each read.
+/** An indexed, immutable, in-memory graph reader over a local export.
+  *
+  * Parity with `NeptuneGraphReader` is established for `node` and `directedEdges` only: those are
+  * the reads of `LiveGraphSnapshot` and the graph API, and `DirectedGraphReaderSpec` runs the same
+  * direction, self-loop, type, window, paging and cursor tests against this reader and the Neptune
+  * mapping. On AWS the agents do not hold this reader: they use `RemoteGraphReader` over the graph
+  * API, and only the graph role reads the graph store through `directedEdges`. To reproduce that
+  * path, put this reader behind `LiveGraphSnapshot`/`GraphApi` and let the agents call it through
+  * `RemoteGraphReader` on an in-process `GraphApi`; do not hand it to the agents directly.
+  *
+  * `neighbors`, `directCoauthors`, `shortestPaths`, `communityMembers` and `crossCommunityEdges`
+  * implement the `GraphReader` port with Neptune's documented semantics (window constrains
+  * COAUTHORED_WITH only; shortest paths use only COAUTHORED_WITH edges of the requested window and
+  * return the minimal-length paths in node-ID order), but the AWS runtime does not call them, they
+  * were not compared with a live Neptune, and they differ in two known ways: community
+  * qualifications and membership lookups are derived from the stored membership rows rather than
+  * from Neptune's enriched node properties (so `communityQualificationsJson` lists memberships in
+  * manifest window order), and a self-loop appears once in `neighbors`. Treat them as local
+  * conveniences, not as evidence of what Neptune returns.
+  *
+  * Stored endpoints are returned as written; order is edge ID within the outgoing then incoming
+  * phase. Nothing is inferred; a node is parsed and checked from its stored row on each read.
   *
   * @param nodes
   *   node ID to (node class wire name, stored node row as JSON)

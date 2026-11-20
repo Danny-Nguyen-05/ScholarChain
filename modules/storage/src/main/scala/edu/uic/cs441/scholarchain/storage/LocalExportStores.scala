@@ -10,7 +10,13 @@ import StorageResult.*
 
 /** A refused local load. `code` is a closed, value-free reason; `part` names the export part that
   * was being read (for example `manifests`, `table:edges/type=coauthored_with`, `cache`,
-  * `runtime-artifact`). `detail` carries only names and counts, never file contents.
+  * `runtime-artifact`). `detail` carries table names, counts, an exception class name and, for an
+  * include-list refusal, the offending stable IDs; never file contents or row values.
+  *
+  * The codes of this object are the loader's own. A refusal by the cache loader or by the
+  * include-ids subset keeps that component's code (for example `manifest-content-hash-mismatch`,
+  * `include-id-not-found`, `include-entity-alone-exceeds-cap`), and the run verification reports
+  * `incomplete-or-corrupt-source-run`.
   */
 final case class LocalExportError(code: String, part: String, detail: String = "")
 
@@ -24,7 +30,8 @@ object LocalExportError {
   val contentHashMismatch = "source-content-hash-mismatch"
   val rowTooLarge = "source-row-too-large"
   val invalidRow = "invalid-source-row"
-  val runMismatch = "row-run-mismatch"
+  val cacheWriteRejected = "cache-write-rejected"
+  val outOfMemory = "out-of-memory"
   val duplicateKey = "duplicate-source-key"
   val missingEndpoint = "missing-edge-endpoint"
   val invalidExport = "invalid-export"
@@ -70,7 +77,11 @@ object RuntimeArtifactScope {
   *   also run `NeptuneExportValidator` over the sidecar CSV (hashes all ~450 MB, needs scratch
   *   disk)
   * @param scratchDirectory
-  *   parent of the temporary scratch the cache loader and the CSV validator use
+  *   parent of the temporary `storage-cache-*` (about 2 GB for size-S) and `neptune-validate-*` (up
+  *   to about 6 GB) directories the cache loader and the CSV validator create; default is the
+  *   system temp directory. They are deleted when a load ends, including after a refusal, but a
+  *   killed process leaves them behind. They are not swept automatically, because another running
+  *   load may own a directory of the same name pattern; delete stale ones by hand.
   * @param progress
   *   receives one short line per load phase
   */
@@ -129,7 +140,10 @@ final case class LocalExportCounts(
 /** The in-memory stores a local (offline) query stack needs, built from one completed Phase 6 Spark
   * export. Nothing here calls a provider.
   *
-  *   - `graphReader` answers the reads of `LiveGraphSnapshot` and `GraphReader` like Neptune would.
+  *   - `graphReader` answers `node` and `directedEdges` like Neptune would (proved by the shared
+  *     reader tests); put it behind `LiveGraphSnapshot`/`GraphApi`, and give the agents a
+  *     `RemoteGraphReader` over an in-process `GraphApi`, as on AWS. Its other `GraphReader` reads
+  *     are not on the AWS path (see `LocalGraphReader`).
   *   - `metrics` and `entityLinks` are filled by the same `Phase6CacheLoader` that fills DynamoDB.
   *   - `runtimeArtifacts` answers rank, community, bridge, temporal, edge-support and researcher
   *     context reads; `artifactPointer` identifies what it serves.
@@ -251,7 +265,6 @@ object LocalExportStores {
   private val summariesTable = "metrics/type=community_summaries"
   private val temporalTable = "metrics/type=temporal_changes"
   private val cacheOnlyTables = Set("metrics/type=kcore", "metrics/type=path_length_estimate")
-  private val coauthorEvidenceTable = supportTable
 
   private final class Loader(
       manifests: Vector[LoadManifest],
@@ -280,7 +293,13 @@ object LocalExportStores {
         case r: Refused        => Left(r.error)
         case SourceRejected(c) => Left(LocalExportError(c, part))
         case _: OutOfMemoryError =>
-          Left(LocalExportError("out-of-memory", part, "raise the JVM heap or use an include list"))
+          Left(
+            LocalExportError(
+              LocalExportError.outOfMemory,
+              part,
+              "raise the JVM heap or use an include list"
+            )
+          )
         case NonFatal(e) =>
           Left(LocalExportError(LocalExportError.invalidExport, part, e.getClass.getSimpleName))
       }
@@ -342,7 +361,7 @@ object LocalExportStores {
           case Rejected(c)  => refuse(c)
           case _            => refuse(LocalExportError.invalidExport, "cache")
         }
-        if (report.rejected > 0) refuse("cache-write-rejected")
+        if (report.rejected > 0) refuse(LocalExportError.cacheWriteRejected)
         report
       }
 
@@ -380,7 +399,7 @@ object LocalExportStores {
       // ---- typed tables ----
       val tableProvenance = Vector.newBuilder[LocalExportTableProvenance]
       var sourceRows = 0L
-      val contexts = mutable.HashMap.empty[Option[String], SparkRecordContext]
+      val contexts = mutable.HashMap.empty[SparkRecordContext, SparkRecordContext]
       val contextJson = mutable.HashMap.empty[String, String]
       def scan(m: LoadManifest)(f: ujson.Obj => Unit): Unit = {
         part = "table:" + m.logicalDataset
@@ -422,7 +441,7 @@ object LocalExportStores {
           c.runId == run && c.lineage == context.lineage && c.windowId.forall(windowSet),
           table
         )
-        contexts.getOrElseUpdate(c.windowId, c)
+        contexts.getOrElseUpdate(c, c)
       }
       val seen = mutable.HashMap.empty[String, mutable.HashSet[String]]
       def unique(table: String, key: String): Unit =
@@ -463,17 +482,10 @@ object LocalExportStores {
           if (!nodes.contains(edge.fromId) || !nodes.contains(edge.toId))
             refuse(LocalExportError.missingEndpoint, name)
           if (!edgeIds.add(edge.edgeId)) refuse(LocalExportError.duplicateKey, name)
-          // A null or absent cell is an absent property, as the CSV loader would store it.
-          def cell(column: String, property: String): Option[(String, String)] =
-            row.obj.get(column).flatMap(serialized).map(property -> _)
-          val props = Vector(
-            Some("schemaVersion" -> i(edge.schemaVersion)),
-            Some("policyVersion" -> i(edge.policyVersion)),
-            cell("sourceEvidence", "sourceEvidenceJson"),
-            cell("properties", "propertiesJson"),
-            cell("provenance", "provenanceJson"),
-            cell("context", "contextJson").map((k, v) => k -> contextJson.getOrElseUpdate(v, v))
-          ).flatten.toMap
+          // The same projection the Neptune CSV is validated against.
+          val props = GraphProjection
+            .properties(GraphProjection.graphEdge(row))
+            .map((k, v) => k -> (if (k == "contextJson") contextJson.getOrElseUpdate(v, v) else v))
           edges += new LocalEdge(
             i(edge.edgeId),
             i(edge.fromId),
@@ -511,29 +523,31 @@ object LocalExportStores {
           edge.researcherB,
           "COAUTHORED_WITH",
           i(window),
+          // Built on first read from the typed row, through the shared projection.
           () =>
-            Vector(
-              Some("policyVersion" -> edge.policyVersion),
-              Some("jointPublicationCount" -> edge.jointPublicationCount.toString),
-              edge.firstCollaborationYear.map("firstCollaborationYear" -> _.toString),
-              edge.lastCollaborationYear.map("lastCollaborationYear" -> _.toString),
-              edge.windowStartYear.map("windowStartYear" -> _.toString),
-              edge.windowEndYear.map("windowEndYear" -> _.toString),
-              Some("windowId" -> window),
-              Some(
-                "representativeWorkIdsJson" ->
-                  ujson.Arr.from(edge.representativeWorkIds.map(ujson.Str(_))).render()
-              ),
-              Some("evidenceTable" -> coauthorEvidenceTable),
-              Some("evidenceEdgeId" -> edge.edgeId),
-              Some("contextJson" -> sharedCtx)
-            ).flatten.toMap
+            GraphProjection.properties(
+              GraphProjection.coauthor(
+                edge.edgeId,
+                edge.researcherA,
+                edge.researcherB,
+                edge.policyVersion,
+                edge.jointPublicationCount,
+                edge.firstCollaborationYear,
+                edge.lastCollaborationYear,
+                edge.windowStartYear,
+                edge.windowEndYear,
+                Some(window),
+                Some(ujson.Arr.from(edge.representativeWorkIds.map(ujson.Str(_))).render()),
+                Some(sharedCtx)
+              )
+            )
         )
       }
       val supports = Vector.newBuilder[CoauthorEdgeSupport]
       scan(byName(supportTable)) { row =>
         val raw = read[CoauthorEdgeSupport](row)
         validRow(SparkAnalyticsValidation.check(raw).isRight, supportTable)
+        unique(supportTable, raw.edgeId + "\u0000" + raw.workId)
         supports += raw.copy(
           context = sparkContext(raw.context, supportTable),
           edgeId = i(raw.edgeId),
@@ -647,11 +661,14 @@ object LocalExportStores {
 
       val (pointer, store) = subset.getOrElse {
         val key = StorageKeys.versioned("local-runtime-artifact", run.replace(':', '-'), "whole")
+        // Not a hash of a byte snapshot: no snapshot is serialized in this scope. It binds the
+        // loaded tables' manifest hashes and whether those hashes were recomputed from the rows.
         val sha = StableIds.sha256Hex(
-          "scholarchain.local-whole-runtime-artifact.v1\n" + loaded
-            .sortBy(_.logicalDataset)
-            .map(m => s"${m.logicalDataset}:${m.rowCount}:${m.sortedRowsSha256}")
-            .mkString("\n")
+          "scholarchain.local-whole-runtime-artifact.v1 hashes-verified=" +
+            options.verifySourceHashes + "\n" + loaded
+              .sortBy(_.logicalDataset)
+              .map(m => s"${m.logicalDataset}:${m.rowCount}:${m.sortedRowsSha256}")
+              .mkString("\n")
         )
         val p = RuntimeArtifactPointer(key, sha, run)
         p -> (new RuntimeArtifactData(rows, p, RuntimeArtifactConfig()): RuntimeArtifactStore)
