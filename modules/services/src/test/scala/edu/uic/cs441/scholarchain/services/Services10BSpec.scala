@@ -133,14 +133,11 @@ class Services10BSpec extends AnyFunSuite {
       assert(reply.body("claims").arr.forall(_("verificationStatus").str == "VERIFIED"))
       val id = reply.body("claims")(0)("evidenceIds")(0).str
       assert(composition.extended.evidence.evidence(id).isRight)
-      assert(
-        composition.extended.evidence
-          .explain(reply.body("queryId").str)
-          .toOption
-          .get
-          .body("outcome")
-          .str == "ANSWERED"
-      )
+      val explain = composition.extended.evidence.explain(reply.body("queryId").str).toOption.get
+      assert(explain.body("outcome").str == "ANSWERED")
+      // The synthesis label of the pinned runtime config: the retired v1 label never answers.
+      val versions = explain.body("promptVersions").arr.map(_.str)
+      assert(versions.contains("synthesis-v2") && !versions.contains("synthesis-v1"))
     } finally { composition.queries.close(); composition.extended.close() }
   }
   test("shortest graph paths respect the requested hop cap and expose only actual edges") {
