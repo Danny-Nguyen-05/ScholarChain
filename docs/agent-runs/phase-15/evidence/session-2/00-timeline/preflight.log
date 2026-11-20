@@ -1,0 +1,4 @@
+Wed Nov 18 14:01:40 UTC 2026 block 2 pre-flight (pasted by human; IP omitted)
+HEAD bd0b8180b919ed61f6234fa515f4c07d1137a641; git status empty; IGNORED-CHECK-DONE
+llm_budget: answers_used=55 usd_used=0.075075 remaining_usd=1.254925 (all from earlier phases; no Session 2 use)
+caffeinate running; ~/.scholarchain/emr-ledger/runs.jsonl present

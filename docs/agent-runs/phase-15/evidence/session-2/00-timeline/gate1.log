@@ -1,0 +1,2 @@
+X_a=0.80  gate1 threshold 2.85: PASS
+pre-R-b: 15.83 + 0.80 + 3.57 = 20.20  limit 23.00: PASS

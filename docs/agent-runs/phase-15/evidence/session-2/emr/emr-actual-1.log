@@ -1,0 +1,6 @@
+STEP: start
+[2026-11-18T16:56:18Z] [20261118T165618Z-90354] INFO script=run-bounded-pipeline.sh mode=record-actual run_id=20261118T165618Z-90354 repo_root=<repo>
+STEP: ledger-record-actual
+LEDGER-ACTUAL: run=15a-emr-size-100-20261118T163203Z-87466 cluster=j-00663481CVHVEQEYZQ5L window=2026-11-18T16:26:54.261000Z..2026-11-18T16:56:18Z seconds=1763.739 hourly_usd=0.555 measured_usd=0.28 tail_seconds=900 tail_usd=0.14 reserved_estimate_usd=0.84
+LEDGER: live_runs=3 of 4 cumulative_usd=2.10 (was 2.52; 1 run(s) now counted at actuals) cap_usd=3.53
+RESULT: PASS actual recorded for run 15a-emr-size-100-20261118T163203Z-87466 in ~/.scholarchain/emr-ledger/runs.jsonl; local files only, no cloud call was made

@@ -1,0 +1,16 @@
+{
+    "Name": "scholarchain-course/anthropic-api-key",
+    "Versions": {
+        "89248cd3-2bdb-47d0-be78-f5291d71b4a8": [
+            "AWSCURRENT"
+        ]
+    }
+}
+{
+    "Name": "scholarchain-course/voyage-api-key",
+    "Versions": {
+        "4b9c1245-5fbc-4626-a5aa-3d196b7b178d": [
+            "AWSCURRENT"
+        ]
+    }
+}

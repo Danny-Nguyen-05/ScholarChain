@@ -1,0 +1,175 @@
+STEP: start
+[2026-11-18T16:32:03Z] [20261118T163203Z-87466] INFO script=run-experiment.sh mode=execute run_id=20261118T163203Z-87466 repo_root=<repo>
+STEP: inputs
+STEP: manifest-committed
+[2026-11-18T16:32:03Z] [20261118T163203Z-87466] INFO manifest experiments/manifests/15a-emr-size-100.json is tracked and identical to HEAD bd0b8180b919ed61f6234fa515f4c07d1137a641 (sha256 b73b896904a3460f075149c42373c9f1b274ff8085726037f680a7af5ed39423)
+STEP: manifest-tokens
+EXPERIMENT-TOKEN: SCHOLARCHAIN_ARTIFACTS_BUCKET scholarchain-course-<acct>-artifacts
+EXPERIMENT-TOKEN: SCHOLARCHAIN_RUN_PREFIX run-20261118
+EXPERIMENT-MANIFEST-SHA256: committed=b73b896904a3460f075149c42373c9f1b274ff8085726037f680a7af5ed39423 rendered=44b71413eac72f58eb55af3472cfd6fa7f65b2625bad73e7477cef130df4b54e
+STEP: manifest-schema
+[2026-11-18T16:32:03Z] [20261118T163203Z-87466] INFO manifest 15a-emr-size-100 is valid: max_usd=0.84 max_runtime_minutes=75 max_capacity=2 region=us-east-2 idle_timeout_seconds<=900
+STEP: run-record
+EXPERIMENT-RECORD: experiment=15a-emr-size-100 commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 manifest=experiments/manifests/15a-emr-size-100.json manifest_sha256=b73b896904a3460f075149c42373c9f1b274ff8085726037f680a7af5ed39423 region=us-east-2 start_utc=2026-11-18T16:32:03Z
+EXPERIMENT-LIMITS: max_usd=0.84 max_runtime_minutes=75 max_capacity=2 region=us-east-2 idle_timeout_seconds<=900
+EXPERIMENT-METRIC-LOCATION: s3://scholarchain-course-<acct>-artifacts/pipeline/run-20261118/15a/size-100/metrics/
+EXPERIMENT-APPROVAL-LINE: APPROVED_ACTION=run-experiment
+EXPERIMENT-APPROVAL-LINE: APPROVED_MANIFEST_SHA256=b73b896904a3460f075149c42373c9f1b274ff8085726037f680a7af5ed39423
+EXPERIMENT-APPROVAL-NOTE: Rendered manifest sha256: 44b71413eac72f58eb55af3472cfd6fa7f65b2625bad73e7477cef130df4b54e (a comment line, ignored by the parser; the resolved values are bound by APPROVED_RUN_CONFIG_SHA256)
+[2026-11-18T16:32:04Z] [20261118T163203Z-87466] INFO experiment record: target/experiment-runs/15a-emr-size-100-20261118T163203Z-87466/experiment-record.json
+STEP: delegate-pipeline
+[2026-11-18T16:32:04Z] [20261118T163203Z-87466] INFO delegating to run-bounded-pipeline.sh (run id 15a-emr-size-100-20261118T163203Z-87466)
+pipeline| STEP: start
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO script=run-bounded-pipeline.sh mode=execute run_id=20261118T163204Z-87595 repo_root=<repo>
+pipeline| STEP: inputs
+pipeline| STEP: terraform-only
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO this script submits steps to the existing cluster j-00663481CVHVEQEYZQ5L; it never creates, resizes or deletes infrastructure (no create-cluster, run-job-flow or Terraform command)
+pipeline| STEP: g6-estimate
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO G6 estimate: {"billed_seconds": 5400, "ec2_rate_usd_per_hour": "0.192", "emr_rate_usd_per_hour": "0.048", "estimate_usd": "0.84", "formula": "(primary x (primary EC2 + EMR) + (core + task) x (EC2 + EMR of instance_type)) x (max_runtime + idle_timeout) hours, rounded up to the cent", "hourly_usd": "0.555", "idle_timeout_seconds": 900, "instance_type": "m5.xlarge", "instances": 2, "max_runtime_minutes": 75, "primary_ec2_rate_usd_per_hour": "0.252", "primary_emr_rate_usd_per_hour": "0.063", "primary_instance_type": "r5.xlarge"}
+pipeline| ESTIMATE-USD: 0.84
+pipeline| G6-CAPS: per-run=3 USD live-runs=4 cumulative=3.53 USD pricing-confirmed-by-human=true rates-retrieved=2026-11-06 region=us-east-2
+pipeline| STEP: plan
+pipeline| PLAN: run-id: 15a-emr-size-100-20261118T163203Z-87466
+pipeline| PLAN: yarn-tag: 15a-emr-size-100-20261118T163203Z-87466
+pipeline| PLAN: cluster-id: j-00663481CVHVEQEYZQ5L
+pipeline| PLAN: region: us-east-2
+pipeline| PLAN: instance-type: m5.xlarge primary=1 core=1 max-task=0 max-capacity=2
+pipeline| PLAN: primary-instance-type: r5.xlarge (core and task: m5.xlarge)
+pipeline| PLAN: max-runtime-minutes: 75
+pipeline| PLAN: budget-usd: 0.84
+pipeline| PLAN: estimate-usd: 0.84 ((primary x (primary EC2 + EMR) + (core + task) x (EC2 + EMR of instance_type)) x (max_runtime + idle_timeout) hours, rounded up to the cent)
+pipeline| PLAN: teardown: auto-termination (the cluster must have an auto-termination idle timeout of at most 900 s)
+pipeline| PLAN: input-prefix: s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/input/size-100
+pipeline| PLAN: output-prefix: s3://scholarchain-course-<acct>-artifacts/pipeline/run-20261118/15a/size-100/15a-emr-size-100-20261118T163203Z-87466/
+pipeline| PLAN: artifact-sha256 er-config: a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c
+pipeline| PLAN: artifact-sha256 er-jar: e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768
+pipeline| PLAN: artifact-sha256 er-policy: 2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f
+pipeline| PLAN: artifact-sha256 hadoop-config: 5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57
+pipeline| PLAN: artifact-sha256 hadoop-libjars: 76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a
+pipeline| PLAN: artifact-sha256 hadoop-submit-jar: 3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6
+pipeline| PLAN: artifact-sha256 job-jar: <redacted>
+pipeline| PLAN: artifact-sha256 spark-config-template: 9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a
+pipeline| PLAN: step-bin-dir: /opt/scholarchain-spike/bin
+pipeline| PLAN: step-program-sha256 sc-ceiling-check.py: <redacted>
+pipeline| PLAN: step-program-sha256 sc-class-origin-verify.py: <redacted>
+pipeline| PLAN: step-program-sha256 sc-render-spark-config.py: <redacted>
+pipeline| PLAN: step-program-sha256 sc-step.sh: <redacted>
+pipeline| PLAN: spark-conf-sha256: 7520a0e796f11d8a8528c44a7e32ced57b52023305fdc47f29d55fa393e2fdd5
+pipeline| PLAN: datasets-manifest-sha256: b66249af2762831123b8a8492585a4c007219655225154da660d0d4d362365a8
+pipeline| PLAN: dataset dblp: snapshot=dblp-2026-10-03 retrieval=2026-10-22
+pipeline| PLAN: dataset openalex: snapshot=openalex-rest-2026-10-05 retrieval=2026-10-05
+pipeline| PLAN: dataset crossref: snapshot=crossref-rest-2026-10-05 retrieval=2026-10-05
+pipeline| PLAN: dataset orcid: snapshot=orcid-public-api-2026-10-05 retrieval=2026-10-05
+pipeline| PLAN: ceilings: maxLocalSampleRecords<=60000 reducerCount<=8 maxCandidateBlockSize<=256 maxCandidatePairsPerBlock<=4096 maxAuthorTeamSize<=64 maxRecordBytes<=8388608 maxXmlEntityExpansion<=8388608
+pipeline| PLAN: data-ceilings: input<=268435456 bytes copy-out<=8589934592 bytes
+pipeline| PLAN: step stage-in: timeout=225s
+pipeline| PLAN: step hadoop-prep: timeout=900s
+pipeline| PLAN: step entity-resolution: timeout=900s
+pipeline| PLAN: step spark-class-origin: timeout=225s
+pipeline| PLAN: step spark-job: timeout=1800s
+pipeline| PLAN: step copy-out: timeout=450s
+pipeline| RUN-CONFIG-SHA256: f064a3105ebfceb656b7d29f743fc8bf07e12a394a01a5c69eb4e3ca9de4ab60
+pipeline| TEARDOWN: forced auto-termination: the cluster must have an idle timeout of at most 900s (checked with --execute: aws emr get-auto-termination-policy)
+pipeline| YARN-TAG: 15a-emr-size-100-20261118T163203Z-87466 (the hard runtime cap kills the YARN application by this tag)
+pipeline| STEP: arg-limit
+pipeline| STEP-ARG-LENGTHS: stage-in limit=10280 count=14 max=293 total=651 lengths=4,2,293,7,64,8,16,13,46,43,21,93,16,25
+pipeline| STEP-ARG-LENGTHS: hadoop-prep limit=10280 count=27 max=293 total=1439 lengths=4,2,293,7,64,11,16,13,46,43,21,102,79,99,76,101,75,44,79,29,25,42,29,42,29,42,26
+pipeline| STEP-ARG-LENGTHS: entity-resolution limit=10280 count=19 max=293 total=1117 lengths=4,2,293,7,64,17,16,13,46,43,21,48,10,102,75,100,78,100,78
+pipeline| STEP-ARG-LENGTHS: spark-class-origin limit=10280 count=41 max=293 total=2074 lengths=4,2,293,7,64,18,16,13,46,43,21,48,37,66,76,15,28,30,84,65,51,45,211,34,44,51,50,43,47,63,46,49,33,35,31,33,35,38,33,62,64
+pipeline| STEP-ARG-LENGTHS: spark-job limit=10280 count=44 max=293 total=2332 lengths=4,2,293,7,64,9,17,13,46,43,21,48,37,66,76,15,28,30,84,78,111,77,65,51,45,211,34,44,51,50,43,47,63,46,49,33,35,31,33,35,38,33,62,64
+pipeline| STEP-ARG-LENGTHS: copy-out limit=10280 count=14 max=293 total=697 lengths=4,2,293,7,64,8,16,13,46,43,21,136,16,28
+pipeline| STEP-ARG-LIMIT: no step argument exceeds 10280 characters (PIPELINE_STEP_ARG_MAX_CHARS, pinned; the EMR HadoopJarStepConfig.Args limit); checked before any cloud call, the ledger reservation and the approval
+pipeline| STEP: g6-gate
+pipeline| LEDGER: live_runs=2 of 4 cumulative_usd=1.68 this_run_usd=0.84 cap_usd=3.53
+pipeline| G6-STATUS: all G6 gates pass for --execute
+pipeline| STEP: clean-tree
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+pipeline| STEP: approval-record
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO approval record parsed (each required line exactly once)
+pipeline| STEP: approval-match
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO approval record matches the commit, region, cluster, run configuration, budget, capacity, runtime and teardown
+pipeline| [2026-11-18T16:32:04Z] [20261118T163204Z-87595] INFO approval record sha256 956a3e6f65028acf8d5eb1b41e72a703ef19a77c2cef26bc4e97ab71af8b667d has not started a run before (single-use)
+pipeline| STEP: prespend-receipt
+pipeline| pre-spend receipt ok: monitoring active, snapshot 2.0 h old, headroom 2.00 USD; spend to date AWS 15.75 + Anthropic 0.08 + Voyage 0.00 = 15.83 USD
+pipeline| STEP: account-check
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+pipeline| [2026-11-18T16:32:05Z] [20261118T163204Z-87595] INFO account sha256 matches the approval record
+pipeline| STEP: cluster-check
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-cluster --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --output json
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr get-auto-termination-policy --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --output json
+pipeline| [2026-11-18T16:32:08Z] [20261118T163204Z-87595] INFO CLUSTER-CHECK: ok state=WAITING auto_termination_idle_timeout_seconds=900 instances=2 type=m5.xlarge primary_type=r5.xlarge
+pipeline| STEP: ledger-reserve
+pipeline| [2026-11-18T16:32:08Z] [20261118T163204Z-87595] INFO LEDGER-RESERVED: run=15a-emr-size-100-20261118T163203Z-87466 live_runs=3 of 4 cumulative_usd=2.52
+pipeline| STEP: run-manifest
+pipeline| [2026-11-18T16:32:08Z] [20261118T163204Z-87595] INFO run manifest: target/pipeline-runs/15a-emr-size-100-20261118T163203Z-87466/run-manifest.json
+pipeline| STEP: step-stage-in
+pipeline| pre-spend receipt ok: monitoring active, snapshot 2.0 h old, headroom 2.00 USD; spend to date AWS 15.75 + Anthropic 0.08 + Voyage 0.00 = 15.83 USD
+pipeline| [2026-11-18T16:32:08Z] [20261118T163204Z-87595] INFO pre-spend receipt re-verified before submitting step stage-in
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --steps \[\{\"Type\":\"CUSTOM_JAR\"\,\"Name\":\"ScholarChain-15a-emr-size-100-20261118T163203Z-87466-stage-in\"\,\"<redacted>OnFailure\":\"CONTINUE\"\,\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\;\ f=<redacted>\;\ want=\\\"\$1\\\"\;\ shift\;\ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{f\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ \{\ printf\ \'STEP-FAIL\ sc-step:\ sha256\ mismatch\ for\ %s:\ the\ installed\ step\ runner\ is\ not\ the\ approved\ one\\\\n\'\ \\\"\$\{f\}\\\"\ \>\&2\;\ exit\ 1\;\ \}\;\ exec\ bash\ \\\"\$\{f\}\\\"\ \\\"\$@\\\"\"\,\"sc-step\"\,\"<redacted>\"\,\"stage-in\"\,\"STEP_SECONDS=225\"\,\"KILL_AFTER=60\"\,\"RUN_ID=15a-emr-size-100-20261118T163203Z-87466\"\,\"TAG=15a-emr-size-100-20261118T163203Z-87466\"\,\"MNT=/mnt/scholarchain\"\,\"INPUT_PREFIX=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/input/size-100/\"\,\"REGION=us-east-2\"\,\"MAX_INPUT_BYTES=268435456\"\]\}\] --query StepIds\[0\] --output text
+pipeline| STEP-SUBMITTED: stage-in s-09519567MXQFPXIKLQC
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09519567MXQFPXIKLQC --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09519567MXQFPXIKLQC --query Step.Status.State --output text
+pipeline| STEP-RESULT: stage-in s-09519567MXQFPXIKLQC COMPLETED
+pipeline| STEP: step-hadoop-prep
+pipeline| pre-spend receipt ok: monitoring active, snapshot 2.0 h old, headroom 2.00 USD; spend to date AWS 15.75 + Anthropic 0.08 + Voyage 0.00 = 15.83 USD
+pipeline| [2026-11-18T16:32:40Z] [20261118T163204Z-87595] INFO pre-spend receipt re-verified before submitting step hadoop-prep
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --steps \[\{\"Type\":\"CUSTOM_JAR\"\,\"Name\":\"ScholarChain-15a-emr-size-100-20261118T163203Z-87466-hadoop-prep\"\,\"<redacted>OnFailure\":\"CONTINUE\"\,\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\;\ f=<redacted>\;\ want=\\\"\$1\\\"\;\ shift\;\ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{f\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ \{\ printf\ \'STEP-FAIL\ sc-step:\ sha256\ mismatch\ for\ %s:\ the\ installed\ step\ runner\ is\ not\ the\ approved\ one\\\\n\'\ \\\"\$\{f\}\\\"\ \>\&2\;\ exit\ 1\;\ \}\;\ exec\ bash\ \\\"\$\{f\}\\\"\ \\\"\$@\\\"\"\,\"sc-step\"\,\"<redacted>\"\,\"hadoop-prep\"\,\"STEP_SECONDS=900\"\,\"KILL_AFTER=60\"\,\"RUN_ID=15a-emr-size-100-20261118T163203Z-87466\"\,\"TAG=15a-emr-size-100-20261118T163203Z-87466\"\,\"MNT=/mnt/scholarchain\"\,\"SUBMIT_JAR_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/hadoop-submit.jar\"\,\"SUBMIT_JAR_SHA=3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6\"\,\"LIBJARS_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/hadoop-bundle.jar\"\,\"LIBJARS_SHA=76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a\"\,\"CONFIG_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/hadoop-config.json\"\,\"CONFIG_SHA=5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57\"\,\"CEILINGS=60000\ 8\ 256\ 4096\ 64\ 8388608\ 8388608\"\,\"CEILING_PY_SHA=<redacted>\"\,\"DBLP_SNAPSHOT=dblp-2026-10-03\"\,\"DBLP_RETRIEVAL=2026-10-22\"\,\"OPENALEX_SNAPSHOT=openalex-rest-2026-10-05\"\,\"OPENALEX_RETRIEVAL=2026-10-05\"\,\"CROSSREF_SNAPSHOT=crossref-rest-2026-10-05\"\,\"CROSSREF_RETRIEVAL=2026-10-05\"\,\"ORCID_SNAPSHOT=orcid-public-api-2026-10-05\"\,\"ORCID_RETRIEVAL=2026-10-05\"\]\}\] --query StepIds\[0\] --output text
+pipeline| STEP-SUBMITTED: hadoop-prep s-078795531R2JAAWHX723
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-078795531R2JAAWHX723 --query Step.Status.State --output text
+pipeline| STEP-RESULT: hadoop-prep s-078795531R2JAAWHX723 COMPLETED
+pipeline| STEP: step-entity-resolution
+pipeline| pre-spend receipt ok: monitoring active, snapshot 2.1 h old, headroom 2.00 USD; spend to date AWS 15.75 + Anthropic 0.08 + Voyage 0.00 = 15.83 USD
+pipeline| [2026-11-18T16:40:50Z] [20261118T163204Z-87595] INFO pre-spend receipt re-verified before submitting step entity-resolution
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --steps \[\{\"Type\":\"CUSTOM_JAR\"\,\"Name\":\"ScholarChain-15a-emr-size-100-20261118T163203Z-87466-entity-resolution\"\,\"<redacted>OnFailure\":\"CONTINUE\"\,\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\;\ f=<redacted>\;\ want=\\\"\$1\\\"\;\ shift\;\ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{f\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ \{\ printf\ \'STEP-FAIL\ sc-step:\ sha256\ mismatch\ for\ %s:\ the\ installed\ step\ runner\ is\ not\ the\ approved\ one\\\\n\'\ \\\"\$\{f\}\\\"\ \>\&2\;\ exit\ 1\;\ \}\;\ exec\ bash\ \\\"\$\{f\}\\\"\ \\\"\$@\\\"\"\,\"sc-step\"\,\"<redacted>\"\,\"entity-resolution\"\,\"STEP_SECONDS=900\"\,\"KILL_AFTER=60\"\,\"RUN_ID=15a-emr-size-100-20261118T163203Z-87466\"\,\"TAG=15a-emr-size-100-20261118T163203Z-87466\"\,\"MNT=/mnt/scholarchain\"\,\"JAVA_HOME_FILE=/opt/scholarchain-spike/java-home\"\,\"ER_XMX=12g\"\,\"ER_JAR_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/entity-resolution.jar\"\,\"ER_JAR_SHA=e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768\"\,\"ER_POLICY_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/er-policy.json\"\,\"ER_POLICY_SHA=2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f\"\,\"ER_CONFIG_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/er-config.json\"\,\"ER_CONFIG_SHA=a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c\"\]\}\] --query StepIds\[0\] --output text
+pipeline| STEP-SUBMITTED: entity-resolution s-0810437381KJNWGMEWYW
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-0810437381KJNWGMEWYW --query Step.Status.State --output text
+pipeline| STEP-RESULT: entity-resolution s-0810437381KJNWGMEWYW COMPLETED
+pipeline| STEP: step-spark-class-origin
+pipeline| pre-spend receipt ok: monitoring active, snapshot 2.2 h old, headroom 2.00 USD; spend to date AWS 15.75 + Anthropic 0.08 + Voyage 0.00 = 15.83 USD
+pipeline| [2026-11-18T16:46:58Z] [20261118T163204Z-87595] INFO pre-spend receipt re-verified before submitting step spark-class-origin
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --steps \[\{\"Type\":\"CUSTOM_JAR\"\,\"Name\":\"ScholarChain-15a-emr-size-100-20261118T163203Z-87466-spark-class-origin\"\,\"<redacted>OnFailure\":\"CONTINUE\"\,\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\;\ f=<redacted>\;\ want=\\\"\$1\\\"\;\ shift\;\ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{f\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ \{\ printf\ \'STEP-FAIL\ sc-step:\ sha256\ mismatch\ for\ %s:\ the\ installed\ step\ runner\ is\ not\ the\ approved\ one\\\\n\'\ \\\"\$\{f\}\\\"\ \>\&2\;\ exit\ 1\;\ \}\;\ exec\ bash\ \\\"\$\{f\}\\\"\ \\\"\$@\\\"\"\,\"sc-step\"\,\"<redacted>\"\,\"spark-class-origin\"\,\"STEP_SECONDS=225\"\,\"KILL_AFTER=60\"\,\"RUN_ID=15a-emr-size-100-20261118T163203Z-87466\"\,\"TAG=15a-emr-size-100-20261118T163203Z-87466\"\,\"MNT=/mnt/scholarchain\"\,\"JAVA_HOME_FILE=/opt/scholarchain-spike/java-home\"\,\"RUNTIME_DIR=/opt/scholarchain-runtime\"\,\"JOB_JAR=/opt/scholarchain-runtime/application/scholarchain-job.jar\"\,\"JOB_JAR_SHA=<redacted>\"\,\"MAX_EXECUTORS=2\"\,\"EXPECTED_SPARK_VERSION=3.5.4\"\,\"EXPECTED_SCALA_VERSION=2.13.14\"\,\"CLASS_ORIGIN_PY_SHA=<redacted>\"\,\"SPARK_CONF=spark.yarn.jars=local:/opt/scholarchain-runtime/jars/\*\"\,\"SPARK_CONF=spark.yarn.populateHadoopClasspath=false\"\,\"SPARK_CONF=spark.hadoop.fs.defaultFS=file:///\"\,\"SPARK_CONF=spark.hadoop.io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec\,org.apache.hadoop.io.compress.DefaultCodec\,org.apache.hadoop.io.compress.BZip2Codec\,org.apache.hadoop.io.compress.SnappyCodec\"\,\"SPARK_CONF=spark.authenticate=true\"\,\"SPARK_CONF=spark.network.crypto.enabled=true\"\,\"SPARK_CONF=spark.network.crypto.authEngine<redacted>=1\"\,\"SPARK_CONF=spark.network.crypto.saslFallback=false\"\,\"SPARK_CONF=spark.io.encryption.enabled=true\"\,\"SPARK_CONF=spark.dynamicAllocation.enabled=true\"\,\"SPARK_CONF=spark.dynamicAllocation.shuffleTracking.enabled=true\"\,\"SPARK_CONF=spark.shuffle.service.enabled=false\"\,\"SPARK_CONF=spark.dynamicAllocation.minExecutors=1\"\,\"SPARK_CONF=spark.executor.cores=1\"\,\"SPARK_CONF=spark.executor.memory=3g\"\,\"SPARK_CONF=spark.driver.cores=1\"\,\"SPARK_CONF=spark.driver.memory=3g\"\,\"SPARK_CONF=spark.task.maxFailures=2\"\,\"SPARK_CONF=spark.yarn.maxAppAttempts=1\"\,\"SPARK_CONF=spark.ui.enabled=false\"\,\"SPARK_CONF=spark.driver.extraJavaOptions=-Xlog:class+load=info\"\,\"SPARK_CONF=spark.executor.extraJavaOptions=-Xlog:class+load=info\"\]\}\] --query StepIds\[0\] --output text
+pipeline| STEP-SUBMITTED: spark-class-origin s-09814723LU3FPZ2QVXB3
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09814723LU3FPZ2QVXB3 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09814723LU3FPZ2QVXB3 --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09814723LU3FPZ2QVXB3 --query Step.Status.State --output text
+pipeline| STEP-RESULT: spark-class-origin s-09814723LU3FPZ2QVXB3 COMPLETED
+pipeline| STEP: step-spark-job
+pipeline| pre-spend receipt ok: monitoring active, snapshot 2.2 h old, headroom 2.00 USD; spend to date AWS 15.75 + Anthropic 0.08 + Voyage 0.00 = 15.83 USD
+pipeline| [2026-11-18T16:48:00Z] [20261118T163204Z-87595] INFO pre-spend receipt re-verified before submitting step spark-job
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --steps \[\{\"Type\":\"CUSTOM_JAR\"\,\"Name\":\"ScholarChain-15a-emr-size-100-20261118T163203Z-87466-spark-job\"\,\"<redacted>OnFailure\":\"CONTINUE\"\,\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\;\ f=<redacted>\;\ want=\\\"\$1\\\"\;\ shift\;\ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{f\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ \{\ printf\ \'STEP-FAIL\ sc-step:\ sha256\ mismatch\ for\ %s:\ the\ installed\ step\ runner\ is\ not\ the\ approved\ one\\\\n\'\ \\\"\$\{f\}\\\"\ \>\&2\;\ exit\ 1\;\ \}\;\ exec\ bash\ \\\"\$\{f\}\\\"\ \\\"\$@\\\"\"\,\"sc-step\"\,\"<redacted>\"\,\"spark-job\"\,\"STEP_SECONDS=1800\"\,\"KILL_AFTER=60\"\,\"RUN_ID=15a-emr-size-100-20261118T163203Z-87466\"\,\"TAG=15a-emr-size-100-20261118T163203Z-87466\"\,\"MNT=/mnt/scholarchain\"\,\"JAVA_HOME_FILE=/opt/scholarchain-spike/java-home\"\,\"RUNTIME_DIR=/opt/scholarchain-runtime\"\,\"JOB_JAR=/opt/scholarchain-runtime/application/scholarchain-job.jar\"\,\"JOB_JAR_SHA=<redacted>\"\,\"MAX_EXECUTORS=2\"\,\"EXPECTED_SPARK_VERSION=3.5.4\"\,\"EXPECTED_SCALA_VERSION=2.13.14\"\,\"CLASS_ORIGIN_PY_SHA=<redacted>\"\,\"RENDER_PY_SHA=<redacted>\"\,\"TEMPLATE_REF=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/spark-config-template.json\"\,\"TEMPLATE_SHA=9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a\"\,\"SPARK_CONF=spark.yarn.jars=local:/opt/scholarchain-runtime/jars/\*\"\,\"SPARK_CONF=spark.yarn.populateHadoopClasspath=false\"\,\"SPARK_CONF=spark.hadoop.fs.defaultFS=file:///\"\,\"SPARK_CONF=spark.hadoop.io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec\,org.apache.hadoop.io.compress.DefaultCodec\,org.apache.hadoop.io.compress.BZip2Codec\,org.apache.hadoop.io.compress.SnappyCodec\"\,\"SPARK_CONF=spark.authenticate=true\"\,\"SPARK_CONF=spark.network.crypto.enabled=true\"\,\"SPARK_CONF=spark.network.crypto.authEngine<redacted>=1\"\,\"SPARK_CONF=spark.network.crypto.saslFallback=false\"\,\"SPARK_CONF=spark.io.encryption.enabled=true\"\,\"SPARK_CONF=spark.dynamicAllocation.enabled=true\"\,\"SPARK_CONF=spark.dynamicAllocation.shuffleTracking.enabled=true\"\,\"SPARK_CONF=spark.shuffle.service.enabled=false\"\,\"SPARK_CONF=spark.dynamicAllocation.minExecutors=1\"\,\"SPARK_CONF=spark.executor.cores=1\"\,\"SPARK_CONF=spark.executor.memory=3g\"\,\"SPARK_CONF=spark.driver.cores=1\"\,\"SPARK_CONF=spark.driver.memory=3g\"\,\"SPARK_CONF=spark.task.maxFailures=2\"\,\"SPARK_CONF=spark.yarn.maxAppAttempts=1\"\,\"SPARK_CONF=spark.ui.enabled=false\"\,\"SPARK_CONF=spark.driver.extraJavaOptions=-Xlog:class+load=info\"\,\"SPARK_CONF=spark.executor.extraJavaOptions=-Xlog:class+load=info\"\]\}\] --query StepIds\[0\] --output text
+pipeline| STEP-SUBMITTED: spark-job s-09595101MXOLD79N7UTQ
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09595101MXOLD79N7UTQ --query Step.Status.State --output text
+pipeline| CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-step --region us-east-2 --cluster-id j-00663481CVHVEQEYZQ5L --step-id s-09595101MXOLD79N7UTQ --query Step.Status.State --output text
+pipeline| STEP-RESULT: spark-job s-09595101MXOLD79N7UTQ FAILED
+pipeline| [2026-11-18T16:48:32Z] [20261118T163204Z-87595] ERROR failed at step step-spark-job: run=15a-emr-size-100-20261118T163203Z-87466 FAILED at step spark-job: state FAILED
+pipeline| RESULT: FAIL step=step-spark-job reason=run=15a-emr-size-100-20261118T163203Z-87466 FAILED at step spark-job: state FAILED
+STEP: pipeline-failed
+RESULT: FAIL step=delegate-pipeline reason=run-bounded-pipeline.sh exited 4 (see the pipeline| lines)

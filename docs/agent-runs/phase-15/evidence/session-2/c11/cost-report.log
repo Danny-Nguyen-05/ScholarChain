@@ -1,0 +1,8 @@
+Project cost report as of 2026-11-20T15:48:56Z
+
+AWS        USD      17.88   usage: Cost Explorer 2026-11-01..2026-11-20, daily by service, credits excluded: total 17.88; Session 2 day Nov 18 = 2.13 (Neptune 0.49, EC2-Other 0.44, EC2-Instances 0.28, S3 0.26, DynamoDB 0.19, EFS 0.14, ECS 0.12, VPC 0.06, EMR 0.06, ELB 0.05, Secrets 0.03, KMS 0.01); Nov 19 and Nov 20 = 0.00. Budgets (period from 2026-10-01): 17.87 of 25.00.
+Anthropic  USD       0.08   usage: project LLM ledger USD 0.075075 from earlier phases (receipt figure 0.08, human decision); no Anthropic use in Session 2 (placeholder key only, ledger unchanged)
+Voyage AI  USD       0.00   usage: voyage-4-lite: dashboard Cost tab November 2026 monthly spend USD 0.00, balance 0.00 (inside the free tokens); token count not read; R-b window not isolable on the page: unverified
+Combined   USD      17.96   (AWS + Anthropic + Voyage AI)
+
+Project ceiling USD 25.00; remaining USD 7.04

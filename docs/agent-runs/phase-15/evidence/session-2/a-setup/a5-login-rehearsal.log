@@ -1,0 +1,9 @@
+arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator
+arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator
+arn:aws:sts::<acct>:assumed-role/scholarchain-course-operator-loader/scholarchain-billing-operator
+CREDENTIALS-RESOLVED: profile=scholarchain-loader-java sessionToken=true expiresAt=2026-11-18T14:32:59Z
+arn:aws:sts::<acct>:assumed-role/scholarchain-course-operator-reader/scholarchain-billing-operator
+CREDENTIALS-RESOLVED: profile=scholarchain-reader-java sessionToken=true expiresAt=2026-11-18T14:34:05Z
+arn:aws:sts::<acct>:assumed-role/scholarchain-course-operator-cleanup/scholarchain-billing-operator
+CREDENTIALS-RESOLVED: profile=scholarchain-cleanup-java sessionToken=true expiresAt=2026-11-18T14:35:08Z
+arn:aws:sts::<acct>:assumed-role/scholarchain-course-operator-pipeline/scholarchain-billing-operator

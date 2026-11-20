@@ -1,0 +1,36 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 1 source file(s); redacted.
+
+## <repo>/target/phase15/session2/evidence/emr-upload.log (131 lines, sha256 f5f71ff7d0b9b34600071ca5abba7d6b58805992f3dea5f8aca0e8d0479cd094)
+STEP: start
+[2026-11-18T16:19:45Z] [20261118T161945Z-82770] INFO script=upload-emr-artifacts.sh mode=execute run_id=20261118T161945Z-82770 repo_root=<repo>
+STEP: inputs
+STEP: approval-record
+STEP: artifact-scan
+EMR-UPLOAD: run=run-20261118 files=17 bytes=55011333 datasets=1
+EMR-INPUT-DATASET: label=size-100 files=4 bytes=6053225 skipped_hidden=0
+STEP: next-values
+EMR-CONFIG: bootstrap_uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/bin/bootstrap.sh bootstrap_sha256=2d90f3bc9538a6ac02fe4ccf6a0560e92eb41c026b6032394983e7c7b3905070
+EMR-RENDER: --sha er-config=a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/er-config.json
+EMR-RENDER: --sha er-policy=2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/er-policy.json
+EMR-RENDER: --sha hadoop-config=5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/hadoop-config.json
+EMR-RENDER: --sha spark-config-template=9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/config/spark-config-template.json
+EMR-RENDER: --sha er-jar=e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/entity-resolution.jar
+EMR-RENDER: --sha hadoop-libjars=76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/hadoop-bundle.jar
+EMR-RENDER: --sha hadoop-submit-jar=3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/hadoop-submit.jar
+EMR-CONFIG: job_jar_uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/spark-job.jar job_jar_sha256=<redacted>
+EMR-RENDER: --sha job-jar=<redacted>    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/jars/spark-job.jar
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/steps/sc-ceiling-check.py sha256=<redacted> dest=<redacted>
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/steps/sc-class-origin-verify.py sha256=<redacted> dest=<redacted>
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/steps/sc-render-spark-config.py sha256=<redacted> dest=<redacted>
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/steps/sc-step.sh sha256=b79f5c1f50f1bf95a2d57c891f82df65d92aee50ab6888e8c3f2a12771b9ff2d dest=<redacted>
+EMR-PIPELINE: input-prefix label=size-100 uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/input/size-100 files=4 bytes=6053225
+EMR-PIPELINE: output prefix (written by the EMR instance role, not uploaded here): s3://scholarchain-course-<acct>-artifacts/pipeline/run-20261118/15a/size-N
+EMR-PIPELINE: the G5 runtime archive is uploaded by deploy.sh base-apply, not by this script
+STEP: approval-record
+STEP: identity
+[2026-11-18T16:19:47Z] [20261118T161945Z-82770] INFO caller is a scholarchain-course-operator-pipeline session of the bucket's account
+STEP: preflight
+STEP: upload
+STEP: verify
+STEP: manifest
+RESULT: PASS 17 file(s) verified under emr/run-20261118/ (17 uploaded, 0 unchanged); manifest target/phase15/session2/evidence/emr-upload-manifest.json

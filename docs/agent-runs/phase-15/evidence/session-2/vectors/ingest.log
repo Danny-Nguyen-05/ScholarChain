@@ -1,0 +1,12 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from <repo>/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:<repo>/)
+[info] running (fork) edu.uic.cs441.scholarchain.rag.LiveEmbeddingIngestMain --config <repo>/target/phase15/session2/14c-work/live-config.json --manifest <repo>/target/phase15/session2/14c-work/real-model-manifest.json --approval <repo>/target/phase15/session2/14c-work/ingest-approval.json --report <repo>/target/phase15/session2/evidence/ingest-report.json --run-id run-20261118-ingest
+[error] Exception in thread "main" java.lang.IllegalArgumentException: live-ingestion-rejected-items
+[error] 	at edu.uic.cs441.scholarchain.rag.LiveEmbeddingIngestMain$.main(LiveEmbeddingIngestMain.scala:643)
+[error] 	at edu.uic.cs441.scholarchain.rag.LiveEmbeddingIngestMain.main(LiveEmbeddingIngestMain.scala)
+[error] Nonzero exit code returned from runner: 1
+[error] (rag / Compile / runMain) Nonzero exit code returned from runner: 1
+[error] Total time: 2740 s (45:40), completed Nov 18, 2026, 12:13:34 PM

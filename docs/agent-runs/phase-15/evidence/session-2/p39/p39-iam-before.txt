@@ -1,0 +1,11 @@
+role:
+scholarchain-deployer
+exit=0
+attached (expect 7):
+scholarchain-deployer-phase14-main--compute	scholarchain-deployer-phase14-main--keys-obs	scholarchain-deployer-phase14-main--network-mod	scholarchain-deployer-phase14-main--emr-efs	scholarchain-deployer-phase14-main--data	scholarchain-deployer-phase14-main--iam	scholarchain-deployer-phase14-main--network
+exit=0
+inline (expect only the login policy):
+scholarchain-deployer-same-device-login
+exit=0
+instance profiles (expect nothing):
+exit=0

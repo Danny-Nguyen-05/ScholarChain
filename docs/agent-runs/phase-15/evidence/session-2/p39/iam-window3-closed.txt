@@ -1,0 +1,7 @@
+Thu Nov 19 19:09:33 UTC 2026
+attached:
+
+aws: [ERROR]: Unable to create or refresh login credentials due to insufficient permissions. You may be missing permission for the 'signin:CreateOAuth2Token' action.
+inline:
+
+aws: [ERROR]: Unable to create or refresh login credentials due to insufficient permissions. You may be missing permission for the 'signin:CreateOAuth2Token' action.
