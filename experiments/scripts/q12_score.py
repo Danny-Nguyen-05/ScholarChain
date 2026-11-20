@@ -4,8 +4,10 @@
   python3 -I experiments/scripts/q12_score.py --key experiments/inputs/q12/answer-key.json --raw target/experiment-runs/q12-benchmark-<run-id>/raw \\
       --export-dir <spark export dir> --out-json <scores.json> --out-md <scores.md>
 
-Three scores per question, each pass/fail with the reasons recorded (nothing is guessed; a missing fetch is a failure, not a pass):
-  (i)   retrieval   every evidence id cited by the answer's claims or by /v1/explain resolves through /v1/evidence/{id}; the evidence names the
+Three scores per question, each pass/fail with the reasons recorded (nothing is guessed; an evidence fetch that failed is a failure, not a pass;
+evidence that was never fetched, because of the 60-id cap, or was too large to store, is UNVERIFIED: it neither fails nor passes by itself, and every
+unverified item is counted and shown next to the score, as "pass (unverified N)" in the Markdown):
+  (i)   retrieval   every evidence id cited by the answer's claims or by /v1/explain that was fetched resolves through /v1/evidence/{id}; the evidence names the
                     entities the key requires and has the evidence kind the key requires; every cited value that the key (always) or the export
                     (with --export-dir: distinct coauthors, weighted degree, component and community ids, bridge measures, team sizes,
                     coauthor lists, path edges, community members, temporal deltas) can check is correct.
@@ -22,7 +24,7 @@ Ranking questions are checked for VALUES AND ORDER only: the runtime ranks only 
 verified against the export and the descending order inside the answer is checked, while agreement with the corpus-wide top (corpus_top1_agrees) is
 information and never decides pass or fail. The temporal communityJaccardOverlap is a lower bound (key <= runtime <= 1).
 --export-dir is required (the deep checks are what make retrieval and claims meaningful); --allow-shallow runs key-level checks only and labels
-every output SHALLOW. Evidence that was not fetched because of the 60-id cap, or was too large to store, is counted as unverified, not as unresolved.
+every output SHALLOW. Unverified evidence is counted apart from unresolved evidence (a fetch that failed), see above.
 Exit codes: 0 scored (the exit code does not depend on the scores), 1 refused (unreadable input), 2 usage.
 """
 import argparse
@@ -35,7 +37,8 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCHEMA = "scholarchain.q12-scores.v1"
 WORDS = {1: ("one", "direct", "directly", "single"), 2: ("two",), 3: ("three",), 4: ("four",), 5: ("five",), 6: ("six",)}
-ERROR_CODE = re.compile(r"^[A-Z_]{1,40}$")
+NUMBER_WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
+ERROR_CODE = re.compile(r"[A-Z_]{1,40}")   # used with fullmatch: "$" would accept a trailing newline
 NUMBER = re.compile(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?")
 HOMONYM = re.compile(r"\s+\d{4}$")
 
@@ -147,9 +150,18 @@ class Deep:
                 out.append("page holds %d coauthors, expected %d" % (len(ids), min(len(adj), 25)))
         elif kind == "edge":
             a, b = f.get("researcherA"), f.get("researcherB")
+            if not isinstance(a, str) or not isinstance(b, str):
+                return out   # a claim that restates only part of an edge: nothing to check against the export
             if wg.joint(a, b) == 0:
                 out.append("no coauthor edge between the cited researchers in %s" % window)
             else:
+                shared = self.ex.authored_by.get(a, set()) & self.ex.authored_by.get(b, set())
+                cited = set(f.get("workIds") or [])
+                if cited - shared:
+                    out.append("%d cited joint works are not works of both researchers" % len(cited - shared))
+                known = self.ex.edge_works[window].get((a, b) if a < b else (b, a), ())
+                if wg.joint(a, b) <= 5 and cited != set(known):   # for joint <= 5 the representative work ids are exactly the joint works
+                    out.append("workIds differ from the %d joint works of the export in %s" % (len(known), window))
                 if "jointPublicationCount" in f and not same(f["jointPublicationCount"], wg.joint(a, b)):
                     out.append("jointPublicationCount %s != %s" % (f["jointPublicationCount"], wg.joint(a, b)))
                 if len(f.get("workIds") or []) != wg.joint(a, b):
@@ -267,14 +279,18 @@ def key_check(q, items):
             if k == "ranking" and "maximumCoauthorsOnOnePaper" in f and f["maximumCoauthorsOnOnePaper"] > exp["global_maximum_all_years"]:
                 out.append("a windowed team size exceeds the all-years maximum")
     elif kind == "evidence":
-        r = exp["researcher"]["id"]
-        if not any(r in s for k, s, w, f in seen):
-            out.append("no evidence item names the researcher")
+        pair = {exp["a"]["id"], exp["b"]["id"]}
+        edges = [f for k, s, w, f in seen if k == "edge" and {f.get("researcherA"), f.get("researcherB")} == pair]
+        if not edges:
+            out.append("no edge evidence between the two researchers")
+        for f in edges:
+            if sorted(f.get("workIds") or []) != exp["joint_work_ids"]:
+                out.append("edge workIds %s differ from the key joint works %s" % (sorted(f.get("workIds") or [])[:3], exp["joint_work_ids"][:3]))
+            if "jointPublicationCount" in f and not same(f["jointPublicationCount"], exp["joint_publications"]):
+                out.append("jointPublicationCount %s != key %s" % (f["jointPublicationCount"], exp["joint_publications"]))
         for k, s, w, f in seen:
-            if r in s and "distinctCoauthorCount" in f and not same(f["distinctCoauthorCount"], exp["distinctCoauthorCount"]):
-                out.append("distinctCoauthorCount %s != key %s" % (f["distinctCoauthorCount"], exp["distinctCoauthorCount"]))
-            if r in s and "publicationCount" in f and not same(f["publicationCount"], exp["publicationCount"]):
-                out.append("publicationCount %s != key %s" % (f["publicationCount"], exp["publicationCount"]))
+            if k == "path" and f.get("pathStatus") == "Found" and not same(f.get("hopCount", 1), 1):
+                out.append("cited path has %s hops, key says 1" % f.get("hopCount"))
     return out
 
 
@@ -310,6 +326,8 @@ def text_check(q, body, ranking_first):
     nums = numbers_in(text)
     for group in ([] if q["type"] == "shortest_path" else req.get("numbers") or []):   # a path's hop count is checked below, digits or words
         by_id = q["type"] == "component" and q["expected"]["component_id"] in text   # a component answer may give the size or the component id
+        if q["type"] == "evidence" and re.search(r"\b%s\b" % NUMBER_WORDS.get(req.get("count_words"), "\0"), text, re.I):
+            continue   # the joint-work count as a word ("two joint works")
         if not by_id and not any(all(float(n) in nums for n in alt) for alt in group):
             out.append("none of the number alternatives %s appears" % json.dumps(group))
     for name in req.get("names") or []:
@@ -354,7 +372,7 @@ def classify(row):
     if 400 <= status < 500:
         # only the service's closed UNSUPPORTED_QUERY refusal is an abstention; 429, 400, 401 ... are errors of the run, not answers
         code = row.get("error_code")
-        return "refused" if status == 422 and isinstance(code, str) and ERROR_CODE.match(code) and code == "UNSUPPORTED_QUERY" else "error"
+        return "refused" if status == 422 and isinstance(code, str) and ERROR_CODE.fullmatch(code) and code == "UNSUPPORTED_QUERY" else "error"
     outcome = str(explain.get("outcome", "")).upper()
     verification = str(explain.get("verificationStatus", "")).upper()
     if outcome == "ABSTAINED" or verification == "ABSTAINED":
@@ -388,7 +406,7 @@ def score_question(q, row, deep):
         return result
     body = row.get("answer")
     explain = (row.get("explain") or {}).get("body") or {}
-    result["error_code"] = row.get("error_code") if isinstance(row.get("error_code"), str) and ERROR_CODE.match(row["error_code"]) else None
+    result["error_code"] = row.get("error_code") if isinstance(row.get("error_code"), str) and ERROR_CODE.fullmatch(row["error_code"]) else None
     counters = explain.get("counters") or {}
     attempted, verified, rejected = counters.get("attemptedClaims"), counters.get("verifiedClaims"), counters.get("rejectedClaims")
     claims = (body or {}).get("claims") if isinstance(body, dict) else []
@@ -481,7 +499,7 @@ def score_question(q, row, deep):
         subj = rt.get("subjectIds") or s0
         pseudo = {"supportingContent": {"subjectIds": subj, "windowIds": w0, "values": rt.get("values") or []}}
         pseudo["supportingContent"]["values"] = [{"field": "kind", "text": k0}] + [v for v in rt.get("values") or [] if v.get("field") != "kind"]
-        bad = [m for m in key_check(q, [pseudo]) if not m.startswith("no ")] if q["type"] != "evidence" else []
+        bad = [m for m in key_check(q, [pseudo]) if not m.startswith("no ")]
         if deep and k0:
             pk, ps, pw, pf = flatten(pseudo)
             bad += deep.check(pk, ps, pw, pf)
@@ -556,16 +574,19 @@ def markdown(doc):
     lines = ["# Q12 benchmark scores%s" % (" (SHALLOW: key-level checks only, not a full score)" if shallow else ""), "",
              "Run `%s`, key `%s` (export run `%s`), deep checks: %s." % (doc["run_id"], doc["key_sha256"][:16], doc["export_run_id"], doc["deep_checks"]), "",
              "## Headline: the %d answer-expected questions" % t["questions"], "",
-             "retrieval %d, claims %d, text %d, all three %d of %d." % (t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], t["questions"]), "",
+             "retrieval %d, claims %d, text %d, all three %d of %d. Unverified evidence items (not fetched or too large, neither failed nor passed): %d across %d questions." % (
+                 t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], t["questions"], doc["unverified"]["items"], doc["unverified"]["questions"]), "",
              "## Abstain-expected questions (thin data): %d" % a["questions"], "",
              "correct abstentions %d of %d (a 200 ABSTAINED answer or a 422 UNSUPPORTED_QUERY refusal; anything else is an error)." % (a["all_pass"], a["questions"]), "",
              "## Per question", "",
-             "| id | type | level | outcome | retrieval | claims (a/v/r) | text | all | first failure |", "|---|---|---|---|---|---|---|---|---|"]
+             "| id | type | level | outcome | retrieval | unverified | claims (a/v/r) | text | all | first failure |", "|---|---|---|---|---|---|---|---|---|---|"]
     for r in doc["questions"]:
         c = r["claims"]
         first = (r["retrieval"].get("reasons") or r["claims"].get("reasons") or r["text"].get("reasons") or [""])[0]
-        lines.append("| %s | %s | %s | %s | %s | %s/%s/%s %s | %s | %s | %s |" % (
-            r["id"], r["type"], r["check_level"], r["outcome_kind"], "pass" if r["retrieval"].get("pass") else "FAIL",
+        unv = r["retrieval"].get("unverified") or 0
+        lines.append("| %s | %s | %s | %s | %s | %s | %s/%s/%s %s | %s | %s | %s |" % (
+            r["id"], r["type"], r["check_level"], r["outcome_kind"],
+            ("pass" if r["retrieval"].get("pass") else "FAIL") + (" (unverified %d)" % unv if unv else ""), unv,
             c.get("attempted"), c.get("verified"), c.get("rejected"), "pass" if c.get("pass") else "FAIL",
             "pass" if r["text"].get("pass") else "FAIL", "pass" if r["pass"] else "FAIL", first.replace("|", "/")[:110]))
     lines += ["", "## Per type", "", "| type | questions | retrieval | claims | text | all pass | abstained/refused |", "|---|---|---|---|---|---|---|"]
@@ -607,15 +628,16 @@ def main(argv):
         print("SCORE-REFUSED: %s: %s" % (type(error).__name__, error))
         return 1
     per_type, totals = summarize(results)
-    doc = {"schema": SCHEMA, "run_id": run_id, "key_sha256": g.sha256_file(args.key), "export_run_id": export_run,
+    unverified = [r["retrieval"].get("unverified") or 0 for r in results]
+    doc = {"schema": SCHEMA, "run_id": run_id, "unverified": {"items": sum(unverified), "questions": sum(1 for u in unverified if u)}, "key_sha256": g.sha256_file(args.key), "export_run_id": export_run,
            "deep_checks": "export" if deep else "SHALLOW (no --export-dir)", "per_type": per_type, "totals": totals, "questions": results}
     with open(args.out_json, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(json.dumps(doc, indent=1, sort_keys=True) + "\n")
     with open(args.out_md, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(markdown(doc))
     t, a = totals["answer_expected"], totals["abstain_expected"]
-    print("SCORED answer_expected=%d retrieval=%d claims=%d text=%d all=%d | abstain_expected=%d correct=%d | deep_checks=%s" % (
-        t["questions"], t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], a["questions"], a["all_pass"], doc["deep_checks"]))
+    print("SCORED answer_expected=%d retrieval=%d claims=%d text=%d all=%d | abstain_expected=%d correct=%d | unverified_evidence=%d | deep_checks=%s" % (
+        t["questions"], t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], a["questions"], a["all_pass"], doc["unverified"]["items"], doc["deep_checks"]))
     return 0
 
 

@@ -4,8 +4,8 @@
     "all_years_coauthor_pairs": 81181,
     "eligible": 16537,
     "has_topic_works": 1,
-    "include_ids": 22,
-    "include_total_degree": 364,
+    "include_ids": 25,
+    "include_total_degree": 394,
     "institution_nodes": 1,
     "questions": 33,
     "researchers": 21819,
@@ -14,16 +14,16 @@
   "note": "IDs, DBLP author names, topic and institution names and fixed question text only; DBLP is public (CC0). No credential, account or host value.",
   "outputs": {
     "include-ids.txt": {
-      "lines": 22,
-      "sha256": "30b3b78ddcc0571446a82f813ae40d2b6b4d4003247d628687cdec8d4c2efb26"
+      "lines": 25,
+      "sha256": "bbea4f0f90673c118c8ff6020b108f3433111b7cd4f334098b25d69698552649"
     },
     "question-specs.json": {
-      "lines": 452,
-      "sha256": "e9b770d2da88f30d088087492a4b57f746f24330992c03e27ff6589c55b1d5df"
+      "lines": 483,
+      "sha256": "b044ae4cbe814859fd1e53c14de2be688c2457ce34ceddf8f26f68f4ce6a7270"
     },
     "questions.txt": {
       "lines": 33,
-      "sha256": "0a6bfe2671347ca6014c103c53ddedb872ed4153330027812e57df15443c51d9"
+      "sha256": "afc09952096c49ebacd61a051542295570ec9bcd39ffb72cb7a3d4fc014e4734"
     }
   },
   "rule": {
@@ -32,7 +32,7 @@
       22
     ],
     "eligible": "unique normalized name, ASCII letters/space/hyphen/apostrophe, 3..60 chars, researcher:<source>:<key> id",
-    "evidence_type": "explain form (SemanticExplanation) naming one researcher; also every question is scored on its evidence trail",
+    "evidence_type": "shortest path between two direct coauthors with 2..5 joint works, answered from the edge evidence (joint work ids); the explain / SemanticExplanation form is not used because the local stack has no vectors; every question is also scored on its evidence trail",
     "hub_band": [
       26,
       35
@@ -41,7 +41,7 @@
     "pick": "candidates sorted by id (pairs by (id_a, id_b)); start = int(sha256(seed|slot)[:8],16) mod n; first unused candidate cyclically",
     "planner_routes": {
       "fallback": "accepted by the deterministic QueryPlannerAgent fallback grammar",
-      "llm": "needs the planner LLM (temporal, community comparison and named explain are not in the fallback grammar)"
+      "llm": "needs the planner LLM (temporal and community comparison are not in the fallback grammar)"
     },
     "thin_data": "topic and institution questions: the export has 3 TOPIC nodes on one work with no AUTHORED edge and 1 INSTITUTION node with 0 AFFILIATED_WITH edges, so the expected outcome is a verified abstention",
     "total": 33,

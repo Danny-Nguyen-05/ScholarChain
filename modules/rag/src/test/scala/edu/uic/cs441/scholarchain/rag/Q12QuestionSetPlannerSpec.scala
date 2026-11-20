@@ -6,9 +6,9 @@ import java.nio.file.{Files, Path}
 import java.util.UUID
 import org.scalatest.funsuite.AnyFunSuite
 
-/** The committed Q12 benchmark questions (experiments/inputs/q12) must plan offline. The 24 marked
+/** The committed Q12 benchmark questions (experiments/inputs/q12) must plan offline. The 27 marked
   * `planner: fallback` plan through the deterministic fallback of the default runtime configuration
-  * (the model client always fails). The 9 marked `llm` need a model; a scripted client returns the
+  * (the model client always fails). The 6 marked `llm` need a model; a scripted client returns the
   * implied plan, which must pass the planner's full validation. No network and no credential is
   * used.
   */
@@ -101,15 +101,18 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
     "unsupportedReason" -> ujson.Null
   )
 
-  test("the committed Q12 set is 33 distinct questions, 24 fallback and 9 model-planned") {
+  test("the committed Q12 set is 33 distinct questions, 27 fallback and 6 model-planned") {
     assert(specs.size == 33 && lines.size == 33)
     assert(specs.map(_.question) == lines, "question-specs.json and questions.txt disagree")
     assert(lines.distinct.size == 33)
-    assert(specs.count(_.planner == "fallback") == 24)
-    assert(
-      specs.filter(_.planner == "llm").map(_.id) ==
-        Vector("q06", "q08", "q11", "q17", "q19", "q22", "q28", "q30", "q33")
-    )
+    assert(specs.count(_.planner == "fallback") == 27)
+    // The route follows the question type, not a hard-coded id: community and temporal questions
+    // have no fallback grammar and need the model; every other type has one.
+    val modelTypes = Set("community", "temporal")
+    assert(specs.filter(_.planner == "llm").map(_.kind).toSet == modelTypes)
+    assert(specs.forall(s => (s.planner == "llm") == modelTypes(s.kind)), "planner route per type")
+    assert(specs.count(_.planner == "llm") == 6)
+    assert(specs.map(_.id).distinct.size == 33)
   }
 
   /** Expected operation, ranking metric and measure by question type and params. */
@@ -133,19 +136,20 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
         byMetric(s.params.obj.get("metric").map(_.str).getOrElse("DISTINCT_COAUTHOR_COUNT"))
       case "institution"   => byMetric(s.params("metric").str)
       case "direct_collab" => (QueryOperation.DirectCoauthors, None, None)
-      case "shortest_path" => (QueryOperation.ShortestPath, None, None)
-      case "component"     => (QueryOperation.ComponentLookup, None, None)
+      // `evidence` questions are graph-answerable pair questions ("shortest path between A and B").
+      case "shortest_path" | "evidence" => (QueryOperation.ShortestPath, None, None)
+      case "component"                  => (QueryOperation.ComponentLookup, None, None)
     }
   }
   private def names(s: Spec): Vector[String] = s.kind match {
     case "direct_collab" | "component" => Vector(s.name("researcher"))
-    case "shortest_path"               => Vector(s.name("a"), s.name("b"))
+    case "shortest_path" | "evidence"  => Vector(s.name("a"), s.name("b"))
     case _                             => Vector.empty
   }
 
-  test("every one of the 24 fallback questions plans through the fallback to its expected plan") {
+  test("every one of the 27 fallback questions plans through the fallback to its expected plan") {
     val fallback = specs.filter(_.planner == "fallback")
-    assert(fallback.size == 24)
+    assert(fallback.size == 27)
     fallback.foreach { s =>
       val (operation, metric, measure) = expected(s)
       planFallback(s) match {
@@ -169,9 +173,9 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
     }
   }
 
-  test("the 9 model-planned questions validate against a scripted implied plan") {
+  test("the 6 model-planned questions validate against a scripted implied plan") {
     val llm = specs.filter(_.planner == "llm")
-    assert(llm.size == 9)
+    assert(llm.size == 6)
     llm.foreach { s =>
       val implied = s.kind match {
         case "community" =>
@@ -187,12 +191,6 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
             Vector(s.name("researcher")),
             windows,
             windows
-          )
-        case "evidence" =>
-          planJson(
-            QueryOperation.SemanticExplanation,
-            Vector(s.name("researcher")),
-            Vector(s.window)
           )
       }
       val result =
@@ -217,7 +215,7 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
   }
 
   test("a model plan that changes the requested windows or invents a name is rejected") {
-    val temporal = specs.find(_.id == "q08").get
+    val temporal = specs.find(_.kind == "temporal").get
     val wrong = planJson(
       QueryOperation.TemporalComparison,
       Vector(temporal.name("researcher")),
@@ -229,7 +227,7 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
     val reordered = new QueryPlannerAgent(scripted(wrong), config, assets)
       .plan(temporal.question, "q12-wrong", provenance)
     assert(reordered.isInstanceOf[PlannerResult.Unsupported], reordered.toString)
-    val community = specs.find(_.id == "q06").get
+    val community = specs.find(_.kind == "community").get
     val invented =
       planJson(QueryOperation.CommunityComparison, Vector("Someone Else"), Vector("all-years"))
     val rejected = new QueryPlannerAgent(scripted(invented), config, assets)

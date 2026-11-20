@@ -268,11 +268,15 @@ class EvalQ12Case(unittest.TestCase):
         rows = self.answers()
         self.assertEqual(len(rows), 6)   # the run completed
         for row in rows[:4]:
-            self.assertEqual((row["status"], row["outcome"], row["raw_outcome"], row["expected_refusal"], row["error_code"]), (422, "ok", "client_error", True, "UNSUPPORTED_QUERY"))
+            self.assertEqual((row["status"], row["outcome"], row["raw_outcome"], row["expected_refusal"], row["error_code"]), (422, "expected_refusal", "client_error", True, "UNSUPPORTED_QUERY"))
             self.assertIsNone(row["query_id"])
             self.assertNotIn("do not store this text", json.dumps(row))   # only the closed error code of a 4xx body is kept
         self.assertEqual(rows[4]["outcome"], "ok")
         self.assertNotIn("expected_refusal", rows[4])
+        with open(os.path.join(self.raw(), "run-record.json")) as handle:
+            record = json.load(handle)
+        self.assertEqual(record["outcomes"], {"expected_refusal": 4, "ok": 2})   # counted apart from ok and from failures
+        self.assertEqual(record["schema"], "scholarchain.evalq12-run-record.v1")
 
     def test_the_same_refusals_on_questions_the_key_expects_answered_count_as_failures(self):
         self.init_ledger()
@@ -346,7 +350,9 @@ class EvalQ12Case(unittest.TestCase):
         self.assertEqual([(r["qid"], r["question"]) for r in rows], [("q04", lines[3]), ("q15", lines[14])])
         self.assertEqual([p[1]["question"] for p in self.state.posts], [lines[3], lines[14]])
         self.assertEqual(len([line for line in self.ledger_lines() if line.get("event") == "answer"]), 2)   # one charge per question asked
-        self.assertIn("PREFLIGHT: 22 of 22 include IDs are present", out)   # the committed include list is checked on a probe too
+        with open(os.path.join(REPO, "experiments", "inputs", "q12", "include-ids.txt")) as handle:
+            n_include = len([x for x in handle if x.strip()])
+        self.assertIn("PREFLIGHT: %d of %d include IDs are present" % (n_include, n_include), out)   # the committed include list is checked on a probe too
         self.assertIn("QUESTIONS: 2 from the questions file", out)
 
     def test_only_rejects_bad_ids_and_a_second_questions_file(self):
@@ -357,7 +363,7 @@ class EvalQ12Case(unittest.TestCase):
             self.assertIn("--only takes distinct question ids", err)
         rc, out, err = self.go(["run", "--only", "q04", "--questions-file", self.questions, "--ledger", self.ledger, "--output-root", self.out_root])
         self.assertEqual(rc, 3)
-        self.assertIn("cannot be combined with --questions-file", err)
+        self.assertIn("cannot be combined with another --questions-file", err)
         self.assertEqual(self.state.posts, [])
 
     def test_skipped_ids_are_listed(self):
@@ -379,6 +385,104 @@ class EvalQ12Case(unittest.TestCase):
         big = row["evidence"]["evidence:big:1"]
         self.assertEqual((big["status"], big["item"], big["oversize"]), (200, None, True))   # over 64 KiB: flagged, the body is not kept
         self.assertFalse(row["evidence"]["evidence:metric:1-0"]["oversize"])
+
+    def run_sequence(self, plan):
+        """plan: list of 'f' (a 500, a failure), 'r' (an expected refusal) or 'o' (ok), one entry per question."""
+        self.init_ledger()
+        questions = self.write_questions(len(plan))
+        with open(questions) as handle:
+            lines = [x.strip() for x in handle]
+        for line, kind in zip(lines, plan):
+            if kind == "f":
+                self.state.forced[line] = (500, {"error": "INTERNAL"})
+            elif kind == "r":
+                self.state.forced[line] = (422, {"error": "UNSUPPORTED_QUERY"})
+        refusals = {line for line, kind in zip(lines, plan) if kind == "r"}
+        with mock.patch.object(q12, "abstain_questions", lambda: refusals):
+            rc, out, err = self.run_q12(questions=questions)
+        return rc, [r["outcome"] for r in self.answers()]
+
+    def test_an_expected_refusal_is_neutral_for_the_failure_counter(self):
+        # failure, refusal, failure, refusal, failure: the refusals neither reset nor add, so the stop comes at the third FAILURE (the 5th question)
+        rc, outcomes = self.run_sequence(["f", "r", "f", "r", "f", "o", "o"])
+        self.assertEqual((rc, outcomes), (4, ["server_error", "expected_refusal", "server_error", "expected_refusal", "server_error"]))
+
+    def test_an_expected_refusal_does_not_reset_the_failure_counter(self):
+        # two failures, a refusal, a failure: the third failure stops the run at the 4th question
+        rc, outcomes = self.run_sequence(["f", "f", "r", "f", "o"])
+        self.assertEqual((rc, len(outcomes)), (4, 4))
+
+    def test_a_success_still_resets_the_failure_counter_between_refusals(self):
+        rc, outcomes = self.run_sequence(["f", "f", "r", "o", "f", "f", "r", "o"])
+        self.assertEqual((rc, len(outcomes)), (0, 8))   # fail fail (refusal) ok resets: never three failures in a row
+
+    def test_a_closed_error_code_needs_a_full_match_not_a_trailing_newline(self):
+        self.init_ledger()
+        questions = self.write_questions(1)
+        with open(questions) as handle:
+            line = handle.read().strip()
+        self.state.forced[line] = (422, {"error": "UNSUPPORTED_QUERY\n"})
+        with mock.patch.object(q12, "abstain_questions", lambda: {line}):
+            self.run_q12(questions=questions)
+        row = self.answers()[0]
+        self.assertEqual((row["error_code"], row["outcome"], "expected_refusal" in row), (None, "client_error", False))
+
+    def test_preflight_wording_separates_auth_transport_and_missing(self):
+        include = self.include_file("researcher:dblp:aaa")
+        self.init_ledger()
+        with mock.patch.dict(os.environ, {"SCHOLARCHAIN_LOAD_API_KEY": "WRONGKEY-1234567890abcdef"}):
+            rc, out, err = self.run_q12("--include-ids-file", include)
+        self.assertEqual(rc, 3)
+        self.assertIn("refused the API key (HTTP 401", err)
+        self.assertIn("says nothing about the artifact", err)
+        self.assertNotIn("lacks", err)
+        self.server.shutdown()
+        self.server.server_close()
+        rc, out, err = self.run_q12("--include-ids-file", include)
+        self.assertEqual(rc, 3)
+        self.assertIn("transport error", err)
+        self.assertNotIn("lacks", err)
+        self.assertEqual([line for line in self.ledger_lines() if line.get("event") == "answer"], [])
+
+    def test_the_inputs_must_agree_with_the_key_before_a_default_file_run(self):
+        self.init_ledger()
+        specs = json.load(open(q12.SPECS))
+        specs["questions"][0]["question"] = "A changed question?"
+        altered = os.path.join(self.tmp, "specs.json")
+        with open(altered, "w") as handle:
+            json.dump(specs, handle)
+        with mock.patch.object(q12, "SPECS", altered):
+            rc, out, err = self.go(["plan", "--ledger", self.ledger])
+        self.assertEqual(rc, 3)
+        self.assertIn("differs from the question_specs_sha256 of answer-key.json", err)
+        self.assertEqual(self.state.posts, [])
+
+    def test_only_accepts_the_default_questions_file_given_explicitly(self):
+        self.init_ledger()
+        rc, out, err = self.go(["run", "--only", "q04", "--questions-file", REAL_QUESTIONS, "--ledger", self.ledger, "--output-root", self.out_root,
+                                "--run-id", "q12-test-1", "--pause-seconds", "0"])
+        self.assertEqual(rc, 0, err)
+        self.assertEqual([r["qid"] for r in self.answers()], ["q04"])
+        rc, out, err = self.go(["run", "--only", "q05", "--questions-file=" + REAL_QUESTIONS, "--ledger", self.ledger, "--output-root", self.out_root,
+                                "--run-id", "q12-test-2", "--pause-seconds", "0"])
+        self.assertEqual(rc, 0, err)
+        self.assertEqual([r["qid"] for r in self.answers("q12-test-2")], ["q05"])
+
+    def test_probe_then_full_run_fit_a_16b_bucket_of_36(self):
+        """The documented order: the --only q04 probe (1 answer), then the full 33 run. With 36 transferred in nothing refuses; with 33 it would."""
+        self.init_ledger()
+        approval = os.path.join(self.tmp, "approval.txt")
+        with open(approval, "w") as handle:
+            handle.write("APPROVED_LLM_TRANSFER=15b->16b:36\n")
+        self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "40")[0], 0)   # Session 1: 16b used up
+        rc, out = self.budget("transfer", "--from", "15b", "--to", "16b", "--answers", "36", "--approval", approval)
+        self.assertEqual(rc, 0, out)
+        rc, out, err = self.go(["run", "--only", "q04", "--ledger", self.ledger, "--output-root", self.out_root, "--run-id", "q12-probe", "--pause-seconds", "0"])
+        self.assertEqual(rc, 0, err)
+        rc, out, err = self.go(["plan", "--ledger", self.ledger])
+        self.assertEqual(rc, 0, err)
+        self.assertIn("BUCKET 16b size=76 used=41 remaining=35", out)   # 40 + 36 transferred, 40 + 1 probe used: 35 left, 33 needed
+        self.assertIn("PLANNED: answers=33", out)
 
     def test_the_committed_question_order_never_puts_two_abstain_questions_together(self):
         specs = os.path.join(REPO, "experiments", "inputs", "q12", "question-specs.json")

@@ -137,15 +137,26 @@
     {
       "id": "q11",
       "params": {
-        "researcher": {
-          "id": "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7",
-          "name": "Vo Quoc Bao Bui"
+        "a": {
+          "id": "researcher:dblp:3f9dbd90194e32a07ff9d000bea4ac07f487bba89e904195c663024d3b99478c",
+          "name": "Varsha Dani"
         },
+        "b": {
+          "id": "researcher:dblp:93498d48afbce9bc5c5211558187ab6390f9dc5d3e81bf63357c773df4282ace",
+          "name": "Jared Saia"
+        },
+        "expected_hops": 1,
+        "joint_publications": 3,
+        "joint_work_ids": [
+          "work:doi:10.1145/1993806.1993833",
+          "work:doi:10.1145/2332432.2332473",
+          "work:doi:10.1145/3293611.3331571"
+        ],
         "window": "all-years"
       },
-      "planner": "llm",
-      "question": "Explain the research collaboration of \"Vo Quoc Bao Bui\"",
-      "slot": "evidence-1",
+      "planner": "fallback",
+      "question": "What is the shortest path between \"Varsha Dani\" and \"Jared Saia\"?",
+      "slot": "evidence-all-years",
       "type": "evidence"
     },
     {
@@ -285,15 +296,25 @@
     {
       "id": "q22",
       "params": {
-        "researcher": {
-          "id": "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978",
-          "name": "Aleksey Pesterev"
+        "a": {
+          "id": "researcher:dblp:1511061140ed3a7ce59bfb699f99ed748db3123ec7985ee50551651d89a69bcc",
+          "name": "Markus Horst Becker"
         },
-        "window": "all-years"
+        "b": {
+          "id": "researcher:dblp:7d36f272a45601c47e9a96389f3e22fcf2d039920165166988cbf118b171b8dc",
+          "name": "Leander Jehl"
+        },
+        "expected_hops": 1,
+        "joint_publications": 2,
+        "joint_work_ids": [
+          "work:doi:10.1145/3528535.3531516",
+          "work:doi:10.1145/3528535.3565243"
+        ],
+        "window": "since-2015"
       },
-      "planner": "llm",
-      "question": "Explain the research collaboration of \"Aleksey Pesterev\"",
-      "slot": "evidence-2",
+      "planner": "fallback",
+      "question": "What is the shortest path between \"Markus Horst Becker\" and \"Leander Jehl\" since 2015?",
+      "slot": "evidence-since-2015",
       "type": "evidence"
     },
     {
@@ -434,15 +455,25 @@
     {
       "id": "q33",
       "params": {
-        "researcher": {
-          "id": "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2",
-          "name": "Qizhe Cai"
+        "a": {
+          "id": "researcher:dblp:052d321a51a8bb7da1254ba88ad4b3cc765c8b51ae79fd395b69f6a70e414fc3",
+          "name": "Aaron Schild"
         },
-        "window": "all-years"
+        "b": {
+          "id": "researcher:dblp:1835ab8ffcdb2b4d1999393c2511ba32b0b0310672c415a171e21e13d8393c75",
+          "name": "Ken-ichi Kawarabayashi"
+        },
+        "expected_hops": 1,
+        "joint_publications": 2,
+        "joint_work_ids": [
+          "work:doi:10.1145/3382734.3405728",
+          "work:doi:10.4230/lipics.disc.2020.35"
+        ],
+        "window": "2020-2026"
       },
-      "planner": "llm",
-      "question": "Explain the research collaboration of \"Qizhe Cai\"",
-      "slot": "evidence-3",
+      "planner": "fallback",
+      "question": "What is the shortest path between \"Aaron Schild\" and \"Ken-ichi Kawarabayashi\" in window 2020-2026?",
+      "slot": "evidence-2020-2026",
       "type": "evidence"
     }
   ],

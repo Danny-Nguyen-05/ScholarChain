@@ -24,9 +24,10 @@ communities, bridge researchers, temporal change, topics, institutions, evidence
   topic              ranking filtered by topic "..."; THIN DATA: the export has 3 TOPIC nodes, all on one work with no AUTHORED edge,
                      so no researcher has authoritative topic metadata and the runtime must abstain (key expected: abstain)
   institution        ranking filtered by institution "..."; THIN DATA: 1 INSTITUTION node and 0 AFFILIATED_WITH edges: abstain
-  evidence           "Explain the research collaboration of X": the explain / SemanticExplanation operation; every question is also scored
-                     on its evidence trail, and this type isolates the explanation form: the answer must be backed by evidence items
-                     that resolve through /v1/evidence/{id} and name the researcher (planner route: LLM)
+  evidence           "What is the shortest path between A and B?" for a pair of direct coauthors with 2..5 joint works (windows all-years,
+                     since-2015, 2020-2026): a 1-hop path whose edge evidence carries the joint work ids. The local stack has no vectors, so the
+                     explain / SemanticExplanation form always abstains there and is not used. The answer must cite the edge evidence whose
+                     workIds are exactly the joint works (planner route: fallback, the shortest-path form without the word "coauthor")
 
 Selection rule (no randomness other than the recorded seed; every tie is broken by the stable ID):
   eligible(r) = the display name is unique among ALL researcher nodes after trim + lowercase + whitespace collapse, is also unique after
@@ -63,7 +64,7 @@ TYPES = ("coauthor_breadth", "topic", "max_team_size", "direct_collab", "institu
 HOMONYM = re.compile(r"\s+[0-9]{4}$")
 PLANNER = {"coauthor_breadth": "fallback", "max_team_size": "fallback", "direct_collab": "fallback", "shortest_path": "fallback",
            "component": "fallback", "community": "llm", "bridge": "fallback", "temporal": "llm", "topic": "fallback",
-           "institution": "fallback", "evidence": "llm"}
+           "institution": "fallback", "evidence": "fallback"}
 DEFAULT_SEED = "q12-v1"
 DEFAULT_BUDGET = 900
 BAND = (10, 22)
@@ -236,10 +237,22 @@ def build(ex, seed, budget):
         institution = institutions[i % len(institutions)]
         add("institution", "institution-%d" % (i + 1), form.format(f=institution), {"window": window, "institution": institution, "metric": metric, "thin_data": True})
 
-    # evidence: the explain form for three researchers
-    for slot in ("evidence-1", "evidence-2", "evidence-3"):
-        r = sel.take(slot, [x for x in sel.researchers("all-years", BAND[0], BAND[1]) if len(ex.authored_by.get(x, ())) >= 3])
-        add("evidence", slot, 'Explain the research collaboration of "%s"' % ex.researchers[r].strip(), {"window": "all-years", "researcher": person(ex, r)})
+    # evidence: a pair of direct coauthors with 2..5 joint works. For joint <= 5 the representative work ids of the edge row are exactly the joint works
+    # (checked on the real export for every window), so the set of joint works is exact in every window; all-years it also equals the AUTHORED intersection.
+    for slot, window in (("evidence-all-years", "all-years"), ("evidence-since-2015", "since-2015"), ("evidence-2020-2026", "2020-2026")):
+        wg = ex.window(window)
+        cands = []
+        for (a, b), joint in wg.weight.items():
+            if 2 <= joint <= 5 and a in sel.eligible and b in sel.eligible and a not in sel.used and b not in sel.used \
+                    and ex.window("all-years").degree(a) <= BAND[1] and ex.window("all-years").degree(b) <= BAND[1]:
+                shared = ex.authored_by.get(a, set()) & ex.authored_by.get(b, set())
+                works = ex.edge_works[window][(a, b)]
+                if len(works) == joint and set(works) <= shared and (window != "all-years" or set(works) == shared):
+                    cands.append((a, b))
+        a, b = sel.take(slot, cands)
+        works = list(ex.edge_works[window][(a, b)])
+        add("evidence", slot, 'What is the shortest path between "%s" and "%s"%s?' % (ex.researchers[a].strip(), ex.researchers[b].strip(), window_suffix(window)),
+            {"window": window, "a": person(ex, a), "b": person(ex, b), "expected_hops": 1, "joint_publications": len(works), "joint_work_ids": works})
 
     questions = []
     for index in range(3):
@@ -269,8 +282,8 @@ RULE = {
     "pick": "candidates sorted by id (pairs by (id_a, id_b)); start = int(sha256(seed|slot)[:8],16) mod n; first unused candidate cyclically",
     "windows_stored": list(g.WINDOWS),
     "thin_data": "topic and institution questions: the export has 3 TOPIC nodes on one work with no AUTHORED edge and 1 INSTITUTION node with 0 AFFILIATED_WITH edges, so the expected outcome is a verified abstention",
-    "evidence_type": "explain form (SemanticExplanation) naming one researcher; also every question is scored on its evidence trail",
-    "planner_routes": {"fallback": "accepted by the deterministic QueryPlannerAgent fallback grammar", "llm": "needs the planner LLM (temporal, community comparison and named explain are not in the fallback grammar)"},
+    "evidence_type": "shortest path between two direct coauthors with 2..5 joint works, answered from the edge evidence (joint work ids); the explain / SemanticExplanation form is not used because the local stack has no vectors; every question is also scored on its evidence trail",
+    "planner_routes": {"fallback": "accepted by the deterministic QueryPlannerAgent fallback grammar", "llm": "needs the planner LLM (temporal and community comparison are not in the fallback grammar)"},
 }
 
 
