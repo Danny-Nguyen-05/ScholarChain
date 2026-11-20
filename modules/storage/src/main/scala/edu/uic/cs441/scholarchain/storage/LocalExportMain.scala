@@ -23,23 +23,44 @@ object LocalExportMain {
   def run(args: Vector[String]): Either[String, String] = {
     val usage =
       "usage: LocalExportMain <exportDir> [--include-list <file>] [--no-verify] [--validate-csv]"
+    val known = Set("--include-list", "--no-verify", "--validate-csv")
     val dir = args.headOption.filterNot(_.startsWith("--")).toRight(usage)
     val flags = args.drop(1)
+    val unknown = flags.zipWithIndex.collect {
+      case (f, n) if f.startsWith("--") && !known(f)                                      => f
+      case (f, n) if !f.startsWith("--") && !flags.lift(n - 1).contains("--include-list") => f
+    }
     val includeFile = flags.indexOf("--include-list") match {
       case -1 => Right(None)
       case n  => flags.lift(n + 1).toRight(usage).map(p => Some(Path.of(p)))
     }
     for {
       d <- dir
+      _ <- Either.cond(
+        unknown.isEmpty,
+        (),
+        "unknown argument: " + unknown.mkString(" ") + "\n" + usage
+      )
       inc <- includeFile
       scope <- inc match {
         case None => Right(RuntimeArtifactScope.WholeExport)
         case Some(p) =>
-          IncludeList
-            .parse(Files.readAllBytes(p))
-            .left
-            .map(c => "include-list refused: " + c)
-            .map(RuntimeArtifactScope.IncludeIds(_))
+          for {
+            size <- scala.util
+              .Try(Files.size(p))
+              .toEither
+              .left
+              .map(_ => "include-list unreadable")
+            _ <- Either.cond(
+              size <= IncludeList.maxBytes,
+              (),
+              "include-list refused: include-list-too-large"
+            )
+            parsed <- IncludeList
+              .parse(Files.readAllBytes(p))
+              .left
+              .map(c => "include-list refused: " + c)
+          } yield RuntimeArtifactScope.IncludeIds(parsed)
       }
       options = LocalExportOptions(
         artifactScope = scope,
@@ -71,44 +92,47 @@ object LocalExportMain {
         .toVector
         .flatMap { page =>
           val ids = page.items.map(_.metric.researcherId)
-          val from = ids.head
-          val to = ids.last
-          Vector(
-            s"probe population(all-years)=${page.populationCount} top=$from",
-            timed("probe rank top100") {
-              stores.runtimeArtifacts
-                .rank(
-                  "all-years",
-                  edu.uic.cs441.scholarchain.core.RuntimeRankingMetric.DistinctCoauthorCount,
-                  edu.uic.cs441.scholarchain.core.RuntimePopulationFilter(),
-                  100
-                )
-                .getClass
-                .getSimpleName
-            },
-            timed("probe directedEdges both limit 100") {
-              StorageResult
-                .value(
-                  stores.graphReader
-                    .directedEdges(from, "all-years", EdgeDirection.Both, Set.empty, 100, None)
-                )
-                .map(_.items.size)
-            },
-            timed("probe shortestPaths top1->top100 depth 6") {
-              StorageResult
-                .value(stores.graphReader.shortestPaths(from, to, 6, "all-years", 10))
-                .map(_.map(_.nodeIds.size))
-            },
-            timed("probe researcherContext") {
-              stores.runtimeArtifacts
-                .researcherContext(from, "all-years", 100)
-                .getClass
-                .getSimpleName
-            },
-            timed("probe metrics.get") {
-              stores.metrics.get(from, "all-years").getClass.getSimpleName
-            }
-          )
+          if (ids.isEmpty) Vector("probe: the all-years ranking is empty")
+          else {
+            val from = ids.head
+            val to = ids.last
+            Vector(
+              s"probe population(all-years)=${page.populationCount} top=$from",
+              timed("probe rank top100") {
+                stores.runtimeArtifacts
+                  .rank(
+                    "all-years",
+                    edu.uic.cs441.scholarchain.core.RuntimeRankingMetric.DistinctCoauthorCount,
+                    edu.uic.cs441.scholarchain.core.RuntimePopulationFilter(),
+                    100
+                  )
+                  .getClass
+                  .getSimpleName
+              },
+              timed("probe directedEdges both limit 100") {
+                StorageResult
+                  .value(
+                    stores.graphReader
+                      .directedEdges(from, "all-years", EdgeDirection.Both, Set.empty, 100, None)
+                  )
+                  .map(_.items.size)
+              },
+              timed("probe shortestPaths top1->top100 depth 6") {
+                StorageResult
+                  .value(stores.graphReader.shortestPaths(from, to, 6, "all-years", 10))
+                  .map(_.map(_.nodeIds.size))
+              },
+              timed("probe researcherContext") {
+                stores.runtimeArtifacts
+                  .researcherContext(from, "all-years", 100)
+                  .getClass
+                  .getSimpleName
+              },
+              timed("probe metrics.get") {
+                stores.metrics.get(from, "all-years").getClass.getSimpleName
+              }
+            )
+          }
         }
       def line(m: Map[String, Long]) = m.toVector.sortBy(_._1).map((k, v) => s"$k=$v").mkString(" ")
       Vector(
