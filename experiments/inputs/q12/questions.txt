@@ -1,0 +1,33 @@
+Which researchers have the most distinct coauthors?
+Which researchers have the largest team size?
+Who are the direct coauthors of "Ziheng Jiang"?
+What is the shortest coauthor path between "Hucheng Zhou" and "Xuepeng Fan"?
+What is the component of "Kunal Talwar"?
+Compare communities of "Zhenliang Lu"
+Which researchers are the strongest bridges?
+Did "Tobias Distler" change from through-2009 to 2010-2014?
+Which researchers have the most distinct coauthors topic "Cognitive Computing and Networks"?
+Which researchers have the most distinct coauthors institution "University of Louisiana at Lafayette"?
+Explain the research collaboration of "Zhihao Qu"
+Which researchers have the most distinct coauthors since 2015?
+Which researchers have the maximum team size since 2015?
+Who are the direct coauthors of "Alexander Kolbasov"?
+What is the shortest coauthor path between "Ioannis Zarkadas" and "Maithem Munshed" since 2015?
+What is the component of "Frank Sherwood" in window through-2009?
+Compare communities of "Lichao Liu" since 2015
+Which researchers are the strongest bridges since 2015?
+Did "Marcelo Pasin" change from 2010-2014 to 2015-2019?
+Which researchers have the most distinct coauthors topic "Computability, Logic, AI Algorithms" since 2015?
+Rank bridge researchers institution "University of Louisiana at Lafayette" since 2015
+Explain the research collaboration of "Balaji Prabhakar"
+Which researchers have the most distinct coauthors in window 2010-2014?
+Rank researchers by maximum team size in window 2020-2026
+Who are the direct coauthors of "Chris DeForeest" since 2015?
+What is the shortest coauthor path between "Gefei Zuo" and "Sam Burnett"?
+What is the component of "Teruo Higashino" since 2015?
+Compare communities of "Liang Mao" in window 2020-2026
+Which researchers are the strongest bridges in window 2020-2026?
+Did "Dinesh Bharadia" change from 2015-2019 to 2020-2026?
+Rank researchers by distinct coauthors topic "Language and cultural evolution" in window 2020-2026
+Which researchers have the largest team size institution "University of Louisiana at Lafayette"?
+Explain the research collaboration of "Yinwei Dai"
