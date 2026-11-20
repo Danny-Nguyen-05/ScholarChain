@@ -45,9 +45,14 @@ final class PathFinderAgent(
         Vector(
           ids("coauthorIds", page.items.map(_.nodeId)),
           number("returnedCount", page.items.size),
-          flag("truncated", page.cursor.nonEmpty)
+          flag("truncated", page.cursor.nonEmpty),
+          // The stored window total makes a truncated page verifiable as "showing N of M".
+          number("distinctCoauthorCount", first.detail.distinctCoauthorCount)
         ),
-        Vector(ref("nodes/type=researcher", a)),
+        Vector(
+          ref("nodes/type=researcher", a),
+          ref("metrics/type=researcher_collaboration", a, "distinctCoauthorCount")
+        ),
         sourceContext = Some(first.detail.context)
       )
       RetrievalOutput("path", Vector(item) ++ edges, truncated = page.cursor.nonEmpty)

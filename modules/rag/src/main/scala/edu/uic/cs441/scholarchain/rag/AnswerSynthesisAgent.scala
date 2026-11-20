@@ -27,6 +27,17 @@ final class AnswerSynthesisAgent(
     clockNanos: () => Long = () => System.nanoTime()
 ) {
   require(RuntimeConfigValidation.check(config).isEmpty)
+  // The pinned label must name the assets this build runs; a retired or mixed label never answers.
+  require(
+    !SynthesisAssetVersions.retiredPromptVersions.contains(config.synthesisPromptVersion) &&
+      !SynthesisAssetVersions.retiredSchemaVersions.contains(config.synthesisSchemaVersion),
+    "retired synthesis label"
+  )
+  require(
+    config.synthesisPromptVersion == SynthesisAssetVersions.promptVersion &&
+      config.synthesisSchemaVersion == SynthesisAssetVersions.schemaVersion,
+    "synthesis label does not match SynthesisAssetVersions"
+  )
   private val ScaffoldKeyOverheadBytes = 64
   def synthesize(plan: QueryPlan, bundle: EvidenceBundle): SynthesisResult = {
     if (DomainValidation.check(plan).isLeft) return SynthesisResult.Failed("invalid-runtime-plan")
@@ -42,8 +53,9 @@ final class AnswerSynthesisAgent(
       return SynthesisResult.Abstained("synthesis-prompt-bound", Vector.empty)
     if (DomainValidation.check(bundle).isLeft)
       return SynthesisResult.Failed("invalid-evidence-bundle")
+    val contextBudget = ContextBudget.forPlan(plan, config)
     val context = EvidenceContext.render(bundle)
-    if (context.getBytes(UTF_8).length > config.retrieval.contextTokenBudget)
+    if (context.getBytes(UTF_8).length > contextBudget)
       return SynthesisResult.Abstained("synthesis-context-bound", Vector.empty)
     val base = ujson.Obj(
       "question" -> plan.question,
@@ -55,10 +67,10 @@ final class AnswerSynthesisAgent(
       .length + assets.synthesisSchema.render().getBytes(UTF_8).length
     if (fixedBytes > config.effectiveByteLimits.requestBytes)
       return SynthesisResult.Abstained("synthesis-request-bound", Vector.empty)
-    // The scaffold is bounded separately from the evidence context (same size as that budget) and
-    // never by more than the room left in the request, so it cannot push a request over its limit.
+    // The scaffold is bounded separately from the evidence context (see ContextBudget) and never
+    // by more than the room left in the request, so it cannot push a request over its limit.
     val scaffoldBudget = math.min(
-      config.retrieval.contextTokenBudget,
+      ContextBudget.scaffoldBytes(plan, config),
       config.effectiveByteLimits.requestBytes - fixedBytes - ScaffoldKeyOverheadBytes
     )
     val scaffold = ClaimScaffold.build(plan, bundle, scaffoldBudget)

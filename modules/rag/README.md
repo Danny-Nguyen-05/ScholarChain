@@ -269,9 +269,10 @@ No approved live execution, including an approved path with fake ports, is used 
 
 `QueryPlannerAgent` proposes only allowlisted `QueryOperation` values. It validates model JSON
 against `prompts/schemas/query-plan-v1.json` using the explicit bounded JSON Schema subset in
-`RuntimeJsonSchema`; unsupported schema keywords fail closed. `planner-v1` and `synthesis-v2`
-prompts live in `prompts/runtime/`. Their schema IDs are `scholarchain.runtime.planner.v1` and
-`scholarchain.runtime.synthesis.v2`. Assets are loaded from an explicitly supplied prompts
+`RuntimeJsonSchema`; unsupported schema keywords fail closed. `planner-v1` and `synthesis-v1`
+(now `synthesis-v2`, see N1 below) prompts live in `prompts/runtime/`. Their schema IDs are
+`scholarchain.runtime.planner.v1` and `scholarchain.runtime.synthesis.v1` (now
+`scholarchain.runtime.synthesis.v2`). Assets are loaded from an explicitly supplied prompts
 directory and checked against configured versions. The synthesis schema/prompt are contracts
 only in 9A; synthesis, claim verification, workflow orchestration and benchmarks arrive later.
 
@@ -427,6 +428,25 @@ claim before the unchanged verifier runs. Own claims plus selected scaffold clai
 de-duplicated by `claimId` (the scaffold version wins when both appear), unknown ids are ignored
 and counted in `SynthesisProposal.ignoredSelectedIds`, and an empty `narrativeClaimIds` defaults to
 the selected ids. Verbatim copies in `claims` remain accepted. The synthesis prompt and schema were edited in place under the `synthesis-v1` label during Session 1 (review finding N1); that content is now `synthesis-v2` (`prompts/runtime/synthesis-v2.md`, `prompts/schemas/answer-synthesis-v2.json`, schema id `scholarchain.runtime.synthesis.v2`). The v1 files are removed: they would have been the edited content under the old label, and no single file replays the Session 1 answers (git history holds each revision). `SynthesisAssetVersions` is the registry: `RuntimePromptAssets.fromDirectory` refuses a configuration that pins `synthesis-v1` or its schema with `runtime-synthesis-version-retired`, and any other label with `runtime-asset-version-mismatch`. The version label is configured in core (`synthesisPromptVersion`, `synthesisSchemaVersion`) and must equal the registry. `SynthesisVersionSpec` pins the v2 files by sha256; change the content only with a new label, file name, pin and core value.
+
+**Direct-coauthor and shortest-path budgets (P3, P4).** Session 1 abstained on all 14 direct-coauthor
+and all 10 path questions with `essential-evidence-context-budget`. Cause: the evidence builder
+charges the rendered model context, including both resolved candidates' full `sourceIds` and
+`evidenceRefs` (about 2 KB each) and every per-work edge row, against `contextTokenBudget = 4096`
+(`EvidenceBuilderAgent.fits`). Five of the ten path pairs exceeded 4096 on the two identities alone
+(4109 to 4958 bytes); a 22-coauthor page needs about 17 KB. The fix is all in this module:
+`EvidenceContext.render` omits identity provenance lists and per-work edge fields from the model view
+(the persisted bundle and audit keep everything); `ContextBudget` gives `DirectCoauthors` and
+`ShortestPath` plans eight times the configured context budget (at most one third of `requestBytes`),
+twice that for the claim scaffold, and four times the persisted-bundle bound (an edge row with its
+per-work source references is 3 to 4 KB, so 22 rows exceed 64 KiB); other operations keep the
+configured values, and an explicitly tiny configured value still abstains. When the full claim
+scaffold does not fit, edge claims drop their per-work fields before any claim is dropped. The
+direct-coauthors item now carries `distinctCoauthorCount` from the stored window metric next to
+`returnedCount` and `truncated`, so a page cut at `graphLimit` is a verified "showing N of M"
+claim. `CoauthorScaleSpec` covers 22 and 35 coauthors in two windows, the two-candidate path
+reproduction, and the abstention paths. A path whose endpoint has no stored metric still abstains
+with `required-evidence-missing` (not the Session 1 cause).
 
 Synthesis uses the versioned `synthesis-v2` prompt and `scholarchain.runtime.synthesis.v2` schema,
 with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage

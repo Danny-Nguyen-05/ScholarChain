@@ -48,10 +48,11 @@ final class EvidenceBuilderAgent(store: EvidenceBundleStore, config: RuntimeConf
         return EvidenceBuildResult.Failed("graph-mode-semantic-evidence")
       def ranked(item: EvidenceItem): Boolean =
         item.runtime.get.values.exists(v => v.field == "rank" && v.number.nonEmpty)
+      val budget = ContextBudget.forPlan(input.plan, config)
       def fits(items: Vector[EvidenceItem]): Boolean = EvidenceContext.tokenUpperBound(
         items,
         input.candidates
-      ) <= config.retrieval.contextTokenBudget
+      ) <= budget
       val ranking = deterministic.filter(ranked)
       var selected = deterministic.filterNot(ranked)
       if (!fits(selected)) return EvidenceBuildResult.Missing("essential-evidence-context-budget")
@@ -133,7 +134,7 @@ final class EvidenceBuilderAgent(store: EvidenceBundleStore, config: RuntimeConf
         CoreJson
           .compact(bundle)
           .getBytes(UTF_8)
-          .length > config.effectiveByteLimits.persistedBundleBytes
+          .length > ContextBudget.persistedBundleBytes(input.plan, config)
       )
         return EvidenceBuildResult.Missing("evidence-bundle-byte-budget")
       if (DomainValidation.check(bundle).isLeft)
