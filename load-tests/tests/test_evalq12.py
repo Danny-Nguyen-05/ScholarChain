@@ -350,7 +350,9 @@ class EvalQ12Case(unittest.TestCase):
         self.assertEqual([(r["qid"], r["question"]) for r in rows], [("q04", lines[3]), ("q15", lines[14])])
         self.assertEqual([p[1]["question"] for p in self.state.posts], [lines[3], lines[14]])
         self.assertEqual(len([line for line in self.ledger_lines() if line.get("event") == "answer"]), 2)   # one charge per question asked
-        self.assertIn("PREFLIGHT: 22 of 22 include IDs are present", out)   # the committed include list is checked on a probe too
+        with open(os.path.join(REPO, "experiments", "inputs", "q12", "include-ids.txt")) as handle:
+            n_include = len([x for x in handle if x.strip()])
+        self.assertIn("PREFLIGHT: %d of %d include IDs are present" % (n_include, n_include), out)   # the committed include list is checked on a probe too
         self.assertIn("QUESTIONS: 2 from the questions file", out)
 
     def test_only_rejects_bad_ids_and_a_second_questions_file(self):

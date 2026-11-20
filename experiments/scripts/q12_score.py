@@ -37,6 +37,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCHEMA = "scholarchain.q12-scores.v1"
 WORDS = {1: ("one", "direct", "directly", "single"), 2: ("two",), 3: ("three",), 4: ("four",), 5: ("five",), 6: ("six",)}
+NUMBER_WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
 ERROR_CODE = re.compile(r"[A-Z_]{1,40}")   # used with fullmatch: "$" would accept a trailing newline
 NUMBER = re.compile(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?")
 HOMONYM = re.compile(r"\s+\d{4}$")
@@ -149,9 +150,18 @@ class Deep:
                 out.append("page holds %d coauthors, expected %d" % (len(ids), min(len(adj), 25)))
         elif kind == "edge":
             a, b = f.get("researcherA"), f.get("researcherB")
+            if not isinstance(a, str) or not isinstance(b, str):
+                return out   # a claim that restates only part of an edge: nothing to check against the export
             if wg.joint(a, b) == 0:
                 out.append("no coauthor edge between the cited researchers in %s" % window)
             else:
+                shared = self.ex.authored_by.get(a, set()) & self.ex.authored_by.get(b, set())
+                cited = set(f.get("workIds") or [])
+                if cited - shared:
+                    out.append("%d cited joint works are not works of both researchers" % len(cited - shared))
+                known = self.ex.edge_works[window].get((a, b) if a < b else (b, a), ())
+                if wg.joint(a, b) <= 5 and cited != set(known):   # for joint <= 5 the representative work ids are exactly the joint works
+                    out.append("workIds differ from the %d joint works of the export in %s" % (len(known), window))
                 if "jointPublicationCount" in f and not same(f["jointPublicationCount"], wg.joint(a, b)):
                     out.append("jointPublicationCount %s != %s" % (f["jointPublicationCount"], wg.joint(a, b)))
                 if len(f.get("workIds") or []) != wg.joint(a, b):
@@ -269,14 +279,18 @@ def key_check(q, items):
             if k == "ranking" and "maximumCoauthorsOnOnePaper" in f and f["maximumCoauthorsOnOnePaper"] > exp["global_maximum_all_years"]:
                 out.append("a windowed team size exceeds the all-years maximum")
     elif kind == "evidence":
-        r = exp["researcher"]["id"]
-        if not any(r in s for k, s, w, f in seen):
-            out.append("no evidence item names the researcher")
+        pair = {exp["a"]["id"], exp["b"]["id"]}
+        edges = [f for k, s, w, f in seen if k == "edge" and {f.get("researcherA"), f.get("researcherB")} == pair]
+        if not edges:
+            out.append("no edge evidence between the two researchers")
+        for f in edges:
+            if sorted(f.get("workIds") or []) != exp["joint_work_ids"]:
+                out.append("edge workIds %s differ from the key joint works %s" % (sorted(f.get("workIds") or [])[:3], exp["joint_work_ids"][:3]))
+            if "jointPublicationCount" in f and not same(f["jointPublicationCount"], exp["joint_publications"]):
+                out.append("jointPublicationCount %s != key %s" % (f["jointPublicationCount"], exp["joint_publications"]))
         for k, s, w, f in seen:
-            if r in s and "distinctCoauthorCount" in f and not same(f["distinctCoauthorCount"], exp["distinctCoauthorCount"]):
-                out.append("distinctCoauthorCount %s != key %s" % (f["distinctCoauthorCount"], exp["distinctCoauthorCount"]))
-            if r in s and "publicationCount" in f and not same(f["publicationCount"], exp["publicationCount"]):
-                out.append("publicationCount %s != key %s" % (f["publicationCount"], exp["publicationCount"]))
+            if k == "path" and f.get("pathStatus") == "Found" and not same(f.get("hopCount", 1), 1):
+                out.append("cited path has %s hops, key says 1" % f.get("hopCount"))
     return out
 
 
@@ -312,6 +326,8 @@ def text_check(q, body, ranking_first):
     nums = numbers_in(text)
     for group in ([] if q["type"] == "shortest_path" else req.get("numbers") or []):   # a path's hop count is checked below, digits or words
         by_id = q["type"] == "component" and q["expected"]["component_id"] in text   # a component answer may give the size or the component id
+        if q["type"] == "evidence" and re.search(r"\b%s\b" % NUMBER_WORDS.get(req.get("count_words"), "\0"), text, re.I):
+            continue   # the joint-work count as a word ("two joint works")
         if not by_id and not any(all(float(n) in nums for n in alt) for alt in group):
             out.append("none of the number alternatives %s appears" % json.dumps(group))
     for name in req.get("names") or []:
@@ -483,7 +499,7 @@ def score_question(q, row, deep):
         subj = rt.get("subjectIds") or s0
         pseudo = {"supportingContent": {"subjectIds": subj, "windowIds": w0, "values": rt.get("values") or []}}
         pseudo["supportingContent"]["values"] = [{"field": "kind", "text": k0}] + [v for v in rt.get("values") or [] if v.get("field") != "kind"]
-        bad = [m for m in key_check(q, [pseudo]) if not m.startswith("no ")] if q["type"] != "evidence" else []
+        bad = [m for m in key_check(q, [pseudo]) if not m.startswith("no ")]
         if deep and k0:
             pk, ps, pw, pf = flatten(pseudo)
             bad += deep.check(pk, ps, pw, pf)

@@ -22,8 +22,9 @@ modules/spark). Which method is used per question type:
                     the community Jaccard overlap is a LOWER BOUND (the runtime also counts one-person communities of researchers with no edge
                     in the window, Phase6FGJobs.scala:118-147, which the CSV lacks); NOT CHECKED: deltaAverageCoauthorsPerPaper and deltaMaximumCoauthorsOnOnePaper (need work years).
   topic, institution  ABSTAIN (thin data): the export has no authoritative topic or institution metadata for any researcher.
-  evidence          STRUCTURAL plus entity facts: the explanation must be backed by resolvable evidence naming the researcher; any distinct
-                    coauthor or publication count it states must equal the values recorded here.
+  evidence          EXACT: a 1-hop shortest path between two direct coauthors with 2..5 joint works; the key is the exact set and count of joint works
+                    (the edge row's representative work ids, which for joint <= 5 are exactly the joint works in every window of the real export, and
+                    for all-years equal the AUTHORED intersection of the pair), checked against the edge evidence workIds and the answer text.
 Ranking populations: the runtime ranks only the researchers inside its bounded artifact, so the recorded top-100 lists are corpus-wide;
 the scorer checks every cited value against the export, ordering within the answer, and reports agreement with the corpus top as information.
 Replayable validation (refuses on mismatch, --skip-validation records "skipped"): before the key is written the port is compared, window by window,
@@ -222,15 +223,27 @@ def key_for(spec, ex, sizes):
                              "forbidden": "any ranking of researchers presented as filtered by the %s" % what},
                    required_evidence={"kinds": []}, required_text={"mode": "abstain"})
     elif kind == "evidence":
-        r = p["researcher"]["id"]
-        wg = ex.window("all-years")
-        out.update(check_level="structural", expected_outcome="answer",
-                   expected={"researcher": p["researcher"], "window": "all-years", "distinctCoauthorCount": wg.degree(r),
-                             "publicationCount": len(ex.authored_by.get(r, ())), "componentId": g.analytics_id("component", "all-years", wg.components()[0][r]),
-                             "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; "
-                                     "any distinct-coauthor, publication-count or component value it states equals the values here"},
-                   required_evidence={"kinds": ["semantic", "metrics"], "subjects": [r], "any_kind": True},
-                   required_text={"names": [p["researcher"]["name"]], "note": "the explanation names the researcher; stated counts must match expected"})
+        a, b, window = p["a"]["id"], p["b"]["id"], p["window"]
+        pair = (a, b) if a < b else (b, a)
+        wg = ex.window(window)
+        joint = wg.joint(a, b)
+        works = sorted(ex.edge_works[window].get(pair, ()))
+        shared = ex.authored_by.get(a, set()) & ex.authored_by.get(b, set())
+        if not 2 <= joint <= 5 or len(works) != joint or not set(works) <= shared or (window == "all-years" and set(works) != shared):
+            raise Refused("%s: the pair does not have 2..5 exactly known joint works in %s" % (spec["id"], window))
+        if sorted(p.get("joint_work_ids") or []) != works:
+            raise Refused("%s: the specs list different joint works than the export" % spec["id"])
+        hops, count, paths = wg.shortest_paths(a, b, limit=PATH_LIMIT, max_depth=MAX_DEPTH)
+        if hops != 1:
+            raise Refused("%s: the pair is not a direct pair in %s" % (spec["id"], window))
+        out.update(check_level="exact", expected_outcome="answer",
+                   expected={"a": p["a"], "b": p["b"], "window": window, "status": "Found", "hops": 1, "joint_publications": joint, "joint_work_ids": works,
+                             "joint_work_titles": [ex.works.get(w, "") for w in works], "edge_id": ex.edge_ids[window][pair],
+                             "rule": "the cited edge evidence names both researchers in the window, jointPublicationCount equals joint_publications and its "
+                                     "workIds are exactly joint_work_ids; the cited path has hopCount 1"},
+                   required_evidence={"kinds": ["edge", "path"], "subjects": [a, b], "any_kind": True},
+                   required_text={"names": [p["a"]["name"], p["b"]["name"]], "numbers": [number_alts([joint])], "count_words": joint,
+                                  "note": "the answer names both researchers and states the number of joint works (digit or word)"})
     else:
         raise Refused("unknown question type %s" % kind)
     return out

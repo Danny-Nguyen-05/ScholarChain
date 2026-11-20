@@ -18,6 +18,7 @@ Hand derivation, synchronous label propagation (ties to the smallest label):
   2015-2019: iteration 1 a1=a2 a2=a1 a3=a1 b1=a3, iteration 2 all a1, iteration 3 no change: 3 iterations, one community of 4.
 """
 import contextlib
+import csv
 import importlib.util
 import io
 import json
@@ -55,7 +56,7 @@ def write(path, text):
 
 
 def build_export(root, names, authored, edges, topics=(), institutions=()):
-    """edges: {window: [(a, b, joint)]}; authored: {work: [researcher]}."""
+    """edges: {window: [(a, b, joint) or (a, b, joint, [representative work ids])]}; authored: {work: [researcher]}."""
     data = os.path.join(root, "neptune-opencypher-csv", "data")
     write(os.path.join(root, "run-manifest.json"), json.dumps({"runId": RUN}))
     rows = [":ID,:LABEL,label:String"] + ["%s,RESEARCHER,%s" % (r, n) for r, n in sorted(names.items())]
@@ -64,11 +65,15 @@ def build_export(root, names, authored, edges, topics=(), institutions=()):
     write(os.path.join(data, "nodes", "part-00000.csv"), "\n".join(rows) + "\n")
     lines = [":ID,:START_ID,:END_ID,:TYPE"] + ["ge:%s:%s,%s,%s,AUTHORED" % (w, r, r, w) for w, people in sorted(authored.items()) for r in people]
     write(os.path.join(data, "graph-edges", "part-00000.csv"), "\n".join(lines) + "\n")
-    out = [":ID,:START_ID,:END_ID,:TYPE,jointPublicationCount:Long,windowId:String,evidenceEdgeId:String"]
+    buffer = io.StringIO()
+    writer = csv.writer(buffer, lineterminator="\n")
+    writer.writerow([":ID", ":START_ID", ":END_ID", ":TYPE", "jointPublicationCount:Long", "windowId:String", "evidenceEdgeId:String", "representativeWorkIdsJson:String"])
     for window, items in sorted(edges.items()):
-        for a, b, joint in items:
-            out.append("e,%s,%s,COAUTHORED_WITH,%d,%s,edge:%s:%s:%s" % (a, b, joint, window, window, a[-6:], b[-6:]))
-    write(os.path.join(data, "coauthor-edges", "part-00000.csv"), "\n".join(out) + "\n")
+        for item in items:
+            a, b, joint = item[:3]
+            works = item[3] if len(item) > 3 else []
+            writer.writerow(["e", a, b, "COAUTHORED_WITH", joint, window, "edge:%s:%s:%s" % (window, a[-6:], b[-6:]), json.dumps(works)])
+    write(os.path.join(data, "coauthor-edges", "part-00000.csv"), buffer.getvalue())
 
 
 def small_export(root):
@@ -183,6 +188,28 @@ class KeyTest(unittest.TestCase):
         self.assertEqual(k["expected"]["global_maximum"], 3)
         k = self.key("bridge", measure="CROSS_COMMUNITY_DEGREE")
         self.assertEqual([(e["id"], e["value"]) for e in k["expected"]["top"][:3]], [(A3, 1), (B1, 1), (A1, 0)])
+
+    def test_evidence_key_is_the_exact_joint_work_set(self):
+        # hand-built: X and Y authored wx1, wx2, wx3 together; all-years edge joint 3 with those works; since-2015 edge joint 2 with wx1 and wx3
+        tmp = tempfile.mkdtemp(prefix="q12-evkey-")
+        self.addCleanup(shutil.rmtree, tmp, True)
+        root = os.path.join(tmp, "export")
+        x, y = R("x"), R("y")
+        build_export(root, {x: "Xena Ex", y: "Yuri Why"}, {"wx1": [x, y], "wx2": [x, y], "wx3": [x, y], "wx4": [x]},
+                     {"all-years": [(x, y, 3, ["wx1", "wx2", "wx3"])], "since-2015": [(x, y, 2, ["wx1", "wx3"])]})
+        ex = g.Export(root)
+        sizes = g.team_sizes(ex)
+        spec = {"id": "q99", "type": "evidence", "slot": "s", "question": "Q?", "planner": "fallback",
+                "params": {"window": "all-years", "a": {"id": x, "name": "Xena Ex"}, "b": {"id": y, "name": "Yuri Why"}, "expected_hops": 1,
+                           "joint_publications": 3, "joint_work_ids": ["wx1", "wx2", "wx3"]}}
+        k = keymod.key_for(spec, ex, sizes)["expected"]
+        self.assertEqual((k["joint_publications"], k["joint_work_ids"], k["hops"]), (3, ["wx1", "wx2", "wx3"], 1))
+        self.assertEqual(k["joint_work_titles"], ["Work wx1", "Work wx2", "Work wx3"])
+        windowed = dict(spec, params=dict(spec["params"], window="since-2015", joint_publications=2, joint_work_ids=["wx1", "wx3"]))
+        self.assertEqual(keymod.key_for(windowed, ex, sizes)["expected"]["joint_work_ids"], ["wx1", "wx3"])
+        wrong = dict(spec, params=dict(spec["params"], joint_work_ids=["wx1", "wx2"]))
+        with self.assertRaises(keymod.Refused):
+            keymod.key_for(wrong, ex, sizes)   # the specs must list the joint works the export has
 
     def test_thin_data_questions_expect_abstention(self):
         k = self.key("topic", topic="Topic One")
@@ -306,7 +333,7 @@ def synthetic_export(root):
     for c, clique in enumerate(cliques):
         for i, a in enumerate(clique):
             for b in clique[i + 1:]:
-                edges.append((a, b, 2))
+                edges.append((a, b, 3, ["w-%02d-%d" % (c, w) for w in range(3)]))   # 3 joint works: the 3 works every clique member authored
         for w in range(3):
             authored["w-%02d-%d" % (c, w)] = list(clique)
     for c in range(11):
@@ -353,7 +380,7 @@ class DeriveTest(unittest.TestCase):
             else:
                 self.assertFalse(fallback_accepts(q["question"]), "an LLM-route question is not in the fallback grammar: " + q["question"])
         planners = [q["planner"] for q in json.loads(self.read("question-specs.json"))["questions"]]
-        self.assertEqual((planners.count("fallback"), planners.count("llm")), (24, 9))
+        self.assertEqual((planners.count("fallback"), planners.count("llm")), (27, 6))
 
     def test_named_researchers_are_in_the_include_list_and_budget(self):
         specs = json.loads(self.read("question-specs.json"))["questions"]
@@ -364,7 +391,7 @@ class DeriveTest(unittest.TestCase):
             for key in ("researcher", "a", "b"):
                 if key in q["params"]:
                     named.add(q["params"][key]["id"])
-        self.assertEqual(len(named), 21)   # 3 direct + 6 path endpoints + 3 component + 3 community + 3 temporal + 3 evidence, all distinct
+        self.assertEqual(len(named), 24)   # 3 direct + 6 path endpoints + 3 component + 3 community + 3 temporal + 6 evidence pair members, all distinct
         self.assertTrue(named <= set(include))
         self.assertIn(len(include), (len(named), len(named) + 1))   # plus the middle researcher of the 3-hop path unless it is already named
 
@@ -381,6 +408,24 @@ class DeriveTest(unittest.TestCase):
             r = specs[slot]["params"]["researcher"]["id"]
             self.assertGreaterEqual(wg.component_size(r), 12)
             self.assertLess(wg.component_size(r), 200)   # not the giant component (12 chained cliques = 168 + the hub)
+
+    def test_evidence_pairs_are_direct_coauthors_with_exactly_known_joint_works(self):
+        ex = g.Export(self.root)
+        specs = [q for q in json.loads(self.read("question-specs.json"))["questions"] if q["type"] == "evidence"]
+        self.assertEqual([q["params"]["window"] for q in specs], ["all-years", "since-2015", "2020-2026"])
+        for q in specs:
+            p = q["params"]
+            a, b, window = p["a"]["id"], p["b"]["id"], p["window"]
+            self.assertEqual(q["planner"], "fallback")
+            self.assertTrue(fallback_accepts(q["question"]), q["question"])
+            self.assertNotIn("coauthor", q["question"].lower().split("between")[0])   # the shortest-path form without the word coauthor
+            self.assertEqual(ex.window(window).shortest_paths(a, b)[0], 1)
+            joint = ex.window(window).joint(a, b)
+            self.assertTrue(2 <= joint <= 5)
+            works = sorted(ex.edge_works[window][(a, b) if a < b else (b, a)])
+            self.assertEqual((len(works), p["joint_publications"], sorted(p["joint_work_ids"])), (joint, joint, works))
+            self.assertTrue(set(works) <= (ex.authored_by[a] & ex.authored_by[b]))
+        self.assertEqual(len({r for q in specs for r in (q["params"]["a"]["id"], q["params"]["b"]["id"])}), 6)   # three different pairs
 
     def test_abstain_questions_are_never_adjacent(self):
         specs = json.loads(self.read("question-specs.json"))["questions"]
@@ -578,6 +623,41 @@ class ScoreTest(unittest.TestCase):
         self.assertTrue(passed["retrieval"]["pass"], passed["retrieval"]["reasons"])   # unverified evidence is reported, not failed
         self.assertEqual(passed["retrieval"]["unverified"], 2)
 
+    def evidence_case(self):
+        tmp = os.path.join(self.tmp, "ev-export")
+        x, y = R("x"), R("y")
+        build_export(tmp, {x: "Xena Ex", y: "Yuri Why"}, {"wx1": [x, y], "wx2": [x, y], "wx3": [x, y]}, {"all-years": [(x, y, 3, ["wx1", "wx2", "wx3"])]})
+        ex = g.Export(tmp)
+        spec = {"id": "q01", "type": "evidence", "slot": "s", "question": "What is the shortest path between Xena and Yuri?", "planner": "fallback",
+                "params": {"window": "all-years", "a": {"id": x, "name": "Xena Ex"}, "b": {"id": y, "name": "Yuri Why"}, "expected_hops": 1,
+                           "joint_publications": 3, "joint_work_ids": ["wx1", "wx2", "wx3"]}}
+        return x, y, keymod.key_for(spec, ex, g.team_sizes(ex)), score.Deep(g, ex)
+
+    def test_evidence_answer_passes_with_the_exact_joint_works(self):
+        x, y, q, deep = self.evidence_case()
+        edge = self.item("evidence:edge:1", "edge", [x, y], ["all-years"], researcherA=x, researcherB=y, jointPublicationCount=3, workIds=["wx1", "wx2", "wx3"])
+        path = self.item("evidence:path:1", "path", [x, y], ["all-years"], pathStatus="Found", orderedResearcherIds=[x, y], hopCount=1)
+        result = score.score_question(q, self.row(q, "Xena Ex and Yuri Why are direct coauthors with 3 joint works.", [path, edge]), deep)
+        self.assertTrue(result["pass"], json.dumps(result, indent=1))
+        words = score.score_question(q, self.row(q, "Xena Ex and Yuri Why wrote three joint works together.", [path, edge]), deep)
+        self.assertTrue(words["text"]["pass"], words["text"]["reasons"])   # the count as a word
+
+    def test_evidence_answer_fails_on_a_missing_work_a_wrong_count_or_a_missing_edge(self):
+        x, y, q, deep = self.evidence_case()
+        short = self.item("evidence:edge:1", "edge", [x, y], ["all-years"], researcherA=x, researcherB=y, jointPublicationCount=3, workIds=["wx1", "wx2"])
+        result = score.score_question(q, self.row(q, "Xena Ex and Yuri Why share 3 works.", [short]), deep)
+        self.assertFalse(result["retrieval"]["pass"])
+        self.assertTrue(any("differ from the key joint works" in r for r in result["retrieval"]["reasons"]), result["retrieval"]["reasons"])
+        self.assertTrue(any("differ from the 3 joint works of the export" in r for r in result["retrieval"]["reasons"]))
+        good = self.item("evidence:edge:2", "edge", [x, y], ["all-years"], researcherA=x, researcherB=y, jointPublicationCount=3, workIds=["wx1", "wx2", "wx3"])
+        wrong_text = score.score_question(q, self.row(q, "Xena Ex and Yuri Why share 5 works.", [good]), deep)
+        self.assertFalse(wrong_text["text"]["pass"])
+        self.assertTrue(any("number alternatives" in r for r in wrong_text["text"]["reasons"]))
+        other = self.item("evidence:metric:9", "metrics", [x], ["all-years"], componentId="component:c")
+        missing = score.score_question(q, self.row(q, "Xena Ex and Yuri Why share 3 works.", [other]), deep)
+        self.assertFalse(missing["retrieval"]["pass"])
+        self.assertTrue(any("no edge evidence between the two researchers" in r for r in missing["retrieval"]["reasons"]))
+
     def test_unverified_evidence_is_shown_in_the_markdown(self):
         q = self.q("component", researcher={"id": A2, "name": NAMES[A2]})
         it = self.item("evidence:metric:1", "metrics", [A2], ["all-years"], componentId=g.analytics_id("component", "all-years", A1))
@@ -686,7 +766,7 @@ class CommittedInputsTest(unittest.TestCase):
         self.assertEqual(key["source"]["run_id"], manifest["source"]["export_run_id"])
         self.assertEqual(manifest["llm"]["answers"], 33)
         self.assertEqual(manifest["llm"]["bucket"], "16b")
-        self.assertEqual(key["counts"]["by_check_level"], {"abstain": 6, "bounded": 2, "exact": 15, "structural": 3, "values-and-order": 7})
+        self.assertEqual(key["counts"]["by_check_level"], {"abstain": 6, "bounded": 2, "exact": 18, "values-and-order": 7})
         self.assertEqual(sum(1 for q in key["questions"] if q["expected_outcome"] == "answer"), 27)
         self.assertEqual(sum(1 for q in key["questions"] if q["expected_outcome"] == "abstain"), 6)
         # F1: the two abstain-expected types are never adjacent in the question order

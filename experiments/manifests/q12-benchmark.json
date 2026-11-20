@@ -24,7 +24,7 @@
   "questions": {
     "file": "experiments/inputs/q12/questions.txt",
     "count": 33,
-    "sha256": "0a6bfe2671347ca6014c103c53ddedb872ed4153330027812e57df15443c51d9",
+    "sha256": "afc09952096c49ebacd61a051542295570ec9bcd39ffb72cb7a3d4fc014e4734",
     "specs": "experiments/inputs/q12/question-specs.json",
     "include_ids": "experiments/inputs/q12/include-ids.txt",
     "provenance": "experiments/inputs/q12/provenance.json",
@@ -49,7 +49,7 @@
     "temporal": "did X change between adjacent stored windows; exact except deltaAverageCoauthorsPerPaper and deltaMaximumCoauthorsOnOnePaper (not checked) and communityJaccardOverlap (a lower bound: the runtime also counts one-person communities of researchers with no edge in a window); planner route LLM",
     "topic": "THIN DATA (3 TOPIC nodes on one work with no AUTHORED edge): the key expects an abstention (HTTP 200 ABSTAINED or 422 UNSUPPORTED_QUERY)",
     "institution": "THIN DATA (1 INSTITUTION node, 0 AFFILIATED_WITH edges): the key expects an abstention (HTTP 200 ABSTAINED or 422 UNSUPPORTED_QUERY)",
-    "evidence": "explain the research collaboration of one researcher (explain / SemanticExplanation form); structural key plus entity facts; planner route LLM"
+    "evidence": "shortest path between two direct coauthors with 2..5 joint works (all-years, since-2015, 2020-2026): the answer must cite the edge evidence whose workIds are exactly the joint works; exact key from the CSV sidecar (the edge row's representative work ids, which for joint <= 5 are exactly the joint works in every window); planner route fallback (the shortest-path form without the word coauthor). The explain / SemanticExplanation form is not used: the local stack has no vectors, so it always abstains there"
   },
   "command": {
     "plan": "python3 -I load-tests/evalq12.py plan",
@@ -59,9 +59,15 @@
     "raw_results": "target/experiment-runs/q12-benchmark-<run-id>/raw/ (answers.jsonl with the query answer, the /v1/explain body and every cited /v1/evidence item per question; events.jsonl, run-record.json, raw.sha256), sealed read-only",
     "needs": "SCHOLARCHAIN_LOAD_BASE_URL (loopback host only) and SCHOLARCHAIN_LOAD_API_KEY in the shell; the ledger created with llm_budget.py init; the include list loaded in the runtime artifact (experiments/inputs/q12/include-ids.txt; the run's preflight refuses otherwise); P3 (direct coauthor budget) and P4 (path abstentions) fixed"
   },
+  "run_settings": {
+    "retrieval_mode": "graph (the local stack has no vectors: Voyage keys revoked, S3 Vectors destroyed; the runtime-config default is fused, so the run must override it to graph)",
+    "deadline_overrides_ms": {"planner": 30000, "synthesis": 30000, "note": "the coordinator sets the planner and synthesis deadlines to 30,000 ms for the local run (the committed runtime config has plannerMs 5000 and synthesisMs 5000); record them with the run, they are service settings, not harness options"},
+    "record": "write these settings, the stack commit and the include-list sha256 into the run evidence next to the run id; the harness records the commit and the tree flag in run-record.json but cannot see the service's configuration",
+    "consequence": "no semantic evidence exists in this mode; every Q12 type is answerable from graph and metric evidence or is a key-expected abstention (topic and institution)"
+  },
   "method_note": "the runtime artifact is a bounded subset (the include list plus degree-fill up to the row cap), so ranking questions rank only the researchers inside it; the scorer verifies every cited value against the export and the descending order, and reports agreement with the corpus-wide top as information only",
   "open_items": [
-    "Phase14QuestionSetPlannerSpec equivalent for the 33 questions (rag-engineer): 24 questions are in the fallback grammar; temporal, community and evidence (9) need the planner LLM",
+    "Phase14QuestionSetPlannerSpec equivalent for the 33 questions (rag-engineer): 27 questions are in the fallback grammar (the evidence type is now a fallback-grammar shortest-path form, so the spec's type-to-route rule and counts change from 24/9 to 27/6 and an `evidence` case with params a and b like shortest_path is needed); only temporal and community comparison (6) need the planner LLM",
     "no grading of free-form prose beyond the key facts (numbers, names, hop words); the scorer reports every failure reason"
   ]
 }
