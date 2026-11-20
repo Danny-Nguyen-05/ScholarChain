@@ -468,8 +468,6 @@ object LocalExportStores {
       val edgeIds = mutable.HashSet.empty[String]
       val associations =
         mutable.HashMap.empty[String, Vector[AssociationRef]].withDefaultValue(Vector.empty)
-      def serialized(v: ujson.Value): Option[String] =
-        if (v == ujson.Null) None else Some(v.render())
       graphEdgeTables.filter(byName.contains).foreach { name =>
         val refs = Vector.newBuilder[AssociationRef]
         scan(byName(name)) { row =>

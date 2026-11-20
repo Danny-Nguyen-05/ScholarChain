@@ -34,11 +34,12 @@ private[storage] final class LocalEdge(
   * implement the `GraphReader` port with Neptune's documented semantics (window constrains
   * COAUTHORED_WITH only; shortest paths use only COAUTHORED_WITH edges of the requested window and
   * return the minimal-length paths in node-ID order), but the AWS runtime does not call them, they
-  * were not compared with a live Neptune, and they differ in two known ways: community
-  * qualifications and membership lookups are derived from the stored membership rows rather than
-  * from Neptune's enriched node properties (so `communityQualificationsJson` lists memberships in
-  * manifest window order), and a self-loop appears once in `neighbors`. Treat them as local
-  * conveniences, not as evidence of what Neptune returns.
+  * were not compared with a live Neptune, and they differ in known ways: community data comes from
+  * the stored membership rows, not from Neptune's enriched node CSV; `communityQualificationsJson`
+  * is omitted for a node without memberships (Neptune gives "[]") and lists memberships in manifest
+  * window order (Neptune: the communities table's scan order); `shortestPaths(a, a)` is empty (the
+  * Neptune template could return cycles); a self-loop appears once in `neighbors` (unverified
+  * against Neptune). Treat them as local conveniences, not as evidence of what Neptune returns.
   *
   * Stored endpoints are returned as written; order is edge ID within the outgoing then incoming
   * phase. Nothing is inferred; a node is parsed and checked from its stored row on each read.

@@ -28,7 +28,18 @@ class LocalExportStoresSpec extends AnyFunSuite {
       ujson.Obj.from(row)
     })
   }
-  private val rows = withWorks(source)
+  // Exported graph-edge rows carry every projected column; the fixture's omit the context one.
+  private def withContext(rows: Map[String, Vector[ujson.Obj]]): Map[String, Vector[ujson.Obj]] = {
+    val context = rows("edges/type=coauthored_with").head("context")
+    rows ++ Vector("authored", "has_topic", "published_in", "affiliated_with").map { kind =>
+      val name = "edges/type=" + kind
+      name -> rows(name).map { row =>
+        val copy = ujson.read(row.render()).obj; copy("context") = context
+        ujson.Obj.from(copy)
+      }
+    }
+  }
+  private val rows = withContext(withWorks(source))
   private def load(
       data: Map[String, Vector[ujson.Obj]] = rows,
       served: Map[String, Vector[ujson.Obj]] = null,
@@ -443,6 +454,16 @@ class LocalExportStoresSpec extends AnyFunSuite {
       "edges/type=has_topic"
     ).head))
     assert(load(data = repeated).left.map(_.code) == Left(LocalExportError.duplicateKey))
+  }
+
+  test("a graph-edge row that lacks a projected column is refused, not read as null") {
+    val broken = rows + ("edges/type=authored" -> rows("edges/type=authored").map { row =>
+      val copy = ujson.read(row.render()).obj; copy.remove("context")
+      ujson.Obj.from(copy)
+    })
+    val refused = load(data = broken)
+    assert(refused.left.map(_.code) == Left(LocalExportError.invalidRow))
+    intercept[SourceRejected](GraphProjection.graphEdge(ujson.Obj("edgeId" -> "e")))
   }
 
   private val RuntimeArtifactDistinct = RuntimeRankingMetric.DistinctCoauthorCount

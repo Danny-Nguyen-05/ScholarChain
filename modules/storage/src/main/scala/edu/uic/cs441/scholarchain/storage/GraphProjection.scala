@@ -16,17 +16,23 @@ private[storage] object GraphProjection {
   private def json(v: ujson.Value): ujson.Value =
     if (v == ujson.Null) ujson.Null else ujson.Str(v.render())
 
+  /** A graph-edge row must carry every projected column (null is a value, a missing key is not);
+    * otherwise the export does not have the schema the CSV was projected from.
+    */
+  private def required(row: ujson.Obj, name: String): ujson.Value =
+    row.obj.getOrElse(name, throw SourceRejected("invalid-source-row"))
+
   def graphEdge(row: ujson.Obj): Columns = Vector(
-    ":ID" -> cell(row, "edgeId"),
-    ":START_ID" -> cell(row, "fromId"),
-    ":END_ID" -> cell(row, "toId"),
-    ":TYPE" -> cell(row, "edgeType"),
-    "schemaVersion:String" -> cell(row, "schemaVersion"),
-    "policyVersion:String" -> cell(row, "policyVersion"),
-    "sourceEvidenceJson:String" -> json(cell(row, "sourceEvidence")),
-    "propertiesJson:String" -> json(cell(row, "properties")),
-    "provenanceJson:String" -> json(cell(row, "provenance")),
-    "contextJson:String" -> json(cell(row, "context"))
+    ":ID" -> required(row, "edgeId"),
+    ":START_ID" -> required(row, "fromId"),
+    ":END_ID" -> required(row, "toId"),
+    ":TYPE" -> required(row, "edgeType"),
+    "schemaVersion:String" -> required(row, "schemaVersion"),
+    "policyVersion:String" -> required(row, "policyVersion"),
+    "sourceEvidenceJson:String" -> json(required(row, "sourceEvidence")),
+    "propertiesJson:String" -> json(required(row, "properties")),
+    "provenanceJson:String" -> json(required(row, "provenance")),
+    "contextJson:String" -> json(required(row, "context"))
   )
 
   private def int(v: Option[Int]): ujson.Value =
