@@ -2,7 +2,7 @@
 """Score the raw Q12 run (load-tests/evalq12.py) against the computed answer key (stdlib only; python3 -I; offline, no network).
 
   python3 -I experiments/scripts/q12_score.py --key experiments/inputs/q12/answer-key.json --raw target/experiment-runs/q12-benchmark-<run-id>/raw \\
-      [--export-dir <spark export dir>] --out-json <scores.json> --out-md <scores.md>
+      --export-dir <spark export dir> --out-json <scores.json> --out-md <scores.md>
 
 Three scores per question, each pass/fail with the reasons recorded (nothing is guessed; a missing fetch is a failure, not a pass):
   (i)   retrieval   every evidence id cited by the answer's claims or by /v1/explain resolves through /v1/evidence/{id}; the evidence names the
@@ -14,10 +14,15 @@ Three scores per question, each pass/fail with the reasons recorded (nothing is 
   (iii) text        the answer prose (summary and uncertainty) contains the key facts: numbers, names and, for paths, the hop count and the
                     interior names of a shortest path; for ranking questions the name and value of the rank-1 cited researcher.
 Abstention is correct ONLY where the key says abstain (topic and institution questions on this thin-data export): then retrieval is not
-applicable, the claims score requires that no ranking claim was verified, and the text score requires an abstention (an ABSTAINED outcome,
-an insufficient-evidence summary or an HTTP 4xx refusal). Where the key says answer, an abstention fails all three scores.
-Ranking questions: the runtime ranks only the researchers inside its bounded artifact, so agreement with the corpus-wide top is reported as
-information (corpus_top1_agrees) and never decides pass or fail; every cited value and the descending order are checked.
+applicable, the claims score requires that no ranking claim was verified, and the text score requires an abstention: exactly an HTTP 200
+answer whose explain outcome is ABSTAINED, or an HTTP 422 whose recorded closed error code is UNSUPPORTED_QUERY. Any other 4xx (429, 400 ...),
+any 5xx and any transport failure is an error, never an abstention. Where the key says answer, an abstention fails all three scores.
+Totals are reported separately for the 27 answer-expected questions (the headline) and the 6 abstain-expected questions.
+Ranking questions are checked for VALUES AND ORDER only: the runtime ranks only the researchers inside its bounded artifact, so every cited value is
+verified against the export and the descending order inside the answer is checked, while agreement with the corpus-wide top (corpus_top1_agrees) is
+information and never decides pass or fail. The temporal communityJaccardOverlap is a lower bound (key <= runtime <= 1).
+--export-dir is required (the deep checks are what make retrieval and claims meaningful); --allow-shallow runs key-level checks only and labels
+every output SHALLOW. Evidence that was not fetched because of the 60-id cap, or was too large to store, is counted as unverified, not as unresolved.
 Exit codes: 0 scored (the exit code does not depend on the scores), 1 refused (unreadable input), 2 usage.
 """
 import argparse
@@ -30,7 +35,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCHEMA = "scholarchain.q12-scores.v1"
 WORDS = {1: ("one", "direct", "directly", "single"), 2: ("two",), 3: ("three",), 4: ("four",), 5: ("five",), 6: ("six",)}
-ABSTAIN_TEXT = re.compile(r"insufficient|cannot be answered|can(?:no|')t answer|unable to|not enough|no verified|not (?:available|supported|stored)|abstain|unsupported", re.I)
+ERROR_CODE = re.compile(r"^[A-Z_]{1,40}$")
 NUMBER = re.compile(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?")
 HOMONYM = re.compile(r"\s+\d{4}$")
 
@@ -210,8 +215,10 @@ def key_check(q, items):
         if not found:
             out.append("no temporal evidence for the researcher")
         for f in found:
+            if "communityJaccardOverlap" in f and not exp["communityJaccardOverlap"] - 1e-9 <= f["communityJaccardOverlap"] <= 1.0 + 1e-9:
+                out.append("communityJaccardOverlap %s is outside [key lower bound %s, 1]" % (f["communityJaccardOverlap"], exp["communityJaccardOverlap"]))
             for name in ("deltaDistinctCoauthors", "deltaComponentSize", "deltaCrossCommunityDegree", "deltaCrossCommunityWeight",
-                         "deltaCommunitiesConnected", "communityJaccardOverlap", "deltaParticipationCoefficient"):
+                         "deltaCommunitiesConnected", "deltaParticipationCoefficient"):
                 if name in f and not same(f[name], exp[name], 1e-6):
                     out.append("%s %s != key %s" % (name, f[name], exp[name]))
             for name in ("previousCommunityId", "currentCommunityId", "enteredLargestComponent", "leftLargestComponent", "fromPresent", "toPresent"):
@@ -286,6 +293,7 @@ def numbers_in(text):
         value = to_number(raw.replace(",", ""))
         if value is not None:
             found.add(value)
+            found.add(abs(value))
     return found
 
 
@@ -301,7 +309,8 @@ def text_check(q, body, ranking_first):
         return ["the answer has no summary text"]
     nums = numbers_in(text)
     for group in ([] if q["type"] == "shortest_path" else req.get("numbers") or []):   # a path's hop count is checked below, digits or words
-        if not any(all(float(n) in nums for n in alt) for alt in group):
+        by_id = q["type"] == "component" and q["expected"]["component_id"] in text   # a component answer may give the size or the component id
+        if not by_id and not any(all(float(n) in nums for n in alt) for alt in group):
             out.append("none of the number alternatives %s appears" % json.dumps(group))
     for name in req.get("names") or []:
         if not has_name(text, name):
@@ -343,11 +352,12 @@ def classify(row):
     if not isinstance(status, int) or status >= 500 or status == 0:
         return "error"
     if 400 <= status < 500:
-        return "refused"
+        # only the service's closed UNSUPPORTED_QUERY refusal is an abstention; 429, 400, 401 ... are errors of the run, not answers
+        code = row.get("error_code")
+        return "refused" if status == 422 and isinstance(code, str) and ERROR_CODE.match(code) and code == "UNSUPPORTED_QUERY" else "error"
     outcome = str(explain.get("outcome", "")).upper()
     verification = str(explain.get("verificationStatus", "")).upper()
-    summary = ((body or {}).get("answer") or {}).get("summary", "") if isinstance(body, dict) else ""
-    if outcome == "ABSTAINED" or verification == "ABSTAINED" or (isinstance(summary, str) and re.search(r"insufficient verified evidence", summary, re.I)):
+    if outcome == "ABSTAINED" or verification == "ABSTAINED":
         return "abstained"
     if row.get("job_state") not in (None, "SUCCEEDED", "SUCCESS", "COMPLETED", "DONE"):
         return "error"
@@ -378,6 +388,7 @@ def score_question(q, row, deep):
         return result
     body = row.get("answer")
     explain = (row.get("explain") or {}).get("body") or {}
+    result["error_code"] = row.get("error_code") if isinstance(row.get("error_code"), str) and ERROR_CODE.match(row["error_code"]) else None
     counters = explain.get("counters") or {}
     attempted, verified, rejected = counters.get("attemptedClaims"), counters.get("verifiedClaims"), counters.get("rejectedClaims")
     claims = (body or {}).get("claims") if isinstance(body, dict) else []
@@ -398,17 +409,19 @@ def score_question(q, row, deep):
         ok_claims = kind in ("abstained", "refused") and not ranking_verified
         result["claims"]["pass"] = ok_claims
         result["claims"]["reasons"] = [] if ok_claims else ["a ranking claim was verified or the system answered where the key expects an abstention"]
-        text = answer_text(body)
-        is_abstention = kind in ("abstained", "refused") and (kind == "refused" or kind == "abstained" or bool(ABSTAIN_TEXT.search(text)))
+        is_abstention = kind in ("abstained", "refused")
         result["text"] = {"pass": is_abstention, "reasons": [] if is_abstention else ["not an abstention (outcome kind %s)" % kind],
-                          "abstention_kind": "refused-4xx" if kind == "refused" else ("verified-abstention" if kind == "abstained" else None)}
+                          "abstention_kind": "refused-422-UNSUPPORTED_QUERY" if kind == "refused" else ("verified-abstention" if kind == "abstained" else None)}
         result["pass"] = result["claims"]["pass"] and result["text"]["pass"]
         return result
     # expected answer ---------------------------------------------------------------------------------------------------------------
     reasons = []
     if kind != "answered":
         reasons.append("the system did not answer (outcome kind %s)" % kind)
-    unresolved = [e for e in cited if e not in resolved]
+    skipped = set(row.get("evidence_skipped_ids") or [])
+    oversize = {e for e in cited if (evidence.get(e) or {}).get("oversize")}
+    unverified = sorted((set(cited) & skipped) | oversize)
+    unresolved = [e for e in cited if e not in resolved and e not in unverified]
     if not cited:
         reasons.append("no evidence cited")
     if unresolved:
@@ -432,7 +445,8 @@ def score_question(q, row, deep):
                 deep_checked += 1
                 deep_mismatch += deep.check(k, ss, w, f)
     reasons += deep_mismatch
-    result["retrieval"] = {"pass": not reasons, "cited": len(cited), "resolved": len(resolved), "kinds": sorted(kinds), "deep_checked_items": deep_checked if deep else None,
+    result["retrieval"] = {"pass": not reasons, "cited": len(cited), "resolved": len(resolved), "kinds": sorted(kinds), "unverified": len(unverified), "unverified_skipped_by_cap": len(set(cited) & skipped), "unverified_oversize": len(oversize),
+                           "deep_checked_items": deep_checked if deep else None,
                            "deep": "export" if deep else "skipped (no --export-dir)", "reasons": reasons[:12], "reason_count": len(reasons)}
     # claims
     creasons = []
@@ -510,22 +524,42 @@ def score_question(q, row, deep):
     return result
 
 
-def summarize(results):
-    types = {}
+COUNTS = ("questions", "retrieval_pass", "claims_pass", "text_pass", "all_pass", "abstained_or_refused")
+
+
+def tally(results):
+    t = dict.fromkeys(COUNTS, 0)
     for r in results:
-        t = types.setdefault(r["type"], {"questions": 0, "retrieval_pass": 0, "claims_pass": 0, "text_pass": 0, "all_pass": 0, "abstained_or_refused": 0})
         t["questions"] += 1
         t["retrieval_pass"] += bool(r["retrieval"].get("pass"))
         t["claims_pass"] += bool(r["claims"].get("pass"))
         t["text_pass"] += bool(r["text"].get("pass"))
         t["all_pass"] += bool(r["pass"])
         t["abstained_or_refused"] += r["outcome_kind"] in ("abstained", "refused")
-    total = {k: sum(t[k] for t in types.values()) for k in ("questions", "retrieval_pass", "claims_pass", "text_pass", "all_pass", "abstained_or_refused")}
-    return dict(sorted(types.items())), total
+    return t
+
+
+def summarize(results):
+    """(per type, totals): the headline totals are the answer-expected questions; abstain-expected ones are reported apart."""
+    types = {}
+    for kind in sorted({r["type"] for r in results}):
+        types[kind] = tally([r for r in results if r["type"] == kind])
+    totals = {"answer_expected": tally([r for r in results if r["expected_outcome"] == "answer"]),
+              "abstain_expected": tally([r for r in results if r["expected_outcome"] == "abstain"]), "all": tally(results)}
+    return types, totals
 
 
 def markdown(doc):
-    lines = ["# Q12 benchmark scores", "", "Run `%s`, key `%s` (export run `%s`), deep checks: %s." % (doc["run_id"], doc["key_sha256"][:16], doc["export_run_id"], doc["deep_checks"]), "",
+    shallow = doc["deep_checks"] != "export"
+    t = doc["totals"]["answer_expected"]
+    a = doc["totals"]["abstain_expected"]
+    lines = ["# Q12 benchmark scores%s" % (" (SHALLOW: key-level checks only, not a full score)" if shallow else ""), "",
+             "Run `%s`, key `%s` (export run `%s`), deep checks: %s." % (doc["run_id"], doc["key_sha256"][:16], doc["export_run_id"], doc["deep_checks"]), "",
+             "## Headline: the %d answer-expected questions" % t["questions"], "",
+             "retrieval %d, claims %d, text %d, all three %d of %d." % (t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], t["questions"]), "",
+             "## Abstain-expected questions (thin data): %d" % a["questions"], "",
+             "correct abstentions %d of %d (a 200 ABSTAINED answer or a 422 UNSUPPORTED_QUERY refusal; anything else is an error)." % (a["all_pass"], a["questions"]), "",
+             "## Per question", "",
              "| id | type | level | outcome | retrieval | claims (a/v/r) | text | all | first failure |", "|---|---|---|---|---|---|---|---|---|"]
     for r in doc["questions"]:
         c = r["claims"]
@@ -535,10 +569,10 @@ def markdown(doc):
             c.get("attempted"), c.get("verified"), c.get("rejected"), "pass" if c.get("pass") else "FAIL",
             "pass" if r["text"].get("pass") else "FAIL", "pass" if r["pass"] else "FAIL", first.replace("|", "/")[:110]))
     lines += ["", "## Per type", "", "| type | questions | retrieval | claims | text | all pass | abstained/refused |", "|---|---|---|---|---|---|---|"]
-    for name, t in doc["per_type"].items():
-        lines.append("| %s | %d | %d | %d | %d | %d | %d |" % (name, t["questions"], t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], t["abstained_or_refused"]))
-    t = doc["totals"]
-    lines += ["| **total** | %d | %d | %d | %d | %d | %d |" % (t["questions"], t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], t["abstained_or_refused"]), ""]
+    for name, row in doc["per_type"].items():
+        lines.append("| %s | %d | %d | %d | %d | %d | %d |" % ((name,) + tuple(row[k] for k in COUNTS)))
+    for label, row in (("answer-expected", t), ("abstain-expected", a)):
+        lines.append("| **total %s** | %d | %d | %d | %d | %d | %d |" % ((label,) + tuple(row[k] for k in COUNTS)))
     return "\n".join(lines) + "\n"
 
 
@@ -546,10 +580,14 @@ def main(argv):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--key", required=True)
     parser.add_argument("--raw", required=True, help="directory holding answers.jsonl (and run-record.json) of a load-tests/evalq12.py run")
-    parser.add_argument("--export-dir", help="completed Phase 6 Spark export (read only): enables the deep value checks")
+    parser.add_argument("--export-dir", help="completed Phase 6 Spark export (read only): enables the deep value checks (required unless --allow-shallow)")
+    parser.add_argument("--allow-shallow", action="store_true", help="score without the export: key-level checks only, every output labelled SHALLOW")
     parser.add_argument("--out-json", required=True)
     parser.add_argument("--out-md", required=True)
     args = parser.parse_args(argv)
+    if not args.export_dir and not args.allow_shallow:
+        sys.stderr.write("USAGE: --export-dir is required (or --allow-shallow for a labelled key-level-only score)\n")
+        return 2
     g = load_graph()
     try:
         with open(args.key, encoding="utf-8") as handle:
@@ -570,13 +608,14 @@ def main(argv):
         return 1
     per_type, totals = summarize(results)
     doc = {"schema": SCHEMA, "run_id": run_id, "key_sha256": g.sha256_file(args.key), "export_run_id": export_run,
-           "deep_checks": "export" if deep else "skipped (no --export-dir)", "per_type": per_type, "totals": totals, "questions": results}
+           "deep_checks": "export" if deep else "SHALLOW (no --export-dir)", "per_type": per_type, "totals": totals, "questions": results}
     with open(args.out_json, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(json.dumps(doc, indent=1, sort_keys=True) + "\n")
     with open(args.out_md, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(markdown(doc))
-    print("SCORED questions=%d retrieval=%d claims=%d text=%d all=%d abstained_or_refused=%d deep_checks=%s" % (
-        totals["questions"], totals["retrieval_pass"], totals["claims_pass"], totals["text_pass"], totals["all_pass"], totals["abstained_or_refused"], doc["deep_checks"]))
+    t, a = totals["answer_expected"], totals["abstain_expected"]
+    print("SCORED answer_expected=%d retrieval=%d claims=%d text=%d all=%d | abstain_expected=%d correct=%d | deep_checks=%s" % (
+        t["questions"], t["retrieval_pass"], t["claims_pass"], t["text_pass"], t["all_pass"], a["questions"], a["all_pass"], doc["deep_checks"]))
     return 0
 
 

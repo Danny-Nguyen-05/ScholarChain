@@ -192,6 +192,72 @@ class KeyTest(unittest.TestCase):
         self.assertEqual(k["expected_outcome"], "abstain")
 
 
+class ValidationTest(unittest.TestCase):
+    """q12_answer_key.validate_against_report: the replayable comparison of the port with analytics-report.json."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="q12-valid-")
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        self.root = os.path.join(self.tmp, "export")
+        small_export(self.root)
+        self.ex = g.Export(self.root)
+
+    def report(self, **change):
+        # hand-derived from the module docstring: all-years largest component 6, 4 iterations, 0 changed, largest community 3, bridge maxima 1/1/1/4/9,
+        # max team 3 coauthors; 2010-2014 largest component 3, 20 iterations, 3 changed, largest community 2, maxima 2/2/1/0
+        rep = {"components": [{"window": "all-years", "largestSize": 6}, {"window": "2010-2014", "largestSize": 3}],
+               "communities": [{"window": "all-years", "sizeMax": 3}, {"window": "2010-2014", "sizeMax": 2}],
+               "communityConvergence": [{"window": "all-years", "iterations": 4, "finalChangedCount": 0}, {"window": "2010-2014", "iterations": 20, "finalChangedCount": 3}],
+               "bridges": [{"window": "all-years", "crossCommunityDegreeMax": 1, "crossCommunityWeightMax": 1, "communitiesConnectedMax": 1, "participationCoefficientMax": 4 / 9},
+                           {"window": "2010-2014", "crossCommunityDegreeMax": 2, "crossCommunityWeightMax": 2, "communitiesConnectedMax": 1, "participationCoefficientMax": 0.0}],
+               "metrics": [{"window": "all-years", "maximumCoauthorsOnOnePaperMax": 3}]}
+        rep.update(change)
+        write(os.path.join(self.root, "analytics-report.json"), json.dumps(rep))
+
+    def test_matching_report_is_validated_and_values_are_recorded(self):
+        self.report()
+        compared = keymod.validate_against_report(self.ex, self.root)
+        self.assertEqual(sorted(compared), ["2010-2014", "all-years"])
+        self.assertEqual(compared["all-years"]["communityIterations"], {"computed": 4, "report": 4})
+        self.assertEqual(compared["2010-2014"]["communityFinalChangedCount"], {"computed": 3, "report": 3})
+        self.assertEqual(compared["all-years"]["maximumCoauthorsOnOnePaperMax"], {"computed": 3, "report": 3})
+
+    def test_a_mismatch_is_refused(self):
+        self.report(communityConvergence=[{"window": "all-years", "iterations": 4, "finalChangedCount": 1}, {"window": "2010-2014", "iterations": 20, "finalChangedCount": 3}])
+        with self.assertRaises(keymod.Refused) as raised:
+            keymod.validate_against_report(self.ex, self.root)
+        self.assertIn("all-years communityFinalChangedCount: computed 0, report 1", str(raised.exception))
+
+    def test_a_missing_report_is_refused_and_main_refuses_to_write_the_key(self):
+        with self.assertRaises(keymod.Refused):
+            keymod.validate_against_report(self.ex, self.root)
+        specs = os.path.join(self.tmp, "specs.json")
+        write(specs, json.dumps({"run_id": RUN, "seed": "s", "questions": [{"id": "q01", "type": "topic", "slot": "t", "question": "Q?", "planner": "fallback", "params": {"window": "all-years", "topic": "Topic One"}}]}))
+        out_path = os.path.join(self.tmp, "key.json")
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(keymod.main(["--export-dir", self.root, "--specs", specs, "--out", out_path]), 1)
+        self.assertIn("KEY-REFUSED", out.getvalue())
+        self.assertFalse(os.path.exists(out_path))
+        self.report()
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(keymod.main(["--export-dir", self.root, "--specs", specs, "--out", out_path]), 0)
+        with open(out_path) as handle:
+            self.assertEqual(json.load(handle)["source"]["validation"]["status"], "matched")
+
+
+class HomonymGuardTest(unittest.TestCase):
+    def test_a_plain_name_is_ineligible_when_a_homonym_suffixed_name_exists(self):
+        tmp = tempfile.mkdtemp(prefix="q12-homonym-")
+        self.addCleanup(shutil.rmtree, tmp, True)
+        root = os.path.join(tmp, "export")
+        names = {A1: "Wei Wang", A2: "Wei Wang 0001", A3: "Cat Three", B1: "Dan Four", B2: "dan four"}
+        build_export(root, names, {"w1": [A1, A2, A3]}, {"all-years": [(A1, A2, 1), (A2, A3, 1)]})
+        selector = derive.Selector(g.Export(root), "seed")
+        # "Wei Wang" is unique as a string but "Wei Wang 0001" strips to the same name: ambiguous for the runtime resolver; the suffixed name has a digit
+        self.assertEqual(sorted(selector.eligible), [A3])   # B1 and B2 collide after lowercasing
+
+
 # a planner-grammar check: a Python port of the anchored fallback grammar of QueryPlannerAgent.fallback (QueryPlannerAgent.scala:100-160)
 STORED = {"all-years", "through-2009", "2010-2014", "2015-2019", "2020-2026", "since-2015"}
 FALLBACK = [re.compile(p, re.I) for p in (
@@ -316,6 +382,12 @@ class DeriveTest(unittest.TestCase):
             self.assertGreaterEqual(wg.component_size(r), 12)
             self.assertLess(wg.component_size(r), 200)   # not the giant component (12 chained cliques = 168 + the hub)
 
+    def test_abstain_questions_are_never_adjacent(self):
+        specs = json.loads(self.read("question-specs.json"))["questions"]
+        flags = [q["type"] in ("topic", "institution") for q in specs]
+        self.assertEqual(sum(flags), 6)
+        self.assertFalse(any(a and b for a, b in zip(flags, flags[1:])), "two abstain-expected questions are adjacent")
+
     def test_thin_data_is_recorded(self):
         prov = json.loads(self.read("provenance.json"))
         self.assertEqual(prov["source"]["run_id"], RUN)
@@ -427,8 +499,16 @@ class ScoreTest(unittest.TestCase):
         abstained = self.row(topic, "Insufficient verified evidence to answer.", [], claims=[], outcome="ABSTAINED", attempted=0, verified=0, verdicts=[])
         result = score.score_question(topic, abstained, self.deep)
         self.assertEqual((result["pass"], result["text"]["abstention_kind"]), (True, "verified-abstention"))
-        refused = score.score_question(topic, {"qid": "q01", "question": topic["question"], "status": 422, "answer": None, "explain": None, "evidence": {}}, self.deep)
-        self.assertEqual((refused["pass"], refused["text"]["abstention_kind"]), (True, "refused-4xx"))
+        refused = score.score_question(topic, {"qid": "q01", "question": topic["question"], "status": 422, "error_code": "UNSUPPORTED_QUERY", "answer": None, "explain": None, "evidence": {}}, self.deep)
+        self.assertEqual((refused["pass"], refused["text"]["abstention_kind"], refused["outcome_kind"]), (True, "refused-422-UNSUPPORTED_QUERY", "refused"))
+        # only 422 UNSUPPORTED_QUERY is an abstention: a 429, a 422 with another or no code, a 400 or a 5xx are errors of the run
+        for status, code in ((429, "RATE_LIMITED"), (422, "INVALID_REQUEST"), (422, None), (400, "INVALID_REQUEST"), (401, "UNAUTHORIZED"), (503, "SERVICE_UNAVAILABLE"), (404, "UNSUPPORTED_QUERY")):
+            bad = score.score_question(topic, {"qid": "q01", "question": topic["question"], "status": status, "error_code": code, "answer": None, "explain": None, "evidence": {}}, self.deep)
+            self.assertEqual((bad["outcome_kind"], bad["pass"]), ("error", False), (status, code))
+        # a 200 answer whose summary only SAYS insufficient but whose explain outcome is not ABSTAINED is not an abstention
+        talk = self.row(topic, "Insufficient verified evidence to answer.", [], claims=[], outcome="ANSWERED", attempted=0, verified=0, verdicts=[])
+        talk["explain"]["body"]["verificationStatus"] = "UNVERIFIED"
+        self.assertEqual(score.score_question(topic, talk, self.deep)["pass"], False)
         answered = self.row(topic, "A ranking.", [self.item("evidence:ranking:1", "ranking", [A1], ["all-years"], rank=1, rankingValue=2)],
                             claims=[{"claimId": "claim:1", "evidenceIds": ["evidence:ranking:1"], "runtime": {"claimType": "RANKING", "subjectIds": [A1], "values": []}}])
         self.assertFalse(score.score_question(topic, answered, self.deep)["pass"])
@@ -463,6 +543,49 @@ class ScoreTest(unittest.TestCase):
         self.assertTrue(any("not coauthor edges" in r or "key says 3 hops" in r for r in bad["retrieval"]["reasons"]))
         self.assertFalse(bad["text"]["pass"])
 
+    def test_temporal_jaccard_is_a_lower_bound(self):
+        q = self.q("temporal", researcher={"id": A3, "name": NAMES[A3]}, **{"from": "2010-2014", "to": "2015-2019"})
+        base = dict(fromPresent=True, toPresent=True, deltaDistinctCoauthors=2, deltaComponentSize=1)
+
+        def result(jaccard):
+            it = self.item("evidence:temporal:1", "temporal", [A3], ["2010-2014", "2015-2019"], communityJaccardOverlap=jaccard, **base)
+            return score.score_question(q, self.row(q, "Cat Three gained 2 coauthors.", [it]), self.deep)
+        self.assertEqual(q["expected"]["communityJaccardOverlap"], 0.5)   # hand-derived in the module docstring: 2 / (2 + 4 - 2)
+        self.assertTrue(result(0.5)["retrieval"]["pass"])
+        self.assertTrue(result(0.75)["retrieval"]["pass"])   # the runtime may be higher (one-person communities of researchers without an edge)
+        self.assertTrue(result(1.0)["retrieval"]["pass"])
+        low = result(0.25)
+        self.assertFalse(low["retrieval"]["pass"])
+        self.assertTrue(any("outside [key lower bound 0.5, 1]" in r for r in low["retrieval"]["reasons"]))
+        self.assertFalse(result(1.5)["retrieval"]["pass"])
+
+    def test_skipped_and_oversize_evidence_are_unverified_not_unresolved(self):
+        q = self.q("component", researcher={"id": A2, "name": NAMES[A2]})
+        it = self.item("evidence:metric:1", "metrics", [A2], ["all-years"], componentId=g.analytics_id("component", "all-years", A1))
+        row = self.row(q, "Bob Two: 6 researchers.", [it])
+        row["answer"]["claims"][0]["evidenceIds"] += ["evidence:skipped:1", "evidence:big:1", "evidence:gone:1"]
+        row["evidence_skipped_ids"] = ["evidence:skipped:1"]
+        row["evidence"]["evidence:big:1"] = {"status": 200, "item": None, "oversize": True}
+        row["evidence"]["evidence:gone:1"] = {"status": 404, "item": None, "oversize": False}
+        result = score.score_question(q, row, self.deep)
+        self.assertFalse(result["retrieval"]["pass"])
+        self.assertEqual(result["retrieval"]["reasons"], ["1 of 4 cited evidence ids do not resolve"])   # only the 404
+        self.assertEqual((result["retrieval"]["unverified"], result["retrieval"]["unverified_skipped_by_cap"], result["retrieval"]["unverified_oversize"]), (2, 1, 1))
+        del row["evidence"]["evidence:gone:1"]["status"]
+        row["evidence"]["evidence:gone:1"]["status"] = 200
+        row["evidence"]["evidence:gone:1"]["item"] = self.item("evidence:gone:1", "metrics", [A2], ["all-years"], componentId=g.analytics_id("component", "all-years", A1))
+        passed = score.score_question(q, row, self.deep)
+        self.assertTrue(passed["retrieval"]["pass"], passed["retrieval"]["reasons"])   # unverified evidence is reported, not failed
+        self.assertEqual(passed["retrieval"]["unverified"], 2)
+
+    def test_text_accepts_absolute_values_and_a_component_id(self):
+        comp_id = g.analytics_id("component", "all-years", A1)
+        q = self.q("component", researcher={"id": A2, "name": NAMES[A2]})
+        it = self.item("evidence:metric:1", "metrics", [A2], ["all-years"], componentId=comp_id)
+        self.assertTrue(score.score_question(q, self.row(q, "Bob Two is in %s." % comp_id, [it]), self.deep)["text"]["pass"])
+        self.assertFalse(score.score_question(q, self.row(q, "Bob Two is in some component.", [it]), self.deep)["text"]["pass"])
+        self.assertEqual(score.numbers_in("a drop of -7 and 17,179 researchers") >= {-7.0, 7.0, 17179.0}, True)
+
     def test_without_the_export_the_deep_checks_are_reported_skipped(self):
         q = self.q("component", researcher={"id": A2, "name": NAMES[A2]})
         it = self.item("evidence:metric:1", "metrics", [A2], ["all-years"], componentId=g.analytics_id("component", "all-years", A1))
@@ -489,11 +612,27 @@ class ScoreTest(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             rc = score.main(["--key", key_path, "--raw", raw, "--export-dir", self.root, "--out-json", out_json, "--out-md", out_md])
         self.assertEqual(rc, 0, out.getvalue())
-        self.assertIn("SCORED questions=2 retrieval=2 claims=2 text=2 all=2 abstained_or_refused=1 deep_checks=export", out.getvalue())
+        self.assertIn("SCORED answer_expected=1 retrieval=1 claims=1 text=1 all=1 | abstain_expected=1 correct=1 | deep_checks=export", out.getvalue())
         with open(out_md) as handle:
             md = handle.read()
+        self.assertIn("## Headline: the 1 answer-expected questions", md)
+        self.assertIn("correct abstentions 1 of 1", md)
         self.assertIn("| component | 1 | 1 | 1 | 1 | 1 | 0 |", md)
         self.assertIn("| topic | 1 | 1 | 1 | 1 | 1 | 1 |", md)
+        with open(out_json) as handle:
+            totals = json.load(handle)["totals"]
+        self.assertEqual((totals["answer_expected"]["questions"], totals["abstain_expected"]["questions"], totals["all"]["questions"]), (1, 1, 2))
+        # --export-dir is required; --allow-shallow is labelled everywhere
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            self.assertEqual(score.main(["--key", key_path, "--raw", raw, "--out-json", out_json, "--out-md", out_md]), 2)
+        self.assertIn("--export-dir is required", err.getvalue())
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(score.main(["--key", key_path, "--raw", raw, "--allow-shallow", "--out-json", out_json, "--out-md", out_md]), 0)
+        self.assertIn("deep_checks=SHALLOW (no --export-dir)", out.getvalue())
+        with open(out_md) as handle:
+            self.assertIn("(SHALLOW: key-level checks only, not a full score)", handle.read())
         wrong = os.path.join(self.tmp, "wrong-export")
         small_export(wrong)
         write(os.path.join(wrong, "run-manifest.json"), json.dumps({"runId": "run:other"}))
@@ -528,7 +667,23 @@ class CommittedInputsTest(unittest.TestCase):
         self.assertEqual(key["source"]["run_id"], manifest["source"]["export_run_id"])
         self.assertEqual(manifest["llm"]["answers"], 33)
         self.assertEqual(manifest["llm"]["bucket"], "16b")
-        self.assertEqual(key["counts"]["by_check_level"], {"abstain": 6, "bounded": 2, "exact": 22, "structural": 3})
+        self.assertEqual(key["counts"]["by_check_level"], {"abstain": 6, "bounded": 2, "exact": 15, "structural": 3, "values-and-order": 7})
+        self.assertEqual(sum(1 for q in key["questions"] if q["expected_outcome"] == "answer"), 27)
+        self.assertEqual(sum(1 for q in key["questions"] if q["expected_outcome"] == "abstain"), 6)
+        # F1: the two abstain-expected types are never adjacent in the question order
+        flags = [q["expected_outcome"] == "abstain" for q in key["questions"]]
+        self.assertFalse(any(a and b for a, b in zip(flags, flags[1:])))
+        # F7: the replay validation against analytics-report.json matched in all six windows and recorded the compared values
+        validation = key["source"]["validation"]
+        self.assertEqual((validation["status"], sorted(validation["windows"])), ("matched", sorted(g.WINDOWS)))
+        for window, rows in validation["windows"].items():
+            for name, pair in rows.items():
+                self.assertEqual(pair["computed"], pair["report"], (window, name))
+        self.assertEqual(validation["windows"]["all-years"]["communityFinalChangedCount"], {"computed": 1349, "report": 1349})
+        self.assertEqual(validation["windows"]["all-years"]["maximumCoauthorsOnOnePaperMax"], {"computed": 15, "report": 15})
+        for q in key["questions"]:
+            if q["type"] == "temporal":
+                self.assertIn("LOWER BOUND", q["expected"]["communityJaccardOverlap_semantics"])
 
     def test_every_type_is_covered_and_thin_data_is_marked(self):
         key = json.loads(self.load("answer-key.json"))

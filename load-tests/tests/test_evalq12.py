@@ -37,6 +37,8 @@ class State:
         self.posts = []
         self.gets = []
         self.evidence_per_answer = 2
+        self.with_big = False     # the claims also cite an evidence item of about 70 KB
+        self.forced = {}          # question text -> (status, payload) answered instead of the normal reply
 
 
 def make_handler(state):
@@ -55,7 +57,7 @@ def make_handler(state):
             self.wfile.write(body)
 
         def ids(self, n):
-            return ["evidence:metric:%d-%d" % (n, i) for i in range(state.evidence_per_answer)]
+            return ["evidence:metric:%d-%d" % (n, i) for i in range(state.evidence_per_answer)] + (["evidence:big:%d" % n] if state.with_big else [])
 
         def do_POST(self):
             length = int(self.headers.get("Content-Length") or 0)
@@ -65,6 +67,9 @@ def make_handler(state):
                 n = len(state.posts)
             if self.headers.get("Authorization") != "Bearer " + KEY:
                 return self._send(401, {"error": "UNAUTHORIZED"})
+            forced = state.forced.get(state.posts[-1][1]["question"])
+            if forced:
+                return self._send(*forced)
             claims = [{"claimId": "claim:%d" % n, "evidenceIds": self.ids(n)}]
             return self._send(200, {"queryId": "qry-%d" % n, "answer": {"summary": "answer %d" % n}, "claims": claims})
 
@@ -78,8 +83,14 @@ def make_handler(state):
                 n = int(path.rsplit("-", 1)[1])
                 return self._send(200, {"queryId": "qry-%d" % n, "outcome": "ANSWERED", "evidenceIds": self.ids(n) + ["evidence:extra:%d" % n],
                                         "counters": {"attemptedClaims": 1, "verifiedClaims": 1, "rejectedClaims": 0}})
+            if path.startswith("/v1/graph/nodes/"):
+                if "missing" in path:
+                    return self._send(404, {"error": "NOT_FOUND"})
+                return self._send(200, {"nodeId": path.rsplit("/", 1)[1]})
             if path.startswith("/v1/evidence/"):
                 evidence_id = path[len("/v1/evidence/"):]
+                if evidence_id.startswith("evidence:big"):
+                    return self._send(200, {"evidenceId": evidence_id, "supportingContent": {"subjectIds": [], "windowIds": [], "values": [{"field": "kind", "text": "x" * 70000}]}})
                 if evidence_id.startswith("evidence:extra"):
                     return self._send(404, {"error": "NOT_FOUND"})
                 return self._send(200, {"evidenceId": evidence_id, "supportingContent": {"subjectIds": ["researcher:dblp:x"], "windowIds": ["all-years"], "values": [{"field": "kind", "text": "metrics"}]}})
@@ -241,6 +252,140 @@ class EvalQ12Case(unittest.TestCase):
         self.assertEqual(rc, 4)
         self.assertEqual(len(self.state.posts), 1)
         self.assertEqual(len([line for line in self.ledger_lines() if line.get("event") == "answer"]), 1)
+
+    # --- review round 1
+    def test_expected_refusals_do_not_stop_the_run_but_unexpected_ones_do(self):
+        self.init_ledger()
+        questions = self.write_questions(6)
+        with open(questions) as handle:
+            lines = [x.strip() for x in handle]
+        refusal = (422, {"error": "UNSUPPORTED_QUERY", "message": "do not store this text", "traceId": "t"})
+        for q in lines[:4]:
+            self.state.forced[q] = refusal   # four expected refusals in a row: more than the default 3 consecutive failures
+        with mock.patch.object(q12, "abstain_questions", lambda: set(lines[:4])):
+            rc, out, err = self.run_q12(questions=questions)
+        self.assertEqual(rc, 0, err)
+        rows = self.answers()
+        self.assertEqual(len(rows), 6)   # the run completed
+        for row in rows[:4]:
+            self.assertEqual((row["status"], row["outcome"], row["raw_outcome"], row["expected_refusal"], row["error_code"]), (422, "ok", "client_error", True, "UNSUPPORTED_QUERY"))
+            self.assertIsNone(row["query_id"])
+            self.assertNotIn("do not store this text", json.dumps(row))   # only the closed error code of a 4xx body is kept
+        self.assertEqual(rows[4]["outcome"], "ok")
+        self.assertNotIn("expected_refusal", rows[4])
+
+    def test_the_same_refusals_on_questions_the_key_expects_answered_count_as_failures(self):
+        self.init_ledger()
+        questions = self.write_questions(6)
+        with open(questions) as handle:
+            lines = [x.strip() for x in handle]
+        for q in lines[:4]:
+            self.state.forced[q] = (422, {"error": "UNSUPPORTED_QUERY"})
+        with mock.patch.object(q12, "abstain_questions", lambda: set()):
+            rc, out, err = self.run_q12(questions=questions)
+        self.assertEqual(rc, 4)
+        self.assertEqual(len(self.answers()), 3)   # stopped after 3 consecutive failures
+        self.assertTrue(all(r["outcome"] == "client_error" and "expected_refusal" not in r for r in self.answers()))
+
+    def test_other_4xx_on_an_abstain_question_are_failures_and_the_error_code_is_closed(self):
+        self.init_ledger()
+        questions = self.write_questions(3)
+        with open(questions) as handle:
+            lines = [x.strip() for x in handle]
+        self.state.forced[lines[0]] = (429, {"error": "RATE_LIMITED"})
+        self.state.forced[lines[1]] = (422, {"error": "not a closed code <script>"})
+        self.state.forced[lines[2]] = (400, {"error": "INVALID_REQUEST"})
+        with mock.patch.object(q12, "abstain_questions", lambda: set(lines)):
+            rc, out, err = self.run_q12(questions=questions)
+        rows = self.answers()
+        self.assertEqual(rc, 4)
+        self.assertEqual([(r["status"], r["error_code"], r["outcome"]) for r in rows], [(429, "RATE_LIMITED", "throttled"), (422, None, "client_error"), (400, "INVALID_REQUEST", "client_error")])
+
+    def test_a_non_loopback_base_url_is_refused_before_anything_is_sent(self):
+        self.init_ledger()
+        with mock.patch.dict(os.environ, {"SCHOLARCHAIN_LOAD_BASE_URL": "https://query.example.com"}):
+            rc, out, err = self.run_q12()
+        self.assertEqual(rc, 3)
+        self.assertIn("loopback host", err)
+        self.assertEqual((self.state.posts, self.state.gets), ([], []))
+        self.assertEqual(len(self.ledger_lines()), 1)
+
+    def include_file(self, *ids):
+        path = os.path.join(self.tmp, "include.txt")
+        with open(path, "w") as handle:
+            handle.write("".join(i + "\n" for i in ids))
+        return path
+
+    def test_preflight_refuses_before_the_first_charge_when_an_include_id_is_missing(self):
+        self.init_ledger()
+        include = self.include_file("researcher:dblp:aaa", "researcher:dblp:missing1", "researcher:dblp:bbb")
+        rc, out, err = self.run_q12("--include-ids-file", include)
+        self.assertEqual(rc, 3)
+        self.assertIn("PREFLIGHT: the running artifact lacks 1 of 3 include IDs", err)
+        self.assertIn("nothing was charged", err)
+        self.assertEqual(self.state.posts, [])
+        self.assertEqual([line for line in self.ledger_lines() if line.get("event") == "answer"], [])
+        self.assertEqual(len(self.state.gets), 3)   # one GET per include id, with the key, and no model call
+        self.assertTrue(all(path.startswith("/v1/graph/nodes/") and auth == "Bearer " + KEY for path, auth in self.state.gets))
+
+    def test_preflight_passes_and_the_run_proceeds(self):
+        self.init_ledger()
+        include = self.include_file("researcher:dblp:aaa", "researcher:dblp:bbb")
+        rc, out, err = self.run_q12("--include-ids-file", include)
+        self.assertEqual(rc, 0, err)
+        self.assertIn("PREFLIGHT: 2 of 2 include IDs are present", out)
+        self.assertEqual(len(self.state.posts), 3)
+
+    def test_only_asks_the_named_questions_of_the_pinned_file_with_their_ids(self):
+        self.init_ledger()
+        rc, out, err = self.go(["run", "--only", "q04,q15", "--ledger", self.ledger, "--output-root", self.out_root, "--run-id", "q12-test-1", "--pause-seconds", "0"])
+        self.assertEqual(rc, 0, err)
+        with open(REAL_QUESTIONS) as handle:
+            lines = [x.rstrip("\n") for x in handle if x.strip()]
+        rows = self.answers()
+        self.assertEqual([(r["qid"], r["question"]) for r in rows], [("q04", lines[3]), ("q15", lines[14])])
+        self.assertEqual([p[1]["question"] for p in self.state.posts], [lines[3], lines[14]])
+        self.assertEqual(len([line for line in self.ledger_lines() if line.get("event") == "answer"]), 2)   # one charge per question asked
+        self.assertIn("PREFLIGHT: 22 of 22 include IDs are present", out)   # the committed include list is checked on a probe too
+        self.assertIn("QUESTIONS: 2 from the questions file", out)
+
+    def test_only_rejects_bad_ids_and_a_second_questions_file(self):
+        self.init_ledger()
+        for bad in ("q99", "q00", "4", "q04,q04", "q04,x"):
+            rc, out, err = self.go(["run", "--only", bad, "--ledger", self.ledger, "--output-root", self.out_root])
+            self.assertEqual(rc, 3, bad)
+            self.assertIn("--only takes distinct question ids", err)
+        rc, out, err = self.go(["run", "--only", "q04", "--questions-file", self.questions, "--ledger", self.ledger, "--output-root", self.out_root])
+        self.assertEqual(rc, 3)
+        self.assertIn("cannot be combined with --questions-file", err)
+        self.assertEqual(self.state.posts, [])
+
+    def test_skipped_ids_are_listed(self):
+        self.init_ledger()
+        self.state.evidence_per_answer = 70
+        self.assertEqual(self.run_q12(questions=self.write_questions(1))[0], 0)
+        row = self.answers()[0]
+        self.assertEqual(len(row["evidence"]), 60)
+        self.assertEqual(len(row["evidence_skipped_ids"]), row["evidence_ids_skipped"])
+        self.assertEqual(row["evidence_skipped_ids"][-1], "evidence:extra:1")   # 70 metric ids, then the explain-only id: the 71st is skipped
+        self.assertTrue(set(row["evidence_skipped_ids"]).isdisjoint(row["evidence"]))
+        self.assertTrue(all(v["oversize"] is False for v in row["evidence"].values()))
+
+    def test_an_oversize_item_is_flagged_not_stored(self):
+        self.init_ledger()
+        self.state.with_big = True
+        self.assertEqual(self.run_q12(questions=self.write_questions(1))[0], 0)
+        row = self.answers()[0]
+        big = row["evidence"]["evidence:big:1"]
+        self.assertEqual((big["status"], big["item"], big["oversize"]), (200, None, True))   # over 64 KiB: flagged, the body is not kept
+        self.assertFalse(row["evidence"]["evidence:metric:1-0"]["oversize"])
+
+    def test_the_committed_question_order_never_puts_two_abstain_questions_together(self):
+        specs = os.path.join(REPO, "experiments", "inputs", "q12", "question-specs.json")
+        with open(specs) as handle:
+            flags = [q["type"] in q12.ABSTAIN_TYPES for q in json.load(handle)["questions"]]
+        self.assertFalse(any(a and b for a, b in zip(flags, flags[1:])))
+        self.assertEqual(len(q12.abstain_questions()), 6)
 
 
 if __name__ == "__main__":

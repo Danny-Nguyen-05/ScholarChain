@@ -3,7 +3,7 @@
 
 Reads ONLY the plain-CSV Neptune openCypher sidecar of the export through experiments/scripts/q12_graph.py (no Parquet reader).
 Writes into --out-dir (refuses to overwrite without --overwrite; LF-terminated; byte-identical for the same input and --seed):
-  questions.txt         33 questions, one per line, id order q01..q33 (round-robin over the 11 types)
+  questions.txt         33 questions, one per line, id order q01..q33 (round-robin over the 11 types, see TYPES)
   include-ids.txt       researcher IDs the runtime artifact must hold: every researcher named in a question plus the one middle
                         researcher of the 3-hop path (so the hop between the two middle researchers is inside the artifact closure)
   question-specs.json   per question: id, type, slot, planner route, the structured parameters the answer key computes from
@@ -29,8 +29,9 @@ communities, bridge researchers, temporal change, topics, institutions, evidence
                      that resolve through /v1/evidence/{id} and name the researcher (planner route: LLM)
 
 Selection rule (no randomness other than the recorded seed; every tie is broken by the stable ID):
-  eligible(r) = the display name is unique among ALL researcher nodes after trim + lowercase + whitespace collapse, is 3..60 characters
-                of ASCII letters, spaces, hyphens or apostrophes, and the ID is a researcher:<source>:<key> ID (as derive_14c_inputs.py).
+  eligible(r) = the display name is unique among ALL researcher nodes after trim + lowercase + whitespace collapse, is also unique after
+                removing a DBLP homonym suffix (" 0001") from every researcher name (so "Wei Wang" is ineligible when "Wei Wang 0001" exists),
+                is 3..60 characters of ASCII letters, spaces, hyphens or apostrophes, and the ID is a researcher:<source>:<key> ID.
   pick(slot)  = candidates sorted by ID (pairs by (id_a, id_b)); start index = int(sha256(seed + "|" + slot)[:8], 16) mod len; the first
                 candidate from that index (cyclically) that is not already named by an earlier slot. Slots run in a fixed order.
   degree      = distinct coauthors in the stated window. Budget: the include list's total all-years degree must be at most
@@ -55,8 +56,11 @@ SCHEMA = "scholarchain.q12-inputs-provenance.v1"
 SPECS_SCHEMA = "scholarchain.q12-question-specs.v1"
 NAME_OK = re.compile(r"^[A-Za-z][A-Za-z '\-]{1,58}[A-Za-z]$")
 RESEARCHER_ID = re.compile(r"^researcher:[a-z0-9-]+:[^\s]{1,400}$")
-TYPES = ("coauthor_breadth", "max_team_size", "direct_collab", "shortest_path", "component", "community",
-         "bridge", "temporal", "topic", "institution", "evidence")
+# Order of the round-robin over the question file: the two abstain-expected types (topic, institution) are never adjacent, so the expected
+# 422 refusals cannot meet at the consecutive-failure stop of the runner (and a failure on a neighbour cannot look like a run of them).
+TYPES = ("coauthor_breadth", "topic", "max_team_size", "direct_collab", "institution", "shortest_path", "component", "community",
+         "bridge", "temporal", "evidence")
+HOMONYM = re.compile(r"\s+[0-9]{4}$")
 PLANNER = {"coauthor_breadth": "fallback", "max_team_size": "fallback", "direct_collab": "fallback", "shortest_path": "fallback",
            "component": "fallback", "community": "llm", "bridge": "fallback", "temporal": "llm", "topic": "fallback",
            "institution": "fallback", "evidence": "llm"}
@@ -78,12 +82,14 @@ def window_suffix(window):
 class Selector:
     def __init__(self, export, seed):
         self.ex, self.seed, self.used = export, seed, set()
-        counts = {}
+        counts, base_counts = {}, {}
         for name in export.researchers.values():
             counts[g.norm_name(name)] = counts.get(g.norm_name(name), 0) + 1
+            base = HOMONYM.sub("", g.norm_name(name))   # "Wei Wang 0001" counts as "wei wang": the plain name is then ambiguous too
+            base_counts[base] = base_counts.get(base, 0) + 1
         self.eligible = {r for r, name in export.researchers.items()
                          if RESEARCHER_ID.match(r) and NAME_OK.match(name.strip()) and name == name.strip() and "  " not in name
-                         and counts[g.norm_name(name)] == 1}
+                         and counts[g.norm_name(name)] == 1 and base_counts[g.norm_name(name)] == 1}
         self.sizes = g.team_sizes(export)
 
     def deg(self, r, window):

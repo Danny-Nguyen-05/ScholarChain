@@ -3,8 +3,9 @@
   "by_check_level": {
    "abstain": 6,
    "bounded": 2,
-   "exact": 22,
-   "structural": 3
+   "exact": 15,
+   "structural": 3,
+   "values-and-order": 7
   },
   "questions": 33
  },
@@ -28,7 +29,7 @@
  },
  "questions": [
   {
-   "check_level": "exact",
+   "check_level": "values-and-order",
    "expected": {
     "metric": "DISTINCT_COAUTHOR_COUNT",
     "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
@@ -665,7 +666,40 @@
    "window": "all-years"
   },
   {
-   "check_level": "exact",
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "HTTP 200 answer with outcome ABSTAINED and no verified ranking claim",
+     "HTTP 422 with the closed error code UNSUPPORTED_QUERY"
+    ],
+    "filter": "topic",
+    "forbidden": "any ranking of researchers presented as filtered by the topic",
+    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "Cognitive Computing and Networks",
+    "window": "all-years"
+   },
+   "expected_outcome": "abstain",
+   "id": "q02",
+   "params": {
+    "thin_data": true,
+    "topic": "Cognitive Computing and Networks",
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors topic \"Cognitive Computing and Networks\"?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "topic-1",
+   "type": "topic",
+   "window": "all-years"
+  },
+  {
+   "check_level": "values-and-order",
    "expected": {
     "global_maximum": 15,
     "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
@@ -1276,7 +1310,7 @@
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q02",
+   "id": "q03",
    "params": {
     "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
     "window": "all-years"
@@ -1305,176 +1339,186 @@
    "expected": {
     "coauthors": [
      {
-      "id": "researcher:dblp:0343896f16b504d3460de43f705ca5a684b00a2a28b681efc2ffd4862ab7f3f7",
-      "joint": 1,
-      "name": "Zhanghan Wang"
+      "id": "researcher:dblp:622f8d32ebb4bc1ad5f81210a7adcfc3ccb91c99e79ac3975894a2e4b02bfd95",
+      "joint": 16,
+      "name": "David G. Andersen"
      },
      {
-      "id": "researcher:dblp:0640b343aa795935e0d096db979bbbcd0c19973a57bf539c177bc5cff7f86f51",
-      "joint": 1,
-      "name": "Aurojit Panda"
+      "id": "researcher:dblp:817c5bb4e15db83c19fefab16943549c07376d472ac9e03ad2ab57fcfda8e8fc",
+      "joint": 5,
+      "name": "Michael J. Freedman"
      },
      {
-      "id": "researcher:dblp:3ed9e91a298bdd7c2e329066249307a789d5f097a0784f910a5af0285a43dcbd",
-      "joint": 1,
-      "name": "Xin Liu 0086"
+      "id": "researcher:dblp:058be5f39ccc02abe65be4286041294a82b3a4fa6674e96cfe546e0f1aba73ba",
+      "joint": 3,
+      "name": "Haifeng Yu"
      },
      {
-      "id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
-      "joint": 1,
-      "name": "Arvind Krishnamurthy"
+      "id": "researcher:dblp:7e6a425558ec33641d89f0004a761e16418508ba812c5e7cae31a820d544b095",
+      "joint": 3,
+      "name": "Niraj Tolia"
      },
      {
-      "id": "researcher:dblp:4d9240e88854613938c0787888ab2a6ba036dee0a9b8d8b21b52b2b8587335d0",
-      "joint": 1,
-      "name": "Luis Ceze"
+      "id": "researcher:dblp:abfcc6682cfa87fbe8902774942992ce1dbc83ee3e701844e0930267d8ae1aaf",
+      "joint": 3,
+      "name": "Anuj Kalia"
      },
      {
-      "id": "researcher:dblp:650637114df3d3ce069d967909ac3fc0d7ea832560be9303f5ca60c08ce39312",
-      "joint": 1,
-      "name": "Wei Jia"
+      "id": "researcher:dblp:0703871569f9a001fa7c30d68b8fb46c51bc0c6333159834e99739733a653df3",
+      "joint": 2,
+      "name": "Xiaozhou Li"
      },
      {
-      "id": "researcher:dblp:652be2f7f1ad53f72166a3b09883f0ad5c3b7e266945c7fbaab47c14031a11c4",
-      "joint": 1,
-      "name": "Zuocheng Shi"
+      "id": "researcher:dblp:4c8a019f3420710dd6431909efe0cf7e401e8a916e029313a9d6ed226ee20cf5",
+      "joint": 2,
+      "name": "Wyatt Lloyd"
      },
      {
-      "id": "researcher:dblp:6b5cc561b4e37f515abc3d2022d6effba0556114b6e43ac75eea366f79f4c3bd",
-      "joint": 1,
-      "name": "Eddie Q. Yan"
+      "id": "researcher:dblp:88f51ab295468a5088b8f60bca06245108c8a91074bc5593a6fb69ede702471b",
+      "joint": 2,
+      "name": "Phillip B. Gibbons"
      },
      {
-      "id": "researcher:dblp:70a040f63575d9e91fa93b82065d2b26918e340e241133178977b422fc746340",
-      "joint": 1,
-      "name": "Zuquan Song"
+      "id": "researcher:dblp:b696d127de1a68984dd4134ee24ab9254cecd78e758345dc75a4228a693c99ed",
+      "joint": 2,
+      "name": "Bin Fan"
      },
      {
-      "id": "researcher:dblp:755380d6cb74f343965a5b4975b847583b39d28cf93e6c728089357170768a53",
-      "joint": 1,
-      "name": "Lianmin Zheng"
+      "id": "researcher:dblp:db539113b6add6d365089ffb0832d699ef3b2e9f4faa01849e33a35b6d1b0732",
+      "joint": 2,
+      "name": "Hyeontaek Lim"
      },
      {
-      "id": "researcher:dblp:8256f0d321b6436c55aecff3d9da83ab656633ad7fdcaa8e8f20e14246a9aefe",
-      "joint": 1,
-      "name": "Chenyuan Wang"
+      "id": "researcher:dblp:dbb80197bcf8b9028abb224eda14c5d729be4f307fb3ee880eb93e59e3e5a45c",
+      "joint": 2,
+      "name": "Iulian Moraru"
      },
      {
-      "id": "researcher:dblp:8292e096d3e3b5a91c114616e336d33cadf2c0fd8f3964fcd73bc38cccec6a0e",
+      "id": "researcher:dblp:005600acf55a78b43c05987b5546bb8f151e24dd059b907231a516c4d3ebb98c",
       "joint": 1,
-      "name": "Menghan Yu"
+      "name": "Scott Garriss"
      },
      {
-      "id": "researcher:dblp:8598145ea276e5556e62322e750df9fbb1a082eea2ce3106558f27e4dfb38e5e",
+      "id": "researcher:dblp:00c038add317bd318d4c20589a5352bf08d96f07dd9500a5f7c412dc8d03fcf8",
       "joint": 1,
-      "name": "Haibin Lin"
+      "name": "Nathan L. Binkert"
      },
      {
-      "id": "researcher:dblp:a046fd2dba07a81446b0721720875169434b85ccf15299b0e36086d942401b82",
+      "id": "researcher:dblp:0e3136298880a0ee4cfaf45efdd889530e94dad5ec1da4568d2d19da04af9a72",
       "joint": 1,
-      "name": "Thierry Moreau"
+      "name": "Dongsu Han"
      },
      {
-      "id": "researcher:dblp:a75d7db4f840d2f229b2bdacfd010e67cd103442fe8466f44d52baf33d75a327",
+      "id": "researcher:dblp:19f8a1914e4e51a0518189ab78df1b743f75a28c34087acb12bcb0861fcec3b8",
       "joint": 1,
-      "name": "Yuwei Hu"
+      "name": "Srinivasan Seshan"
      },
      {
-      "id": "researcher:dblp:accb18961c19040ac42b6a8f10784365936ce9a5620a8473aaaea26868169292",
+      "id": "researcher:dblp:1c3c295908beb44cb6213b7793c66562bdf43e54c486919431f2f301f55e871d",
       "joint": 1,
-      "name": "Sida Zhao"
+      "name": "Vijay Vasudevan"
      },
      {
-      "id": "researcher:dblp:ae6a55226433376db78a2c39b3094077394d8ca984fe652230591d851428b6f1",
+      "id": "researcher:dblp:29113951a71fcd3fc1071ecf91a9bc9345a70c47dc152333535644f1909757b2",
       "joint": 1,
-      "name": "Shuguang Wang"
+      "name": "Brad Karp"
      },
      {
-      "id": "researcher:dblp:c8460e8d6c50d2e950a33fd5aa1c7b16f63a5f701e7be48811d2234bc0029037",
+      "id": "researcher:dblp:2e7dfb09b8c1a0212456e5eaad809270bc87b71fad9577fbd9572486e0ac93b8",
       "joint": 1,
-      "name": "Carlos Guestrin"
+      "name": "Lawrence Tan"
      },
      {
-      "id": "researcher:dblp:cab03755e990b6c04e48cd917aff926f96cbe4bab539718c8b5e961b01d65abd",
+      "id": "researcher:dblp:577d3810c4aeab4414d3dcf1e20ee1e1d359e5cfd9c3fa6ad3a5fa0a9ffc02df",
       "joint": 1,
-      "name": "Jinkun Lin"
+      "name": "David Mazi\u00e8res"
      },
      {
-      "id": "researcher:dblp:cdd4d8e3b6c257d9a75c8bde06e68cb53c62b57740cc8fcceb43ca08edce9748",
+      "id": "researcher:dblp:57e2612a55649b347b10785b9c668f359d27caac3edf07b195bd68a5ca6f68f8",
       "joint": 1,
-      "name": "Leyuan Wang"
+      "name": "Dong Zhou 0006"
      },
      {
-      "id": "researcher:dblp:d8e95751b22124ea83ceff793728a0cb2a5b80bd074a9be69c80c586ea72db09",
+      "id": "researcher:dblp:7bc6afc20961647dd353b5b370676f68e2f72d9f2d64d3b4d13831cfd4f84938",
       "joint": 1,
-      "name": "Jinyang Li 0001"
+      "name": "Raghav Sethi"
      },
      {
-      "id": "researcher:dblp:d965c854613bb6bd48045c29cb7ad2c8be60057d05685bda98d935266e758d04",
+      "id": "researcher:dblp:897fc6ae5fc84f7cd2315c238b3187cfca698a0561dae0896686510c2df884d3",
       "joint": 1,
-      "name": "Xiang Shi"
+      "name": "Amar Phanishayee"
      },
      {
-      "id": "researcher:dblp:dc7c4d23237b5194450c7c92e7b8d6d058087737cabc1ab1334d6b9b640cd272",
+      "id": "researcher:dblp:8de97b2923ce103fd0fa1a8c485aef2c45f492f0ed12fed06e6b8ad26ce739ab",
       "joint": 1,
-      "name": "Zherui Liu"
+      "name": "Swapnil V. Patil"
      },
      {
-      "id": "researcher:dblp:ef78888f5b72e0e6ae6689fb40aa31de33fb87db931c69658c1360d98f8b889c",
+      "id": "researcher:dblp:9b2928a9839659e6cf4ac79ef97eb8928f74643ff4fb5132c7b57e60623b23ef",
       "joint": 1,
-      "name": "Meghan Cowan"
+      "name": "Himabindu Pucha"
      },
      {
-      "id": "researcher:dblp:f9183d4040a5fbf8a652e13fd21e1999100a0f25bf089ad929e1de6ca01d8ed7",
+      "id": "researcher:dblp:b5c3424c61be4d425420c4c5fc01c5d9724601b5f1a95f8f3d697d0629f3b02b",
       "joint": 1,
-      "name": "Haichen Shen"
+      "name": "Swapnil Patil 0001"
      },
      {
-      "id": "researcher:dblp:fae59cd344779499ca37127617455d9f1b187fcf08ec22645e69c2546732cb71",
+      "id": "researcher:dblp:d3bb827a39a54755e0b724e6bfaa7c551a7115d1f68ad903f1cd39e8421e94af",
       "joint": 1,
-      "name": "Tianqi Chen 0001"
+      "name": "Parthasarathy Ranganathan"
+     },
+     {
+      "id": "researcher:dblp:dd43d2ecf62382dad9b96135c66d9df87e3ba1c1553e6f40dd4cc94c82b1ae18",
+      "joint": 1,
+      "name": "Jeffrey Pang"
+     },
+     {
+      "id": "researcher:dblp:e5360d83cc43e9a8b782d4a9f2b297ec0ddb3aebf350f7d7fe1db1b67e227467",
+      "joint": 1,
+      "name": "Jason Franklin"
      }
     ],
     "page_limit": 25,
     "researcher": {
-     "id": "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda",
-     "name": "Ziheng Jiang"
+     "id": "researcher:dblp:5e28765449666a71246e10748ac88496be123ca000147acf492497303097efe1",
+     "name": "Michael Kaminsky"
     },
-    "total": 26,
+    "total": 28,
     "truncated": true,
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q03",
+   "id": "q04",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda",
-     "name": "Ziheng Jiang"
+     "id": "researcher:dblp:5e28765449666a71246e10748ac88496be123ca000147acf492497303097efe1",
+     "name": "Michael Kaminsky"
     },
     "window": "all-years"
    },
    "planner": "fallback",
-   "question": "Who are the direct coauthors of \"Ziheng Jiang\"?",
+   "question": "Who are the direct coauthors of \"Michael Kaminsky\"?",
    "required_evidence": {
     "kinds": [
      "direct-coauthors"
     ],
     "rule": "cited coauthorIds are a subset of expected.coauthors; returnedCount equals min(total, page_limit)",
     "subjects": [
-     "researcher:dblp:00869c10fce282c8da9a1d0fbe79707bd0d6b318e802b876127bb3431c151cda"
+     "researcher:dblp:5e28765449666a71246e10748ac88496be123ca000147acf492497303097efe1"
     ]
    },
    "required_text": {
     "coauthor_name_recall_min": 0.6,
     "coauthor_names_expected": 25,
     "names": [
-     "Ziheng Jiang"
+     "Michael Kaminsky"
     ],
     "note": "the count is total or the page size; at least 60 percent of the shown coauthors are named when the page is not truncated",
     "numbers": [
      [
       [
-       26
+       28
       ],
       [
        25
@@ -1487,27 +1531,61 @@
    "window": "all-years"
   },
   {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "HTTP 200 answer with outcome ABSTAINED and no verified ranking claim",
+     "HTTP 422 with the closed error code UNSUPPORTED_QUERY"
+    ],
+    "filter": "institution",
+    "forbidden": "any ranking of researchers presented as filtered by the institution",
+    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "University of Louisiana at Lafayette",
+    "window": "all-years"
+   },
+   "expected_outcome": "abstain",
+   "id": "q05",
+   "params": {
+    "institution": "University of Louisiana at Lafayette",
+    "metric": "DISTINCT_COAUTHOR_COUNT",
+    "thin_data": true,
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors institution \"University of Louisiana at Lafayette\"?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "institution-1",
+   "type": "institution",
+   "window": "all-years"
+  },
+  {
    "check_level": "exact",
    "expected": {
     "a": {
-     "id": "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
-     "name": "Hucheng Zhou"
+     "id": "researcher:dblp:7e6a425558ec33641d89f0004a761e16418508ba812c5e7cae31a820d544b095",
+     "name": "Niraj Tolia"
     },
     "b": {
-     "id": "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb",
-     "name": "Xuepeng Fan"
+     "id": "researcher:dblp:e9a8491d797e7c42a5bf390efebf80c1aeea9f40e29a3b660edeb8810d5c880d",
+     "name": "Zhikui Wang"
     },
     "hops": 1,
     "max_hops": 6,
     "paths": [
      {
       "ids": [
-       "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
-       "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb"
+       "researcher:dblp:7e6a425558ec33641d89f0004a761e16418508ba812c5e7cae31a820d544b095",
+       "researcher:dblp:e9a8491d797e7c42a5bf390efebf80c1aeea9f40e29a3b660edeb8810d5c880d"
       ],
       "names": [
-       "Hucheng Zhou",
-       "Xuepeng Fan"
+       "Niraj Tolia",
+       "Zhikui Wang"
       ]
      }
     ],
@@ -1516,36 +1594,36 @@
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q04",
+   "id": "q06",
    "params": {
     "a": {
-     "id": "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
-     "name": "Hucheng Zhou"
+     "id": "researcher:dblp:7e6a425558ec33641d89f0004a761e16418508ba812c5e7cae31a820d544b095",
+     "name": "Niraj Tolia"
     },
     "b": {
-     "id": "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb",
-     "name": "Xuepeng Fan"
+     "id": "researcher:dblp:e9a8491d797e7c42a5bf390efebf80c1aeea9f40e29a3b660edeb8810d5c880d",
+     "name": "Zhikui Wang"
     },
     "expected_hops": 1,
     "window": "all-years"
    },
    "planner": "fallback",
-   "question": "What is the shortest coauthor path between \"Hucheng Zhou\" and \"Xuepeng Fan\"?",
+   "question": "What is the shortest coauthor path between \"Niraj Tolia\" and \"Zhikui Wang\"?",
    "required_evidence": {
     "kinds": [
      "path"
     ],
     "rule": "every cited path's ids are a real path in the window graph with hopCount == hops, first id a and last id b",
     "subjects": [
-     "researcher:dblp:c95b20936e7f6ff087ad29689bb7213906ffec85621187ba293f06d584d2f951",
-     "researcher:dblp:e3e2df96ea38d2717639504ceb0e5847a7746bb369ffdca59de87c8f2f13a7eb"
+     "researcher:dblp:7e6a425558ec33641d89f0004a761e16418508ba812c5e7cae31a820d544b095",
+     "researcher:dblp:e9a8491d797e7c42a5bf390efebf80c1aeea9f40e29a3b660edeb8810d5c880d"
     ]
    },
    "required_text": {
     "hop_words": 1,
     "names": [
-     "Hucheng Zhou",
-     "Xuepeng Fan"
+     "Niraj Tolia",
+     "Zhikui Wang"
     ],
     "note": "the hop count appears as a digit or word; for 2 or more hops the interior names of at least one shortest path appear",
     "numbers": [
@@ -1570,35 +1648,35 @@
     "is_largest": true,
     "number_of_components_with_edges": 867,
     "researcher": {
-     "id": "researcher:dblp:ed296dc9b5f441454a990a560c188a23834df88800e4a55fe400449a4f810aab",
-     "name": "Kunal Talwar"
+     "id": "researcher:dblp:3c08e39edd49e103f84b6af19a6022cbeab779426f0a63e4a315c934144d9d9a",
+     "name": "Changyu Lin"
     },
     "size": 17179,
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q05",
+   "id": "q07",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:ed296dc9b5f441454a990a560c188a23834df88800e4a55fe400449a4f810aab",
-     "name": "Kunal Talwar"
+     "id": "researcher:dblp:3c08e39edd49e103f84b6af19a6022cbeab779426f0a63e4a315c934144d9d9a",
+     "name": "Changyu Lin"
     },
     "window": "all-years"
    },
    "planner": "fallback",
-   "question": "What is the component of \"Kunal Talwar\"?",
+   "question": "What is the component of \"Changyu Lin\"?",
    "required_evidence": {
     "kinds": [
      "metrics"
     ],
     "rule": "the metrics evidence componentId equals component_id",
     "subjects": [
-     "researcher:dblp:ed296dc9b5f441454a990a560c188a23834df88800e4a55fe400449a4f810aab"
+     "researcher:dblp:3c08e39edd49e103f84b6af19a6022cbeab779426f0a63e4a315c934144d9d9a"
     ]
    },
    "required_text": {
     "names": [
-     "Kunal Talwar"
+     "Changyu Lin"
     ],
     "note": "the answer states the component size (digits with or without thousands separators) or the component id",
     "numbers": [
@@ -1616,69 +1694,78 @@
   {
    "check_level": "exact",
    "expected": {
-    "community_id": "community:b739559aa31ec6dcb0bec2dae22fdf5e006dd599603c71d8ea1d0daaec137ec2",
+    "community_id": "community:8388656e66e50165d973d752cf3a26047e9ac508fbed7773896d70a6a532250f",
     "converged": false,
-    "cross_community_edge_count": 27,
+    "cross_community_edge_count": 39,
     "iterations": 20,
     "members": [
-     "researcher:dblp:2bea45dec2c345139861be2bea6e77840e0b98a3265434621ece65a6093957be",
-     "researcher:dblp:2d96c63bbad7169c12c07f6753bd0e5893f28f8b139fcebd31fdff5da57b93b9",
-     "researcher:dblp:2e626239fe9d6cbb8e53c3116e3f43cc6c9466f8c64b4b5c8c623fb91f75a46d",
-     "researcher:dblp:57e21fb24ccbf1271865decf21daed4c6d3b617e514f49fbb80b2061bea41f06",
-     "researcher:dblp:6d521bf4f7ea26e2560a32ec29ccb090d474c3d47c20f70ca0f79df29f4e6c69",
-     "researcher:dblp:80376f53bb5deb4c99b3af3d1b5ee45695432c6bfc994a2cca46df2262832e0e",
-     "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390",
-     "researcher:dblp:ae1d870deed1ddb7e1ab4274c617e774d24b5ce7bfd92205f217de54601b97e4",
-     "researcher:dblp:d9671015e8c0b5ce814cab762a7bd7c448cb65cff157f479ecf4f3c7fb34af6b",
-     "researcher:dblp:ee3551b64bd49771a28f600940d4a4ee758c9ffc7f511e1ff3c0fa2586c7643f"
+     "researcher:dblp:02407999a4eaffd1852f5438afedc5eeb5c628aedd12ab48f1d588987e03e47d",
+     "researcher:dblp:1a4bbbeab78ea2c43d7d603aa52618750050f86c796460f4fea786cb7fd6a141",
+     "researcher:dblp:20ffba3349d45d7b87325e50e138e1d10c92ac914b8e7cc964d55c560ec79367",
+     "researcher:dblp:2121052164e32f1fe3f2998d85554cbe858b0a8b6324cc0ea3c59f3e04c175f1",
+     "researcher:dblp:236e248c152d12ca5061c7036cb75995bb7caf24d53bc3400d668300a90a3a0c",
+     "researcher:dblp:266ada023d596e844bae2a6533e9a9f95130c27821074f2058c76cfd4db0265e",
+     "researcher:dblp:39959b272df071427ff1609240b5e6aa6914ceebaa86c4a2d7983f797f7acbf0",
+     "researcher:dblp:4217f9365c6ef59af750a35af4d3d47dfedc81d84286eb1f8c1b94d05d3a0031",
+     "researcher:dblp:47b4b8ea346e0422e3f2743917c4cb711afc3f6ee7e779533c59bb160b1b0f10",
+     "researcher:dblp:5805b6afc65e42c369d8f2f4a919f8881bf0e7acddb43fa0db033cc730d992b1",
+     "researcher:dblp:7c5fc707632f9982840a38a3484fb6f338d3c0f42822001cecfa1af6daa4b30d",
+     "researcher:dblp:90734e06e1e7ee0a046bdc77ab20ecf83521216f3eafccc9fca3ee34f0b5f04f",
+     "researcher:dblp:9bbc8969496c553486dee5bbee97c0fab69dc0a434b7584d3a3afda5b4d9e829",
+     "researcher:dblp:a275848fd4b2ce2c575cbe229c4b4feb79a9e6ed7c85e23595ac717a2d6dd6ce",
+     "researcher:dblp:a7b85ec8637cb9915a40294edae491b8f03e831e23dcdb0123da88242ce6416b",
+     "researcher:dblp:aa1f21695f3418929158970a448958c5a61b33daed3636ca60dc682a5ca055c8",
+     "researcher:dblp:bff7932db2a7477f1609ae3de3e03e5d90f3cf2d83f4bd4a33c0900cc360d296",
+     "researcher:dblp:cf2120808e201bfafa35f64dadc18972d1e496acca5adb92071825ebf645f225"
     ],
     "neighbor_community_ids": [
-     "community:102646c76ff0ba929916096b9a2d46d3e4c6439c2029e57a66e5da14b054d39a",
-     "community:2c929d407c5ddd83f901beb7cebf9ee05dc3d7ea4482fa274660ec2e2d70be4c",
-     "community:3061f83d53304d3f160067e1e5bf4e2bbddb80e3c6dd3c6855df65f6bedb2157",
-     "community:a734f6b4757678e56fc3d092b03907724351e128e080947b4c40d5f1a2357d29",
-     "community:bc91ac52e56a2b9b1eb63ccab90307d902a394d9ce46cc3145f1aaaffa91b9a7",
-     "community:cf6e54d37da7ff457cbc5879bb1632fdcca03c69776482dafa5fc95f4c95822d",
-     "community:d28ca1b9c70421c92bc4e3fc2c238e116b8449c14217447e57f97b5a75280741",
-     "community:f34fc9ba679d778ca6d169b2c4d48ce73331bc3f02af468e407594c04aa059a9"
+     "community:14b9ef43b2c36415d28d9e9ad15d6e9328e46501aa9a4f4038d008c14b59eec1",
+     "community:26f9623594a4e347d6c51e1a960ad81f93802940bb53fff15bb4df1025979ce9",
+     "community:5ba284d99e4f82f33c8453a346c379ea883cfe544c496d1b41dfc572dabecbc5",
+     "community:7f4ee2b2d482035944411b2eaa00e27f3c73b335451db230e01efb015a615727",
+     "community:8363608a0a5479344d01e38fbb30fee8daec56dcde79dffcf4acdc43fa012b73",
+     "community:9bc0145f25533a3f8b9da19e022a588eeb996a027aa725691f048b2e72e24e22",
+     "community:a7de275ebace66002c31a644e8cf510aa700a3ab67b27a8a39b77da35fdf62b7",
+     "community:c0da7a918bfbbf5ab45e5f2c19843d55b64d6343a48f859369097c51a9faed91",
+     "community:d696cdbeb1bc2cde10d1e74c94e8827c5b973b839b816095f457817d5aa1a0e1"
     ],
     "qualification": "iteration-limited",
     "researcher": {
-     "id": "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390",
-     "name": "Zhenliang Lu"
+     "id": "researcher:dblp:a275848fd4b2ce2c575cbe229c4b4feb79a9e6ed7c85e23595ac717a2d6dd6ce",
+     "name": "Ales Kubicek"
     },
-    "size": 10,
+    "size": 18,
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q06",
+   "id": "q08",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390",
-     "name": "Zhenliang Lu"
+     "id": "researcher:dblp:a275848fd4b2ce2c575cbe229c4b4feb79a9e6ed7c85e23595ac717a2d6dd6ce",
+     "name": "Ales Kubicek"
     },
     "window": "all-years"
    },
    "planner": "llm",
-   "question": "Compare communities of \"Zhenliang Lu\"",
+   "question": "Compare communities of \"Ales Kubicek\"",
    "required_evidence": {
     "kinds": [
      "community"
     ],
     "rule": "evidence communityId == community_id, size == size, selectedMemberIds subset of members, neighborCommunityIds subset of neighbor_community_ids",
     "subjects": [
-     "researcher:dblp:9e782104f3dca96bf359fe66ba9d193b77b597a29f8b0920ebd23d8533ae3390"
+     "researcher:dblp:a275848fd4b2ce2c575cbe229c4b4feb79a9e6ed7c85e23595ac717a2d6dd6ce"
     ]
    },
    "required_text": {
     "names": [
-     "Zhenliang Lu"
+     "Ales Kubicek"
     ],
     "note": "the answer states the community size; communities are iteration-limited and the answer should say so",
     "numbers": [
      [
       [
-       10
+       18
       ]
      ]
     ]
@@ -1688,7 +1775,7 @@
    "window": "all-years"
   },
   {
-   "check_level": "exact",
+   "check_level": "values-and-order",
    "expected": {
     "measure": "CROSS_COMMUNITY_DEGREE",
     "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
@@ -2299,7 +2386,7 @@
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q07",
+   "id": "q09",
    "params": {
     "measure": "CROSS_COMMUNITY_DEGREE",
     "window": "all-years"
@@ -2330,19 +2417,20 @@
    "check_level": "exact",
    "expected": {
     "communityJaccardOverlap": 0.08333333333333333,
+    "communityJaccardOverlap_semantics": "LOWER BOUND: the runtime also counts the one-person communities of researchers with no edge in a window (they are not in the CSV), so its value may be higher; accepted when key <= runtime <= 1",
     "componentSize": {
      "from": 1830,
      "to": 2631
     },
-    "currentCommunityId": "community:cf26997b91f3c8a3595f7259a777d820672c1566bf413654fa717138eb1c9664",
-    "deltaCommunitiesConnected": -1,
+    "currentCommunityId": "community:dd8c2c7a1b1f29c737bd11ed0de4362bd29e08831e7d5e6a75ad158f45888993",
+    "deltaCommunitiesConnected": -5,
     "deltaComponentSize": 801,
-    "deltaCrossCommunityDegree": -2,
-    "deltaCrossCommunityWeight": -2,
-    "deltaDistinctCoauthors": 1,
-    "deltaParticipationCoefficient": -0.33371913580246915,
+    "deltaCrossCommunityDegree": -12,
+    "deltaCrossCommunityWeight": -13,
+    "deltaDistinctCoauthors": -7,
+    "deltaParticipationCoefficient": -0.78125,
     "distinctCoauthors": {
-     "from": 8,
+     "from": 16,
      "to": 9
     },
     "enteredLargestComponent": false,
@@ -2353,47 +2441,47 @@
      "deltaAverageCoauthorsPerPaper",
      "deltaMaximumCoauthorsOnOnePaper"
     ],
-    "previousCommunityId": "community:5d8a2f1f2240e4c16227271128747d679f506d55f6a5b3c857f4ae4699eb3c76",
+    "previousCommunityId": "community:b6d25844c4a1a9dd5eee99a163fc7c4d8b4e076d323935f46c245f87b7bb9946",
     "researcher": {
-     "id": "researcher:dblp:2689304c3e338281998662302a23b2bb01a83d6e7acf876ad717cc94fb844190",
-     "name": "Tobias Distler"
+     "id": "researcher:dblp:0079cadd7d70d742113e43063c97b213cb55fd16b0a0c984c8cc42e30c57e80b",
+     "name": "Praveen Yalagandula"
     },
     "to": "2010-2014",
     "toPresent": true
    },
    "expected_outcome": "answer",
-   "id": "q08",
+   "id": "q10",
    "params": {
     "from": "through-2009",
     "researcher": {
-     "id": "researcher:dblp:2689304c3e338281998662302a23b2bb01a83d6e7acf876ad717cc94fb844190",
-     "name": "Tobias Distler"
+     "id": "researcher:dblp:0079cadd7d70d742113e43063c97b213cb55fd16b0a0c984c8cc42e30c57e80b",
+     "name": "Praveen Yalagandula"
     },
     "to": "2010-2014"
    },
    "planner": "llm",
-   "question": "Did \"Tobias Distler\" change from through-2009 to 2010-2014?",
+   "question": "Did \"Praveen Yalagandula\" change from through-2009 to 2010-2014?",
    "required_evidence": {
     "kinds": [
      "temporal"
     ],
     "rule": "evidence values equal the expected deltas and ids",
     "subjects": [
-     "researcher:dblp:2689304c3e338281998662302a23b2bb01a83d6e7acf876ad717cc94fb844190"
+     "researcher:dblp:0079cadd7d70d742113e43063c97b213cb55fd16b0a0c984c8cc42e30c57e80b"
     ]
    },
    "required_text": {
     "names": [
-     "Tobias Distler"
+     "Praveen Yalagandula"
     ],
     "note": "the answer states the change in distinct coauthors (absolute value) or both window values",
     "numbers": [
      [
       [
-       1
+       7
       ],
       [
-       8,
+       16,
        9
       ]
      ]
@@ -2404,81 +2492,14 @@
    "window": null
   },
   {
-   "check_level": "abstain",
-   "expected": {
-    "acceptable_abstention_forms": [
-     "ABSTAINED outcome with no verified ranking claim",
-     "HTTP 422 unsupported-query refusal"
-    ],
-    "filter": "topic",
-    "forbidden": "any ranking of researchers presented as filtered by the topic",
-    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-    "thin_data": true,
-    "value": "Cognitive Computing and Networks",
-    "window": "all-years"
-   },
-   "expected_outcome": "abstain",
-   "id": "q09",
-   "params": {
-    "thin_data": true,
-    "topic": "Cognitive Computing and Networks",
-    "window": "all-years"
-   },
-   "planner": "fallback",
-   "question": "Which researchers have the most distinct coauthors topic \"Cognitive Computing and Networks\"?",
-   "required_evidence": {
-    "kinds": []
-   },
-   "required_text": {
-    "mode": "abstain"
-   },
-   "slot": "topic-1",
-   "type": "topic",
-   "window": "all-years"
-  },
-  {
-   "check_level": "abstain",
-   "expected": {
-    "acceptable_abstention_forms": [
-     "ABSTAINED outcome with no verified ranking claim",
-     "HTTP 422 unsupported-query refusal"
-    ],
-    "filter": "institution",
-    "forbidden": "any ranking of researchers presented as filtered by the institution",
-    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-    "thin_data": true,
-    "value": "University of Louisiana at Lafayette",
-    "window": "all-years"
-   },
-   "expected_outcome": "abstain",
-   "id": "q10",
-   "params": {
-    "institution": "University of Louisiana at Lafayette",
-    "metric": "DISTINCT_COAUTHOR_COUNT",
-    "thin_data": true,
-    "window": "all-years"
-   },
-   "planner": "fallback",
-   "question": "Which researchers have the most distinct coauthors institution \"University of Louisiana at Lafayette\"?",
-   "required_evidence": {
-    "kinds": []
-   },
-   "required_text": {
-    "mode": "abstain"
-   },
-   "slot": "institution-1",
-   "type": "institution",
-   "window": "all-years"
-  },
-  {
    "check_level": "structural",
    "expected": {
     "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
-    "distinctCoauthorCount": 12,
+    "distinctCoauthorCount": 10,
     "publicationCount": 3,
     "researcher": {
-     "id": "researcher:dblp:975ac15cd6ccae22ccb3a6c804d08a15025567b24d1c7089deaf9507c2202dbf",
-     "name": "Zhihao Qu"
+     "id": "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7",
+     "name": "Vo Quoc Bao Bui"
     },
     "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
     "window": "all-years"
@@ -2487,13 +2508,13 @@
    "id": "q11",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:975ac15cd6ccae22ccb3a6c804d08a15025567b24d1c7089deaf9507c2202dbf",
-     "name": "Zhihao Qu"
+     "id": "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7",
+     "name": "Vo Quoc Bao Bui"
     },
     "window": "all-years"
    },
    "planner": "llm",
-   "question": "Explain the research collaboration of \"Zhihao Qu\"",
+   "question": "Explain the research collaboration of \"Vo Quoc Bao Bui\"",
    "required_evidence": {
     "any_kind": true,
     "kinds": [
@@ -2501,12 +2522,12 @@
      "metrics"
     ],
     "subjects": [
-     "researcher:dblp:975ac15cd6ccae22ccb3a6c804d08a15025567b24d1c7089deaf9507c2202dbf"
+     "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7"
     ]
    },
    "required_text": {
     "names": [
-     "Zhihao Qu"
+     "Vo Quoc Bao Bui"
     ],
     "note": "the explanation names the researcher; stated counts must match expected"
    },
@@ -2515,7 +2536,7 @@
    "window": "all-years"
   },
   {
-   "check_level": "exact",
+   "check_level": "values-and-order",
    "expected": {
     "metric": "DISTINCT_COAUTHOR_COUNT",
     "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
@@ -3152,6 +3173,39 @@
    "window": "since-2015"
   },
   {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "HTTP 200 answer with outcome ABSTAINED and no verified ranking claim",
+     "HTTP 422 with the closed error code UNSUPPORTED_QUERY"
+    ],
+    "filter": "topic",
+    "forbidden": "any ranking of researchers presented as filtered by the topic",
+    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "Computability, Logic, AI Algorithms",
+    "window": "since-2015"
+   },
+   "expected_outcome": "abstain",
+   "id": "q13",
+   "params": {
+    "thin_data": true,
+    "topic": "Computability, Logic, AI Algorithms",
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the most distinct coauthors topic \"Computability, Logic, AI Algorithms\" since 2015?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "topic-2",
+   "type": "topic",
+   "window": "since-2015"
+  },
+  {
    "check_level": "bounded",
    "expected": {
     "global_maximum_all_years": 15,
@@ -3160,7 +3214,7 @@
     "window": "since-2015"
    },
    "expected_outcome": "answer",
-   "id": "q13",
+   "id": "q14",
    "params": {
     "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
     "window": "since-2015"
@@ -3189,116 +3243,101 @@
    "expected": {
     "coauthors": [
      {
-      "id": "researcher:dblp:04ba867244413d5ed493ed7488d8a7b38c6206f76cd89079e4d3d300e19bae7f",
+      "id": "researcher:dblp:052de9557a04f02820850b311376288c50c06ad1adbd45a59a3e16deea1ed06d",
       "joint": 1,
-      "name": "Chris Lewis"
+      "name": "Ying Zhang 0022"
      },
      {
-      "id": "researcher:dblp:0522aa6efd2c44d669a01e5859d92458c27ac051e9340c932ef350c68da246b1",
+      "id": "researcher:dblp:3607cbbad56c83f26ae94f239a1b6878cde74ebfbc51906d9e7ca1cf24d2932c",
       "joint": 1,
-      "name": "Alireza Ghaffarkhah"
+      "name": "Vitaly Neganov"
      },
      {
-      "id": "researcher:dblp:13ad1e6e88c37b936003b977a30b40840b8f57acd8d790fce3b3e7f4e132da55",
+      "id": "researcher:dblp:3784beed9a52817455746cf9f90bfeb69e5213d2fec8f7e8ed0afce1c6c08c35",
       "joint": 1,
-      "name": "Steve Lacy"
+      "name": "Rong Rong"
      },
      {
-      "id": "researcher:dblp:1c24af6e5c471de7daeb009280e8bebe2e160a92b6b85d91657f62d4c2526fe4",
+      "id": "researcher:dblp:686475e7178c737e7f8d8b8959b3f93ca94931663c00e99f107bc21414f41eca",
       "joint": 1,
-      "name": "Henri Bahini"
+      "name": "Brian Chang"
      },
      {
-      "id": "researcher:dblp:2f7d7989305131ca50577088a20755525da1afd760c5fad4e42df52913791882",
+      "id": "researcher:dblp:68e45aabf70f076c9a9ab7fe50b9e074906be6539e326c1b5a86b1c3d396ee39",
       "joint": 1,
-      "name": "Yazhou Zu"
+      "name": "Faisal Iqbal"
      },
      {
-      "id": "researcher:dblp:479dfb9aa520e7a79301d0a8554e92cc9b5c2f7db9f70e43cf10f40e44cab860",
+      "id": "researcher:dblp:6cda973aaac2f4da3c71d9a77c16a9925ae990d70b8f3af96a827988cf674c98",
       "joint": 1,
-      "name": "Aaron Wisner"
+      "name": "Qin Zhang"
      },
      {
-      "id": "researcher:dblp:64faec6cc41f81128d50181c124477f742320d73a933e63c3b690c7825a9c913",
+      "id": "researcher:dblp:6d68def533b75cb0bd59fee3bdac616be66de445a5f7d8c4427ed748713b52d5",
       "joint": 1,
-      "name": "Dayou Du"
+      "name": "Marek Denis"
      },
      {
-      "id": "researcher:dblp:7829a211b0050af102e79cfb44e6c37120aae48c552661f3c51d5dd37e229ff6",
+      "id": "researcher:dblp:7754ce2af37e101a319246bf9e4d7b019d6a0c7b54739bcfbc6904c281e49350",
       "joint": 1,
-      "name": "Brian Towles"
+      "name": "Anton Marchenko"
      },
      {
-      "id": "researcher:dblp:952199647ffb9500eedb54074a88677d07624a83e21f28b9df5850a1d22b9d6f",
+      "id": "researcher:dblp:7f07f3e84dd6abeb272ff01d145a85b5bf205050eb576de376c3c5cdfd5fba52",
       "joint": 1,
-      "name": "Hoang-Vu Dang"
+      "name": "Yuanjun Yao"
      },
      {
-      "id": "researcher:dblp:a8bea1f596ac9e1a77e11f6979d70c6423aed6408a89e6d1bcfb610d5553ba69",
+      "id": "researcher:dblp:8e9f51ecef0b88072696cd830bcd951ef972d37b3be4e685f2d0fdcd3191225e",
       "joint": 1,
-      "name": "Safeen Huda"
+      "name": "Aditya Akella"
      },
      {
-      "id": "researcher:dblp:c36754ae1629895c2cea69040d8f82c9a48a41c4c36b506c8bffd9349eced574",
+      "id": "researcher:dblp:9f3e0b550313c276a38ee5deab7046a098a9881f7637a32a31546b3f789fad33",
       "joint": 1,
-      "name": "Arash Rezaei"
-     },
-     {
-      "id": "researcher:dblp:c8a9af8d8efbb8789366c33cc4da2820179b9b1014bf6c5eecd63104538f55cf",
-      "joint": 1,
-      "name": "Adekunle Bello"
-     },
-     {
-      "id": "researcher:dblp:dd72e261878ef747da6af687254b18af2e9c58e78abf584ff546b283b4758c55",
-      "joint": 1,
-      "name": "Hang Wang"
-     },
-     {
-      "id": "researcher:dblp:f3366d3a07ab2253c64ca66c7ba8ef09df89d18dda344499cd9d8e4bf6cfd990",
-      "joint": 1,
-      "name": "Steven Hand 0001"
+      "name": "Ulas Kozat"
      }
     ],
     "page_limit": 25,
     "researcher": {
-     "id": "researcher:dblp:02d9306a4203caac1712339b21650680e204ea2d941b4febdac6912b5895e7a7",
-     "name": "Alexander Kolbasov"
+     "id": "researcher:dblp:b4cd20d76c58a602967e703911203d8ad33089df20ccef6484e3569a9c890dfd",
+     "name": "Alexandru Manea"
     },
-    "total": 14,
+    "total": 11,
     "truncated": false,
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q14",
+   "id": "q15",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:02d9306a4203caac1712339b21650680e204ea2d941b4febdac6912b5895e7a7",
-     "name": "Alexander Kolbasov"
+     "id": "researcher:dblp:b4cd20d76c58a602967e703911203d8ad33089df20ccef6484e3569a9c890dfd",
+     "name": "Alexandru Manea"
     },
     "window": "all-years"
    },
    "planner": "fallback",
-   "question": "Who are the direct coauthors of \"Alexander Kolbasov\"?",
+   "question": "Who are the direct coauthors of \"Alexandru Manea\"?",
    "required_evidence": {
     "kinds": [
      "direct-coauthors"
     ],
     "rule": "cited coauthorIds are a subset of expected.coauthors; returnedCount equals min(total, page_limit)",
     "subjects": [
-     "researcher:dblp:02d9306a4203caac1712339b21650680e204ea2d941b4febdac6912b5895e7a7"
+     "researcher:dblp:b4cd20d76c58a602967e703911203d8ad33089df20ccef6484e3569a9c890dfd"
     ]
    },
    "required_text": {
     "coauthor_name_recall_min": 0.6,
-    "coauthor_names_expected": 14,
+    "coauthor_names_expected": 11,
     "names": [
-     "Alexander Kolbasov"
+     "Alexandru Manea"
     ],
     "note": "the count is total or the page size; at least 60 percent of the shown coauthors are named when the page is not truncated",
     "numbers": [
      [
       [
-       14
+       11
       ]
      ]
     ]
@@ -3308,29 +3347,63 @@
    "window": "all-years"
   },
   {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "HTTP 200 answer with outcome ABSTAINED and no verified ranking claim",
+     "HTTP 422 with the closed error code UNSUPPORTED_QUERY"
+    ],
+    "filter": "institution",
+    "forbidden": "any ranking of researchers presented as filtered by the institution",
+    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "University of Louisiana at Lafayette",
+    "window": "since-2015"
+   },
+   "expected_outcome": "abstain",
+   "id": "q16",
+   "params": {
+    "institution": "University of Louisiana at Lafayette",
+    "metric": "CROSS_COMMUNITY_DEGREE",
+    "thin_data": true,
+    "window": "since-2015"
+   },
+   "planner": "fallback",
+   "question": "Rank bridge researchers institution \"University of Louisiana at Lafayette\" since 2015",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "institution-2",
+   "type": "institution",
+   "window": "since-2015"
+  },
+  {
    "check_level": "exact",
    "expected": {
     "a": {
-     "id": "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
-     "name": "Ioannis Zarkadas"
+     "id": "researcher:dblp:06fcef7f16a0c100029972c945247152095c13c7146cb9c36539e89c9aee24db",
+     "name": "Geoff Outhred"
     },
     "b": {
-     "id": "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0",
-     "name": "Maithem Munshed"
+     "id": "researcher:dblp:69a3223f695233ef91251726eb11e5b39bebe0358ab2a727f0396d3832c1059c",
+     "name": "Umesh Krishnaswamy"
     },
     "hops": 2,
     "max_hops": 6,
     "paths": [
      {
       "ids": [
-       "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
-       "researcher:dblp:96fff726c78c33ef369609af839ee6cd0edaf415dce32bb97d5c7f25b1649fd7",
-       "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0"
+       "researcher:dblp:06fcef7f16a0c100029972c945247152095c13c7146cb9c36539e89c9aee24db",
+       "researcher:dblp:197efe452d10e2b1bbe50a73790a2135c3a69b16ee581a90ba9e96db52fe2b14",
+       "researcher:dblp:69a3223f695233ef91251726eb11e5b39bebe0358ab2a727f0396d3832c1059c"
       ],
       "names": [
-       "Ioannis Zarkadas",
-       "Amy Tai",
-       "Maithem Munshed"
+       "Geoff Outhred",
+       "Behnaz Arzani",
+       "Umesh Krishnaswamy"
       ]
      }
     ],
@@ -3339,36 +3412,36 @@
     "window": "since-2015"
    },
    "expected_outcome": "answer",
-   "id": "q15",
+   "id": "q17",
    "params": {
     "a": {
-     "id": "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
-     "name": "Ioannis Zarkadas"
+     "id": "researcher:dblp:06fcef7f16a0c100029972c945247152095c13c7146cb9c36539e89c9aee24db",
+     "name": "Geoff Outhred"
     },
     "b": {
-     "id": "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0",
-     "name": "Maithem Munshed"
+     "id": "researcher:dblp:69a3223f695233ef91251726eb11e5b39bebe0358ab2a727f0396d3832c1059c",
+     "name": "Umesh Krishnaswamy"
     },
     "expected_hops": 2,
     "window": "since-2015"
    },
    "planner": "fallback",
-   "question": "What is the shortest coauthor path between \"Ioannis Zarkadas\" and \"Maithem Munshed\" since 2015?",
+   "question": "What is the shortest coauthor path between \"Geoff Outhred\" and \"Umesh Krishnaswamy\" since 2015?",
    "required_evidence": {
     "kinds": [
      "path"
     ],
     "rule": "every cited path's ids are a real path in the window graph with hopCount == hops, first id a and last id b",
     "subjects": [
-     "researcher:dblp:00f4b22bfea7288ac2a66ec902b2dd1b424d30f7b050f982b9ddc2e43a76ba54",
-     "researcher:dblp:afee5f765ce02141138ddcd2f6cbe559d6c2333af057c3bd944e2f4217fa63a0"
+     "researcher:dblp:06fcef7f16a0c100029972c945247152095c13c7146cb9c36539e89c9aee24db",
+     "researcher:dblp:69a3223f695233ef91251726eb11e5b39bebe0358ab2a727f0396d3832c1059c"
     ]
    },
    "required_text": {
     "hop_words": 2,
     "names": [
-     "Ioannis Zarkadas",
-     "Maithem Munshed"
+     "Geoff Outhred",
+     "Umesh Krishnaswamy"
     ],
     "note": "the hop count appears as a digit or word; for 2 or more hops the interior names of at least one shortest path appear",
     "numbers": [
@@ -3380,7 +3453,7 @@
     ],
     "path_names_any_of": [
      [
-      "Amy Tai"
+      "Behnaz Arzani"
      ]
     ]
    },
@@ -3402,7 +3475,7 @@
     "window": "through-2009"
    },
    "expected_outcome": "answer",
-   "id": "q16",
+   "id": "q18",
    "params": {
     "researcher": {
      "id": "researcher:dblp:982bec09febf3c2ab988d719a5e94865442658f56213c3956a3232f013a4978b",
@@ -3441,71 +3514,96 @@
   {
    "check_level": "exact",
    "expected": {
-    "community_id": "community:a85d3a2402639c722b3a49356aef9d4a5d9d2f1098f9292ab0223b86a9ce399d",
+    "community_id": "community:8b060dbc9b04a6ed32b3da4b4a1ea4c78156ea09ea20b5ac2f11abdf711d99fa",
     "converged": false,
-    "cross_community_edge_count": 65,
+    "cross_community_edge_count": 101,
     "iterations": 20,
     "members": [
-     "researcher:dblp:1f9f47f1ffa19351413e82704508b654da39b27eb11748240acccf424d88679b",
-     "researcher:dblp:21f25f04a4a5f4ae7ee7b27b8414884a2f66030bf2177b6c7fa7251a9a0049b6",
-     "researcher:dblp:30e55b07e9837da3b51e9f3de75091ded1eda1c975205cb72b5dfb44f0616bfd",
-     "researcher:dblp:7822b782d3a51111ece126415158167846793e296bc6ed908e8664551a72bdad",
-     "researcher:dblp:7d4a6cf87d2cb11f32798296281a0ba26341545cfdc0b34ad60e047a49e41343",
-     "researcher:dblp:8207a8801391b8b3eccc503a99b8da0dd8f95e97b9e1df466b36813eb463cb9a",
-     "researcher:dblp:8247ea767afeaeaaac42f1680de3a4c196a9cf789ff87bb4e2b098609df88bfe",
-     "researcher:dblp:8723318eac64f94c77673c33135f07637bf2c563d299bfcba291abdea669ab1c",
-     "researcher:dblp:91558bd6bce4080f13f4bae29a36ba96c56b486beda691026069dd76909a0765",
-     "researcher:dblp:c8ed8fabc3bde513ad8c2375bf45610bb4b88f4f57d62e93efd3312bbde1ca3f",
-     "researcher:dblp:d057172f39ec46838a4ca9cc7971959397b98875b43c57229cad0de2556fd315",
-     "researcher:dblp:e334bea0293f967947ad98efbd4d4cf99ae0088e64c271bb39de7d4ab0168205",
-     "researcher:dblp:e4c67400e8b6bc96c034dece694605c99c9df3a83ce37e1f885a8f6d761684bd",
-     "researcher:dblp:ea07d3d51515b9689343ca797143e5d1913f6e568bb6f0b29a7248dfa0c2e721",
-     "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2"
+     "researcher:dblp:051827e3c67db97915f487d512766dcdffd778f4c47c60f56bcf5fdcf0a31556",
+     "researcher:dblp:12e616883dc29ecda40898ee48c4673e51c7a108462206d0656edcd6f81295d3",
+     "researcher:dblp:2529d89fbf1023bf4f455c24887a2341aa69bc5431efd79f73109829cccd2563",
+     "researcher:dblp:254eb07af7bbe5b586ce4f61cdc48a1c58ddb107800270c25f5877217e4f3c9a",
+     "researcher:dblp:2691548fd5cd4316123c3255c8b31e77f27b31aaee1a782f106174e28119a199",
+     "researcher:dblp:2b97685211dbdf67594e1c81fef4cce2708f481b4fb46a632b9713206c37b592",
+     "researcher:dblp:2c4f134875b8ec15fa0300d3259abb34b02ad53bace668f21133e8e740b66e77",
+     "researcher:dblp:2eaf6c757dc17346058ffa221d497b194172aaa37047185eeeea7b64837fbe90",
+     "researcher:dblp:3f2103e1ede1af294227f4133e36d5227ca0c5f7b3da1315f4cbefabe9e6e2e3",
+     "researcher:dblp:42d050088f2c36d07ce9be68431a3da7a7ee6093e5c6d03a12d1a5f260b00af1",
+     "researcher:dblp:5cf88157ecb2a2caeb947032f6d617cd9f9fc98c92fe7c0d98016ad3450626c1",
+     "researcher:dblp:5cfec44c42006cb4e37ca8616a569b072beb7249260b0f9f7601b89d7a9a60fd",
+     "researcher:dblp:5d5042501df9bfc18d1a0fb61bc2269d65b06109f477fc16e4c4e523dc93cf2c",
+     "researcher:dblp:618094882c5d6794acbb6309d34b76b4af273bd690605cff62a778db6be6bbff",
+     "researcher:dblp:647a850e022152198f9eddfa6ca73af8f132aaeb93287ae0bbfded348b75e250",
+     "researcher:dblp:64b89e3b9cd555a82b7eedc5cbb701cb75085024d24499ac79f5132b29d99e14",
+     "researcher:dblp:6aa5a449a04f2a83b198871e4c9ca7d540c3bdfbb763aa46d6842293a067a309",
+     "researcher:dblp:6e1a8e58ebd9b48ca8f1f67f421f04841e3f09c7caa6dfcee62a7585fd37995c",
+     "researcher:dblp:860e4cb5e8e34f89851eafcf2b32da198db00b639218ad3371969d808a7ef6aa",
+     "researcher:dblp:865ea539e29ca1f67a722aca2533825c7309e0debeafb938bb55a988a5a6b7f2",
+     "researcher:dblp:8bbb47156e3635340e84a1c7982f112a4b18d696a068d429fe8e649c13db6736",
+     "researcher:dblp:9aa76c44c8e92791e9677c04fa8c7ee97146de70855861dc0ba12e6364b2c952",
+     "researcher:dblp:9bd825adca6ff73e31403f5fd6c7133d167a2ada30c4d4d41808ebbd164c31f7",
+     "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927",
+     "researcher:dblp:b4dc4e9c3e02c06784fde4f1140b59504d78582e0570ef24383056fcd792c193",
+     "researcher:dblp:bc8ebd79981e3f2bd010d72023557b406e6d0998c3b352da88407051ffa2c195",
+     "researcher:dblp:c5a286fc478faf007f2300c6e5ed09a9270edf495082bb6b9cf840d1c0955b20",
+     "researcher:dblp:c93c79c58e350d4a4d843083aa8f0d3707ab82bea1f3c4e9de655b6c72dd9099",
+     "researcher:dblp:d46d2823112bb11d3077af613e8edbde3a68d3dce1c5c468f7b04c1b6cabf317",
+     "researcher:dblp:e316bbc18ead752980b75c8e67a362da1e263e24367958007329da999e78f77d",
+     "researcher:dblp:f7d2ff9cfaf679c56ef42681f1de423e13321ba3dd722520862e47b7a4bb764a",
+     "researcher:dblp:ffce2c15c5bc136337bddeefbaa740e8151d59a5136d3c9f6138df86df7d5e2f"
     ],
     "neighbor_community_ids": [
-     "community:1a6afa1e300e00ce793b9b1758fa573002debbb80158c5023754e182cc629232",
+     "community:0915e2a88b5998e629d3e0376a3fa1160739cc6a39a2a251dfe965461e6349da",
+     "community:15f6dbe64d206e34980f26e26082a81440196a5d07d6f8411e0b84f4169282bb",
+     "community:1f199869736ca9d547e9d256660c25d54c1e65a8b29a6aebececc67d1b2447dc",
+     "community:24484cd32eecf829f1822c4cd87b3593013963193e98619b53b6af76a70510eb",
+     "community:27d881131ef62fb4a82dd0081e10106d3a827ef036ae665cd22f0e858bb651f2",
+     "community:295f814930190c9d566674593dc179bb98208701bae8e94becaab8a82c49a1dc",
      "community:53b667c7389c5fb5c834ef5a0fd82945bbe2409bf2c3d7c03feb384d6d0f91a1",
-     "community:67e553a384912ef594c667c299980a2a7d26e1532d4ef64d13682c7f66fa5a21",
-     "community:b2e1a6e12ab5f3ae3ffb07afe5a24485073853006908b887a540ea6ff7af375a",
-     "community:f137a37b82af923975206df6886c66f10e9924eccdfa0a5652d30e765972a867"
+     "community:7c8603ab7c32d4075333e3976d9226d5af6752424c0e79e3640af0df066923f4",
+     "community:8a3a8e916688444b8c231604c7bbaf8bd03646bc0a1edd924b195b1f8a7236cd",
+     "community:ccf8e34d49f2480ba6693b8782c906ca18c8dcc22e034d716f937f3883d551ac",
+     "community:d4120cdced8c20005a46478a197759af73cd830dd45ca803eb47cdafcfd80f42",
+     "community:d6d4d1769c3ed1d2f75a1f24fd1da09986d2c52efb0e6f40f422e652a96c4f73",
+     "community:dbbae26b04a11f919f67d1e0c72f02e3353b237c87a50fe72104440c42a363ab"
     ],
     "qualification": "iteration-limited",
     "researcher": {
-     "id": "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2",
-     "name": "Lichao Liu"
+     "id": "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927",
+     "name": "Shengdong Dai"
     },
-    "size": 15,
+    "size": 32,
     "window": "since-2015"
    },
    "expected_outcome": "answer",
-   "id": "q17",
+   "id": "q19",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2",
-     "name": "Lichao Liu"
+     "id": "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927",
+     "name": "Shengdong Dai"
     },
     "window": "since-2015"
    },
    "planner": "llm",
-   "question": "Compare communities of \"Lichao Liu\" since 2015",
+   "question": "Compare communities of \"Shengdong Dai\" since 2015",
    "required_evidence": {
     "kinds": [
      "community"
     ],
     "rule": "evidence communityId == community_id, size == size, selectedMemberIds subset of members, neighborCommunityIds subset of neighbor_community_ids",
     "subjects": [
-     "researcher:dblp:f5039497573704dd2f0313e7c34e14d8031e5346643a43642e875bb7fd4f57f2"
+     "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927"
     ]
    },
    "required_text": {
     "names": [
-     "Lichao Liu"
+     "Shengdong Dai"
     ],
     "note": "the answer states the community size; communities are iteration-limited and the answer should say so",
     "numbers": [
      [
       [
-       15
+       32
       ]
      ]
     ]
@@ -3515,7 +3613,7 @@
    "window": "since-2015"
   },
   {
-   "check_level": "exact",
+   "check_level": "values-and-order",
    "expected": {
     "measure": "CROSS_COMMUNITY_DEGREE",
     "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
@@ -4126,7 +4224,7 @@
     "window": "since-2015"
    },
    "expected_outcome": "answer",
-   "id": "q18",
+   "id": "q20",
    "params": {
     "measure": "CROSS_COMMUNITY_DEGREE",
     "window": "since-2015"
@@ -4156,21 +4254,22 @@
   {
    "check_level": "exact",
    "expected": {
-    "communityJaccardOverlap": 0.06666666666666667,
+    "communityJaccardOverlap": 0.18181818181818182,
+    "communityJaccardOverlap_semantics": "LOWER BOUND: the runtime also counts the one-person communities of researchers with no edge in a window (they are not in the CSV), so its value may be higher; accepted when key <= runtime <= 1",
     "componentSize": {
      "from": 2631,
      "to": 3965
     },
-    "currentCommunityId": "community:d544c9f0e267838d6e0b87128a7018afa2a17ca22b2bd8b253fb953d485eeebd",
-    "deltaCommunitiesConnected": 0,
+    "currentCommunityId": "community:8af6ca93a95a7538e986b7e9e83b2134cc029ee663233c4e3db793ffd6827f8a",
+    "deltaCommunitiesConnected": -1,
     "deltaComponentSize": 1334,
-    "deltaCrossCommunityDegree": 2,
-    "deltaCrossCommunityWeight": 5,
-    "deltaDistinctCoauthors": 2,
-    "deltaParticipationCoefficient": 0.06624999999999992,
+    "deltaCrossCommunityDegree": -5,
+    "deltaCrossCommunityWeight": -5,
+    "deltaDistinctCoauthors": -2,
+    "deltaParticipationCoefficient": -0.31547801244770945,
     "distinctCoauthors": {
-     "from": 8,
-     "to": 10
+     "from": 11,
+     "to": 9
     },
     "enteredLargestComponent": false,
     "from": "2010-2014",
@@ -4180,38 +4279,38 @@
      "deltaAverageCoauthorsPerPaper",
      "deltaMaximumCoauthorsOnOnePaper"
     ],
-    "previousCommunityId": "community:2a9d3d0228fc8901b6f0dfb3300591ba40c37faf6fdff3cbbc2e90f6432326a6",
+    "previousCommunityId": "community:61baffbaea7ea4a872c23c23761eb9923303bbfb35b5c43b676ead662d56d17f",
     "researcher": {
-     "id": "researcher:dblp:8406961e35bc2142599a13cf7f94c64ccdd01a140689f439c53d63f76d15d00b",
-     "name": "Marcelo Pasin"
+     "id": "researcher:dblp:c9c817537488c6e023a46649f381730495432435dc860b0955d45a968afa1de9",
+     "name": "Nisha Talagala"
     },
     "to": "2015-2019",
     "toPresent": true
    },
    "expected_outcome": "answer",
-   "id": "q19",
+   "id": "q21",
    "params": {
     "from": "2010-2014",
     "researcher": {
-     "id": "researcher:dblp:8406961e35bc2142599a13cf7f94c64ccdd01a140689f439c53d63f76d15d00b",
-     "name": "Marcelo Pasin"
+     "id": "researcher:dblp:c9c817537488c6e023a46649f381730495432435dc860b0955d45a968afa1de9",
+     "name": "Nisha Talagala"
     },
     "to": "2015-2019"
    },
    "planner": "llm",
-   "question": "Did \"Marcelo Pasin\" change from 2010-2014 to 2015-2019?",
+   "question": "Did \"Nisha Talagala\" change from 2010-2014 to 2015-2019?",
    "required_evidence": {
     "kinds": [
      "temporal"
     ],
     "rule": "evidence values equal the expected deltas and ids",
     "subjects": [
-     "researcher:dblp:8406961e35bc2142599a13cf7f94c64ccdd01a140689f439c53d63f76d15d00b"
+     "researcher:dblp:c9c817537488c6e023a46649f381730495432435dc860b0955d45a968afa1de9"
     ]
    },
    "required_text": {
     "names": [
-     "Marcelo Pasin"
+     "Nisha Talagala"
     ],
     "note": "the answer states the change in distinct coauthors (absolute value) or both window values",
     "numbers": [
@@ -4220,8 +4319,8 @@
        2
       ],
       [
-       8,
-       10
+       11,
+       9
       ]
      ]
     ]
@@ -4231,81 +4330,14 @@
    "window": null
   },
   {
-   "check_level": "abstain",
-   "expected": {
-    "acceptable_abstention_forms": [
-     "ABSTAINED outcome with no verified ranking claim",
-     "HTTP 422 unsupported-query refusal"
-    ],
-    "filter": "topic",
-    "forbidden": "any ranking of researchers presented as filtered by the topic",
-    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-    "thin_data": true,
-    "value": "Computability, Logic, AI Algorithms",
-    "window": "since-2015"
-   },
-   "expected_outcome": "abstain",
-   "id": "q20",
-   "params": {
-    "thin_data": true,
-    "topic": "Computability, Logic, AI Algorithms",
-    "window": "since-2015"
-   },
-   "planner": "fallback",
-   "question": "Which researchers have the most distinct coauthors topic \"Computability, Logic, AI Algorithms\" since 2015?",
-   "required_evidence": {
-    "kinds": []
-   },
-   "required_text": {
-    "mode": "abstain"
-   },
-   "slot": "topic-2",
-   "type": "topic",
-   "window": "since-2015"
-  },
-  {
-   "check_level": "abstain",
-   "expected": {
-    "acceptable_abstention_forms": [
-     "ABSTAINED outcome with no verified ranking claim",
-     "HTTP 422 unsupported-query refusal"
-    ],
-    "filter": "institution",
-    "forbidden": "any ranking of researchers presented as filtered by the institution",
-    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-    "thin_data": true,
-    "value": "University of Louisiana at Lafayette",
-    "window": "since-2015"
-   },
-   "expected_outcome": "abstain",
-   "id": "q21",
-   "params": {
-    "institution": "University of Louisiana at Lafayette",
-    "metric": "CROSS_COMMUNITY_DEGREE",
-    "thin_data": true,
-    "window": "since-2015"
-   },
-   "planner": "fallback",
-   "question": "Rank bridge researchers institution \"University of Louisiana at Lafayette\" since 2015",
-   "required_evidence": {
-    "kinds": []
-   },
-   "required_text": {
-    "mode": "abstain"
-   },
-   "slot": "institution-2",
-   "type": "institution",
-   "window": "since-2015"
-  },
-  {
    "check_level": "structural",
    "expected": {
     "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
-    "distinctCoauthorCount": 20,
-    "publicationCount": 7,
+    "distinctCoauthorCount": 15,
+    "publicationCount": 4,
     "researcher": {
-     "id": "researcher:dblp:f2c1b8fdbdf4057567ea702b9f5570fd299c380484235c4eda1bc66ea352daf6",
-     "name": "Balaji Prabhakar"
+     "id": "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978",
+     "name": "Aleksey Pesterev"
     },
     "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
     "window": "all-years"
@@ -4314,13 +4346,13 @@
    "id": "q22",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:f2c1b8fdbdf4057567ea702b9f5570fd299c380484235c4eda1bc66ea352daf6",
-     "name": "Balaji Prabhakar"
+     "id": "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978",
+     "name": "Aleksey Pesterev"
     },
     "window": "all-years"
    },
    "planner": "llm",
-   "question": "Explain the research collaboration of \"Balaji Prabhakar\"",
+   "question": "Explain the research collaboration of \"Aleksey Pesterev\"",
    "required_evidence": {
     "any_kind": true,
     "kinds": [
@@ -4328,12 +4360,12 @@
      "metrics"
     ],
     "subjects": [
-     "researcher:dblp:f2c1b8fdbdf4057567ea702b9f5570fd299c380484235c4eda1bc66ea352daf6"
+     "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978"
     ]
    },
    "required_text": {
     "names": [
-     "Balaji Prabhakar"
+     "Aleksey Pesterev"
     ],
     "note": "the explanation names the researcher; stated counts must match expected"
    },
@@ -4342,7 +4374,7 @@
    "window": "all-years"
   },
   {
-   "check_level": "exact",
+   "check_level": "values-and-order",
    "expected": {
     "metric": "DISTINCT_COAUTHOR_COUNT",
     "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
@@ -4979,6 +5011,39 @@
    "window": "2010-2014"
   },
   {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "HTTP 200 answer with outcome ABSTAINED and no verified ranking claim",
+     "HTTP 422 with the closed error code UNSUPPORTED_QUERY"
+    ],
+    "filter": "topic",
+    "forbidden": "any ranking of researchers presented as filtered by the topic",
+    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "Language and cultural evolution",
+    "window": "2020-2026"
+   },
+   "expected_outcome": "abstain",
+   "id": "q24",
+   "params": {
+    "thin_data": true,
+    "topic": "Language and cultural evolution",
+    "window": "2020-2026"
+   },
+   "planner": "fallback",
+   "question": "Rank researchers by distinct coauthors topic \"Language and cultural evolution\" in window 2020-2026",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "topic-3",
+   "type": "topic",
+   "window": "2020-2026"
+  },
+  {
    "check_level": "bounded",
    "expected": {
     "global_maximum_all_years": 15,
@@ -4987,7 +5052,7 @@
     "window": "2020-2026"
    },
    "expected_outcome": "answer",
-   "id": "q24",
+   "id": "q25",
    "params": {
     "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
     "window": "2020-2026"
@@ -5016,105 +5081,105 @@
    "expected": {
     "coauthors": [
      {
-      "id": "researcher:dblp:1aa093b8af45184d62ae63b88ccad8bd1417ade452e8b47ed13790828568bd3f",
+      "id": "researcher:dblp:3f679cdcffb48d044fd8288d2010b8fdd60eb7d18dd1290517f18eab2a24353f",
       "joint": 1,
-      "name": "Meng-Jung Tsai"
+      "name": "Xinyu Qian"
      },
      {
-      "id": "researcher:dblp:1ad4b54b097480afe9a7d1d19046b60e3b8c99a4deed25c63df043f4d838d5ec",
+      "id": "researcher:dblp:4572a68a5aab2d3ccd9773a4ac7d99f3b6c653481fd0d8b8fe98539f5fff6289",
       "joint": 1,
-      "name": "Liqun Cheng"
+      "name": "Xin Wang 0261"
      },
      {
-      "id": "researcher:dblp:1b89a49bbf6fdf512799ab028e3c5094bbf2a9bd22a367b9ef868e7a42351111",
+      "id": "researcher:dblp:4b187f617d7995dfef1bcf959fe912fb92050d6c310aefad24aa3d95ed0f0b1d",
       "joint": 1,
-      "name": "Jan Kopanski"
+      "name": "Lidong Jiang"
      },
      {
-      "id": "researcher:dblp:26a54542729a9a37818e8f9e2e26808071a4b4c0ca7c7e239b6004d18853e873",
+      "id": "researcher:dblp:7fada115bbc5b0b32abdc2cc08b940a37a0ab9cfe935fa867113617202ad9821",
       "joint": 1,
-      "name": "Neal Cardwell"
+      "name": "Shubo Wen"
      },
      {
-      "id": "researcher:dblp:4eced99656538c6989ba85d2cf5c1baf997e2243a3c9845a2da05ceb9f3045f0",
+      "id": "researcher:dblp:adc18718e9914ced339a44bf76e1d488a0f34ebc3189adcb56b27fb70cc9bdcd",
       "joint": 1,
-      "name": "Yuxue Jin"
+      "name": "Engin Arslan"
      },
      {
-      "id": "researcher:dblp:5edec5e1addad023b58560466565e0d54e382a09263084a1d289f9e2319e322c",
+      "id": "researcher:dblp:b817cc0826037fa4689aab3813d777f12d7f5cb679a206154e9aedd9254eafc0",
       "joint": 1,
-      "name": "Minlan Yu"
+      "name": "Ke Lin"
      },
      {
-      "id": "researcher:dblp:878bde2e9f59046b91763518d59c8508f914c9132a8809cd6234c77ba3aacc0b",
+      "id": "researcher:dblp:b90cc0ad9b57be34217839ae73c808b5d4417d562516d8fd8f1fbc94978d6c91",
       "joint": 1,
-      "name": "Nandita Dukkipati"
+      "name": "Jianwen Pi"
      },
      {
-      "id": "researcher:dblp:a1e70898c61921bd71c8377034e4b5d1d69a271981ed4319247b6bcc8a3be073",
+      "id": "researcher:dblp:c1a9e51bc60f4ae7b3aadc146c50acc41d80046f654653a49af7ccaf1b03b7da",
       "joint": 1,
-      "name": "Charles J. Carver"
+      "name": "Zhihong Wang"
      },
      {
-      "id": "researcher:dblp:bafb0bc40032c0f68b4d2f3ec3ac672e337c15e50557402c98971a89dfbd8fd3",
+      "id": "researcher:dblp:d323f9a540b534204570e3aa5f0c06ef2a6176a8fd45e0c875ddeef19924c2df",
       "joint": 1,
-      "name": "Ramesh Govindan"
+      "name": "Xiaoning Ding"
      },
      {
-      "id": "researcher:dblp:de4f18ea8f5de1e28fc8c1f07a4c15e2117f9a09cbd22c2d280cdffb5d402df2",
+      "id": "researcher:dblp:d44973b948fc61f66793f9a1e15046bc86dd0f45b13a94617bdf2d681ba0690d",
       "joint": 1,
-      "name": "Hamid Hajabdolali Bazzaz"
+      "name": "Daxiang Kang"
      },
      {
-      "id": "researcher:dblp:ece9cccb538b7f0795735b0f113996d44c18aac71b60b8c13b83c3c474e72826",
+      "id": "researcher:dblp:db7ad80ace78ec134a52c08c21e4c78e3344eefdb05bbabb33bb7e52705e760b",
       "joint": 1,
-      "name": "Amin Vahdat"
+      "name": "Hao Luo 0013"
      },
      {
-      "id": "researcher:dblp:f98d7f73797774ea5a3ff0b29a5bcd65324f8c059b065291bb7a05379b327132",
+      "id": "researcher:dblp:e863d7d41c6006f46cdf05464b6daabeb33822de7ac85d17f15915e250e51e78",
       "joint": 1,
-      "name": "Yingjie Bi"
+      "name": "Peng He 0003"
      },
      {
-      "id": "researcher:dblp:fef49d10f1cf5e8677f018150e9231c088917f1bf7c733753f2ef34e2dbe4bf9",
+      "id": "researcher:dblp:f9e313f5da20b4a47c672cc32f9d2a8f726c15283e8fce92376019aa6587c7b2",
       "joint": 1,
-      "name": "Weiwu Pang"
+      "name": "Deguo Li"
      }
     ],
     "page_limit": 25,
     "researcher": {
-     "id": "researcher:dblp:40c2e4689f99a31a59553800cbe88bf0fed57b4dba8a852a1b73ada0af610927",
-     "name": "Chris DeForeest"
+     "id": "researcher:dblp:07ea4103d2304274cbf530055d836b0d94287d69b63b653148c160ad4f3a3d3b",
+     "name": "Bin Niu"
     },
     "total": 13,
     "truncated": false,
     "window": "since-2015"
    },
    "expected_outcome": "answer",
-   "id": "q25",
+   "id": "q26",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:40c2e4689f99a31a59553800cbe88bf0fed57b4dba8a852a1b73ada0af610927",
-     "name": "Chris DeForeest"
+     "id": "researcher:dblp:07ea4103d2304274cbf530055d836b0d94287d69b63b653148c160ad4f3a3d3b",
+     "name": "Bin Niu"
     },
     "window": "since-2015"
    },
    "planner": "fallback",
-   "question": "Who are the direct coauthors of \"Chris DeForeest\" since 2015?",
+   "question": "Who are the direct coauthors of \"Bin Niu\" since 2015?",
    "required_evidence": {
     "kinds": [
      "direct-coauthors"
     ],
     "rule": "cited coauthorIds are a subset of expected.coauthors; returnedCount equals min(total, page_limit)",
     "subjects": [
-     "researcher:dblp:40c2e4689f99a31a59553800cbe88bf0fed57b4dba8a852a1b73ada0af610927"
+     "researcher:dblp:07ea4103d2304274cbf530055d836b0d94287d69b63b653148c160ad4f3a3d3b"
     ]
    },
    "required_text": {
     "coauthor_name_recall_min": 0.6,
     "coauthor_names_expected": 13,
     "names": [
-     "Chris DeForeest"
+     "Bin Niu"
     ],
     "note": "the count is total or the page size; at least 60 percent of the shown coauthors are named when the page is not truncated",
     "numbers": [
@@ -5130,70 +5195,146 @@
    "window": "since-2015"
   },
   {
+   "check_level": "abstain",
+   "expected": {
+    "acceptable_abstention_forms": [
+     "HTTP 200 answer with outcome ABSTAINED and no verified ranking claim",
+     "HTTP 422 with the closed error code UNSUPPORTED_QUERY"
+    ],
+    "filter": "institution",
+    "forbidden": "any ranking of researchers presented as filtered by the institution",
+    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
+    "thin_data": true,
+    "value": "University of Louisiana at Lafayette",
+    "window": "all-years"
+   },
+   "expected_outcome": "abstain",
+   "id": "q27",
+   "params": {
+    "institution": "University of Louisiana at Lafayette",
+    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+    "thin_data": true,
+    "window": "all-years"
+   },
+   "planner": "fallback",
+   "question": "Which researchers have the largest team size institution \"University of Louisiana at Lafayette\"?",
+   "required_evidence": {
+    "kinds": []
+   },
+   "required_text": {
+    "mode": "abstain"
+   },
+   "slot": "institution-3",
+   "type": "institution",
+   "window": "all-years"
+  },
+  {
    "check_level": "exact",
    "expected": {
     "a": {
-     "id": "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
-     "name": "Gefei Zuo"
+     "id": "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+     "name": "Ming-Chang Yang"
     },
     "b": {
-     "id": "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a",
-     "name": "Sam Burnett"
+     "id": "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba",
+     "name": "Chenxiao Liu"
     },
     "hops": 3,
     "max_hops": 6,
     "paths": [
      {
       "ids": [
-       "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
-       "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
-       "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
-       "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a"
+       "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+       "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+       "researcher:dblp:634aa7606284d5117daaeae16b033781312058bd5a3b95446859f87bf0cc1bee",
+       "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba"
       ],
       "names": [
-       "Gefei Zuo",
-       "Arvind Krishnamurthy",
-       "Harsha V. Madhyastha",
-       "Sam Burnett"
+       "Ming-Chang Yang",
+       "Jie Zhang 0048",
+       "Quanxi Li",
+       "Chenxiao Liu"
+      ]
+     },
+     {
+      "ids": [
+       "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+       "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+       "researcher:dblp:ccbd0895f50daef3ed8377d257c3aa1577a3a6947e005e1371f7b1c8c61594bd",
+       "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba"
+      ],
+      "names": [
+       "Ming-Chang Yang",
+       "Jie Zhang 0048",
+       "Huimin Cui",
+       "Chenxiao Liu"
+      ]
+     },
+     {
+      "ids": [
+       "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+       "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+       "researcher:dblp:cf0f9e6acf96a32c3e74b21ba6cfc89639604464eb671f79c7ec3fa943205150",
+       "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba"
+      ],
+      "names": [
+       "Ming-Chang Yang",
+       "Jie Zhang 0048",
+       "Chenxi Wang 0005",
+       "Chenxiao Liu"
+      ]
+     },
+     {
+      "ids": [
+       "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+       "researcher:dblp:13e9a0998b070944b940d286bed0483a3de294a73b75b35799447ccbd5b0f9b1",
+       "researcher:dblp:dd61b7544cce8900915c66a40e9f903ce791bb7a433e6f4cf66128fd4cc007b3",
+       "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba"
+      ],
+      "names": [
+       "Ming-Chang Yang",
+       "Jie Zhang 0048",
+       "Yanwen Xia",
+       "Chenxiao Liu"
       ]
      }
     ],
-    "shortest_path_count": 1,
+    "shortest_path_count": 4,
     "status": "Found",
     "window": "all-years"
    },
    "expected_outcome": "answer",
-   "id": "q26",
+   "id": "q28",
    "params": {
     "a": {
-     "id": "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
-     "name": "Gefei Zuo"
+     "id": "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+     "name": "Ming-Chang Yang"
     },
     "b": {
-     "id": "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a",
-     "name": "Sam Burnett"
+     "id": "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba",
+     "name": "Chenxiao Liu"
     },
     "expected_hops": 3,
-    "support_include_id": "researcher:dblp:cf51870e20d67fe3721c27a54ca89fcd133281862daf502ff54f21ba7e0fdc35",
+    "support_include_id": "researcher:dblp:634aa7606284d5117daaeae16b033781312058bd5a3b95446859f87bf0cc1bee",
     "window": "all-years"
    },
    "planner": "fallback",
-   "question": "What is the shortest coauthor path between \"Gefei Zuo\" and \"Sam Burnett\"?",
+   "question": "What is the shortest coauthor path between \"Ming-Chang Yang\" and \"Chenxiao Liu\"?",
    "required_evidence": {
     "kinds": [
      "path"
     ],
     "rule": "every cited path's ids are a real path in the window graph with hopCount == hops, first id a and last id b",
     "subjects": [
-     "researcher:dblp:056f5b51e87fdcb2c4750704562a2a0adf439022c5e660d9f5bea48ea8d012e3",
-     "researcher:dblp:838874980d4852df89781fad216e40bfa0a492d750f8430c91f6f38c45a6955a"
+     "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+     "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba"
     ]
    },
    "required_text": {
     "hop_words": 3,
     "names": [
-     "Gefei Zuo",
-     "Sam Burnett"
+     "Ming-Chang Yang",
+     "Chenxiao Liu"
     ],
     "note": "the hop count appears as a digit or word; for 2 or more hops the interior names of at least one shortest path appear",
     "numbers": [
@@ -5205,8 +5346,20 @@
     ],
     "path_names_any_of": [
      [
-      "Arvind Krishnamurthy",
-      "Harsha V. Madhyastha"
+      "Jie Zhang 0048",
+      "Quanxi Li"
+     ],
+     [
+      "Jie Zhang 0048",
+      "Huimin Cui"
+     ],
+     [
+      "Jie Zhang 0048",
+      "Chenxi Wang 0005"
+     ],
+     [
+      "Jie Zhang 0048",
+      "Yanwen Xia"
      ]
     ]
    },
@@ -5228,7 +5381,7 @@
     "window": "since-2015"
    },
    "expected_outcome": "answer",
-   "id": "q27",
+   "id": "q29",
    "params": {
     "researcher": {
      "id": "researcher:dblp:9706bf15b6147bd09ff1ad796f89d639e5e0fb2976c792563a6dd007b773338a",
@@ -5267,61 +5420,59 @@
   {
    "check_level": "exact",
    "expected": {
-    "community_id": "community:34b9c3b75e2f48d8f7f1ad9c22730e7aeac586b2152c3075a59be1a5b2b34325",
+    "community_id": "community:a1475aa7be94e02fc030fed9b39e2c3328a60839e65c90dd95d6a17727a12d59",
     "converged": false,
-    "cross_community_edge_count": 27,
+    "cross_community_edge_count": 4,
     "iterations": 20,
     "members": [
-     "researcher:dblp:448efcb663c48ba73a02bef0e57f4cff8aebbf59f6fcc97b42eed477783f5175",
-     "researcher:dblp:54f1b7a7e4e9b969575a1f292a60fa22a57d1f1ba5e47bd707e84a0bdeb163e0",
-     "researcher:dblp:5e7c4e049c84be6f736d5d671560bf3ad66fb2f8edca7041f817c39dbb4ff067",
-     "researcher:dblp:78741cae5662cf10ac628fd3d9d95b21de178e64a35b91eaead44557967f1c66",
-     "researcher:dblp:79e6ed8912c3c50db9b4c4fbb88ab0f87834902c69e736286eb14baa83b57cad",
-     "researcher:dblp:92fa7ebd945d8f427e474096c1ca476de2ee3ceb04b71b62a2fc4cc0ea6b1cff",
-     "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26",
-     "researcher:dblp:e3f3f99185dde75027bbf3fe0a502c5f93a52225507677f2480f242f20bd0da8",
-     "researcher:dblp:f766cde0489e429678228c49474b717abdac96306bd8f94b06669c54fd3c9b62"
+     "researcher:dblp:2948287ca0bb229a9327e76ae081d90d2bfd8554ef9f9121ea8aa3aff39f73c6",
+     "researcher:dblp:61bc2d401242c4765698d789edf431872fb8501ddcf4970b6762d5bfe886ef70",
+     "researcher:dblp:95b9e1a0a8cf11d387806e1f74fe1b75fbf5d9125d1c1afab12a3d45a1c00d42",
+     "researcher:dblp:c0994854566fb7f6e9cdadce28c325368f0d18953f6d1e94a47062fb3d6b6248",
+     "researcher:dblp:ccefb5d6b98a1008c8d6eec02e70a8de89e9aab60d00090d6483e017119329a7",
+     "researcher:dblp:d9b0302a3ab1e665686821920627d1dff940d53b8a57b03b8bad6c4aa98f9ea9",
+     "researcher:dblp:ec49df63d46fc66b324115ca155965fd807cbb8fee1eca3c5ba3cf4b7258a105"
     ],
     "neighbor_community_ids": [
-     "community:17029effc346884187df414a560466a762e43b966f63ede9143175c27878a8e0"
+     "community:c73263583cd706f97d1cf98acdf5713a4a3ffc0195a538dcdd7419b836a618a4"
     ],
     "qualification": "iteration-limited",
     "researcher": {
-     "id": "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26",
-     "name": "Liang Mao"
+     "id": "researcher:dblp:ec49df63d46fc66b324115ca155965fd807cbb8fee1eca3c5ba3cf4b7258a105",
+     "name": "Soo-Mook Moon"
     },
-    "size": 9,
+    "size": 7,
     "window": "2020-2026"
    },
    "expected_outcome": "answer",
-   "id": "q28",
+   "id": "q30",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26",
-     "name": "Liang Mao"
+     "id": "researcher:dblp:ec49df63d46fc66b324115ca155965fd807cbb8fee1eca3c5ba3cf4b7258a105",
+     "name": "Soo-Mook Moon"
     },
     "window": "2020-2026"
    },
    "planner": "llm",
-   "question": "Compare communities of \"Liang Mao\" in window 2020-2026",
+   "question": "Compare communities of \"Soo-Mook Moon\" in window 2020-2026",
    "required_evidence": {
     "kinds": [
      "community"
     ],
     "rule": "evidence communityId == community_id, size == size, selectedMemberIds subset of members, neighborCommunityIds subset of neighbor_community_ids",
     "subjects": [
-     "researcher:dblp:a2b5dddc0b1d5fe1e83d495f31086220d5fecaf4f374e271ff469e8162ee3b26"
+     "researcher:dblp:ec49df63d46fc66b324115ca155965fd807cbb8fee1eca3c5ba3cf4b7258a105"
     ]
    },
    "required_text": {
     "names": [
-     "Liang Mao"
+     "Soo-Mook Moon"
     ],
     "note": "the answer states the community size; communities are iteration-limited and the answer should say so",
     "numbers": [
      [
       [
-       9
+       7
       ]
      ]
     ]
@@ -5331,7 +5482,7 @@
    "window": "2020-2026"
   },
   {
-   "check_level": "exact",
+   "check_level": "values-and-order",
    "expected": {
     "measure": "CROSS_COMMUNITY_DEGREE",
     "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
@@ -5942,7 +6093,7 @@
     "window": "2020-2026"
    },
    "expected_outcome": "answer",
-   "id": "q29",
+   "id": "q31",
    "params": {
     "measure": "CROSS_COMMUNITY_DEGREE",
     "window": "2020-2026"
@@ -5973,6 +6124,7 @@
    "check_level": "exact",
    "expected": {
     "communityJaccardOverlap": 0.05555555555555555,
+    "communityJaccardOverlap_semantics": "LOWER BOUND: the runtime also counts the one-person communities of researchers with no edge in a window (they are not in the CSV), so its value may be higher; accepted when key <= runtime <= 1",
     "componentSize": {
      "from": 3965,
      "to": 23
@@ -6005,7 +6157,7 @@
     "toPresent": true
    },
    "expected_outcome": "answer",
-   "id": "q30",
+   "id": "q32",
    "params": {
     "from": "2015-2019",
     "researcher": {
@@ -6047,81 +6199,14 @@
    "window": null
   },
   {
-   "check_level": "abstain",
-   "expected": {
-    "acceptable_abstention_forms": [
-     "ABSTAINED outcome with no verified ranking claim",
-     "HTTP 422 unsupported-query refusal"
-    ],
-    "filter": "topic",
-    "forbidden": "any ranking of researchers presented as filtered by the topic",
-    "reason": "no researcher has authoritative topic metadata in the export (3 TOPIC nodes, all on 1 work with no AUTHORED edge); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-    "thin_data": true,
-    "value": "Language and cultural evolution",
-    "window": "2020-2026"
-   },
-   "expected_outcome": "abstain",
-   "id": "q31",
-   "params": {
-    "thin_data": true,
-    "topic": "Language and cultural evolution",
-    "window": "2020-2026"
-   },
-   "planner": "fallback",
-   "question": "Rank researchers by distinct coauthors topic \"Language and cultural evolution\" in window 2020-2026",
-   "required_evidence": {
-    "kinds": []
-   },
-   "required_text": {
-    "mode": "abstain"
-   },
-   "slot": "topic-3",
-   "type": "topic",
-   "window": "2020-2026"
-  },
-  {
-   "check_level": "abstain",
-   "expected": {
-    "acceptable_abstention_forms": [
-     "ABSTAINED outcome with no verified ranking claim",
-     "HTTP 422 unsupported-query refusal"
-    ],
-    "filter": "institution",
-    "forbidden": "any ranking of researchers presented as filtered by the institution",
-    "reason": "no researcher has authoritative institution metadata in the export (1 INSTITUTION node, 0 AFFILIATED_WITH edges); the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-    "thin_data": true,
-    "value": "University of Louisiana at Lafayette",
-    "window": "all-years"
-   },
-   "expected_outcome": "abstain",
-   "id": "q32",
-   "params": {
-    "institution": "University of Louisiana at Lafayette",
-    "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
-    "thin_data": true,
-    "window": "all-years"
-   },
-   "planner": "fallback",
-   "question": "Which researchers have the largest team size institution \"University of Louisiana at Lafayette\"?",
-   "required_evidence": {
-    "kinds": []
-   },
-   "required_text": {
-    "mode": "abstain"
-   },
-   "slot": "institution-3",
-   "type": "institution",
-   "window": "all-years"
-  },
-  {
    "check_level": "structural",
    "expected": {
     "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
-    "distinctCoauthorCount": 13,
-    "publicationCount": 5,
+    "distinctCoauthorCount": 19,
+    "publicationCount": 4,
     "researcher": {
-     "id": "researcher:dblp:edae4f5d7eaa80d8fc58415c7b7a3b49916ec9644ec80540562689db14f74175",
-     "name": "Yinwei Dai"
+     "id": "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2",
+     "name": "Qizhe Cai"
     },
     "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
     "window": "all-years"
@@ -6130,13 +6215,13 @@
    "id": "q33",
    "params": {
     "researcher": {
-     "id": "researcher:dblp:edae4f5d7eaa80d8fc58415c7b7a3b49916ec9644ec80540562689db14f74175",
-     "name": "Yinwei Dai"
+     "id": "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2",
+     "name": "Qizhe Cai"
     },
     "window": "all-years"
    },
    "planner": "llm",
-   "question": "Explain the research collaboration of \"Yinwei Dai\"",
+   "question": "Explain the research collaboration of \"Qizhe Cai\"",
    "required_evidence": {
     "any_kind": true,
     "kinds": [
@@ -6144,12 +6229,12 @@
      "metrics"
     ],
     "subjects": [
-     "researcher:dblp:edae4f5d7eaa80d8fc58415c7b7a3b49916ec9644ec80540562689db14f74175"
+     "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2"
     ]
    },
    "required_text": {
     "names": [
-     "Yinwei Dai"
+     "Qizhe Cai"
     ],
     "note": "the explanation names the researcher; stated counts must match expected"
    },
@@ -6162,9 +6247,223 @@
  "source": {
   "files_read_listing_sha256": "98379ee35d535cf358a52fce5b5c4cfd3aade8a200bd7ab362372825d9d315f1",
   "graph_helper_sha256": "b82a9db0158b12dd3088b92e203b93831cbf1e74963eff8da301c1239648e17c",
-  "question_specs_sha256": "665263ccb64e33ff37ef9e0381e25e0ba25cdc91610229935bd27bca4aa8ed54",
+  "question_specs_sha256": "e9b770d2da88f30d088087492a4b57f746f24330992c03e27ff6589c55b1d5df",
   "run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
-  "seed": "q12-v1"
+  "seed": "q12-v1",
+  "validation": {
+   "against": "analytics-report.json",
+   "status": "matched",
+   "windows": {
+    "2010-2014": {
+     "communitiesConnectedMax": {
+      "computed": 15,
+      "report": 15
+     },
+     "communityFinalChangedCount": {
+      "computed": 372,
+      "report": 372
+     },
+     "communityIterations": {
+      "computed": 20,
+      "report": 20
+     },
+     "communityLargest": {
+      "computed": 97,
+      "report": 97
+     },
+     "crossCommunityDegreeMax": {
+      "computed": 30,
+      "report": 30
+     },
+     "crossCommunityWeightMax": {
+      "computed": 42,
+      "report": 42
+     },
+     "largestComponent": {
+      "computed": 2631,
+      "report": 2631
+     },
+     "participationCoefficientMax": {
+      "computed": 0.8826530612244898,
+      "report": 0.8826530612244898
+     }
+    },
+    "2015-2019": {
+     "communitiesConnectedMax": {
+      "computed": 14,
+      "report": 14
+     },
+     "communityFinalChangedCount": {
+      "computed": 430,
+      "report": 430
+     },
+     "communityIterations": {
+      "computed": 20,
+      "report": 20
+     },
+     "communityLargest": {
+      "computed": 45,
+      "report": 45
+     },
+     "crossCommunityDegreeMax": {
+      "computed": 60,
+      "report": 60
+     },
+     "crossCommunityWeightMax": {
+      "computed": 83,
+      "report": 83
+     },
+     "largestComponent": {
+      "computed": 3965,
+      "report": 3965
+     },
+     "participationCoefficientMax": {
+      "computed": 0.8895747599451304,
+      "report": 0.8895747599451304
+     }
+    },
+    "2020-2026": {
+     "communitiesConnectedMax": {
+      "computed": 35,
+      "report": 35
+     },
+     "communityFinalChangedCount": {
+      "computed": 504,
+      "report": 504
+     },
+     "communityIterations": {
+      "computed": 20,
+      "report": 20
+     },
+     "communityLargest": {
+      "computed": 100,
+      "report": 100
+     },
+     "crossCommunityDegreeMax": {
+      "computed": 98,
+      "report": 98
+     },
+     "crossCommunityWeightMax": {
+      "computed": 125,
+      "report": 125
+     },
+     "largestComponent": {
+      "computed": 8431,
+      "report": 8431
+     },
+     "participationCoefficientMax": {
+      "computed": 0.9221157850895461,
+      "report": 0.9221157850895461
+     }
+    },
+    "all-years": {
+     "communitiesConnectedMax": {
+      "computed": 57,
+      "report": 57
+     },
+     "communityFinalChangedCount": {
+      "computed": 1349,
+      "report": 1349
+     },
+     "communityIterations": {
+      "computed": 20,
+      "report": 20
+     },
+     "communityLargest": {
+      "computed": 209,
+      "report": 209
+     },
+     "crossCommunityDegreeMax": {
+      "computed": 166,
+      "report": 166
+     },
+     "crossCommunityWeightMax": {
+      "computed": 225,
+      "report": 225
+     },
+     "largestComponent": {
+      "computed": 17179,
+      "report": 17179
+     },
+     "maximumCoauthorsOnOnePaperMax": {
+      "computed": 15,
+      "report": 15
+     },
+     "participationCoefficientMax": {
+      "computed": 0.94455,
+      "report": 0.94455
+     }
+    },
+    "since-2015": {
+     "communitiesConnectedMax": {
+      "computed": 44,
+      "report": 44
+     },
+     "communityFinalChangedCount": {
+      "computed": 793,
+      "report": 793
+     },
+     "communityIterations": {
+      "computed": 20,
+      "report": 20
+     },
+     "communityLargest": {
+      "computed": 224,
+      "report": 224
+     },
+     "crossCommunityDegreeMax": {
+      "computed": 153,
+      "report": 153
+     },
+     "crossCommunityWeightMax": {
+      "computed": 190,
+      "report": 190
+     },
+     "largestComponent": {
+      "computed": 12583,
+      "report": 12583
+     },
+     "participationCoefficientMax": {
+      "computed": 0.9564090893176009,
+      "report": 0.9564090893176009
+     }
+    },
+    "through-2009": {
+     "communitiesConnectedMax": {
+      "computed": 16,
+      "report": 16
+     },
+     "communityFinalChangedCount": {
+      "computed": 524,
+      "report": 524
+     },
+     "communityIterations": {
+      "computed": 20,
+      "report": 20
+     },
+     "communityLargest": {
+      "computed": 68,
+      "report": 68
+     },
+     "crossCommunityDegreeMax": {
+      "computed": 24,
+      "report": 24
+     },
+     "crossCommunityWeightMax": {
+      "computed": 43,
+      "report": 43
+     },
+     "largestComponent": {
+      "computed": 1830,
+      "report": 1830
+     },
+     "participationCoefficientMax": {
+      "computed": 0.8925619834710744,
+      "report": 0.8925619834710744
+     }
+    }
+   }
+  }
  },
  "tool": "experiments/scripts/q12_answer_key.py"
 }
