@@ -57,6 +57,7 @@ BUCKET = "16b"
 EXPERIMENT_ID = "16b-live-evaluation"
 DEFAULT_QUESTIONS = os.path.join(REPO, "experiments", "inputs", "14c", "questions.txt")
 MANIFEST = os.path.join(REPO, "experiments", "manifests", "16b-live-evaluation.json")
+RECORD_SCHEMA = "scholarchain.eval16b-run-record.v1"   # evalq12.py sets its own
 DEFAULT_KEY_ENV = loadgen.DEFAULT_KEY_ENV
 DEFAULT_URL_ENV = loadgen.DEFAULT_URL_ENV
 IN_PROGRESS = ("QUEUED", "RUNNING", "PENDING")
@@ -244,7 +245,8 @@ def run_command(args, out):
             if row["status"] in (401, 403):
                 outcome, reason = "aborted", "auth-failure"
                 break
-            evaluator.consecutive_failures = 0 if row["outcome"] == "ok" else evaluator.consecutive_failures + 1
+            if not row.get("expected_refusal"):   # (evalq12 only) an expected refusal is neutral: it neither adds to nor resets the failure run
+                evaluator.consecutive_failures = 0 if row["outcome"] == "ok" else evaluator.consecutive_failures + 1
             if evaluator.consecutive_failures >= args.max_consecutive_failures:
                 outcome, reason = "aborted", "repeated-failures"
                 break
@@ -264,7 +266,7 @@ def run_command(args, out):
     cost_report = llm_budget.cost_report(plan["profile"], evaluator.charged)
     loopback = target[1] in loadgen.LOOPBACK
     record = {
-        "schema": "scholarchain.eval16b-run-record.v1", "run_id": run_id, "experiment_id": EXPERIMENT_ID, "outcome": outcome, "outcome_reason": reason,
+        "schema": RECORD_SCHEMA, "run_id": run_id, "experiment_id": EXPERIMENT_ID, "outcome": outcome, "outcome_reason": reason,
         "started_utc": loadgen.stamp(started), "ended_utc": loadgen.stamp(time.time()), "commit": commit, "tree_dirty": dirty,
         "questions": {"file_sha256": plan["questions_sha256"], "planned": plan["planned_answers"], "asked": len(evaluator.rows)},
         "manifest_sha256": loadgen.sha256_file(MANIFEST) if os.path.isfile(MANIFEST) else None,

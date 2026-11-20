@@ -3,8 +3,7 @@
   "by_check_level": {
    "abstain": 6,
    "bounded": 2,
-   "exact": 15,
-   "structural": 3,
+   "exact": 18,
    "values-and-order": 7
   },
   "questions": 33
@@ -2492,46 +2491,82 @@
    "window": null
   },
   {
-   "check_level": "structural",
+   "check_level": "exact",
    "expected": {
-    "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
-    "distinctCoauthorCount": 10,
-    "publicationCount": 3,
-    "researcher": {
-     "id": "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7",
-     "name": "Vo Quoc Bao Bui"
+    "a": {
+     "id": "researcher:dblp:3f9dbd90194e32a07ff9d000bea4ac07f487bba89e904195c663024d3b99478c",
+     "name": "Varsha Dani"
     },
-    "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
+    "b": {
+     "id": "researcher:dblp:93498d48afbce9bc5c5211558187ab6390f9dc5d3e81bf63357c773df4282ace",
+     "name": "Jared Saia"
+    },
+    "edge_id": "spark-coauthor-edge:8637eb816a0ed4539b0105bcdc9c235e80f5796b02c85ab93e4b355acc09cf90",
+    "hops": 1,
+    "joint_publications": 3,
+    "joint_work_ids": [
+     "work:doi:10.1145/1993806.1993833",
+     "work:doi:10.1145/2332432.2332473",
+     "work:doi:10.1145/3293611.3331571"
+    ],
+    "joint_work_titles": [
+     "Scalable rational secret sharing.",
+     "Brief announcement: breaking the O(nm) bit barrier, secure multiparty computation with a static adversary.",
+     "Multiparty Interactive Communication with Private Channels."
+    ],
+    "rule": "the cited edge evidence names both researchers in the window, jointPublicationCount equals joint_publications and its workIds are exactly joint_work_ids; the cited path has hopCount 1",
+    "status": "Found",
     "window": "all-years"
    },
    "expected_outcome": "answer",
    "id": "q11",
    "params": {
-    "researcher": {
-     "id": "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7",
-     "name": "Vo Quoc Bao Bui"
+    "a": {
+     "id": "researcher:dblp:3f9dbd90194e32a07ff9d000bea4ac07f487bba89e904195c663024d3b99478c",
+     "name": "Varsha Dani"
     },
+    "b": {
+     "id": "researcher:dblp:93498d48afbce9bc5c5211558187ab6390f9dc5d3e81bf63357c773df4282ace",
+     "name": "Jared Saia"
+    },
+    "expected_hops": 1,
+    "joint_publications": 3,
+    "joint_work_ids": [
+     "work:doi:10.1145/1993806.1993833",
+     "work:doi:10.1145/2332432.2332473",
+     "work:doi:10.1145/3293611.3331571"
+    ],
     "window": "all-years"
    },
-   "planner": "llm",
-   "question": "Explain the research collaboration of \"Vo Quoc Bao Bui\"",
+   "planner": "fallback",
+   "question": "What is the shortest path between \"Varsha Dani\" and \"Jared Saia\"?",
    "required_evidence": {
     "any_kind": true,
     "kinds": [
-     "semantic",
-     "metrics"
+     "edge",
+     "path"
     ],
     "subjects": [
-     "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7"
+     "researcher:dblp:3f9dbd90194e32a07ff9d000bea4ac07f487bba89e904195c663024d3b99478c",
+     "researcher:dblp:93498d48afbce9bc5c5211558187ab6390f9dc5d3e81bf63357c773df4282ace"
     ]
    },
    "required_text": {
+    "count_words": 3,
     "names": [
-     "Vo Quoc Bao Bui"
+     "Varsha Dani",
+     "Jared Saia"
     ],
-    "note": "the explanation names the researcher; stated counts must match expected"
+    "note": "the answer names both researchers and states the number of joint works (digit or word)",
+    "numbers": [
+     [
+      [
+       3
+      ]
+     ]
+    ]
    },
-   "slot": "evidence-1",
+   "slot": "evidence-all-years",
    "type": "evidence",
    "window": "all-years"
   },
@@ -4330,48 +4365,81 @@
    "window": null
   },
   {
-   "check_level": "structural",
+   "check_level": "exact",
    "expected": {
-    "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
-    "distinctCoauthorCount": 15,
-    "publicationCount": 4,
-    "researcher": {
-     "id": "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978",
-     "name": "Aleksey Pesterev"
+    "a": {
+     "id": "researcher:dblp:1511061140ed3a7ce59bfb699f99ed748db3123ec7985ee50551651d89a69bcc",
+     "name": "Markus Horst Becker"
     },
-    "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
-    "window": "all-years"
+    "b": {
+     "id": "researcher:dblp:7d36f272a45601c47e9a96389f3e22fcf2d039920165166988cbf118b171b8dc",
+     "name": "Leander Jehl"
+    },
+    "edge_id": "spark-coauthor-edge:cdc313fe85c289a94970e05946932a61b168c22298d739fcd15ef95cb3813d71",
+    "hops": 1,
+    "joint_publications": 2,
+    "joint_work_ids": [
+     "work:doi:10.1145/3528535.3531516",
+     "work:doi:10.1145/3528535.3565243"
+    ],
+    "joint_work_titles": [
+     "SplitBFT: Improving Byzantine Fault Tolerance Safety Using Trusted Compartments.",
+     "EventChain: a blockchain framework for secure, privacy-preserving event verification."
+    ],
+    "rule": "the cited edge evidence names both researchers in the window, jointPublicationCount equals joint_publications and its workIds are exactly joint_work_ids; the cited path has hopCount 1",
+    "status": "Found",
+    "window": "since-2015"
    },
    "expected_outcome": "answer",
    "id": "q22",
    "params": {
-    "researcher": {
-     "id": "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978",
-     "name": "Aleksey Pesterev"
+    "a": {
+     "id": "researcher:dblp:1511061140ed3a7ce59bfb699f99ed748db3123ec7985ee50551651d89a69bcc",
+     "name": "Markus Horst Becker"
     },
-    "window": "all-years"
+    "b": {
+     "id": "researcher:dblp:7d36f272a45601c47e9a96389f3e22fcf2d039920165166988cbf118b171b8dc",
+     "name": "Leander Jehl"
+    },
+    "expected_hops": 1,
+    "joint_publications": 2,
+    "joint_work_ids": [
+     "work:doi:10.1145/3528535.3531516",
+     "work:doi:10.1145/3528535.3565243"
+    ],
+    "window": "since-2015"
    },
-   "planner": "llm",
-   "question": "Explain the research collaboration of \"Aleksey Pesterev\"",
+   "planner": "fallback",
+   "question": "What is the shortest path between \"Markus Horst Becker\" and \"Leander Jehl\" since 2015?",
    "required_evidence": {
     "any_kind": true,
     "kinds": [
-     "semantic",
-     "metrics"
+     "edge",
+     "path"
     ],
     "subjects": [
-     "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978"
+     "researcher:dblp:1511061140ed3a7ce59bfb699f99ed748db3123ec7985ee50551651d89a69bcc",
+     "researcher:dblp:7d36f272a45601c47e9a96389f3e22fcf2d039920165166988cbf118b171b8dc"
     ]
    },
    "required_text": {
+    "count_words": 2,
     "names": [
-     "Aleksey Pesterev"
+     "Markus Horst Becker",
+     "Leander Jehl"
     ],
-    "note": "the explanation names the researcher; stated counts must match expected"
+    "note": "the answer names both researchers and states the number of joint works (digit or word)",
+    "numbers": [
+     [
+      [
+       2
+      ]
+     ]
+    ]
    },
-   "slot": "evidence-2",
+   "slot": "evidence-since-2015",
    "type": "evidence",
-   "window": "all-years"
+   "window": "since-2015"
   },
   {
    "check_level": "values-and-order",
@@ -6199,55 +6267,88 @@
    "window": null
   },
   {
-   "check_level": "structural",
+   "check_level": "exact",
    "expected": {
-    "componentId": "component:afdc9df1674093e8e31537e945c13b37fcfb78e0613a3f1facfccbe5a00c3eaa",
-    "distinctCoauthorCount": 19,
-    "publicationCount": 4,
-    "researcher": {
-     "id": "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2",
-     "name": "Qizhe Cai"
+    "a": {
+     "id": "researcher:dblp:052d321a51a8bb7da1254ba88ad4b3cc765c8b51ae79fd395b69f6a70e414fc3",
+     "name": "Aaron Schild"
     },
-    "rule": "the explanation is backed by evidence items that resolve through /v1/evidence/{id} and name the researcher; any distinct-coauthor, publication-count or component value it states equals the values here",
-    "window": "all-years"
+    "b": {
+     "id": "researcher:dblp:1835ab8ffcdb2b4d1999393c2511ba32b0b0310672c415a171e21e13d8393c75",
+     "name": "Ken-ichi Kawarabayashi"
+    },
+    "edge_id": "spark-coauthor-edge:90dc3fbbd12292e55183c92c67b6f407fd232f096a391f161ea88b352a1e6274",
+    "hops": 1,
+    "joint_publications": 2,
+    "joint_work_ids": [
+     "work:doi:10.1145/3382734.3405728",
+     "work:doi:10.4230/lipics.disc.2020.35"
+    ],
+    "joint_work_titles": [
+     "Brief Announcement: Improved Distributed Approximations for Maximum-Weight Independent Set.",
+     "Improved Distributed Approximations for Maximum Independent Set."
+    ],
+    "rule": "the cited edge evidence names both researchers in the window, jointPublicationCount equals joint_publications and its workIds are exactly joint_work_ids; the cited path has hopCount 1",
+    "status": "Found",
+    "window": "2020-2026"
    },
    "expected_outcome": "answer",
    "id": "q33",
    "params": {
-    "researcher": {
-     "id": "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2",
-     "name": "Qizhe Cai"
+    "a": {
+     "id": "researcher:dblp:052d321a51a8bb7da1254ba88ad4b3cc765c8b51ae79fd395b69f6a70e414fc3",
+     "name": "Aaron Schild"
     },
-    "window": "all-years"
+    "b": {
+     "id": "researcher:dblp:1835ab8ffcdb2b4d1999393c2511ba32b0b0310672c415a171e21e13d8393c75",
+     "name": "Ken-ichi Kawarabayashi"
+    },
+    "expected_hops": 1,
+    "joint_publications": 2,
+    "joint_work_ids": [
+     "work:doi:10.1145/3382734.3405728",
+     "work:doi:10.4230/lipics.disc.2020.35"
+    ],
+    "window": "2020-2026"
    },
-   "planner": "llm",
-   "question": "Explain the research collaboration of \"Qizhe Cai\"",
+   "planner": "fallback",
+   "question": "What is the shortest path between \"Aaron Schild\" and \"Ken-ichi Kawarabayashi\" in window 2020-2026?",
    "required_evidence": {
     "any_kind": true,
     "kinds": [
-     "semantic",
-     "metrics"
+     "edge",
+     "path"
     ],
     "subjects": [
-     "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2"
+     "researcher:dblp:052d321a51a8bb7da1254ba88ad4b3cc765c8b51ae79fd395b69f6a70e414fc3",
+     "researcher:dblp:1835ab8ffcdb2b4d1999393c2511ba32b0b0310672c415a171e21e13d8393c75"
     ]
    },
    "required_text": {
+    "count_words": 2,
     "names": [
-     "Qizhe Cai"
+     "Aaron Schild",
+     "Ken-ichi Kawarabayashi"
     ],
-    "note": "the explanation names the researcher; stated counts must match expected"
+    "note": "the answer names both researchers and states the number of joint works (digit or word)",
+    "numbers": [
+     [
+      [
+       2
+      ]
+     ]
+    ]
    },
-   "slot": "evidence-3",
+   "slot": "evidence-2020-2026",
    "type": "evidence",
-   "window": "all-years"
+   "window": "2020-2026"
   }
  ],
  "schema": "scholarchain.q12-answer-key.v1",
  "source": {
   "files_read_listing_sha256": "98379ee35d535cf358a52fce5b5c4cfd3aade8a200bd7ab362372825d9d315f1",
-  "graph_helper_sha256": "b82a9db0158b12dd3088b92e203b93831cbf1e74963eff8da301c1239648e17c",
-  "question_specs_sha256": "e9b770d2da88f30d088087492a4b57f746f24330992c03e27ff6589c55b1d5df",
+  "graph_helper_sha256": "949188823000f399ac33bfb4c9fa4ed9ed52c3e31308055200786696eede4631",
+  "question_specs_sha256": "b044ae4cbe814859fd1e53c14de2be688c2457ce34ceddf8f26f68f4ce6a7270",
   "run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
   "seed": "q12-v1",
   "validation": {

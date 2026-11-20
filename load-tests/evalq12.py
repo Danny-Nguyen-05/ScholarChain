@@ -9,8 +9,8 @@ raw-result sealing); it differs only in what it asks and records:
               answer's claims or by the explain body (at most 60 ids per question; GET requests, no model call, no ledger charge) and
               keeps the raw responses in answers.jsonl: qid, status, answer, explain {status, body}, evidence {id: {status, item}}.
 Cost: 33 answers x USD 0.001365 = USD 0.045045 (estimate, not metered) from bucket 16b. Bucket 16b is a hard stop: it must hold 33 answers
-(after the human-approved transfer APPROVED_LLM_TRANSFER=15b->16b:33 applied through load-tests/llm_budget.py transfer; this program never
-creates or applies an approval). Do NOT also run `llm_budget.py reserve --bucket 16b` for it: the run charges the ledger itself.
+(after the human-approved transfer APPROVED_LLM_TRANSFER=15b->16b:36 applied through load-tests/llm_budget.py transfer: 33 for the run, 1 for the
+--only q04 probe that is run first, 2 spare; 15b keeps 24; this program never creates or applies an approval). Do NOT also run `llm_budget.py reserve --bucket 16b` for it: the run charges the ledger itself.
 
   python3 -I load-tests/evalq12.py plan                       # no network; questions, bucket state, estimated cost
   python3 -I load-tests/evalq12.py run --only q04 --run-id <id>   # a one-question probe first (one ledger answer), then the full run
@@ -22,8 +22,11 @@ Differences from eval16b.py:
     experiments/inputs/q12/include-ids.txt (--include-ids-file overrides; skipped only for a custom --questions-file without one); a missing node
     refuses the run with exit 3 and nothing charged;
   * --only q04[,q15...] asks just those questions of the pinned file (ids q01..q33), charging one answer each: a bounded probe;
-  * an expected refusal (HTTP 422 with the closed error code UNSUPPORTED_QUERY on a topic or institution question, which the key expects) is not
-    counted toward the consecutive-failure stop; its row keeps status 422, raw_outcome client_error and expected_refusal true;
+  * an expected refusal (HTTP 422 with the closed error code UNSUPPORTED_QUERY on a topic or institution question, which the key expects) is
+    neutral for the consecutive-failure stop (it neither adds to nor resets the run of failures); its row keeps status 422, has outcome
+    expected_refusal (counted under that name in run-record.json outcomes), raw_outcome client_error and expected_refusal true;
+  * the run record has its own schema name, scholarchain.evalq12-run-record.v1;
+  * the committed inputs must agree: question-specs.json must be the file the answer key was computed from (sha256) and list the questions file, else exit 3;
   * a 4xx answer row records only the closed error code of the body (^[A-Z_]{1,40}$), never other body text;
   * evidence ids beyond the 60-per-question cap are listed in evidence_skipped_ids and an item over 64 KiB is flagged oversize, so the scorer can
     tell "not fetched / too large" from "does not resolve".
@@ -59,8 +62,10 @@ MAX_ITEM_BYTES = 65536
 MAX_EXPLAIN_BYTES = 262144
 DEFAULT_INCLUDE_IDS = os.path.join(REPO, "experiments", "inputs", "q12", "include-ids.txt")
 SPECS = os.path.join(REPO, "experiments", "inputs", "q12", "question-specs.json")
-ERROR_CODE = re.compile(r"^[A-Z_]{1,40}$")
-QID = re.compile(r"^q[0-9]{2}$")
+ERROR_CODE = re.compile(r"[A-Z_]{1,40}")   # used with fullmatch: "$" would accept a trailing newline
+QID = re.compile(r"q[0-9]{2}")
+KEY = os.path.join(REPO, "experiments", "inputs", "q12", "answer-key.json")
+RECORD_SCHEMA = "scholarchain.evalq12-run-record.v1"
 ABSTAIN_TYPES = ("topic", "institution")
 
 
@@ -120,10 +125,10 @@ class Q12Evaluator(ev.Evaluator):
         if 400 <= status < 500:
             err = ev.read_json_body(data)
             code = err.get("error") if isinstance(err, dict) else None
-            row["error_code"] = code if isinstance(code, str) and ERROR_CODE.match(code) else None
+            row["error_code"] = code if isinstance(code, str) and ERROR_CODE.fullmatch(code) else None
             if status == 422 and row["error_code"] == "UNSUPPORTED_QUERY" and question in abstain_questions():
-                # the key expects this refusal: it must not count toward the consecutive-failure stop of the run loop
-                row["raw_outcome"], row["outcome"], row["expected_refusal"] = row["outcome"], "ok", True
+                # the key expects this refusal: the run loop treats it as neutral (neither a failure nor a success)
+                row["raw_outcome"], row["outcome"], row["expected_refusal"] = row["outcome"], "expected_refusal", True
         parsed = ev.read_json_body(data) if 200 <= status < 300 else None
         if isinstance(parsed, dict):
             for key, field in (("queryId", "query_id"), ("jobId", "job_id")):
@@ -179,6 +184,32 @@ def check_pinned_questions(path):
                       "re-derive the inputs and the answer key together and update the manifest")
 
 
+def check_inputs_consistent():
+    """question-specs.json (used to know which questions expect an abstention) must be the file the answer key was computed from and must list
+    the questions file; otherwise the abstain detection could silently differ from the key."""
+    with open(KEY, encoding="utf-8") as handle:
+        pinned = json.load(handle)["source"]["question_specs_sha256"]
+    if loadgen.sha256_file(SPECS) != pinned:
+        raise Refused("experiments/inputs/q12/question-specs.json differs from the question_specs_sha256 of answer-key.json; re-derive the inputs and the key together")
+    with open(SPECS, encoding="utf-8") as handle:
+        listed = [q["question"] for q in json.load(handle)["questions"]]
+    if listed != read_questions(DEFAULT_QUESTIONS):
+        raise Refused("experiments/inputs/q12/question-specs.json does not list the questions of questions.txt in order")
+
+
+def strip_questions_file(argv):
+    """argv without --questions-file (both spellings) and its value."""
+    out, skip = [], False
+    for a in argv:
+        if skip:
+            skip = False
+        elif a == "--questions-file":
+            skip = True
+        elif not a.startswith("--questions-file="):
+            out.append(a)
+    return out
+
+
 def questions_path(argv):
     for i, arg in enumerate(argv):
         if arg == "--questions-file" and i + 1 < len(argv):
@@ -198,18 +229,30 @@ def preflight(args, include_ids, out):
     target = loadgen.parse_base_url(args.base_url or os.environ.get(args.base_url_env, ""))
     key = loadgen.read_key(args.api_key_env)
     client = loadgen.HttpClient(target[0], target[1], target[2], 10)
-    missing = []
+    absent, auth, transport = [], [], []
     try:
         for node in include_ids:
             error, status, _n, _echo, _data = client.request("GET", "/v1/graph/nodes/" + urllib.parse.quote(node, safe=""), {
                 "User-Agent": "scholarchain-evalq12/1", "Accept": "application/json", "Authorization": "Bearer " + key}, None, 10)
-            if status != 200:
-                missing.append((node, status or error or "no-response"))
+            if status == 200:
+                continue
+            if status in (401, 403):
+                auth.append((node, status))
+            elif status == 0:
+                transport.append((node, error or "no-response"))
+            else:
+                absent.append((node, status))
     finally:
         client.close()
-    if missing:
+    if auth:
+        raise Refused("PREFLIGHT: the service refused the API key (HTTP %s on %d of %d requests); this says nothing about the artifact: check the key in "
+                      "the environment variable; nothing was charged" % (auth[0][1], len(auth), len(include_ids)))
+    if transport:
+        raise Refused("PREFLIGHT: transport error (%s) on %d of %d requests; the service is not reachable or not ready, this says nothing about the artifact; "
+                      "nothing was charged" % (transport[0][1], len(transport), len(include_ids)))
+    if absent:
         raise Refused("PREFLIGHT: the running artifact lacks %d of %d include IDs (first: %s status %s); load experiments/inputs/q12/include-ids.txt "
-                      "into the runtime artifact first; nothing was charged" % (len(missing), len(include_ids), missing[0][0][-16:], missing[0][1]))
+                      "into the runtime artifact first; nothing was charged" % (len(absent), len(include_ids), absent[0][0][-16:], absent[0][1]))
     out.write("PREFLIGHT: %d of %d include IDs are present in the running artifact (GET /v1/graph/nodes, no model call)\n" % (len(include_ids), len(include_ids)))
 
 
@@ -219,6 +262,7 @@ def main(argv, out=None):
     ev.DEFAULT_QUESTIONS = DEFAULT_QUESTIONS
     ev.MANIFEST = MANIFEST
     ev.Evaluator = Q12Evaluator
+    ev.RECORD_SCHEMA = RECORD_SCHEMA
     pre = argparse.ArgumentParser(add_help=False)
     pre.add_argument("--only")
     pre.add_argument("--include-ids-file")
@@ -227,18 +271,20 @@ def main(argv, out=None):
     try:
         path = questions_path(rest)
         check_pinned_questions(path)
+        if os.path.abspath(path) == os.path.abspath(DEFAULT_QUESTIONS):
+            check_inputs_consistent()
         if known.only:
             if os.path.abspath(path) != os.path.abspath(DEFAULT_QUESTIONS):
-                raise Refused("--only selects from the pinned question file and cannot be combined with --questions-file")
+                raise Refused("--only selects from the pinned question file and cannot be combined with another --questions-file")
             wanted = known.only.split(",")
             lines = read_questions(DEFAULT_QUESTIONS)
-            if not wanted or any(not QID.match(w) or not 1 <= int(w[1:]) <= len(lines) for w in wanted) or len(set(wanted)) != len(wanted):
+            if not wanted or any(not QID.fullmatch(w) or not 1 <= int(w[1:]) <= len(lines) for w in wanted) or len(set(wanted)) != len(wanted):
                 raise Refused("--only takes distinct question ids q01..q%02d, comma separated" % len(lines))
             scratch = tempfile.mkdtemp(prefix="q12-only-")
             only_file = os.path.join(scratch, "questions.txt")
             with open(only_file, "w", encoding="utf-8", newline="\n") as handle:
                 handle.write("".join(lines[int(w[1:]) - 1] + "\n" for w in wanted))
-            rest = [a for a in rest if not a.startswith("--questions-file")] + ["--questions-file", only_file]
+            rest = strip_questions_file(rest) + ["--questions-file", only_file]
         if rest[:1] == ["run"]:
             args = ev.build_parser().parse_args(rest)
             target = loadgen.parse_base_url(args.base_url or os.environ.get(args.base_url_env, ""))

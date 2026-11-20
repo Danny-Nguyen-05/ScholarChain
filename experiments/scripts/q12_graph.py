@@ -99,6 +99,7 @@ class Export:
         self.affiliated = {}     # researcher id -> set of institution ids
         self.edges = {w: {} for w in WINDOWS}      # window -> {(a, b): jointPublicationCount}
         self.edge_ids = {w: {} for w in WINDOWS}   # window -> {(a, b): edge id}
+        self.edge_works = {w: {} for w in WINDOWS}  # window -> {(a, b): representative work ids (at most 5; all joint works when joint <= 5)}
         csv.field_size_limit(2 ** 31 - 1)
         by_label = {"RESEARCHER": self.researchers, "WORK": self.works, "TOPIC": self.topics,
                     "INSTITUTION": self.institutions, "VENUE": self.venues}
@@ -132,6 +133,11 @@ class Export:
                 if joint >= self.edges[window].get((a, b), 0):
                     self.edges[window][(a, b)] = joint
                     self.edge_ids[window][(a, b)] = row["evidenceEdgeId:String"] or row[":ID"]
+                    try:
+                        works = json.loads(row.get("representativeWorkIdsJson:String") or "[]")
+                    except ValueError:
+                        works = []
+                    self.edge_works[window][(a, b)] = tuple(sorted(w for w in works if isinstance(w, str)))
         if not self.researchers or not self.edges["all-years"]:
             raise Refused("the export holds no researcher nodes or no all-years coauthor edges")
         self.files_read.sort()
