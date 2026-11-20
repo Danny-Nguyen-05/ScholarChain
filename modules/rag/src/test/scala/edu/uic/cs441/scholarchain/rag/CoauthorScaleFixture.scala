@@ -12,7 +12,11 @@ import edu.uic.cs441.scholarchain.storage.fakes.InMemoryRuntimeArtifactStore
   */
 private[rag] final class CoauthorScaleFixture(
     val coauthors: Int,
-    hubJoint: Int => Int = i => 1 + (i + 1) % 4
+    hubJoint: Int => Int = i => 1 + (i + 1) % 4,
+    /** When set, the stored metric of the hub reports this distinct-coauthor count instead of the
+      * number of its edge rows: the graph and the metrics then disagree.
+      */
+    hubMetricDistinct: Option[Int] = None
 ) {
   val run = "run:66666666-6666-4666-8666-666666666666"
   private val upstream = "run:33333333-3333-4333-8333-333333333333"
@@ -115,7 +119,7 @@ private[rag] final class CoauthorScaleFixture(
       who,
       policy,
       total,
-      mine.size.toLong,
+      (if (who == hub) hubMetricDistinct else None).getOrElse(mine.size).toLong,
       total,
       1.0,
       1L,
@@ -181,18 +185,31 @@ private[rag] final class CoauthorScaleFixture(
     )
   )
 
-  /** Production-sized resolved identity: 5 source IDs and 21 evidence references. */
+  /** Production-sized resolved identity: 5 source IDs and 23 evidence references (the Session 1 16B
+    * path candidates had 5 source IDs and 16 to 23 references).
+    */
   def candidate(who: String, name: String): ResearcherCandidate = ResearcherCandidate(
     who,
     name,
-    (1 to 5).toVector.map(k => s"mention:dblp:conf/scale/${name.replace(' ', '_')}$k#$k"),
+    (1 to 5).toVector.map(k =>
+      s"mention:dblp:conf/scale/${name.replace(' ', '_')}ConferencePaper$k#$k"
+    ),
     Vector.empty,
     None,
     Vector.empty,
     Vector("edges/type=resolves_to", "nodes/type=researcher") ++
-      (1 to 19).toVector.map(k => "graph-edge:" + StableIds.sha256Hex(s"$who|$k")),
+      (1 to 21).toVector.map(k => "graph-edge:" + StableIds.sha256Hex(s"$who|$k")),
     Vector(run)
   )
+
+  /** A candidate at the resolver bound (16 source IDs) whose stored provenance was truncated: the
+    * summary reports more IDs and references than the retained lists.
+    */
+  def truncatedCandidate(who: String, name: String): ResearcherCandidate =
+    candidate(who, name).copy(
+      sourceIds = (1 to 16).toVector.map(k => s"mention:dblp:conf/scale/Truncated$k#$k"),
+      provenanceSummary = Some(ResearcherCandidateProvenanceSummary(40, 60, 0, 1, true))
+    )
   def candidates(names: String*): Vector[ResearcherCandidate] =
     names.toVector.map(n => candidate(id(n), n))
 

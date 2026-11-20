@@ -434,7 +434,14 @@ and all 10 path questions with `essential-evidence-context-budget`. Cause: the e
 charges the rendered model context, including both resolved candidates' full `sourceIds` and
 `evidenceRefs` (about 2 KB each) and every per-work edge row, against `contextTokenBudget = 4096`
 (`EvidenceBuilderAgent.fits`). Five of the ten path pairs exceeded 4096 on the two identities alone
-(4109 to 4958 bytes); a 22-coauthor page needs about 17 KB. The fix is all in this module:
+(4109 to 4958 bytes). That figure was measured from the Session 1 16B record
+`target/experiment-runs/16b-live-evaluation-16b-1/raw/answers.jsonl` (not tracked): for each path
+answer, the compact JSON of the two candidates' `researcherId`, `displayName`, `sourceIds`,
+`evidenceRefs`, run index and confidence, as the pre-fix `EvidenceContext.render` emitted them.
+`CoauthorScaleSpec` ("P4 reproduction" and "full identity JSON of two production-sized candidates")
+reproduces the shape from the fixture, whose candidates have Session 1 sizes (5 source ids, 23
+references; the 16B path candidates had 16 to 23). A 22-coauthor all-years page measured about 17 KB of rendered context on the fixture before the
+compact model view. The fix is all in this module:
 `EvidenceContext.render` omits identity provenance lists and per-work edge fields from the model view
 (the persisted bundle and audit keep everything); `ContextBudget` gives `DirectCoauthors` and
 `ShortestPath` plans eight times the configured context budget (at most one third of `requestBytes`),
@@ -444,14 +451,19 @@ configured values, and an explicitly tiny configured value still abstains. When 
 scaffold does not fit, edge claims drop their per-work fields before any claim is dropped. The
 direct-coauthors item now carries `distinctCoauthorCount` from the stored window metric next to
 `returnedCount` and `truncated`, so a page cut at `graphLimit` is a verified "showing N of M"
-claim. `CoauthorScaleSpec` covers 22 and 35 coauthors in two windows, the two-candidate path
+claim; the stage fails with `coauthor-count-mismatch` when the stored total and the page disagree
+(a page larger than the total, or an untruncated page that is not the total). In fused mode the
+scaled room is for deterministic rows only: descriptive text may add at most the configured base
+budget beyond the deterministic evidence. `CoauthorScaleSpec` covers 22 and 35 coauthors in two windows, the two-candidate path
 reproduction, and the abstention paths. A path whose endpoint has no stored metric still abstains
 with `required-evidence-missing` (not the Session 1 cause).
 
 Synthesis uses the versioned `synthesis-v2` prompt and `scholarchain.runtime.synthesis.v2` schema,
-with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage
-allows at most one malformed-output retry inside its total configured deadline. Tests and the CLI
-use scripted clients; no Bedrock request is made. Model output supplies only typed proposals and
+with forced `submit_answer` tool use through the configured `LlmClient`. The live route is the
+Anthropic Messages API (`AnthropicMessagesLlmClient`, see "Anthropic path" below); the Bedrock
+Converse adapter is retained but is not the live route. The stage allows at most one
+malformed-output retry inside its total configured deadline. Tests and the CLI use scripted
+clients; no live model request is made. Model output supplies only typed proposals and
 narrative claim IDs. Factual prose and model uncertainty text are never trusted as answer facts.
 The deterministic verifier checks allowlisted claim fields and templates against evidence IDs,
 subjects, windows and exact stored values. It rejects missing evidence, wrong values, fabricated

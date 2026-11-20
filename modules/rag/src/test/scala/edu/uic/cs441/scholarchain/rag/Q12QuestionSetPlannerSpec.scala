@@ -252,4 +252,18 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
         .isInstanceOf[PlannerResult.Planned]
     )
   }
+
+  test("the explain-the-topic fallback refuses extra filters instead of dropping them") {
+    Vector(
+      "Explain the topic \"Cognitive Computing and Networks\" venue \"OSDI\"",
+      "Explain the topic \"Cognitive Computing and Networks\" institution \"UIC\"",
+      "Explain the topic \"Cognitive Computing and Networks\" topic \"Language and cultural evolution\""
+    ).zipWithIndex.foreach { (q, i) =>
+      assert(
+        planFallback(Spec("neg-" + i, q, "fallback", "evidence", ujson.Obj())) ==
+          PlannerResult.Unsupported("fallback-unrecognized-or-unrepresentable-constraint", 1),
+        q
+      )
+    }
+  }
 }

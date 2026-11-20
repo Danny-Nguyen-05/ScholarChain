@@ -21,9 +21,11 @@ object ContextBudget {
 
   /** Persisted-bundle bound. Each edge row is immutable evidence with one source reference per
     * joint work, about 3 to 4 KB, so a page of 22 coauthors is about 80 KB against the 64 KiB
-    * configured bound. List operations get [[PersistedBundleFactor]] times the configured bound;
-    * the bundle store keeps a larger bundle as an object, and a configured value that is tiny stays
-    * tiny.
+    * configured bound. List operations get [[PersistedBundleFactor]] times the configured bound,
+    * 262,144 bytes with the current configuration. That equals the storage default
+    * `StorageConfig.maxInlineEvidenceBytes` (256 KiB, StoragePorts.scala), so a bundle at this
+    * bound is still stored inline; the bound must stay at or below that value or bundles would move
+    * to object storage. A configured value that is tiny stays tiny.
     */
   def persistedBundleBytes(plan: QueryPlan, config: RuntimeConfig): Int = {
     val base = config.effectiveByteLimits.persistedBundleBytes

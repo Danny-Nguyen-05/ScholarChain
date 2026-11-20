@@ -71,8 +71,18 @@ final class EvidenceBuilderAgent(store: EvidenceBundleStore, config: RuntimeConf
         if (retained == 0)
           return EvidenceBuildResult.Missing("essential-ranking-evidence-context-budget")
       }
+      // The scaled list-operation budget is room for deterministic rows only: descriptive (semantic)
+      // text may add at most the configured base budget beyond the deterministic evidence. For every
+      // other operation the budget equals the base, so this cap never binds below it.
+      val semanticCap = math.min(
+        budget.toLong,
+        EvidenceContext.tokenUpperBound(selected, input.candidates).toLong +
+          config.retrieval.contextTokenBudget
+      )
+      def fitsSemantic(items: Vector[EvidenceItem]): Boolean =
+        fits(items) && EvidenceContext.tokenUpperBound(items, input.candidates) <= semanticCap
       for (item <- semantic) {
-        if (fits(selected :+ item))
+        if (fitsSemantic(selected :+ item))
           selected :+= item
         else {
           // Truncate Unicode code points, then rebind the changed immutable payload.
@@ -84,7 +94,7 @@ final class EvidenceBuilderAgent(store: EvidenceBundleStore, config: RuntimeConf
               .bind(item.copy(text = Some(new String(points, 0, middle))))
               .toOption
               .get
-            if (fits(selected :+ next)) {
+            if (fitsSemantic(selected :+ next)) {
               if (middle > 0) best = Some(next)
               low = middle + 1
             } else high = middle - 1

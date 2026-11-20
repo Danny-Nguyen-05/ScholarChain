@@ -110,7 +110,7 @@ class CoauthorScaleSpec extends AnyFunSuite {
     v.answer.claims.flatMap(_.runtime.toVector.flatMap(_.values)).find(_.field == field)
 
   test("P4 reproduction: a one-hop path with 18 joint works and production-sized identities") {
-    // Session 1 shape (Hugues Fauconnier / Carole Delporte-Gallet): 21-ref identities, 18 joint works.
+    // Session 1 shape (Hugues Fauconnier / Carole Delporte-Gallet): 23-ref identities, 18 joint works.
     val fx = new CoauthorScaleFixture(3, i => if (i == 0) 18 else 1)
     val cfg = cfgWith(25)
     val plan = fx.plan(QueryOperation.ShortestPath, "all-years", 25, fx.hubName, fx.coauthorName(1))
@@ -156,7 +156,136 @@ class CoauthorScaleSpec extends AnyFunSuite {
     assert(identity("displayName").str == fx.hubName)
     assert(!identity.obj.contains("sourceIds") && !identity.obj.contains("evidenceRefs"))
     val kept = bundle.runtime.get.resolvedCandidates.head
-    assert(kept.sourceIds.size == 5 && kept.evidenceRefs.size == 21)
+    assert(kept.sourceIds.size == 5 && kept.evidenceRefs.size == 23)
+  }
+
+  test("the full identity JSON of two production-sized candidates exceeds the pre-fix budget") {
+    // The pre-fix render emitted these fields for every candidate; two Session 1 sized identities
+    // (5 source ids, 23 references) alone are larger than contextTokenBudget = 4096.
+    val fx = new CoauthorScaleFixture(3)
+    val full = ujson.Arr.from(fx.candidates(fx.hubName, fx.coauthorName(1)).map { c =>
+      ujson.Obj(
+        "researcherId" -> c.researcherId,
+        "displayName" -> c.displayName,
+        "sourceIds" -> ujson.Arr.from(c.sourceIds),
+        "evidenceRefs" -> ujson.Arr.from(c.evidenceRefs),
+        "runs" -> ujson.Arr(0),
+        "confidence" -> ujson.Null
+      )
+    })
+    assert(full.render().getBytes(UTF_8).length > 4096)
+  }
+
+  test("a truncated provenance summary stays in the model view; the provenance lists do not") {
+    val fx = new CoauthorScaleFixture(3)
+    val cfg = cfgWith(25)
+    val plan = fx.plan(QueryOperation.DirectCoauthors, "all-years", 25, fx.hubName)
+    val input = RetrievalInput(plan, Vector(fx.truncatedCandidate(fx.hub, fx.hubName)))
+    val result = new PathFinderAgent(fx.graph(), fx.metricStore(), fx.artifacts(), cfg).run(input)
+    val bundle = bundleOf(build(input, result, cfg))
+    val identity = ujson
+      .read(
+        EvidenceContext
+          .render(bundle)
+          .stripPrefix("<untrusted_evidence_json>\n")
+          .stripSuffix("\n</untrusted_evidence_json>")
+      )("identities")
+      .arr
+      .head
+    assert(!identity.obj.contains("sourceIds") && !identity.obj.contains("evidenceRefs"))
+    assert(identity("provenanceSummary")("truncated").bool)
+    assert(identity("provenanceSummary")("sourceIdCount").num == 40)
+    val kept = bundle.runtime.get.resolvedCandidates.head
+    assert(kept.sourceIds.size == 16 && kept.provenanceSummary.exists(_.truncated))
+  }
+
+  test("a stored total that disagrees with the returned page fails the stage") {
+    // (rows in the graph, metric distinct count, page limit): the page exceeds the total, an
+    // untruncated page differs from the total, and a truncated page exceeds the total.
+    for ((rows, metric, limit) <- Seq((25, 22, 40), (25, 30, 40), (35, 20, 25))) {
+      val fx = new CoauthorScaleFixture(rows, hubMetricDistinct = Some(metric))
+      val cfg = cfgWith(limit)
+      val plan = fx.plan(QueryOperation.DirectCoauthors, "all-years", limit, fx.hubName)
+      val (_, result) = retrieve(fx, plan, Seq(fx.hubName), cfg)
+      assert(
+        result == RetrievalResult.Failed("path", "coauthor-count-mismatch"),
+        s"rows=$rows metric=$metric limit=$limit: $result"
+      )
+    }
+    // Agreement is accepted, truncated or not.
+    for ((rows, limit) <- Seq((22, 40), (35, 25))) {
+      val fx = new CoauthorScaleFixture(rows)
+      val plan = fx.plan(QueryOperation.DirectCoauthors, "all-years", limit, fx.hubName)
+      val (_, result) = retrieve(fx, plan, Seq(fx.hubName), cfgWith(limit))
+      assert(result.isInstanceOf[RetrievalResult.Ready], result.toString)
+    }
+  }
+
+  private def semanticItem(fx: CoauthorScaleFixture, text: String): EvidenceItem =
+    RuntimeEvidenceIds
+      .bind(
+        EvidenceItem(
+          "chunk:" + "0" * 64,
+          SchemaVersions.domain,
+          EvidenceType.TextChunk,
+          None,
+          "s3://synthetic-scale/context.json",
+          None,
+          None,
+          score = 0.0,
+          text = Some(text),
+          provenance = fx.provenance,
+          runtime = Some(
+            RuntimeEvidence(
+              Vector(fx.hub),
+              Vector("all-years"),
+              None,
+              fx.run,
+              Vector(RuntimeClaimValue("kind", text = Some("semantic"))),
+              Vector(SummarySourceRef("synthetic-scale", "context", "text")),
+              None,
+              None,
+              approximate = false,
+              descriptive = true
+            )
+          )
+        )
+      )
+      .toOption
+      .get
+
+  test("fused mode: descriptive text cannot use the room scaled for deterministic list rows") {
+    val fx = new CoauthorScaleFixture(22)
+    val cfg = cfgWith(25)
+    val graphPlan = fx.plan(QueryOperation.DirectCoauthors, "all-years", 25, fx.hubName)
+    val plan =
+      graphPlan.copy(runtime = graphPlan.runtime.map(_.copy(retrievalMode = RetrievalMode.Fused)))
+    val (input, result) = retrieve(fx, plan, Seq(fx.hubName), cfg)
+    val rows = result match {
+      case RetrievalResult.Ready(o) => o
+      case other                    => fail(other.toString)
+    }
+    val semantic = RetrievalOutput(
+      "semantic",
+      Vector(semanticItem(fx, "descriptive " * 5000)),
+      truncated = true
+    )
+    val bundle = bundleOf(
+      new EvidenceBuilderAgent(new InMemoryIndexedEvidenceBundleStore, cfg)
+        .build("query:fused", input, Vector(semantic, rows))
+    )
+    val deterministic = bundle.items.filterNot(_.runtime.get.descriptive)
+    val descriptive = bundle.items.filter(_.runtime.get.descriptive)
+    val base = cfg.retrieval.contextTokenBudget
+    val detBytes = EvidenceContext.tokenUpperBound(deterministic, input.candidates)
+    val totalBytes = EvidenceContext.render(bundle).getBytes(UTF_8).length
+    // The list-operation ceiling is far above deterministic bytes plus the base budget, so the
+    // descriptive cap, not the ceiling, is what bounds the excerpt.
+    assert(detBytes + base < ContextBudget.forPlan(plan, cfg))
+    assert(deterministic.size == 23 && descriptive.size == 1)
+    assert(descriptive.head.text.exists(t => t.nonEmpty && t.length < 60000))
+    assert(totalBytes <= detBytes + base, s"total=$totalBytes det=$detBytes base=$base")
+    assert(bundle.runtime.get.truncated)
   }
 
   for {
@@ -164,7 +293,9 @@ class CoauthorScaleSpec extends AnyFunSuite {
     window <- Seq("all-years", "2015-2019")
   } test(s"P3: direct coauthors of a researcher with $n coauthors, window $window, verify") {
     val fx = new CoauthorScaleFixture(n)
-    val limit = 40 // above n so every coauthor is returned; core graphLimit stays untouched
+    // `answer` copies the shared config and sets its graph limit to this value, so every coauthor
+    // is returned in one page; the deployed core graphLimit (25) is not changed by this test.
+    val limit = 40
     val (bundle, verified, request) =
       answer(fx, QueryOperation.DirectCoauthors, window, limit, fx.hubName)
     assertAllVerified(verified)

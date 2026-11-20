@@ -589,7 +589,8 @@ final class QueryPlannerAgent(
     val coauthors = "(?i)(?:who are the )?direct coauthors of \"([^\"]+)\"".r
     val component = "(?i)(?:what is the )?component (?:of|for) \"([^\"]+)\"".r
     // The quoted `topic "..."` clause is removed from `remaining` above, so the explanation form is
-    // what is left of "explain the (research) topic "X"": the verb phrase plus exactly one topic.
+    // what is left of "explain the (research) topic "X"": the verb phrase plus exactly one quoted
+    // filter, which is a topic. Extra topics, venues or institutions are not representable here.
     val semantic = "(?i)explain the(?: research)?".r
     val topicFilters = filters.filter(_.group(1).equalsIgnoreCase("topic"))
     val repeated = "(?i)(?:show|rank) (?:the )?strongest repeated collaboration(?:s)?".r
@@ -599,7 +600,7 @@ final class QueryPlannerAgent(
       case path(a, b)   => Some((Vector(QueryOperation.ShortestPath), Vector(a, b), None, None))
       case coauthors(a) => Some((Vector(QueryOperation.DirectCoauthors), Vector(a), None, None))
       case component(a) => Some((Vector(QueryOperation.ComponentLookup), Vector(a), None, None))
-      case semantic() if topicFilters.size == 1 =>
+      case semantic() if filters.size == 1 && topicFilters.size == 1 =>
         Some((Vector(QueryOperation.SemanticExplanation), Vector.empty, None, None))
       case repeated() =>
         Some(
