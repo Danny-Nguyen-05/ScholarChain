@@ -6,8 +6,9 @@
 
 The key is computed by experiments/scripts/q12_graph.py (see its docstring for the algorithm of every quantity, each a port of
 modules/spark). Which method is used per question type:
-  coauthor_breadth  EXACT: distinct coauthors per window from the CSV (option b); ranking top-100 recorded.
-  max_team_size     all-years: EXACT from the AUTHORED edges (option b), top-100 recorded. Windowed: BOUNDED (the CSV has no work years):
+  coauthor_breadth  VALUES-AND-ORDER: distinct coauthors per window from the CSV (option b) are exact per researcher; the ranking is only checked
+                    for values and order (the runtime ranks its artifact population, not the corpus); corpus top-100 recorded.
+  max_team_size     all-years: VALUES-AND-ORDER from the AUTHORED edges (option b), top-100 recorded. Windowed: BOUNDED (the CSV has no work years):
                     every cited value must not exceed the researcher's all-years maximum, and a cited max-team work's team size must equal
                     the value + 1.
   direct_collab     EXACT: the complete coauthor list and joint publication counts of the window graph.
@@ -16,15 +17,19 @@ modules/spark). Which method is used per question type:
   community         EXACT by independent port (option b) of the synchronous label propagation of job06, validated against
                     analytics-report.json (rows, sizeMax, iterations, finalChangedCount of every window) and against observed Session 1
                     values; community and component ids ported from StableIds.sparkAnalyticsId.
-  bridge            EXACT from the ported community partition (crossCommunityDegree etc.), top-100 recorded.
-  temporal          EXACT for distinct coauthors, component size, entered/left largest component, community ids, community Jaccard overlap and
-                    the four bridge deltas; NOT CHECKED: deltaAverageCoauthorsPerPaper and deltaMaximumCoauthorsOnOnePaper (need work years).
+  bridge            VALUES-AND-ORDER from the ported community partition (crossCommunityDegree etc.), top-100 recorded.
+  temporal          EXACT for distinct coauthors, component size, entered/left largest component, community ids and the four bridge deltas;
+                    the community Jaccard overlap is a LOWER BOUND (the runtime also counts one-person communities of researchers with no edge
+                    in the window, Phase6FGJobs.scala:118-147, which the CSV lacks); NOT CHECKED: deltaAverageCoauthorsPerPaper and deltaMaximumCoauthorsOnOnePaper (need work years).
   topic, institution  ABSTAIN (thin data): the export has no authoritative topic or institution metadata for any researcher.
   evidence          STRUCTURAL plus entity facts: the explanation must be backed by resolvable evidence naming the researcher; any distinct
                     coauthor or publication count it states must equal the values recorded here.
 Ranking populations: the runtime ranks only the researchers inside its bounded artifact, so the recorded top-100 lists are corpus-wide;
 the scorer checks every cited value against the export, ordering within the answer, and reports agreement with the corpus top as information.
-Exit codes: 0 ok, 1 refused, 2 usage.
+Replayable validation (refuses on mismatch, --skip-validation records "skipped"): before the key is written the port is compared, window by window,
+with the export's own analytics-report.json: largest component, community iterations, final changed count, largest community, the maxima of the four
+bridge measures and (all-years) the maximum team size; the compared values are written to answer-key.json under source.validation.
+Exit codes: 0 ok, 1 refused (including a validation mismatch), 2 usage.
 """
 import argparse
 import importlib.util
@@ -65,7 +70,7 @@ def key_for(spec, ex, sizes):
     if kind == "coauthor_breadth":
         wg = ex.window(p["window"])
         values = {r: len(a) for r, a in wg.adj.items()}
-        out.update(check_level="exact", expected_outcome="answer",
+        out.update(check_level="values-and-order", expected_outcome="answer",
                    expected={"metric": p["metric"], "window": p["window"], "tie_break": "researcher id ascending", "top": ranking_top(values, ex),
                              "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide"},
                    required_evidence={"kinds": ["ranking"], "fields_checked_per_entity": ["distinctCoauthorCount", "weightedDegree", "componentId", "communityId"]},
@@ -73,7 +78,7 @@ def key_for(spec, ex, sizes):
     elif kind == "max_team_size":
         if p["window"] == "all-years":
             values = {r: g.max_team(ex, r, sizes)[0] for r in ex.authored_by}
-            out.update(check_level="exact", expected_outcome="answer",
+            out.update(check_level="values-and-order", expected_outcome="answer",
                        expected={"metric": p["metric"], "window": p["window"], "tie_break": "researcher id ascending", "top": ranking_top(values, ex),
                                  "global_maximum": max(values.values()),
                                  "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide"},
@@ -90,7 +95,7 @@ def key_for(spec, ex, sizes):
     elif kind == "bridge":
         wg = ex.window(p["window"])
         values = {r: b["crossCommunityDegree"] for r, b in wg.bridges().items()}
-        out.update(check_level="exact", expected_outcome="answer",
+        out.update(check_level="values-and-order", expected_outcome="answer",
                    expected={"measure": p["measure"], "window": p["window"], "tie_break": "researcher id ascending", "top": ranking_top(values, ex),
                              "population_caveat": "the runtime ranks only the researchers inside its bounded artifact; the top list is corpus-wide",
                              "qualification": "community-derived: synchronous label propagation, iteration-limited at 20 (not converged); the answer should say so"},
@@ -194,6 +199,8 @@ def key_for(spec, ex, sizes):
                              "enteredLargestComponent": in_largest_b and not in_largest_a, "leftLargestComponent": in_largest_a and not in_largest_b,
                              "previousCommunityId": g.analytics_id("community", w_from, prev), "currentCommunityId": g.analytics_id("community", w_to, cur),
                              "communityJaccardOverlap": best[0],
+                             "communityJaccardOverlap_semantics": "LOWER BOUND: the runtime also counts the one-person communities of researchers with no edge in a window "
+                                                                  "(they are not in the CSV), so its value may be higher; accepted when key <= runtime <= 1",
                              "deltaCrossCommunityDegree": bb["crossCommunityDegree"] - ba["crossCommunityDegree"],
                              "deltaCrossCommunityWeight": bb["crossCommunityWeight"] - ba["crossCommunityWeight"],
                              "deltaCommunitiesConnected": bb["communitiesConnected"] - ba["communitiesConnected"],
@@ -211,7 +218,7 @@ def key_for(spec, ex, sizes):
                                         if kind == "topic" else
                                         "no researcher has authoritative institution metadata in the export (%d INSTITUTION node, %d AFFILIATED_WITH edges)" % (len(ex.institutions), sum(len(v) for v in ex.affiliated.values())))
                                        + "; the runtime rejects the filtered ranking (unsupported-authoritative-filter-metadata) and must abstain",
-                             "acceptable_abstention_forms": ["ABSTAINED outcome with no verified ranking claim", "HTTP 422 unsupported-query refusal"],
+                             "acceptable_abstention_forms": ["HTTP 200 answer with outcome ABSTAINED and no verified ranking claim", "HTTP 422 with the closed error code UNSUPPORTED_QUERY"],
                              "forbidden": "any ranking of researchers presented as filtered by the %s" % what},
                    required_evidence={"kinds": []}, required_text={"mode": "abstain"})
     elif kind == "evidence":
@@ -229,12 +236,54 @@ def key_for(spec, ex, sizes):
     return out
 
 
+def validate_against_report(ex, export_dir):
+    """Compare the port with analytics-report.json of the export; returns {window: {name: {computed, report}}}; raises Refused on a mismatch."""
+    path = os.path.join(export_dir, "analytics-report.json")
+    if not os.path.isfile(path):
+        raise Refused("%s has no analytics-report.json to validate the port against (use --skip-validation to record that it was skipped)" % os.path.basename(os.path.abspath(export_dir)))
+    with open(path, encoding="utf-8") as handle:
+        report = json.load(handle)
+    by = lambda section: {e.get("window"): e for e in report.get(section, [])}
+    comps, comms, conv, bridges, metrics = (by(x) for x in ("components", "communities", "communityConvergence", "bridges", "metrics"))
+    sizes = g.team_sizes(ex)
+    compared, problems = {}, []
+    windows = [w for w in g.WINDOWS if w in comps]
+    if not windows:
+        raise Refused("analytics-report.json holds no window the port can be compared on")
+    for w in windows:
+        wg = ex.window(w)
+        label, iterations, changed, _converged = wg.communities()
+        br = wg.bridges()
+        rows = {
+            "largestComponent": (max(len(m) for m in wg.components()[1].values()), comps[w].get("largestSize")),
+            "communityIterations": (iterations, conv.get(w, {}).get("iterations")),
+            "communityFinalChangedCount": (changed, conv.get(w, {}).get("finalChangedCount")),
+            "communityLargest": (max(len(m) for m in wg.community_members().values()), comms.get(w, {}).get("sizeMax")),
+            "crossCommunityDegreeMax": (max(b["crossCommunityDegree"] for b in br.values()), bridges.get(w, {}).get("crossCommunityDegreeMax")),
+            "crossCommunityWeightMax": (max(b["crossCommunityWeight"] for b in br.values()), bridges.get(w, {}).get("crossCommunityWeightMax")),
+            "communitiesConnectedMax": (max(b["communitiesConnected"] for b in br.values()), bridges.get(w, {}).get("communitiesConnectedMax")),
+            "participationCoefficientMax": (max(b["participationCoefficient"] for b in br.values()), bridges.get(w, {}).get("participationCoefficientMax")),
+        }
+        if w == "all-years":
+            rows["maximumCoauthorsOnOnePaperMax"] = (max(sizes.values()) - 1, metrics.get(w, {}).get("maximumCoauthorsOnOnePaperMax"))
+        compared[w] = {}
+        for name, (mine, theirs) in rows.items():
+            ok = theirs is not None and abs(float(mine) - float(theirs)) <= 1e-9
+            compared[w][name] = {"computed": mine, "report": theirs}
+            if not ok:
+                problems.append("%s %s: computed %s, report %s" % (w, name, mine, theirs))
+    if problems:
+        raise Refused("the port disagrees with analytics-report.json: " + "; ".join(problems[:6]))
+    return compared
+
+
 def main(argv):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--export-dir", required=True)
     parser.add_argument("--specs", required=True, help="question-specs.json written by derive_q12_inputs.py")
     parser.add_argument("--out", required=True)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--skip-validation", action="store_true", help="do not compare the port with analytics-report.json (recorded in the key)")
     args = parser.parse_args(argv)
     try:
         with open(args.specs, encoding="utf-8") as handle:
@@ -245,6 +294,7 @@ def main(argv):
             raise Refused("the specs were derived from %s, the export is %s" % (specs.get("run_id"), ex.run_id))
         if os.path.lexists(args.out) and not args.overwrite:
             raise Refused("%s exists (use --overwrite)" % args.out)
+        validation = {"status": "skipped"} if args.skip_validation else {"status": "matched", "against": "analytics-report.json", "windows": validate_against_report(ex, args.export_dir)}
         sizes = g.team_sizes(ex)
         questions = [key_for(q, ex, sizes) for q in specs["questions"]]
         listing = "".join("%s  %s\n" % (sha, rel) for rel, sha in ex.files_read)
@@ -253,7 +303,7 @@ def main(argv):
             by_level[q["check_level"]] = by_level.get(q["check_level"], 0) + 1
         doc = {"schema": SCHEMA, "tool": "experiments/scripts/q12_answer_key.py",
                "source": {"run_id": ex.run_id, "files_read_listing_sha256": g.sha256_text(listing), "question_specs_sha256": specs_sha,
-                          "graph_helper_sha256": g.sha256_file(os.path.join(HERE, "q12_graph.py")), "seed": specs.get("seed")},
+                          "graph_helper_sha256": g.sha256_file(os.path.join(HERE, "q12_graph.py")), "seed": specs.get("seed"), "validation": validation},
                "method": {"windows": list(g.WINDOWS), "path_depth": MAX_DEPTH, "page_limit": PATH_LIMIT, "ranking_top": TOP,
                           "communities": "independent port of synchronous label propagation (modules/spark job06), validated against analytics-report.json",
                           "not_checked": ["deltaAverageCoauthorsPerPaper", "deltaMaximumCoauthorsOnOnePaper"]},

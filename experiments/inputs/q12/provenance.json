@@ -2,10 +2,10 @@
   "counts": {
     "affiliated_with_researchers": 0,
     "all_years_coauthor_pairs": 81181,
-    "eligible": 16868,
+    "eligible": 16537,
     "has_topic_works": 1,
     "include_ids": 22,
-    "include_total_degree": 389,
+    "include_total_degree": 364,
     "institution_nodes": 1,
     "questions": 33,
     "researchers": 21819,
@@ -15,15 +15,15 @@
   "outputs": {
     "include-ids.txt": {
       "lines": 22,
-      "sha256": "8eae93ae678ddccba5ff054c0f942a1cb205113acfb05d8959ce8012f89cc280"
+      "sha256": "30b3b78ddcc0571446a82f813ae40d2b6b4d4003247d628687cdec8d4c2efb26"
     },
     "question-specs.json": {
       "lines": 452,
-      "sha256": "665263ccb64e33ff37ef9e0381e25e0ba25cdc91610229935bd27bca4aa8ed54"
+      "sha256": "e9b770d2da88f30d088087492a4b57f746f24330992c03e27ff6589c55b1d5df"
     },
     "questions.txt": {
       "lines": 33,
-      "sha256": "0986f84206bc486ba40b857b0f628042089c9ff2d4f0495fff408cca5ed11f17"
+      "sha256": "0a6bfe2671347ca6014c103c53ddedb872ed4153330027812e57df15443c51d9"
     }
   },
   "rule": {
@@ -47,15 +47,15 @@
     "total": 33,
     "types": [
       "coauthor_breadth",
+      "topic",
       "max_team_size",
       "direct_collab",
+      "institution",
       "shortest_path",
       "component",
       "community",
       "bridge",
       "temporal",
-      "topic",
-      "institution",
       "evidence"
     ],
     "windows_stored": [
@@ -138,9 +138,9 @@
   "tool": "experiments/scripts/derive_q12_inputs.py",
   "types": {
     "bridge": [
-      "q07",
-      "q18",
-      "q29"
+      "q09",
+      "q20",
+      "q31"
     ],
     "coauthor_breadth": [
       "q01",
@@ -148,19 +148,19 @@
       "q23"
     ],
     "community": [
-      "q06",
-      "q17",
-      "q28"
+      "q08",
+      "q19",
+      "q30"
     ],
     "component": [
-      "q05",
-      "q16",
-      "q27"
+      "q07",
+      "q18",
+      "q29"
     ],
     "direct_collab": [
-      "q03",
-      "q14",
-      "q25"
+      "q04",
+      "q15",
+      "q26"
     ],
     "evidence": [
       "q11",
@@ -168,29 +168,29 @@
       "q33"
     ],
     "institution": [
+      "q05",
+      "q16",
+      "q27"
+    ],
+    "max_team_size": [
+      "q03",
+      "q14",
+      "q25"
+    ],
+    "shortest_path": [
+      "q06",
+      "q17",
+      "q28"
+    ],
+    "temporal": [
       "q10",
       "q21",
       "q32"
     ],
-    "max_team_size": [
+    "topic": [
       "q02",
       "q13",
       "q24"
-    ],
-    "shortest_path": [
-      "q04",
-      "q15",
-      "q26"
-    ],
-    "temporal": [
-      "q08",
-      "q19",
-      "q30"
-    ],
-    "topic": [
-      "q09",
-      "q20",
-      "q31"
     ]
   }
 }
