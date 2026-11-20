@@ -9,12 +9,13 @@ source "${SCRIPT_DIR}/lib/common.sh"
 
 usage() {
   cat <<'EOF'
-Usage: scripts/run-bounded-pipeline.sh --cluster-id J-ID --region R --instance-type T --core-count N
+Usage: scripts/run-bounded-pipeline.sh --cluster-id J-ID --region R --instance-type T [--primary-instance-type P] --core-count N
          [--max-task-count N] --max-runtime-minutes M --budget-usd B --input-prefix s3://b/k --output-prefix s3://b/k
          --hadoop-submit-jar REF --hadoop-libjars REF --hadoop-config FILE --er-jar REF --er-policy REF --er-config REF
          --spark-config-template REF --datasets-manifest FILE --artifact-sha256 NAME=HEX [...] [--run-id ID]
          [--approval FILE] [--prespend FILE] [--profile P] [--execute] [--help]
        scripts/run-bounded-pipeline.sh --init-ledger
+       scripts/run-bounded-pipeline.sh --record-actual --run-id ID --describe FILE [--as-of-utc T]
 
 Purpose
   Submit the bounded ScholarChain pipeline to an EXISTING EMR cluster created by Terraform (it never calls
@@ -39,7 +40,10 @@ auto-termination must stay set; --execute verifies it first.
 
 Inputs (flags; there are no defaults for these)
   --cluster-id J-ID or SCHOLARCHAIN_EMR_CLUSTER_ID   --region R or SCHOLARCHAIN_AWS_REGION
-  --instance-type T    m5.xlarge or m5.2xlarge (a reviewed hourly rate must exist in scripts/config/emr-pricing.conf)
+  --instance-type T    the CORE and TASK node type, m5.xlarge (a reviewed hourly rate must exist in scripts/config/emr-pricing.conf)
+  --primary-instance-type P   the PRIMARY node type (default: T). Phase 15 D3 (prompt.md "S run cap and D3 go-ahead"): r5.xlarge,
+                       for the single-JVM entity-resolution step on the primary (PIPELINE_ER_XMX). Its own reviewed rate applies
+                       to the estimate, and --execute requires the MASTER group to be exactly P and the CORE/TASK groups exactly T
   --core-count N       core nodes (1-10)           --max-task-count N   task nodes at most (default 0)
   --max-runtime-minutes M   hard cap, 10..PIPELINE_MAX_RUNTIME_MINUTES (180); 10 is a real minimum (each step gets its
                             PIPELINE_STEP_WEIGHTS percent, at least PIPELINE_MIN_STEP_SECONDS = 30 s); outside the range it
@@ -60,6 +64,10 @@ Inputs (flags; there are no defaults for these)
   --delegated-from-experiment SHA   internal: set by run-experiment.sh; the record must then be a run-experiment
                          record whose APPROVED_MANIFEST_SHA256 equals SHA (do not use it by hand)
   --init-ledger  create the run ledger once (who and when), then exit; refuses when it exists; needs no other argument
+  --record-actual  record a run's MEASURED EMR cost in the ledger right after the run (Phase 15 D3), then exit; local, no cloud
+                 call. Needs --run-id (the run's id; its run manifest under PIPELINE_RUNS_DIR names the cluster) and
+                 --describe FILE (the operator's saved `aws emr describe-cluster --cluster-id <j-id> --output json`), plus
+                 --as-of-utc T (the UTC time that file was saved) while the cluster has not ended. See "Run ledger".
   --run-id ID    default bp-<UTC time>-<pid>; also the YARN tag and the EFS run directory name (never reused)
   --approval FILE    approval record (default RUN_APPROVAL_RECORD_PATH); --prespend FILE pre-spend receipt
                      (default PRESPEND_RECEIPT_DEFAULT_PATH); --profile P or AWS_PROFILE for --execute
@@ -91,7 +99,7 @@ Ceilings and refusals (all before any cloud call)
   `timeout --kill-after=PIPELINE_KILL_AFTER_SECONDS <its timeout_seconds>`, in its own process group: on timeout, failure or
   cancel the wrapper sends TERM to the whole group and KILL after the grace, so a grandchild that ignores TERM cannot outlive
   the step; YARN-submitting bodies also kill the YARN application by run tag when that timeout fires or on TERM.
-  Phase 4 ceilings on the prep config (maxLocalSampleRecords<=12000 [pipeline-specific, PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS; the Phase 4 smoke keeps 1000] reducerCount<=8 maxCandidateBlockSize<=256
+  Phase 4 ceilings on the prep config (maxLocalSampleRecords<=60000 [pipeline-specific, PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS; the Phase 4 smoke keeps 1000] reducerCount<=8 maxCandidateBlockSize<=256
   maxCandidatePairsPerBlock<=4096 maxAuthorTeamSize<=64 maxRecordBytes<=8388608 maxXmlEntityExpansion<=8388608),
   input and copy-out byte ceilings, capacity <= PIPELINE_MAX_CAPACITY, runtime <= PIPELINE_MAX_RUNTIME_MINUTES.
 
@@ -99,8 +107,8 @@ G6 cost guard
   estimate = instances x (EC2 on-demand + EMR uplift rate) x (maximum runtime + the auto-termination idle timeout
   PIPELINE_MAX_IDLE_TIMEOUT_SECONDS, 900 s) hours: the idle tail before the cluster stops is billed too. It is printed in
   the dry run and before --execute. --execute is REFUSED when the estimate exceeds EMR_MAX_RUN_USD (3) or the declared
-  budget, when the run ledger already holds EMR_MAX_LIVE_RUNS (3) live runs, when the cumulative estimate would exceed
-  EMR_CUMULATIVE_CAP_USD (2.52), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
+  budget, when the run ledger already holds EMR_MAX_LIVE_RUNS (4) live runs, when the cumulative estimate would exceed
+  EMR_CUMULATIVE_CAP_USD (3.53), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
   the approval record already started a run, or while EMR_PRICING_CONFIRMED_BY_HUMAN is not true (a human flips it after
   checking the sources).
 
@@ -110,6 +118,15 @@ Run ledger (EMR_LEDGER_PATH, default ~/.scholarchain/emr-ledger/runs.jsonl, expa
       scripts/run-bounded-pipeline.sh --init-ledger
   which records who and when and REFUSES when the ledger already exists (a script never resets the spend record). Deleting
   the file by hand is the only reset and reopens the caps: do it only deliberately.
+  ACTUALS (Phase 15 D3, human: "Record the EMR actuals right after each S run so the pre-R-b check uses real numbers, not the
+  cap"): right after a run, save the cluster description and record it:
+      aws emr describe-cluster --region R --cluster-id <j-id> --output json > <private file>
+      scripts/run-bounded-pipeline.sh --record-actual --run-id <run id> --describe <private file> [--as-of-utc <UTC save time>]
+  The ledger then counts that run at its measured cost (cluster creation, or the end of the previous actual on the same
+  cluster, to the cluster's end or --as-of-utc, x the reviewed rates of its instance groups, rounded up to the cent) instead
+  of its reserved estimate, plus the auto-termination idle tail (the run's max idle timeout) still to come while the cluster has
+  not ended. Record again after the cluster has terminated to replace the provisional tail with the real end. An actual never
+  frees a run slot.
   Approvals are SINGLE-USE: a reservation stores the sha256 of the approval record, and a later run with the same record
   is refused even after a failed run (a failed run may have spent money). Write a new record (change any text, for example
   a serial line; text that is not an APPROVED_* line is ignored by the parser) for each run.
@@ -148,7 +165,8 @@ EOF
 CLUSTER_ID="${SCHOLARCHAIN_EMR_CLUSTER_ID:-}"
 REGION="${SCHOLARCHAIN_AWS_REGION:-}"
 PROFILE="${AWS_PROFILE:-}"
-INSTANCE_TYPE="" CORE_COUNT="" TASK_COUNT="0" RUNTIME_MIN="" BUDGET=""
+INSTANCE_TYPE="" PRIMARY_TYPE_OPT="" CORE_COUNT="" TASK_COUNT="0" RUNTIME_MIN="" BUDGET=""
+DESCRIBE_OPT="" AS_OF_OPT="" RECORD_ACTUAL=0
 INPUT_PREFIX="" OUTPUT_PREFIX=""
 HADOOP_JAR="" HADOOP_LIBS="" HADOOP_CONFIG="" ER_JAR="" ER_POLICY="" ER_CONFIG="" SPARK_TEMPLATE="" DATASETS=""
 RUN_ID_OPT="" IDLE_MAX_OPT=""
@@ -158,7 +176,7 @@ EXECUTE=0
 INIT_LEDGER=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --cluster-id | --region | --instance-type | --core-count | --max-task-count | --max-runtime-minutes | --budget-usd | --input-prefix | --output-prefix | --hadoop-submit-jar | --hadoop-libjars | --hadoop-config | --er-jar | --er-policy | --er-config | --spark-config-template | --datasets-manifest | --artifact-sha256 | --run-id | --approval | --prespend | --profile | --max-idle-seconds | --delegated-from-experiment)
+    --cluster-id | --region | --instance-type | --primary-instance-type | --describe | --as-of-utc | --core-count | --max-task-count | --max-runtime-minutes | --budget-usd | --input-prefix | --output-prefix | --hadoop-submit-jar | --hadoop-libjars | --hadoop-config | --er-jar | --er-policy | --er-config | --spark-config-template | --datasets-manifest | --artifact-sha256 | --run-id | --approval | --prespend | --profile | --max-idle-seconds | --delegated-from-experiment)
       if [[ $# -lt 2 ]]; then
         sc_usage_exit "run-bounded-pipeline.sh" "$1 needs a value"
       fi
@@ -166,6 +184,9 @@ while [[ $# -gt 0 ]]; do
         --cluster-id) CLUSTER_ID="$2" ;;
         --region) REGION="$2" ;;
         --instance-type) INSTANCE_TYPE="$2" ;;
+        --primary-instance-type) PRIMARY_TYPE_OPT="$2" ;;
+        --describe) DESCRIBE_OPT="$2" ;;
+        --as-of-utc) AS_OF_OPT="$2" ;;
         --core-count) CORE_COUNT="$2" ;;
         --max-task-count) TASK_COUNT="$2" ;;
         --max-runtime-minutes) RUNTIME_MIN="$2" ;;
@@ -202,6 +223,10 @@ while [[ $# -gt 0 ]]; do
       INIT_LEDGER=1
       shift
       ;;
+    --record-actual)
+      RECORD_ACTUAL=1
+      shift
+      ;;
     -h | --help)
       usage
       exit 0
@@ -228,8 +253,8 @@ case "${LEDGER_ABS}" in
 esac
 
 if [[ "${INIT_LEDGER}" -eq 1 ]]; then
-  [[ "${EXECUTE}" -eq 0 ]] || sc_usage_error "--init-ledger takes no other mode flag"
-  [[ ${#ARTIFACT_SHAS[@]} -eq 0 && -z "${CLUSTER_ID}${INSTANCE_TYPE}${CORE_COUNT}${RUNTIME_MIN}${BUDGET}" ]] || sc_usage_error "--init-ledger takes no other argument"
+  [[ "${EXECUTE}" -eq 0 && "${RECORD_ACTUAL}" -eq 0 ]] || sc_usage_error "--init-ledger takes no other mode flag"
+  [[ ${#ARTIFACT_SHAS[@]} -eq 0 && -z "${CLUSTER_ID}${INSTANCE_TYPE}${PRIMARY_TYPE_OPT}${CORE_COUNT}${RUNTIME_MIN}${BUDGET}${DESCRIBE_OPT}${AS_OF_OPT}" ]] || sc_usage_error "--init-ledger takes no other argument"
   sc_banner "init-ledger"
   sc_step "ledger-init"
   sc_require_tool python3
@@ -242,6 +267,42 @@ if [[ "${INIT_LEDGER}" -eq 1 ]]; then
   sc_info "${INIT_OUT}"
   sc_result PASS "ledger initialised at ${EMR_LEDGER_PATH}; this is a local file, no cloud call was made" "${EX_OK}"
 fi
+if [[ "${RECORD_ACTUAL}" -eq 1 ]]; then
+  # Phase 15 D3: replace a run's reserved estimate with its measured cluster cost. Local files only, no cloud call.
+  [[ "${EXECUTE}" -eq 0 && "${INIT_LEDGER}" -eq 0 ]] || sc_usage_error "--record-actual takes no other mode flag"
+  [[ -n "${RUN_ID_OPT}" && -n "${DESCRIBE_OPT}" ]] || sc_usage_error "--record-actual needs --run-id and --describe"
+  [[ "${RUN_ID_OPT}" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{5,63}$ && "${RUN_ID_OPT}" != *..* ]] || sc_usage_error "--run-id must be a plain run id (6-64 letters, digits, '.', '_' or '-')"
+  [[ ${#ARTIFACT_SHAS[@]} -eq 0 && -z "${INSTANCE_TYPE}${PRIMARY_TYPE_OPT}${CORE_COUNT}${RUNTIME_MIN}${BUDGET}${APPROVAL}${PRESPEND}" ]] ||
+    sc_usage_error "--record-actual takes only --run-id, --describe and --as-of-utc"
+  sc_banner "record-actual"
+  sc_step "ledger-record-actual"
+  sc_require_tool python3
+  [[ -f "${DESCRIBE_OPT}" && ! -L "${DESCRIBE_OPT}" ]] || sc_refuse "${EX_REFUSED}" "--describe ${DESCRIBE_OPT} is not a regular file"
+  ACTUAL_MANIFEST="${REPO_ROOT}/${PIPELINE_RUNS_DIR}/${RUN_ID_OPT}/run-manifest.json"
+  [[ -f "${ACTUAL_MANIFEST}" && ! -L "${ACTUAL_MANIFEST}" ]] ||
+    sc_refuse "${EX_REFUSED}" "no run manifest ${PIPELINE_RUNS_DIR}/${RUN_ID_OPT}/run-manifest.json: --record-actual binds the run to its cluster through it"
+  ACTUAL_FIELDS="$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d["cluster_id"], int(d["teardown"]["max_idle_timeout_seconds"]))' "${ACTUAL_MANIFEST}")" ||
+    sc_refuse "${EX_REFUSED}" "the run manifest has no cluster id or teardown idle timeout"
+  read -r ACTUAL_CLUSTER ACTUAL_IDLE <<<"${ACTUAL_FIELDS}"
+  rate_args=()
+  while IFS= read -r name; do
+    suffix="${name#EMR_RATE_EC2_}"
+    emr_name="EMR_RATE_EMR_${suffix}"
+    [[ -n "${!name:-}" && -n "${!emr_name:-}" ]] || continue
+    rate_args+=(--rate "$(printf '%s' "${suffix}" | tr '[:upper:]_' '[:lower:].')=${!name},${!emr_name}")
+  done < <(compgen -v EMR_RATE_EC2_ | LC_ALL=C sort)
+  [[ ${#rate_args[@]} -gt 0 ]] || sc_refuse "${EX_REFUSED}" "no reviewed hourly rate in ${PIPELINE_PRICING_FILE}"
+  ACTUAL_RC=0
+  ACTUAL_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-record-actual --root "${HOME}" --ledger "${LEDGER_ABS}" --repo-root "${REPO_ROOT}" \
+    --run-id "${RUN_ID_OPT}" --describe "${DESCRIBE_OPT}" --expected-cluster-id "${ACTUAL_CLUSTER}" --pending-idle-seconds "${ACTUAL_IDLE}" \
+    --as-of-utc "${AS_OF_OPT}" --recorded-utc "$(sc_now)" --max-runs "${EMR_MAX_LIVE_RUNS}" --cumulative-cap "${EMR_CUMULATIVE_CAP_USD}" "${rate_args[@]}")" || ACTUAL_RC=$?
+  if [[ "${ACTUAL_RC}" -ne 0 ]]; then
+    sc_refuse "${EX_REFUSED}" "${ACTUAL_OUT}"
+  fi
+  printf '%s\n' "${ACTUAL_OUT}"
+  sc_result PASS "actual recorded for run ${RUN_ID_OPT} in ${EMR_LEDGER_PATH}; local files only, no cloud call was made" "${EX_OK}"
+fi
+[[ -z "${DESCRIBE_OPT}${AS_OF_OPT}" ]] || sc_usage_error "--describe and --as-of-utc belong to --record-actual"
 if [[ "${EXECUTE}" -eq 1 ]]; then
   DRY_RUN=0
   sc_banner "execute"
@@ -269,6 +330,7 @@ done
 sc_region_valid "${REGION}" || sc_usage_error "region '${REGION}' is not a valid AWS region name"
 [[ "${CORE_COUNT}" =~ ^[0-9]+$ && "${TASK_COUNT}" =~ ^[0-9]+$ && "${RUNTIME_MIN}" =~ ^[0-9]+$ ]] || sc_usage_error "--core-count, --max-task-count and --max-runtime-minutes must be integers"
 [[ "${BUDGET}" =~ ^[0-9]+(\.[0-9]{1,4})?$ ]] || sc_usage_error "--budget-usd must be a decimal number"
+[[ -z "${PRIMARY_TYPE_OPT}" || "${PRIMARY_TYPE_OPT}" =~ ^[a-z][a-z0-9]{1,8}\.[a-z0-9]{3,12}$ ]] || sc_usage_error "--primary-instance-type must look like r5.xlarge"
 if [[ -n "${RUN_ID_OPT}" ]]; then
   RUN="${RUN_ID_OPT}"
 else
@@ -299,10 +361,16 @@ sc_step "g6-estimate"
 TYPE_KEY="$(printf '%s' "${INSTANCE_TYPE}" | tr '[:lower:].' '[:upper:]_')"
 EC2_VAR="EMR_RATE_EC2_${TYPE_KEY}"
 EMR_VAR="EMR_RATE_EMR_${TYPE_KEY}"
+# Phase 15 D3: the primary node has its own type (default: the core type) and its own reviewed rates.
+PRIMARY_TYPE="${PRIMARY_TYPE_OPT:-${INSTANCE_TYPE}}"
+P_TYPE_KEY="$(printf '%s' "${PRIMARY_TYPE}" | tr '[:lower:].' '[:upper:]_')"
+P_EC2_VAR="EMR_RATE_EC2_${P_TYPE_KEY}"
+P_EMR_VAR="EMR_RATE_EMR_${P_TYPE_KEY}"
 sc_mktemp ESTIMATE_FILE
 EST_RC=0
 python3 -I "${SC_LIB_DIR}/budget.py" estimate --instance-type "${INSTANCE_TYPE}" --primary-count 1 --core-count "${CORE_COUNT}" \
   --task-count "${TASK_COUNT}" --minutes "${RUNTIME_MIN}" --idle-seconds "${IDLE_MAX}" --ec2-rate "${!EC2_VAR:-}" --emr-rate "${!EMR_VAR:-}" \
+  --primary-instance-type "${PRIMARY_TYPE}" --primary-ec2-rate "${!P_EC2_VAR:-}" --primary-emr-rate "${!P_EMR_VAR:-}" \
   --max-run-usd "${EMR_MAX_RUN_USD}" --budget-usd "${BUDGET}" >"${ESTIMATE_FILE}" || EST_RC=$?
 ESTIMATE_AVAILABLE=1
 case "${EST_RC}" in
@@ -323,7 +391,11 @@ if [[ "${ESTIMATE_AVAILABLE}" -eq 1 ]]; then
   printf 'ESTIMATE-USD: %s\n' "${ESTIMATE_USD}"
 else
   ESTIMATE_USD=""
-  printf 'ESTIMATE-USD: unavailable (rates %s and %s are not set in %s)\n' "${EC2_VAR}" "${EMR_VAR}" "${PIPELINE_PRICING_FILE}"
+  if [[ "${PRIMARY_TYPE}" == "${INSTANCE_TYPE}" ]]; then
+    printf 'ESTIMATE-USD: unavailable (rates %s and %s are not set in %s)\n' "${EC2_VAR}" "${EMR_VAR}" "${PIPELINE_PRICING_FILE}"
+  else
+    printf 'ESTIMATE-USD: unavailable (rates %s, %s, %s and %s must all be set in %s)\n' "${EC2_VAR}" "${EMR_VAR}" "${P_EC2_VAR}" "${P_EMR_VAR}" "${PIPELINE_PRICING_FILE}"
+  fi
 fi
 printf 'G6-CAPS: per-run=%s USD live-runs=%s cumulative=%s USD pricing-confirmed-by-human=%s rates-retrieved=%s region=%s\n' \
   "${EMR_MAX_RUN_USD}" "${EMR_MAX_LIVE_RUNS}" "${EMR_CUMULATIVE_CAP_USD}" "${EMR_PRICING_CONFIRMED_BY_HUMAN:-unset}" "${EMR_PRICING_RETRIEVED:-unset}" "${EMR_PRICING_REGION:-unset}"
@@ -340,7 +412,7 @@ fi
 # Ceiling values in the order of pipeline.py CEILING_FIELDS (the Phase 4 order).
 PLAN_RC=0
 PLAN_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" plan --out "${PLAN_FILE}" --run-id "${RUN}" --action "${ACTION}" --region "${REGION}" \
-  --cluster-id "${CLUSTER_ID}" --instance-type "${INSTANCE_TYPE}" --core-count "${CORE_COUNT}" --max-task-count "${TASK_COUNT}" \
+  --cluster-id "${CLUSTER_ID}" --instance-type "${INSTANCE_TYPE}" --primary-instance-type "${PRIMARY_TYPE}" --core-count "${CORE_COUNT}" --max-task-count "${TASK_COUNT}" \
   --max-runtime-minutes "${RUNTIME_MIN}" --budget-usd "${BUDGET}" --input-prefix "${INPUT_PREFIX}" --output-prefix "${OUTPUT_PREFIX}" \
   --hadoop-submit-jar "${HADOOP_JAR}" --hadoop-libjars "${HADOOP_LIBS}" --hadoop-config "${HADOOP_CONFIG}" --er-jar "${ER_JAR}" \
   --er-policy "${ER_POLICY}" --er-config "${ER_CONFIG}" --spark-config-template "${SPARK_TEMPLATE}" --datasets-manifest "${DATASETS}" \
@@ -391,7 +463,11 @@ if [[ "${EMR_PRICING_CONFIRMED_BY_HUMAN:-false}" != "true" ]]; then
   G6_PROBLEMS+=("pricing is not confirmed by the human (EMR_PRICING_CONFIRMED_BY_HUMAN is not true in ${PIPELINE_PRICING_FILE})")
 fi
 if [[ "${ESTIMATE_AVAILABLE}" -eq 0 ]]; then
-  G6_PROBLEMS+=("no reviewed hourly rate for ${INSTANCE_TYPE} (${EC2_VAR} / ${EMR_VAR}): the estimate cannot be computed and is never read as zero")
+  if [[ "${PRIMARY_TYPE}" == "${INSTANCE_TYPE}" ]]; then
+    G6_PROBLEMS+=("no reviewed hourly rate for ${INSTANCE_TYPE} (${EC2_VAR} / ${EMR_VAR}): the estimate cannot be computed and is never read as zero")
+  else
+    G6_PROBLEMS+=("no reviewed hourly rate for ${INSTANCE_TYPE} (${EC2_VAR} / ${EMR_VAR}) or the primary ${PRIMARY_TYPE} (${P_EC2_VAR} / ${P_EMR_VAR}): the estimate cannot be computed and is never read as zero")
+  fi
 else
   LEDGER_RC=0
   LEDGER_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-check --ledger "${LEDGER_ABS}" --repo-root "${REPO_ROOT}" --estimate "${ESTIMATE_USD}" \
@@ -569,7 +645,7 @@ sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${POLICY_FILE}" --
 if [[ "${EXECUTE}" -eq 1 ]]; then
   CHECK_RC=0
   CHECK_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" check-cluster --describe "${DESCRIBE_FILE}" --policy "${POLICY_FILE}" \
-    --cluster-id "${CLUSTER_ID}" --instance-type "${INSTANCE_TYPE}" --core-count "${CORE_COUNT}" --max-task-count "${TASK_COUNT}" \
+    --cluster-id "${CLUSTER_ID}" --instance-type "${INSTANCE_TYPE}" --primary-instance-type "${PRIMARY_TYPE}" --core-count "${CORE_COUNT}" --max-task-count "${TASK_COUNT}" \
     --max-capacity "${MAX_CAPACITY}" --max-idle-seconds "${IDLE_MAX}")" || CHECK_RC=$?
   if [[ "${CHECK_RC}" -ne 0 ]]; then
     while IFS= read -r line; do sc_err "${line}"; done <<<"${CHECK_OUT}"
@@ -577,7 +653,7 @@ if [[ "${EXECUTE}" -eq 1 ]]; then
   fi
   sc_info "${CHECK_OUT}"
 else
-  sc_info "dry run: --execute requires a WAITING or RUNNING cluster WITH an auto-termination idle timeout (60..${IDLE_MAX} s) and only ${INSTANCE_TYPE} groups within primary=1 core<=${CORE_COUNT} task<=${TASK_COUNT}"
+  sc_info "dry run: --execute requires a WAITING or RUNNING cluster WITH an auto-termination idle timeout (60..${IDLE_MAX} s), a ${PRIMARY_TYPE} primary and only ${INSTANCE_TYPE} core and task groups within primary=1 core<=${CORE_COUNT} task<=${TASK_COUNT}"
 fi
 
 # ---------------------------------------------------------------------------------------------

@@ -166,7 +166,7 @@ class ConfigurationTests(unittest.TestCase):
     def test_new_policy_and_prespend_settings_are_pinned_with_the_decided_values(self):
         conf = parse_conf()
         self.assertEqual(conf["PRESPEND_MAX_AGE_HOURS"], "24")
-        self.assertEqual(conf["PRESPEND_MIN_HEADROOM_USD"], "3")
+        self.assertEqual(conf["PRESPEND_MIN_HEADROOM_USD"], "2")  # Phase 15 "R-b option decision": floor 2 (was 3)
         self.assertNotIn("PRESPEND_MIN_HEADROOM_CLEANUP_USD", conf, "cleanup-prepare has no headroom floor, so there is no key for it")
         self.assertEqual(conf["PLAN_DIR"], "target/plans")
         common = read("lib/common.sh")

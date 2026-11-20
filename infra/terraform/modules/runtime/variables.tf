@@ -174,3 +174,39 @@ variable "neptune_tunnel_task_role_arn" {
   default     = null
   description = "Task role of the tunnel task (modules/identity: four ssmmessages channel actions only). Required when the tunnel is registered."
 }
+
+# Phase 15 P41 (session-2-plan.md rows F26 and P41, Work order 3 defaults accepted 2026-11-16). All three default to null: no new
+# resource and no new environment variable (no request-count policy, no rate-limit variable in any task environment). When the ALB
+# exists and the dashboard is on, the dashboard gains the ALB panels regardless of these variables. The values come from the P35
+# rehearsal and reach this module from the root variables (phase12b-variables.tf): query_requests_per_target_target (same name),
+# query_semantic_rate_limit_per_second -> semantic_rate_limit_per_second, query_semantic_rate_limit_burst -> semantic_rate_limit_burst.
+variable "query_requests_per_target_target" {
+  type        = number
+  default     = null
+  nullable    = true
+  description = "Target of the query-api ALBRequestCountPerTarget target-tracking policy: requests per target (task) per minute, a whole number from 1 to 100000. null: no request-count policy (the CPU policy alone, unchanged)."
+  validation {
+    condition     = var.query_requests_per_target_target == null ? true : (var.query_requests_per_target_target >= 1 && var.query_requests_per_target_target <= 100000 && var.query_requests_per_target_target == floor(var.query_requests_per_target_target))
+    error_message = "query_requests_per_target_target must be null or a whole number of requests per target per minute from 1 to 100000."
+  }
+}
+variable "semantic_rate_limit_per_second" {
+  type        = number
+  default     = null
+  nullable    = true
+  description = "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND on query-api (aws mode only): requests per second per API key per task, a whole number from 1 to 100000 (the service's accepted range). null: unset, the service default 50 applies."
+  validation {
+    condition     = var.semantic_rate_limit_per_second == null ? true : (var.semantic_rate_limit_per_second >= 1 && var.semantic_rate_limit_per_second <= 100000 && var.semantic_rate_limit_per_second == floor(var.semantic_rate_limit_per_second))
+    error_message = "semantic_rate_limit_per_second must be null or a whole number from 1 to 100000."
+  }
+}
+variable "semantic_rate_limit_burst" {
+  type        = number
+  default     = null
+  nullable    = true
+  description = "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST on query-api (aws mode only): token-bucket burst per API key per task, a whole number from 1 to 1000000 (the service's accepted range). null: unset, the service default 100 applies."
+  validation {
+    condition     = var.semantic_rate_limit_burst == null ? true : (var.semantic_rate_limit_burst >= 1 && var.semantic_rate_limit_burst <= 1000000 && var.semantic_rate_limit_burst == floor(var.semantic_rate_limit_burst))
+    error_message = "semantic_rate_limit_burst must be null or a whole number from 1 to 1000000."
+  }
+}

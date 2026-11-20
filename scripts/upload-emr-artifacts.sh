@@ -13,7 +13,7 @@ usage() {
 Usage: scripts/upload-emr-artifacts.sh --artifacts-bucket BUCKET --run-prefix run-YYYYMMDD --region REGION
                                        --input-dataset LABEL=DIR [--input-dataset LABEL=DIR ...]
                                        [--bootstrap FILE] [--artifact-manifest FILE] [--er-policy FILE] [--er-config FILE]
-                                       [--spark-config-template FILE]
+                                       [--spark-config-template FILE] [--hadoop-config FILE]
                                        --profile scholarchain-pipeline --principal-role operator-pipeline --approval FILE
                                        [--manifest-out PATH] [--execute] [--help]
 
@@ -31,6 +31,9 @@ Purpose
                                              infra/terraform/emr-step-programs.json                   -> emr_config.extra_artifacts
     config/er-policy.json, er-config.json, spark-config-template.json
                                              from --er-policy, --er-config, --spark-config-template (each optional)
+    config/hadoop-config.json                from --hadoop-config (optional; Phase 15 P1): the Hadoop prep config, so the manifest's
+                                             pipeline.hadoop_config is s3://<bucket>/emr/<run-prefix>/config/hadoop-config.json with
+                                             artifact_sha256 name hadoop-config (the dry run prints its key, sha256 and EMR-RENDER line)
     input/<label>/datasets/samples/...       one input dataset per --input-dataset LABEL=DIR (1 to 3; size-25, size-50 and size-100 in
                                              Phase 15A); DIR must hold the Phase 4 layout run-bounded-pipeline.sh stages in
                                              (datasets/samples/dblp/linked-records.xml, openalex/works.jsonl, crossref/works.jsonl,
@@ -105,10 +108,10 @@ EOF2
 
 BUCKET="${SCHOLARCHAIN_ARTIFACTS_BUCKET:-}" REGION="${SCHOLARCHAIN_AWS_REGION:-}" PROFILE="${AWS_PROFILE:-}"
 RUN_PREFIX="" BOOTSTRAP="" ARTIFACT_MANIFEST="" PRINCIPAL_ROLE="" APPROVAL="" MANIFEST_OUT="" EXECUTE=0
-ER_POLICY="" ER_CONFIG="" SPARK_TEMPLATE="" DATASETS=()
+ER_POLICY="" ER_CONFIG="" SPARK_TEMPLATE="" HADOOP_CONFIG="" DATASETS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --artifacts-bucket | --run-prefix | --region | --profile | --principal-role | --approval | --manifest-out | --bootstrap | --artifact-manifest | --er-policy | --er-config | --spark-config-template | --input-dataset)
+    --artifacts-bucket | --run-prefix | --region | --profile | --principal-role | --approval | --manifest-out | --bootstrap | --artifact-manifest | --er-policy | --er-config | --spark-config-template | --hadoop-config | --input-dataset)
       if [[ $# -lt 2 ]]; then
         sc_usage_exit "upload-emr-artifacts.sh" "$1 needs a value"
       fi
@@ -125,6 +128,7 @@ while [[ $# -gt 0 ]]; do
         --er-policy) ER_POLICY="$2" ;;
         --er-config) ER_CONFIG="$2" ;;
         --spark-config-template) SPARK_TEMPLATE="$2" ;;
+        --hadoop-config) HADOOP_CONFIG="$2" ;;
         --input-dataset) DATASETS+=("$2") ;;
       esac
       shift 2
@@ -204,6 +208,7 @@ SCAN_ARGS=(scan --repo-root "${REPO_ROOT}" --run-prefix "${RUN_PREFIX}" --out "$
 [[ -z "${ER_POLICY}" ]] || SCAN_ARGS+=(--er-policy "${ER_POLICY}")
 [[ -z "${ER_CONFIG}" ]] || SCAN_ARGS+=(--er-config "${ER_CONFIG}")
 [[ -z "${SPARK_TEMPLATE}" ]] || SCAN_ARGS+=(--spark-config-template "${SPARK_TEMPLATE}")
+[[ -z "${HADOOP_CONFIG}" ]] || SCAN_ARGS+=(--hadoop-config "${HADOOP_CONFIG}")
 for d in "${DATASETS[@]}"; do
   SCAN_ARGS+=(--input-dataset "${d}")
 done

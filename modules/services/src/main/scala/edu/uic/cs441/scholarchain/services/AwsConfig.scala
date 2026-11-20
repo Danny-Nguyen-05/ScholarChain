@@ -56,7 +56,8 @@ final case class SemanticRoleConfig(
     metric: String,
     embedding: EmbeddingModel,
     embeddingProvider: EmbeddingProvider,
-    voyageApiKey: Option[Secret]
+    voyageApiKey: Option[Secret],
+    embeddingCacheMaxEntries: Int = EmbeddingCacheSettings.default
 ) extends AwsRoleConfig
 final case class QueryRoleConfig(
     common: AwsCommon,
@@ -273,7 +274,13 @@ object AwsServiceConfig {
           metric,
           embedding(provider),
           provider,
-          voyageKey(provider)
+          voyageKey(provider),
+          r.long(
+            EmbeddingCacheSettings.EnvName,
+            EmbeddingCacheSettings.default.toLong,
+            1,
+            EmbeddingCacheSettings.MaxEntries
+          ).toInt
         )
       case "embedding-worker" =>
         val wait = r.long("SCHOLARCHAIN_WORKER_WAIT_SECONDS", 0, 0, 20).toInt

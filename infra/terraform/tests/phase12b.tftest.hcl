@@ -132,7 +132,7 @@ run "inactive_defaults_and_vector_contract" {
 run "dashboard_metric_shapes_and_route_ownership" {
   command = plan
   assert {
-    condition     = alltrue(flatten([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : [for m in try(w.properties.metrics, []) : can(m[0]) && can(m[1])]])) && length([for m in one([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w.properties.metrics if try(w.properties.title, "") == "DynamoDB capacity units and table throttle events"]) : m if m[0] == "AWS/DynamoDB" && contains(["ReadThrottleEvents", "WriteThrottleEvents"], m[1]) && m[2] == "TableName" && length(m) == 4]) == 12
+    condition     = alltrue(flatten([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : [for m in try(w.properties.metrics, []) : can(m[0]) && can(m[1])]])) && length([for m in one([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w.properties.metrics if try(w.properties.title, "") == "DynamoDB table throttle events"]) : m if m[0] == "AWS/DynamoDB" && contains(["ReadThrottleEvents", "WriteThrottleEvents"], m[1]) && m[2] == "TableName" && length(m) == 4]) == 12
     error_message = "CloudWatch metrics must be arrays (not recursively flattened strings); each of six tables gets correctly dimensioned read/write throttle-event series."
   }
   assert {

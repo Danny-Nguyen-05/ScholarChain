@@ -58,11 +58,12 @@ MODIFY_ACCOUNT_PLACEHOLDER = "<acct>"
 MODIFY_RECORD_PREFIX = "docs/agent-runs/phase-14/"
 MODIFY_PACKET_PREFIX = "docs/agent-runs/phase-14/evidence/14b/"
 # A budget shape is (name, USD limit, threshold type, alert thresholds). "initial"
-# is the Phase 12D create shape; "usd25" is the Phase 14B target. The ONE switch
-# between the two expectations is this value; there is no other flag.
+# is the Phase 12D create shape; "usd25" is the Phase 14B target (alerts USD 18/20/22
+# per the 2026-11-15 human decision; the earlier 10/15/20 target was never applied).
+# The ONE switch between the two expectations is this value; there is no other flag.
 Shape = namedtuple("Shape", "name amount threshold_type thresholds")
 INITIAL_SHAPE = Shape("initial", Decimal(200), "PERCENTAGE", (50, 80, 100))
-USD25_SHAPE = Shape("usd25", Decimal(25), "ABSOLUTE_VALUE", (10, 15, 20))
+USD25_SHAPE = Shape("usd25", Decimal(25), "ABSOLUTE_VALUE", (18, 20, 22))
 MAX_BYTES = 8 * 1024 * 1024
 READ_TIMEOUT_SECONDS = 60
 APPLY_TIMEOUT_SECONDS = 300
@@ -82,6 +83,20 @@ def require(condition, code):
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def failure_cause(error):
+    """Fixed identifier of an inner failure: the Blocked code, or the exception type name.
+
+    Never the message of a non-Blocked exception and never any path or value, so it is safe to
+    persist in the private preservation receipt. Anything not matching the fixed alphabet is
+    reduced to a generic name.
+    """
+    if isinstance(error, Blocked):
+        code = str(error)
+        return code if re.fullmatch(r"[A-Z0-9_]{1,80}", code) else "Blocked"
+    name = type(error).__name__
+    return name if re.fullmatch(r"[A-Za-z0-9_]{1,64}", name) else "Exception"
 
 
 def unique_pairs(pairs):
@@ -884,7 +899,7 @@ class Execution:
                                               "budget_name": BUDGET, "exit": code,
                                               "service_error": "NotFoundException"})
 
-    def preserve(self, backup):
+    def preserve(self, backup, cause=None):
         candidates = [self.p.state, self.p.state.with_name(self.p.state.name + ".backup"),
                       self.p.primary / ".billing.execution.tfstate.lock.info",
                       self.p.config / "errored.tfstate", self.p.config / "terraform.tfstate",
@@ -904,7 +919,10 @@ class Execution:
                     result.append({"source": str(source.relative_to(self.p.primary)), **info})
                 except (OSError, Blocked):
                     result.append({"source": str(source.relative_to(self.p.primary)), "preserved": False})
-        save_json(backup / "preservation.receipt.json", {"artifacts": result, "incident_required": True})
+        receipt = {"artifacts": result, "incident_required": True}
+        if cause is not None:
+            receipt["cause"] = cause  # fixed code or exception type name only; see failure_cause
+        save_json(backup / "preservation.receipt.json", receipt)
 
     def apply(self):
         self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
@@ -925,10 +943,14 @@ class Execution:
                 require(found == [self.p.state], "UNEXPECTED_POST_APPLY_STATE")
                 info = opaque_copy(self.p.state, backup / "billing.execution.tfstate", self.p.uid)
                 save_json(backup / "backup.receipt.json", {**self.binding, **info})
-            except BaseException:
+            except BaseException as error:
                 # After a failed or interrupted apply no further AWS calls are permitted.
                 try:
-                    self.preserve(backup)
+                    cause = failure_cause(error)
+                except BaseException:
+                    cause = "Exception"  # computed before preserve() so a cause failure can never skip preservation
+                try:
+                    self.preserve(backup, cause)
                 except BaseException:
                     pass  # Original error + fixed public incident message; originals never deleted.
                 raise Blocked("APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED") from None
@@ -1071,7 +1093,7 @@ class Execution:
         return shape, sanitize_readback(b, t, n, subs, self.private_recipient(), shape)
 
     def modify(self):
-        """Reviewed in-place update of the live budget: USD 200 / 50-80-100 percent -> USD 25 / 10-15-20 dollars."""
+        """Reviewed in-place update of the live budget: USD 200 / 50-80-100 percent -> USD 25 / 18-20-22 dollars."""
         require(self.gate is not None and self.gate.get("option") == "M", "MODIFY_GATE_REQUIRED")
         self.check_checkout(); self.check_modify_record(); self.check_modify_files()
         self.check_modify_state(); self.check_window()
@@ -1093,6 +1115,7 @@ class Execution:
             require(pre["sha256"] == INITIAL_STATE_SHA256 and pre["bytes"] == INITIAL_STATE_BYTES,
                     "PRE_BACKUP_NOT_INITIAL")
             save_json(backup / "pre-apply.backup.receipt.json", {**self.binding, **pre})
+            tf_backup_observed = None
             try:
                 code, _, _ = self.command(self.p.modify_apply_argv(), "modify-apply")
                 require(code == 0, "APPLY_FAILED_PARTIAL_POSSIBLE")
@@ -1100,22 +1123,32 @@ class Execution:
                                if x.name.endswith(".tfstate") or ".tfstate." in x.name or x.name.endswith(".lock.info"))
                 tf_backup = self.p.state.with_name(self.p.state.name + ".backup")
                 require(found in ([self.p.state], sorted([self.p.state, tf_backup])), "UNEXPECTED_POST_APPLY_STATE")
-                if tf_backup.exists():
-                    # Terraform's own previous-state copy must be the pre-apply state, byte for byte.
-                    file_meta(tf_backup, self.p.uid)
-                    require(hash_file(tf_backup) == INITIAL_STATE_SHA256, "TERRAFORM_BACKUP_NOT_INITIAL")
+                if tf_backup.exists() or tf_backup.is_symlink():
+                    # Terraform re-serializes its own previous-state copy (observed live 2026-11-16: same size,
+                    # other bytes), so it is not required to equal the pre-apply state. The wrapper's pre-apply
+                    # copy, already verified equal to the initial state, is the authoritative backup. Only the
+                    # type, mode and owner are enforced; the hash and size are recorded as observed metadata
+                    # (opaque bytes, no state parsing).
+                    meta = file_meta(tf_backup, self.p.uid)
+                    tf_backup_observed = {"sha256": hash_file(tf_backup), "bytes": meta.st_size,
+                                          "observed_only": True}
                 post = opaque_copy(self.p.state, backup / "post-apply.billing.execution.tfstate", self.p.uid)
                 require(post["sha256"] != INITIAL_STATE_SHA256, "STATE_UNCHANGED_AFTER_APPLY")
                 save_json(backup / "post-apply.backup.receipt.json", {**self.binding, **post})
-            except BaseException:
+            except BaseException as error:
                 # After a failed or interrupted apply no further AWS calls are permitted.
                 try:
-                    self.preserve(backup)
+                    cause = failure_cause(error)
+                except BaseException:
+                    cause = "Exception"  # computed before preserve() so a cause failure can never skip preservation
+                try:
+                    self.preserve(backup, cause)
                 except BaseException:
                     pass  # Originals are never deleted; the fixed code below is the public message.
                 raise Blocked("MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED") from None
             window_open = self.now() < date(self.gate["window_end"])
             self.receipt("modify-apply", {"exit": 0, "pre_backup": pre, "post_backup": post,
+                                          "terraform_backup_observed": tf_backup_observed,
                                           "backup_verified": True, "window_open_for_further_live": window_open})
             require(window_open, "WINDOW_EXPIRED_AFTER_BACKUP_NO_FURTHER_LIVE")
             try:

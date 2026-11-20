@@ -152,6 +152,8 @@ object QueryRequest {
   def fingerprint(request: QueryRequest): String = Auth.sha256(canonical(request.json).render())
   def parse(body: String, config: ServiceConfig): Either[ApiError, QueryRequest] = boundary {
     try {
+      // Bounded nesting is checked on the raw text before ujson sees it (see RequestJson).
+      if (!RequestJson.withinDepth(body)) boundary.break(Left(ApiError.invalid))
       val value = ujson.read(body); val obj = value.obj
       if (!obj.keySet.subsetOf(Set("question", "constraints", "analysis", "retrieval", "output")))
         boundary.break(Left(ApiError.unsupported))

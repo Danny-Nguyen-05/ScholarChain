@@ -1,0 +1,18 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 1 source file(s); redacted.
+
+## <repo>/target/phase15/session2/evidence/deployer-cleanup-apply.log (2423 lines, sha256 aba1318c8710200042463c57fa903b9f4a378e80fb45275568ea619ea51fcaea)
+Plan: 0 to add, 0 to change, 13 to destroy.
+aws_iam_role_policy.operator_login["reader"]: Destruction complete after 0s
+aws_iam_role_policy.operator_login["cleanup"]: Destruction complete after 0s
+aws_iam_role_policy.operator["loader--data"]: Destruction complete after 0s
+aws_iam_role_policy.operator["cleanup--data"]: Destruction complete after 0s
+aws_iam_role_policy.operator_pipeline_login[0]: Destruction complete after 0s
+aws_iam_role_policy.operator_login["loader"]: Destruction complete after 0s
+aws_iam_role_policy.operator["loader--tunnel"]: Destruction complete after 0s
+aws_iam_role_policy.operator["reader--data"]: Destruction complete after 0s
+aws_iam_role_policy.operator_pipeline[0]: Destruction complete after 0s
+aws_iam_role.operator_pipeline[0]: Destruction complete after 0s
+aws_iam_role.operator["cleanup"]: Destruction complete after 0s
+aws_iam_role.operator["reader"]: Destruction complete after 0s
+aws_iam_role.operator["loader"]: Destruction complete after 0s
+Apply complete! Resources: 0 added, 0 changed, 13 destroyed.

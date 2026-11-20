@@ -174,8 +174,10 @@ class ConfigMirrorsTerraformTests(unittest.TestCase):
 
     def test_the_caps_are_unchanged_and_the_project_ceiling_is_pinned(self):
         values = conf()
-        self.assertEqual((values["EMR_MAX_RUN_USD"], values["EMR_MAX_LIVE_RUNS"], values["EMR_CUMULATIVE_CAP_USD"]), ("3", "3", "2.52"))
-        self.assertEqual((values["PRESPEND_MAX_AGE_HOURS"], values["PRESPEND_MIN_HEADROOM_USD"]), ("24", "3"))
+        # Phase 15 P25 (user decision 2026-11-16, phase-15 prompt.md line 131): 4 runs; repair round (user decision 2026-11-16, "Raise cap to 3.53"): USD 3.53 cumulative (was 3.36); the per-run cap is unchanged.
+        self.assertEqual((values["EMR_MAX_RUN_USD"], values["EMR_MAX_LIVE_RUNS"], values["EMR_CUMULATIVE_CAP_USD"]), ("3", "4", "3.53"))
+        # Phase 15 "R-b option decision" (prompt.md): floor 2 / project <= 23.00 (the floor was 3).
+        self.assertEqual((values["PRESPEND_MAX_AGE_HOURS"], values["PRESPEND_MIN_HEADROOM_USD"]), ("24", "2"))
         self.assertEqual(values["PRESPEND_PROJECT_CEILING_USD"], "25")
         pinned = re.search(r'SC_PINNED_KEYS="([^"]*)"', read(os.path.join(SCRIPTS_DIR, "lib", "common.sh"))).group(1).split()
         self.assertIn("PRESPEND_PROJECT_CEILING_USD", pinned, "no environment variable may widen the ceiling")

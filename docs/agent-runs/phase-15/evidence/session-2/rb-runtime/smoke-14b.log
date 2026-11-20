@@ -1,0 +1,10 @@
+STEP: start
+[2026-11-18T20:35:52Z] [20261118T203552Z-16439] INFO script=smoke-test.sh mode=smoke run_id=20261118T203552Z-16439 repo_root=<repo>
+STEP: inputs
+[2026-11-18T20:35:52Z] [20261118T203552Z-16439] INFO target https://<redacted>; the API key is read from SCHOLARCHAIN_SMOKE_API_KEY and is never printed
+STEP: smoke-healthz
+CHECK-OK: healthz: GET /healthz 200 status=alive
+STEP: smoke-readyz
+CHECK-OK: readyz: GET /readyz 200 status=ready
+STEP: smoke-complete
+RESULT: PASS only 2 of 6 checks ran (healthz readyz) and passed against https://<redacted>; this is not the full smoke test

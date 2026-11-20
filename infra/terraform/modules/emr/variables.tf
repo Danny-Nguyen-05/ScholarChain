@@ -23,7 +23,12 @@ variable "config" {
     # Step scripts and config the bootstrap verifies and installs (item 8). dest must be under an allowed directory.
     extra_artifacts = optional(list(object({ uri = string, sha256 = string, dest = string })), [])
 
-    instance_type = optional(string, "m5.xlarge")
+    # instance_type is the core (and task) node type. The primary (master) node has its own type: Phase 15 D3 (human decision,
+    # docs/agent-runs/phase-15/prompt.md, "D3 decision" and "S run cap and D3 go-ahead", 2026-11-16): r5.xlarge (32 GiB, 4 vCPU),
+    # because the entity-resolution step is a single JVM on the PRIMARY node (scripts/emr/sc-step.sh) that needs a 12g heap
+    # (P6: 8g OOM, RSS 13.9 GB at 12g), which a 16 GiB m5.xlarge primary cannot hold with headroom. Spark executors run on core.
+    instance_type         = optional(string, "m5.xlarge")
+    primary_instance_type = optional(string, "r5.xlarge")
     # G3: task nodes and managed scaling are OFF unless tfvars turn them on, within the caps below.
     max_task_nodes               = optional(number, 0)
     task_node_count              = optional(number, 0)
@@ -48,6 +53,13 @@ variable "config" {
   validation {
     condition     = var.config.instance_type == "m5.xlarge"
     error_message = "Only m5.xlarge keeps the smallest cluster (primary + core) inside the USD 3 per-run cap at the maximum runtime plus idle tail (G6); m5.2xlarge would not."
+  }
+  validation {
+    # D3: exactly the reviewed pair. Primary m5.xlarge or r5.xlarge; the core (and task) type stays pinned to m5.xlarge above.
+    # G6 at r5.xlarge: the largest allowed cluster (r5 primary 0.315 + core and one task m5 0.240 each, USD per hour) costs
+    # 0.795 x (180 min + 900 s) = USD 2.59 (2.58375 rounded up), inside the USD 3 per-run cap; tests/phase15_emr_primary.tftest.hcl derives it.
+    condition     = contains(["m5.xlarge", "r5.xlarge"], var.config.primary_instance_type)
+    error_message = "D3: the primary instance type must be r5.xlarge (the reviewed default) or m5.xlarge; no other type has a reviewed rate and cap check."
   }
   validation {
     condition     = floor(var.config.max_task_nodes) == var.config.max_task_nodes && var.config.max_task_nodes >= 0 && var.config.max_task_nodes <= 1
@@ -153,8 +165,11 @@ variable "spark_defaults" {
     "spark.executor.memory" = "3g"
     "spark.driver.cores"    = "1"
     "spark.driver.memory"   = "3g"
-    # Bounded, predictable failure behaviour.
-    "spark.task.maxFailures"    = "1"
+    # Bounded failure behaviour: one task retry (maxFailures 2) absorbs a transient task failure, notably SPARK-43221 (host-local
+    # block fetch of a broadcast piece stored on disk with spark.io.encryption.enabled=true yields an empty buffer, so
+    # TorrentBroadcast.readBlocks throws ArrayIndexOutOfBoundsException; fixed in Spark 3.5.6, not in our 3.5.4), which otherwise
+    # aborts a paid run. Application attempts stay 1, so a failed job is still bounded (no second full application run).
+    "spark.task.maxFailures"    = "2"
     "spark.yarn.maxAppAttempts" = "1"
     "spark.ui.enabled"          = "false"
     # Class-origin evidence in the driver and executor stdout.
@@ -176,6 +191,10 @@ variable "spark_defaults" {
       "spark.shuffle.service.enabled"                   = "false"
     } : lookup(var.spark_defaults, k, null) == v])
     error_message = "Decision 12-10 requires: yarn.jars on the local runtime, populateHadoopClasspath=false, defaultFS file:///, spark.authenticate, AES-CTR (authEngineVersion=1, no SASL fallback), IO encryption and G2 shuffle tracking without an external shuffle service."
+  }
+  validation {
+    condition     = lookup(var.spark_defaults, "spark.task.maxFailures", null) == "2" && lookup(var.spark_defaults, "spark.yarn.maxAppAttempts", null) == "1"
+    error_message = "Failure bounds are pinned: spark.task.maxFailures must be 2 (one task retry for a transient task failure) and spark.yarn.maxAppAttempts must be 1 (a failed job is not rerun as a whole). Changing either is a cost-bound change that needs a recorded human decision."
   }
   validation {
     condition     = !strcontains(lower(lookup(var.spark_defaults, "spark.hadoop.io.compression.codecs", "lzo")), "lzo") && contains(keys(var.spark_defaults), "spark.hadoop.io.compression.codecs")

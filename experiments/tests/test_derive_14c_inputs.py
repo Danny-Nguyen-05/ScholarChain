@@ -325,10 +325,11 @@ class CommittedInputsTests(unittest.TestCase):
 
 
 class ConfigSourcesTests(unittest.TestCase):
-    """Item 1: the --er-policy, --er-config and --spark-config-template files are the repository's Phase 5/6 files; their hashes must not drift."""
+    """Item 1: the --er-policy and --er-config files are the repository's Phase 5/6 files, --spark-config-template and --hadoop-config the
+    experiment-owned 15A files (P24, P1/P22); their hashes must not drift."""
     def test_sources_exist_and_hashes_match(self):
         doc = json.loads(read(os.path.join(REPO, "experiments", "inputs", "15a", "config-sources.json")))
-        self.assertEqual(sorted(doc["files"]), ["er-config", "er-policy", "spark-config-template"])
+        self.assertEqual(sorted(doc["files"]), ["er-config", "er-policy", "hadoop-config", "spark-config-template"])
         for name, entry in doc["files"].items():
             path = os.path.join(REPO, entry["path"])
             self.assertTrue(os.path.isfile(path), name)

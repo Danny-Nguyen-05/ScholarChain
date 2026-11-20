@@ -19,6 +19,7 @@ synthetic format material, never a claim about a real researcher or deployed ans
 | graph-service | GET `/internal/v1/graph/nodes/{nodeId}` and `/neighbors`; GET `/internal/v1/graph/metrics/{nodeId}`; GET `/internal/v1/graph/paths` |
 | semantic-service | POST `/internal/v1/semantic/retrieve` |
 | query-api | POST `/internal/v1/semantic/retrieve` forwards to the configured semantic service |
+| query-api | POST `/v1/semantic/retrieve`: public, API-key authenticated, rate limited, forwards to the internal semantic route (see "Public semantic retrieval") |
 | all artifacts | GET `/healthz`, `/readyz`, `/metrics` |
 | embedding-worker | Bounded `EmbeddingWorkQueue` consumer, durable per-payload processing reservation, separate DLQ queue port |
 
@@ -159,6 +160,7 @@ semantic-service:
 | `SCHOLARCHAIN_EMBEDDING_MODEL_VERSION` | must equal the version stamped on the stored vectors | none |
 | `SCHOLARCHAIN_EMBEDDING_DIMENSION` | `256` (256, 512 or 1024) | `var.vector_dimension` |
 | `SCHOLARCHAIN_S3_VECTORS_METRIC` (optional) | default `cosine` | `var.vector_metric` |
+| `SCHOLARCHAIN_EMBEDDING_CACHE_MAX_ENTRIES` (optional) | default `1024` (`CachingEmbeddingClient.DefaultMaxEntries`), 1..100000; refusal `invalid-aws-configuration:SCHOLARCHAIN_EMBEDDING_CACHE_MAX_ENTRIES` | none (P40 uses the default; any override rides with P41) |
 
 query-api:
 
@@ -177,6 +179,7 @@ query-api:
 | `SCHOLARCHAIN_QUERY_SESSION_TTL_SECONDS` (optional) | positive | `var.enable_query_session_ttl` |
 | `SCHOLARCHAIN_EVIDENCE_INDEX_PREFIX`, `SCHOLARCHAIN_AUDIT_PREFIX` (optional) | `evidence-index`, `runtime-audit` | none |
 | `SCHOLARCHAIN_RUNTIME_PLANNER_DEADLINE_MS`, `_SYNTHESIS_DEADLINE_MS`, `_SYNCHRONOUS_DEADLINE_MS` (optional) | override the packaged stage deadlines | none. The result must pass `RuntimeConfigValidation` |
+| `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND`, `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST` (optional) | defaults `50` and `100`; 1..100000 and 1..1000000; read in every mode | none (P40 uses the defaults; the Session 2 value `r_S2` rides with P41) |
 
 embedding-worker:
 
@@ -275,6 +278,65 @@ breaker, so after a peer outage query-api stays not-ready until the breaker clos
 - Stage deadlines come from the packaged runtime config (planner and synthesis 5 s) and may need
   the optional overrides for real model latency.
 
+## Public semantic retrieval (`POST /v1/semantic/retrieve`, P40)
+
+Served by query-api in `aws` and `offline-synthetic` mode (404 in `unconfigured` mode and on
+other roles). Steps, in order:
+
+1. **Authentication**: the same `Authorization: Bearer <API key>` as every other `/v1` route,
+   checked against `SCHOLARCHAIN_API_KEY_SHA256`. Missing or wrong key: 401 `UNAUTHORIZED`. The
+   internal token is not accepted here, and the API key still does not open `/internal/**`.
+2. **Rate limit** (before validation and before any downstream call): an in-memory token bucket
+   per API-key hash in each query-api process. Defaults 50 requests/s sustained, burst 100,
+   overridable with `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND` and
+   `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST`. Buckets are keyed by the SHA-256 of the presented key,
+   never the raw key, and at most 1,024 buckets are held (fully refilled buckets are dropped first,
+   then the least recently used). Over the limit: 429 `RATE_LIMITED`, `retryable: true`, with a
+   `Retry-After` header in whole seconds (at least 1). The limit is per task, so N query-api tasks
+   admit up to N times the configured rate. An invalid value refuses startup (exit 2) with
+   `invalid-service-configuration:<variable>`.
+3. **Public limits** (`PublicSemanticLimits`), typed 400 `INVALID_REQUEST` otherwise: body at most
+   8,192 UTF-8 bytes; JSON object with only `question`, `topK`, `filters`; `question` a string with
+   a non-whitespace character and at most 1,000 Unicode code points; `topK` a whole number 1..20
+   (default 20); `filters` an object of at most 16 non-empty keys with string values of at most
+   1,000 code points (the internal route's filter shape); no query string; JSON nesting at most 32
+   levels (see "Request-body nesting limit" below).
+4. **Forwarding**: the body is re-serialized (`question`, `topK`, optional `filters`) and sent to
+   semantic-service `POST /internal/v1/semantic/retrieve` through `RemoteSemanticApi` with the
+   internal token, under the existing `DownstreamClient` timeout and circuit breaker. In
+   offline-synthetic mode without `SCHOLARCHAIN_SEMANTIC_BASE_URI` it calls the in-process
+   `SemanticApi` instead. The internal route and its `SemanticApiConfig` limits are unchanged,
+   apart from the shared request-body nesting limit.
+5. **Reply**: rebuilt from exactly `hits[].key`, `hits[].distance`, `hits[].metadata` and `model`
+   (`modelId`, `version`, `dimension`); any other downstream field is dropped, and a downstream body
+   of another shape is a 502. At most the forwarded `topK` hits are returned: if the downstream
+   returns more, the first `topK` are kept in downstream order.
+
+Downstream errors use the existing mapping: semantic-service 503 or an open circuit is 503
+(`SERVICE_UNAVAILABLE` or `CIRCUIT_OPEN`), a 504 or a transport timeout is 504
+`DOWNSTREAM_TIMEOUT`, downstream throttling is 429 `THROTTLED` (no `Retry-After`), and connection
+failures are 502 `DOWNSTREAM_FAILURE`. The question is not logged (request logs carry only the
+route template `/v1/semantic/retrieve`, status and correlation IDs) and is never a metric label.
+
+**Query-embedding cache.** In `aws` mode, semantic-service wraps only its query-type embedding
+client, after the port factory builds it, in the rag-owned `CachingEmbeddingClient`, and passes the
+wrapped client both to the vector-identity check and to `SemanticApi.fromPorts`. The embedding
+worker's document client is not wrapped. The size comes from
+`SCHOLARCHAIN_EMBEDDING_CACHE_MAX_ENTRIES` (default 1,024). The offline-synthetic semantic
+composition wraps its deterministic embedder the same way (same variable; refusal
+`invalid-service-configuration:SCHOLARCHAIN_EMBEDDING_CACHE_MAX_ENTRIES`). The cache keys on the
+provider, the model and a SHA-256 of the exact text. It caches only successful embeddings, has no
+TTL, and does not coalesce concurrent misses for the same text (see `modules/rag/README.md`).
+
+**Metrics** (on `/metrics`, API key required):
+
+| Metric | Where | Meaning |
+| --- | --- | --- |
+| `api_route_requests_total{route,status}` | every role | replies per route template and status; routes outside the labelled set count as `unmatched`, as in the request log |
+| `api_rate_limited_total` | every role (non-zero only on query-api) | 429 `RATE_LIMITED` replies from the semantic rate limiter; downstream `THROTTLED` replies are not counted here |
+| `embedding_cache_hits_total`, `embedding_cache_misses_total`, `embedding_cache_evictions_total` | semantic-service; offline-synthetic query-api with an in-process semantic route | cumulative; misses are texts sent to the underlying embedder (Voyage calls in aws mode) |
+| `embedding_cache_size`, `embedding_cache_capacity` | as above | current entries and the configured bound |
+
 ## Requests, jobs and errors
 
 `X-Request-Id` and `X-Trace-Id` are bounded safe correlation tokens, generated when absent or
@@ -311,15 +373,31 @@ then persist a **nonretryable** terminal error; same-key replay cannot execute a
 429 and oversize-result 502 are also terminal/nonretryable. A deliberate new workflow requires
 a new idempotency key. Runtime-adapter failures do not retry an already published immutable audit.
 
+**Request-body nesting limit.** Every JSON request body parsed by this module (`POST /v1/query`,
+`POST /v1/semantic/retrieve` and `POST /internal/v1/semantic/retrieve`) may have at most
+**32** arrays and objects open at once (`RequestJson.MaxNestingDepth`; the root object counts as
+level 1). The deepest legitimate body is 3 levels (`/v1/query` `constraints.topics`). The limit is
+checked by a single loop over the raw text, before ujson parses it: `[` and `{` outside strings
+open a level, `]` and `}` close one, a backslash escapes the next character inside a string, and
+closing more levels than were opened is also refused. A deeper body is a typed 400
+`INVALID_REQUEST`. Without this check a body of a few thousand `[` (within the 8 KiB public limit)
+overflowed the thread stack while ujson rendered or transformed the parsed value; that
+`StackOverflowError` escaped the application and the transport printed a stack trace and answered
+an untyped 500. On the public semantic route the rate limit still runs first, so a deep body over
+the limit is a 429. Separately, and only as a backstop, `ApiApplication.handle` maps a
+`StackOverflowError` to the typed 500 `INTERNAL_ERROR` with a trace ID rather than letting it reach
+the transport; it is not the defence against deep JSON. For `/v1/query`, a deep body whose objects
+carry unknown keys is now 400 rather than 422, because the nesting check runs first.
+
 | Status | Meaning |
 | --- | --- |
-| 400 | Malformed JSON, wrong types, invalid graph/cursor bounds, malformed query parameters |
+| 400 | Malformed JSON, wrong types, JSON nested deeper than 32 levels, invalid graph/cursor bounds, malformed query parameters |
 | 401 | Missing or invalid authentication |
 | 403 | Reserved for a configured permission policy; shared course key has one authorization domain |
 | 404 | Missing job, evidence, audit or graph node |
 | 409 | Different request body under an existing key or incompatible downstream state |
 | 422 | Unsupported query/constraint, graph scan/node cap or incomplete bounded path expansion |
-| 429 | Bounded local queue full or downstream throttling |
+| 429 | Bounded local queue full, downstream throttling, or the query-api semantic rate limit (`RATE_LIMITED`, retryable, `Retry-After`) |
 | 500 | Closed internal error with trace ID |
 | 502 | Downstream failure, oversized result or rejected downstream authentication |
 | 503 | Not ready, dependency unavailable or circuit open |
@@ -442,7 +520,9 @@ Additional bootstrap graph prefix `SCHOLARCHAIN_GRAPH_`: `DIRECTION=both`,
 `MAX_CURSOR_CHARS=4096`, and `CURSOR_KEY` (random per-process unless injected).
 Worker prefix `SCHOLARCHAIN_WORKER_`: `MAX_ATTEMPTS=3`, `BATCH_SIZE=1`, `POLL_MS=1000`.
 Semantic injection config defaults top-K 50, question chars 8192, body bytes 65536,
-filter count 16 and timeout 5000 ms. All caps are configured application bounds, not measured
+filter count 16 and timeout 5000 ms (internal route). The public route's `PublicSemanticLimits`
+are top-K 20, question 1000 code points, body 8192 bytes and filter count 16; its rate limit and
+the embedding-cache size are described under "Public semantic retrieval". All caps are configured application bounds, not measured
 production tuning. Publishing different public caps requires updating the deployment contract.
 
 Prior observed targeted gates on Java 17: **26/26 module tests in four suites**; the combined

@@ -6,6 +6,8 @@
 **Update 2026-11-09 (repair round 3):** the primary model providers are now the **Anthropic API** (answers, model `claude-haiku-5-5`) and **Voyage AI** (embeddings, model `voyage-4-lite`, 256 dimensions), approved by the instructor because AWS Bedrock quotas are 0 (see the [report section](../report/provider-fallback.md) and the root [README](../../README.md)). This runbook was updated for that change, offline only; nothing in it has been run. Wherever the text below says "Haiku" without a version it now means `claude-haiku-5-5` on the Anthropic API, unless you choose a Bedrock run (A0 and A6). The Bedrock steps are kept, but only for a Bedrock run. The earlier text that says Titan, Marketplace or the Bedrock quota applies only to a Bedrock run.
 **Update 2026-11-10 (14B pre-session items 1 to 10, offline):** the ten open items listed in section 10 of the [approval request](../agent-runs/phase-14/approval-request-14b-replan.md) now have delivered paths, values and commands in A1.4, A3 (the login step and the two gate field counts), A4 (one STOP rule), A8, A10, A12, B8.3 to B8.6, B9.1 to B9.3, B11 and B13.3, replacing the earlier notes that said the repository lacked these. They were written from the repository files; none of these commands has been run against AWS or a provider. Items marked **(unverified until live)** stay unverified.
 
+**Session 2 (2026-11-19) amendment, 2026-11-17 (no Session 2 step can spend on Anthropic):** the Session 1 text below is kept as history. In Session 2 the Anthropic secret holds a non-working placeholder and no real Anthropic key is created (B3b); the steps that call Anthropic are marked **not in Session 2** where they occur (B8.8, B10.1 and B10.3 with `--llm`, B11, B12.1, B12.3 and the paid-answer parts of B12.2, and the GO / NO-GO boxes that count them); the Anthropic spend-limit and revocation steps apply to Voyage only (B3b.1 and C5b); C3 only deletes the Anthropic container, which holds a placeholder. Session 2 follows the [Session 2 plan](session-2-plan.md) wherever it differs. Decision: your answer recorded verbatim in `docs/agent-runs/phase-15/prompt.md` (last section, "Session 2 Anthropic exposure"). Nothing in these notes has been run against AWS or Anthropic.
+
 Related documents: [approval request](../agent-runs/phase-14/approval-request-14b-replan.md) (the costs and caps you approve), [replan decisions](../agent-runs/phase-14/prompt.md) (your recorded answers), [scripts README](../../scripts/README.md), [deployer README](../../infra/terraform/deployer/README.md), [Terraform README](../../infra/terraform/README.md), [billing README](../../scripts/billing/README.md), [billing verification](../../scripts/billing/VERIFICATION.md), [storage README](../../modules/storage/README.md), [rag README](../../modules/rag/README.md), [load-tests README](../../load-tests/README.md), [experiments README](../../experiments/README.md), [14C templates](../agent-runs/phase-14/evidence/14b/replan/14c-templates.md), [fallback note](../agent-runs/phase-14/evidence/14b/replan/fallback-note.md).
 
 ---
@@ -104,6 +106,8 @@ What this does: `JAVA_HOME` selects Java 17 (sbt breaks on newer Java); `tfout` 
 | **H0, H35, H37** | H0 is the minute you start B1.2. Hours after H0 are written H1:30 and so on. H35 is the latest moment cleanup may start; H37 is the hard stop. |
 
 **Money rule (read twice):** the whole project may spend at most **USD 25**, cumulative, including the USD 0.34 already spent. The USD 25 covers **three bills together: AWS, Anthropic and Voyage AI** (the instructor counts external API charges toward it). The Anthropic and Voyage charges are not on the AWS bill and the AWS budget e-mails do not see them. **At every GO / NO-GO box, and before every receipt, read the actual charges in all three places** (AWS Cost Explorer, the Anthropic Console usage and billing page, the Voyage AI dashboard usage page) and write each number in the session clock log; the USD 25 is a ceiling, not a target, so stop paid resources as soon as the experiments finish. While the stack is up it costs about **USD 0.31 per hour before tax (about USD 0.35 per hour including about 11% sales tax)** even when idle. Sales tax counts toward the USD 25 cap. The budget alerts at USD 10, 15 and 20 are **only e-mails: they stop nothing, and billing data arrives 8 to 24 hours late.** Our own caps do the protecting. **Start cleanup (Section C) no later than H35, and never let the session pass H37.** If anything is going badly, going to cleanup early is always allowed.
+
+2026-11-15 note: from Phase 15 P0 the AWS budget alerts are at USD 18/20/22, not 10/15/20 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)); the paragraph above is the Session 1 record.
 
 ---
 
@@ -259,6 +263,8 @@ Plain words: this file pins the size and fingerprint (sha256) of 209 tracked fil
 
 ## A3. Budget modify to USD 25 (the FIRST LIVE STEP)
 
+> **2026-11-15:** A3 was skipped on 2026-11-11 (user decision); the modify is done in Phase 15 as P0 with alerts at USD 18/20/22 instead of 10/15/20 — see `docs/runbooks/session-2-plan.md` (row P0; draft, not yet committed) and [scripts/billing/README.md](../../scripts/billing/README.md). The original Session 1 text below (including every 10/15/20 mention in this section) is kept unchanged as the historical record.
+
 Plain words: the AWS Budget currently warns at 50/80/100% of USD 200. This changes it to a USD 25 budget with warnings at USD 10, 15 and 20. A special billing role and a purpose-built wrapper script do it. It changes only the budget (a monitor); it cannot spend money. Full detail: [billing README, "Phase 14B"](../../scripts/billing/README.md) and [VERIFICATION.md](../../scripts/billing/VERIFICATION.md). The numbers below are the README's step numbers.
 
 - **Where:** T1, one terminal kept open the whole time, started with `umask 077`.
@@ -290,7 +296,7 @@ Plain words: the AWS Budget currently warns at 50/80/100% of USD 200. This chang
 10. **Steps 10 to 12, pins, gate record, gate JSON:**
     - Add the `modify` object to `scripts/billing/reviewed-pins.json` (README "Pins that become stale": `plan_sha256`, `plan_bytes`, `public_input_sha256`, and seven `config` rows with the repository file hash and byte size). Commit (commit C2).
     - Write the new modify human-gate record in your own words as a new committed file under `docs/agent-runs/phase-14/` (not under `evidence/14b/`): you approve this exact plan hash, the USD 25 target, the alerts at 10/15/20, the state backup and the time window. Commit it; this HEAD is the gate's `source_commit`.
-    - Save the gate JSON privately as `"$PRIMARY/approval-<yyyymmdd>-modify.json"` (mode 600, window at most 1 hour; the field list is in billing README step 12) and compute `shasum -a 256` of it. This **modify gate has 28 fields** (the `required` set in `load_modify_gate`, `scripts/billing/budget_execution.py:673-678`).
+    - Save the gate JSON privately as `"$PRIMARY/approval-<yyyymmdd>-modify.json"` (mode 600, window at most 1 hour; the field list is in billing README step 12) and compute `shasum -a 256` of it. This **modify gate has 28 fields** (the `required` set in `load_modify_gate`, `scripts/billing/budget_execution.py:688-694`).
 11. **Step 13, the apply, inside the gate window** (repeat step 4 first if the login is older than the gate allows):
     ```
     python3 -I scripts/billing/budget_execution.py modify --gate "$PRIMARY/approval-<yyyymmdd>-modify.json" --gate-sha256 <gate sha> --operation modify-<yyyymmdd>-01 2>&1 | tee target/phase14/evidence/14b/budget-modify-apply.log; echo "exit=$?"
@@ -303,6 +309,7 @@ Plain words: the AWS Budget currently warns at 50/80/100% of USD 200. This chang
     python3 -I scripts/billing/budget_verification.py verify-modified --gate <gate> --gate-sha256 <sha> --operation verify-usd25-<id> 2>&1 | tee target/phase14/evidence/14b/budget-modify-verify.log; echo "exit=$?"
     ```
     Success: `"stage": "verify"`, `"option": "M"`, `"notification_count": 3`, `"email_subscribers_each": 1`, `"private_recipients_match": true`, `"delivery_verified": false`. (The old Phase 12D `verify` mode now fails by design.)
+    - **Exception, operation `modify-20261116-01`:** its apply completed but the wrapper stopped before writing the post-apply backup and the receipts, so the 29-field gate and `modify_receipt_sha256` do not exist for it. Its verification is the read-only incident-linkage variant (the gate field `"modify_linkage": "incident"`; [VERIFICATION.md](../../scripts/billing/VERIFICATION.md), "Incident linkage"); see the [incident record](../incidents/2026-11-16-p0-budget-modify-backup-check.md).
 14. **Step 16 (optional):** Console > Billing and Cost Management > **Budgets**: one budget, USD 25, three actual-cost alerts at $10, $15 and $20.
 15. **Commit the wrapper's public packet and gate record** (it writes `public_packet_root` under `docs/agent-runs/phase-14/evidence/14b/`): `git add -A; git commit -m "Phase 14B: budget modify record"` before A4 and before the base plan. HEAD moves; that is fine because no plan exists yet.
 
@@ -604,6 +611,7 @@ Plain words: the ledger is a local counter that makes the answer buckets (14c 10
 - [ ] A1 reviewer APPROVE seen; EMR flag true; manifests rendered; `approval-14c.md` committed; `check.sh` PASS gates=7; committed; HEAD noted
 - [ ] A2 pins: `209 pinned; 0 drifted` (and `modify` object added in A3)
 - [ ] A3 budget is USD 25 with alerts at 10/15/20 (apply log and verify log both OK); packet and gate record committed
+  - 2026-11-15 note: A3 was skipped on 2026-11-11; done in Phase 15 P0 with alerts at USD 18/20/22 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)).
 - [ ] A4 deployer applied; verification outputs as expected; state backups copied to Drive
 - [ ] A5 all five roles rehearsed (Arn shapes OK; three CREDENTIALS-RESOLVED lines)
 - [ ] A6 (only for a Bedrock run) quotas non-zero; playground/Titan calls OK; Marketplace subscription listed. Default run: A6 skipped.
@@ -626,6 +634,7 @@ Money is spent from the first apply until the last cleanup pass. Keep the clock:
 - **Do:**
   1. Console: sign in as your IAM user with MFA (fresh). In T1: `date -u | tee -a target/phase14/evidence/14b/session-clock.log` and `date -u +%s > target/phase14/private/h0.epoch` (used later to set approval expiry to H0 + 37 hours).
   2. Console > **Billing and Cost Management** > **Cost Explorer**: group by Service, date range from the project start, and untick **Credits** and **Refunds** under Charge type (the USD 25 cap counts usage regardless of credits; confirm this setting with the coordinator). Note the total and the "data through" date. Then Billing > **Budgets**: one budget, USD 25, alerts at 10/15/20. Then read the **Anthropic Console** usage and billing page and the **Voyage AI dashboard** usage page and note both totals in US dollars (they feed the two new receipt fields; `0` if nothing yet).
+     - 2026-11-15 note: from Phase 15 P0 the alerts are at USD 18/20/22, not 10/15/20 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)).
   3. T1: `git status --short` (must print nothing), `git rev-parse HEAD` (must equal the A12 HEAD), `curl -s https://checkip.amazonaws.com` (must equal the IP in your tfvars), `python3 -I load-tests/llm_budget.py status` (nothing used).
 - **Success looks like:** the three checks above agree; the budget page shows USD 25 with three alerts.
 - **If it fails:** a dirty tree, a different HEAD or a different IP means stop; tell the coordinator (HEAD change = redo A12; IP change = update `public_ingress_cidrs` before B4).
@@ -821,6 +830,14 @@ Plain words: `push` copies the four container images built in A12 to the AWS ima
 
 Plain words: the base-apply made two **empty** containers in Secrets Manager, one for each provider's API key. A key is a long secret password that lets our services call Anthropic (answers) or Voyage (embeddings) and bills your account there. The containers must hold a real key **before** B4: ECS cannot start a service whose secret is empty, so the runtime-apply would fail. You create each key in the provider's own web console, then put it into its container with **your own** AWS identity (no Terraform role is allowed to write secret values, by design). These steps were authored offline and have not been run: the first run is their test.
 
+> **Session 2 (2026-11-19) amendment, 2026-11-17: the Anthropic container gets a placeholder, not a real key.** The Session 1 text of B3b stays as written for the Voyage key. For Anthropic in Session 2:
+> - **No Anthropic key is created.** Skip step 1 of B3b.1 (no Anthropic Console visit, no Anthropic spend limit). Voyage is created as in step 2.
+> - **Enter a non-working placeholder in `scholarchain-course/anthropic-api-key` exactly like a real key**, by the terminal method of B3b.2 (`read -rs`, then `printf '%s' "$KEY" | aws secretsmanager put-secret-value ... --secret-string file:///dev/stdin ...`, then `unset KEY`). The value is typed at the hidden prompt: never in a file, the repo, the evidence folder, the shell history or a command-line argument, and never sent to the coordinator. The console method of B3b.2 also works; the same rules apply.
+> - **Rules for the placeholder value:** 8 to 512 printable ASCII characters, no spaces, **not a real key and not derived from a real key**. query-api reads this container at startup and accepts any value of that shape (`AwsConfig.scala` lines 131-136, as verified by the coordinator); ECS cannot start the task while the container is empty, which is why a value is needed. No example value is written here.
+> - **Why it is enough (by code reading; not yet observed live):** building the Anthropic client makes no network call (`AwsPorts.scala` lines 174-195; the only network call is in `complete()`, on a lazy `HttpClient`, `modules/rag` `AnthropicLlm.scala` line 187; the rag-side key check, 1-512 visible ASCII, is at `AnthropicLlm.scala` lines 25-28; as verified by the review of 2026-11-17) and `/readyz` does not probe Anthropic, so query-api should start and the B6 smoke should pass. Watch for it in B6; if query-api does not start or `readyz` fails, stop and tell the coordinator.
+> - **If anything calls Anthropic by accident, it fails** with an authentication error at the provider instead of spending. Do not "fix" that error by entering a real key (E6b).
+> - B3b.3 is unchanged: `describe-secret` still shows `AWSCURRENT` for both containers. The container itself is still deleted at cleanup (C3), as before; there is no Anthropic key to revoke (C5b).
+
 **Status of the entry method: pending user confirmation.** The primary method (AWS console) and the alternative (terminal) below are proposals. Tell the coordinator which one you choose before B3b; do not start until you have.
 
 **Rules for the key (read first):**
@@ -829,9 +846,9 @@ Plain words: the base-apply made two **empty** containers in Secrets Manager, on
 - The provider consoles show a key's value **once**, when you create it. Copy it straight into the AWS console (or the terminal prompt below). If you keep a copy for the later Voyage ingest (B8.6), keep it in your password manager only; this is your decision (pending user confirmation).
 
 **B3b.1 Create the two keys in the provider consoles** (browser; do both):
-1. Anthropic: sign in to the Anthropic Console, open **API keys**, create a key, name it for this project (for example `scholarchain-course-session`). Look for a **spend limit** or usage limit setting (in the console's billing or limits pages; menu names may differ, unverified) and set a small monthly limit, for example USD 5. Keep the page open; the value is shown once.
+1. Anthropic: sign in to the Anthropic Console, open **API keys**, create a key, name it for this project (for example `scholarchain-course-session`). Look for a **spend limit** or usage limit setting (in the console's billing or limits pages; menu names may differ, unverified) and set a small monthly limit, for example USD 5. Keep the page open; the value is shown once. **Not in Session 2 (amended 2026-11-17): skip this step.** No Anthropic key and no Anthropic spend limit in Session 2; see the amendment above for the placeholder. (Session 1 history: this step was done.)
 2. Voyage AI: sign in to the Voyage dashboard, open **API keys**, create a key, name it the same way. If the dashboard offers a spend or usage limit, set a small one. Keep the page open.
-- **Success looks like:** two named keys appear in the two key lists; limits are set where the console offers them.
+- **Success looks like:** two named keys appear in the two key lists; limits are set where the console offers them. (Session 2: one named key, the Voyage key; limits only where the Voyage dashboard offers them.)
 - **If it fails:** a console that needs a card or credit first: add the minimum the console asks for and tell the coordinator the amount (it counts toward the USD 25). A missing limit option: continue, and tell the coordinator.
 
 **B3b.2 Put each value into its container** (use your own administrator identity, not a deployer or operator role). The two containers are named `scholarchain-course/anthropic-api-key` and `scholarchain-course/voyage-api-key` (`scholarchain-<env>/...` with `<env>` = `course`).
@@ -1152,6 +1169,7 @@ sbt -batch "storage / Compile / runMain edu.uic.cs441.scholarchain.storage.Stora
 - **Tell the coordinator:** the exit code and the report summary.
 
 **B8.8 Reserve answers (`claude-haiku-5-5`), then the real-data smoke.**
+- **Not in Session 2 (amended 2026-11-17).** The `smoke-test.sh` command below runs the default six checks, whose `query` check sends a valid-key `POST /v1/query` and therefore calls Anthropic. Session 2 does not run B8.8 and does not reserve bucket 14c. Session 2 runs instead: the B6 smoke (B6.2 health, B6.3 the two wrong-key checks, B6.4 the evidence 404; the 401 and 404 answers come before any model call) after the runtime-apply, and **B8.7** (`LiveEmbeddingSmokeMain`, Voyage and S3 Vectors only, no answer call) as the stage-a query smoke, as in [Session 2 plan](session-2-plan.md) section 5.2 (the "B8.7 query smoke" bullets). Do not run `scripts/smoke-test.sh` without `--checks` in Session 2. Session 1 text follows as history.
 - **Do:**
   ```
   python3 -I load-tests/llm_budget.py reserve --bucket 14c --answers 2 2>&1 | tee -a target/phase14/evidence/14c/llm-reserve.log; echo "exit=$?"
@@ -1166,7 +1184,7 @@ sbt -batch "storage / Compile / runMain edu.uic.cs441.scholarchain.storage.Stora
 
 **B8.9 Wrap up 14C.** T2 Ctrl-C; `sudo cp target/phase14/private/hosts.before /etc/hosts`; `grep -c "$WRITER" /etc/hosts` must print `0`; `aws ecs stop-task --cluster "$TUNNEL_CLUSTER" --task "$TASK_ARN" --profile scholarchain-loader --region us-east-2 --query 'task.lastStatus' --output text` (if the session expired, re-login first; a 4-hour task ends itself). Save `python3 -I load-tests/llm_budget.py status` to `target/phase14/evidence/14c/llm-status-after-14c.log`.
 
-> **GO / NO-GO 5 (14C done; checkpoint H14):** [ ] upload-slice PASS [ ] runtime artifact uploaded, pointer applied [ ] `LOAD_COMPLETED` [ ] awsIntegration passed [ ] ingest `rejected: 0` [ ] query smoke exit 0 [ ] six-check smoke PASS [ ] tunnel stopped, hosts restored. GO = B9. If time is over H14, decide with the coordinator; Phase 15 is never dropped.
+> **GO / NO-GO 5 (14C done; checkpoint H14):** [ ] upload-slice PASS [ ] runtime artifact uploaded, pointer applied [ ] `LOAD_COMPLETED` [ ] awsIntegration passed [ ] ingest `rejected: 0` [ ] query smoke exit 0 [ ] six-check smoke PASS (not in Session 2: B8.8 is skipped; Session 2 has no GO / NO-GO 5, its gates are in the plan) [ ] tunnel stopped, hosts restored. GO = B9. If time is over H14, decide with the coordinator; Phase 15 is never dropped.
 
 ## B9. 15A: three EMR runs (about H10 to H18)
 
@@ -1245,6 +1263,8 @@ Success and failure as B9.5. If the cluster ended before the next run (state `TE
 
 Plain words: we send controlled traffic at 1, 5, 25 and 50 simultaneous users to the query service and watch the number of tasks go up and then down. Almost all traffic hits endpoints that do not call Haiku; a fixed sample of **60** real answers (bucket 15b) is included. The load generator reserves answers in the ledger itself, one by one, and stops calling Haiku the moment the bucket is used up. Details: [load-tests README](../../load-tests/README.md), [experiments README](../../experiments/README.md#15b-ecs-scale-out-and-scale-in-on-query-api).
 
+> **Not in Session 2 (amended 2026-11-17): the `--llm` commands of B10.1 and B10.3.** The `15b-ecs-scaling.json ... --llm` command sends valid-key answers that call Anthropic. Session 2 runs the plan's command instead: [Session 2 plan](session-2-plan.md) section 5.3, step "Elasticity (B10, adapted)", which is `loadgen.py run --manifest <P42 semantic manifest> --questions-file <fixed semantic questions>` without `--node-ids-file`, `--evidence-ids-file` or `--llm` (the load generator refuses `--llm` with that manifest, and its query route has weight 0). The plan does not list B10.1's `validate-manifest` and `plan` commands separately; if you run them, give them the P42 semantic manifest and no `--llm`. In Session 2 the first two lines of B10.1 are still needed before the plan's `loadgen.py` command: `export SCHOLARCHAIN_LOAD_BASE_URL="https://api.<domain>"` and `read -rs SCHOLARCHAIN_LOAD_API_KEY; export SCHOLARCHAIN_LOAD_API_KEY` (the load generator reads both by default, `load-tests/loadgen.py` lines 69-70, as verified by the review of 2026-11-17); only the `--llm` parts are not in Session 2. The metric polling (B10.2) is unchanged. The Session 1 text below is history.
+
 **B10.1 Pre-flight.**
 - **Do:**
   ```
@@ -1266,6 +1286,8 @@ while true; do echo "$(date -u +%FT%TZ) $(aws ecs describe-services --cluster sc
 (Unverified until live: with Container Insights off there is no `RunningTaskCount` metric; this poll is the task-count record.)
 
 **B10.3 Run the experiment** (about 50 minutes: four levels, a 10-minute hold at 50, then 30 minutes with no load):
+
+**Not in Session 2 (amended 2026-11-17): do not run the command below.** It carries `--llm`, so it would send paid answers. Session 2 runs the plan's command in [Session 2 plan](session-2-plan.md) section 5.3 ("Elasticity (B10, adapted)", the P42 semantic manifest, no `--llm`). Session 1 command, kept as history:
 ```
 python3 -I load-tests/loadgen.py run --manifest experiments/manifests/15b-ecs-scaling.json --run-id 15b-1 --node-ids-file target/phase14/14c-work/node-ids.txt --llm --questions-file target/phase14/14c-work/questions.txt 2>&1 | tee target/phase14/evidence/15/b10-loadgen.log; echo "exit=$?"
 ```
@@ -1290,6 +1312,8 @@ python3 -I load-tests/llm_budget.py status 2>&1 | tee target/phase14/evidence/15
 ## B11. 16B: live evaluation (about H21 to H27)
 
 Plain words: a fixed set of 40 real questions is answered through the live system, one at a time, and the raw answers are saved for grading later. At most **40** Haiku answers (bucket 16b). The command is `load-tests/eval16b.py` ([load-tests README, "eval16b.py"](../../load-tests/README.md#eval16bpy-the-16b-live-evaluation-command-bucket-16b)); the questions are `experiments/inputs/14c/questions.txt`, the same 40 questions that 15B cycles through.
+
+> **Not in Session 2 (amended 2026-11-17).** B11 sends paid answers (Anthropic). The Session 2 plan runs no 16B evaluation (R-c dropped; plan section 8, 16B row: "Session 2: none"). Do not run `eval16b.py` in Session 2.
 
 **Do not run `llm_budget.py reserve --bucket 16b` for this step.** `eval16b.py run` writes one ledger line for bucket 16b before every question, so a separate reserve would count each answer twice. (The same rule applies to 15B; B12.1 and B8.8 are different, those steps do not charge the ledger themselves.)
 
@@ -1322,6 +1346,8 @@ Plain words: a fixed set of 40 real questions is answered through the live syste
 
 ## B12. Demo video and final smoke (about H27 to H31)
 
+> **Not in Session 2 (amended 2026-11-17): B12.1 and B12.3 (and the paid-answer parts of B12.2).** The Session 2 plan has no B12 step: it runs no demo-answer recording and no final six-check smoke, and nothing in the plan replaces B12.3. The Session 2 smoke checks are the B6 smoke and the B8.7 query smoke (see B8.8 above); the plan's own demo items are in its section 5 and section 6.6. Do not reserve bucket 17.
+
 **B12.1 Reserve for the last Haiku bucket:** `python3 -I load-tests/llm_budget.py reserve --bucket 17 --answers 5 2>&1 | tee -a target/phase14/evidence/17/llm-reserve.log` (two answers for the final smoke, up to three for the demo). Exit 3 means stop.
 
 **B12.2 Record the demo video.**
@@ -1332,6 +1358,8 @@ Plain words: a fixed set of 40 real questions is answered through the live syste
 - **Tell the coordinator:** the file name and its sha256.
 
 **B12.3 Final smoke (the full six checks):**
+
+**Not in Session 2 (amended 2026-11-17): do not run the command below.** The six-check smoke sends a valid-key `POST /v1/query`, which calls Anthropic. The plan runs nothing in place of B12.3; its smoke evidence is the B6 smoke and the B8.7 query smoke. Session 1 command, kept as history:
 ```
 scripts/smoke-test.sh --url https://api.<domain> --api-key-env SCHOLARCHAIN_SMOKE_API_KEY --query-body target/phase14/14c-work/real-query.json 2>&1 | tee target/phase14/evidence/17/final-smoke.log; echo "exit=$?"
 python3 -I load-tests/llm_budget.py status 2>&1 | tee target/phase14/evidence/17/llm-status-final.log
@@ -1340,7 +1368,7 @@ python3 -I load-tests/llm_budget.py status 2>&1 | tee target/phase14/evidence/17
 - **If it fails:** send the log; do not retry more than once (each query is a paid answer).
 - **Tell the coordinator:** the six lines and the final ledger status.
 
-> **GO / NO-GO 9:** [ ] video saved and hashed [ ] final smoke PASS [ ] ledger final status saved. GO = B13.
+> **GO / NO-GO 9:** [ ] video saved and hashed [ ] final smoke PASS [ ] ledger final status saved. GO = B13. (Session 2: not used; B12 is not in the plan. The Session 2 flow goes to B13 as the plan's section 5.5 says.)
 
 ## B13. Evidence archive and downloads (about H31 to H34; BEFORE cleanup)
 
@@ -1411,7 +1439,7 @@ Every step here uses a **fresh deployer session** (the destroy passes can take c
 - **If it fails:** `RESULT: REFUSED step=prepare-policy` with `POLICY-VIOLATION:` lines means the plan creates, deletes or changes something other than the protection flags: STOP and send the log. Otherwise as B1.5.
 - **Save to:** the logs above; archive the record as `cleanup-prepare` (R.5). **Tell:** both `RESULT:` lines.
 
-**C3. Two-pass destroy.** (This destroy also force-deletes the two Terraform-created API-key containers `scholarchain-course/anthropic-api-key` and `scholarchain-course/voyage-api-key` with no recovery window; the listing and the end of the run print `KEY-REVOCATION-REMINDER:` lines. **Deleting a container does not revoke the key**: do C5b.)
+**C3. Two-pass destroy.** (This destroy also force-deletes the two Terraform-created API-key containers `scholarchain-course/anthropic-api-key` and `scholarchain-course/voyage-api-key` with no recovery window; the listing and the end of the run print `KEY-REVOCATION-REMINDER:` lines. **Deleting a container does not revoke the key**: do C5b. Session 2 (amended 2026-11-17): the Anthropic container holds only a placeholder, so there is nothing to revoke for it; the container is still deleted here as before, and the Voyage key still needs C5b.)
 - **Do (pass 1, listing):**
   ```
   scripts/cleanup.sh --env course --region us-east-2 --profile scholarchain-deployer-tf --execute 2>&1 | tee target/phase14/evidence/14b/cleanup-list-1.log; echo "exit=$?"
@@ -1443,7 +1471,7 @@ aws secretsmanager list-secrets --region us-east-2 --profile "$ADMIN" --query "S
 ```
 - **Success looks like:** four names printed by the loop; the final `list-secrets` prints nothing. **Tell:** "4 secrets deleted".
 
-**C5b. Revoke both provider keys in the provider consoles (after the destroy of C3 and before you sign out).** Plain words: "revoke" tells Anthropic and Voyage to stop accepting the key, so a leaked or forgotten copy can no longer spend money. The deleted AWS containers do not do this.
+**C5b. Revoke both provider keys in the provider consoles (after the destroy of C3 and before you sign out).** **Session 2 (amended 2026-11-17): Voyage only.** No real Anthropic key was created, so skip step 1 and the Anthropic parts of steps 3 and 4 and of "Success looks like" and "Tell the coordinator"; the Anthropic usage page is still read in C11b. Everything below stays as Session 1 history for Anthropic. Plain words: "revoke" tells Anthropic and Voyage to stop accepting the key, so a leaked or forgotten copy can no longer spend money. The deleted AWS containers do not do this.
 1. Anthropic Console (browser) > **API keys** > find the project key you named in B3b.1 > the row's menu (or delete/disable action) > delete or revoke it > confirm.
 2. Voyage AI dashboard (browser) > **API keys** > the project key > delete or revoke it > confirm.
 3. Reload each key list: the project key must be gone (or show as disabled/revoked). Menu wording may differ per console (unverified until live).
@@ -1451,7 +1479,7 @@ aws secretsmanager list-secrets --region us-east-2 --profile "$ADMIN" --query "S
 - **Success looks like:** both key lists no longer show the key; both consoles' usage pages are still readable (needed for C11).
 - **If it fails:** if you cannot find the key or the console refuses, take a screenshot of the key list **without** any key value and tell the coordinator; do not leave a key active.
 - **Save to:** `target/phase14/evidence/14b/c5b-key-revocation.log` (type the UTC time of each revocation and the words "revoked"; **never the key**).
-- **Tell the coordinator:** "Anthropic key revoked at <UTC>, Voyage key revoked at <UTC>".
+- **Tell the coordinator:** "Anthropic key revoked at <UTC>, Voyage key revoked at <UTC>". (Session 2: "Voyage key revoked at <UTC>; no Anthropic key was created".)
 
 **C6. Cloudflare.** CF > DNS > Records: delete the two DNS-only records (the ACM validation CNAME and the `api` CNAME). Success: both rows gone. **Tell:** "Cloudflare records removed". (The certificate itself was a Terraform resource and went in C3.)
 
@@ -1469,7 +1497,7 @@ aws s3api list-buckets --query "Buckets[?starts_with(Name,'scholarchain-course')
 - **Success looks like:** the first prints nothing or only the KMS key; the second prints nothing. In the Console also look for stray **Elastic IPs**, **NAT gateways**, **Load balancers**, **EMR clusters**, **Neptune clusters**, **EFS file systems** and **ECR repositories** in us-east-2: none should remain.
 - **If it fails:** a remaining billable item means tell the coordinator at once (a manual console deletion is not allowed; it needs a routed repair and a decision). **Tell:** the inventory result.
 
-**C9. Haiku ledger final status.** `python3 -I load-tests/llm_budget.py status | tee target/phase14/evidence/17/llm-status-cleanup.log`. Keep `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` and `~/.scholarchain/emr-ledger/runs.jsonl`. When the Anthropic Console later shows more than the ledger estimate (or, for a Bedrock run, when the AWS bill shows the Marketplace Haiku charge), any spend outside the buckets is recorded with `python3 -I load-tests/llm_budget.py adjust --usd <amount> --source aws-bill`. **Tell:** the totals.
+**C9. Haiku ledger final status.** (Session 2: no answers are sent, so the ledger should show no new use; the status command still runs.) `python3 -I load-tests/llm_budget.py status | tee target/phase14/evidence/17/llm-status-cleanup.log`. Keep `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` and `~/.scholarchain/emr-ledger/runs.jsonl`. When the Anthropic Console later shows more than the ledger estimate (or, for a Bedrock run, when the AWS bill shows the Marketplace Haiku charge), any spend outside the buckets is recorded with `python3 -I load-tests/llm_budget.py adjust --usd <amount> --source aws-bill`. **Tell:** the totals.
 
 **C10. Sign out.** `aws logout --all`; Console: sign out; stop T4 (`caffeinate`); `unset SCHOLARCHAIN_SMOKE_API_KEY SCHOLARCHAIN_LOAD_API_KEY SCHOLARCHAIN_VOYAGE_API_KEY`; `grep -c "$WRITER" /etc/hosts` is `0`. Removing the Marketplace subscription is optional (it has no fixed fee).
 
@@ -1523,12 +1551,13 @@ General rules: stop first. Send the log path and the last `STEP:`/`RESULT:` line
 - Tunnel task definition missing: `neptune_tunnel_enabled = true` was not in the first runtime plan: set it and do another runtime-apply.
 
 **E4. `smoke-query` stops with "the answer holds no claims" before 14C.**
-- Expected: a full six-check `scripts/smoke-test.sh` before the data is loaded ends `CHECK-FAILED: query: the answer holds no claims to fetch evidence for` / `RESULT: FAIL step=smoke-query reason=query check failed` with exit 4. That is **not** a rollback trigger, nor is a typed no-evidence 4xx. This is why B6 runs `--checks healthz,readyz`.
+- Expected: a full six-check `scripts/smoke-test.sh` before the data is loaded ends `CHECK-FAILED: query: the answer holds no claims to fetch evidence for` / `RESULT: FAIL step=smoke-query reason=query check failed` with exit 4. That is **not** a rollback trigger, nor is a typed no-evidence 4xx. This is why B6 runs `--checks healthz,readyz`. **Session 2 (amended 2026-11-17): never run the full six-check smoke, before or after any data load.** Its `query` check sends a valid-key `POST /v1/query`, which calls Anthropic (a placeholder key would make it fail at the provider, but do not rely on that as a test). Always pass `--checks`, as B6 does; the plan's smoke evidence is the B6 smoke and the B8.7 query smoke.
 - The script prints only the HTTP status for a non-200/202 reply. To read the typed `error` field, repeat the request with `curl` and the key in a temporary header file (as in B6.4).
-- It **is** a failure after B8.8 (data loaded, pointer applied): send the log and the curl body.
+- It **is** a failure after B8.8 (data loaded, pointer applied): send the log and the curl body. (Session 2: B8.8 and the six-check smoke are not run, so E4 does not arise.)
 - Real Q5 failures (rollback policy 13-5): healthz or readyz failing, a 5xx, AccessDenied, a timeout (exit 124) or an authentication failure.
 
 **E5. A budget e-mail arrives (USD 10, 15 or 20).**
+- 2026-11-15 note: from Phase 15 P0 the alerts are at USD 18/20/22, not 10/15/20 (see the [A3 note](#a3-budget-modify-to-usd-25-the-first-live-step)); E5 below is the Session 1 record.
 - The alerts are informational. They do not stop spending and arrive 8 to 24 hours late.
 - USD 10 is expected during the session. Compare with your own running total (Procedure R.1); nothing else to do.
 - USD 15: recompute headroom (25 - reported - unreported - reserves). If it is below 3, tell the coordinator and drop optional work (B11, B12); never drop cleanup.
@@ -1546,6 +1575,7 @@ General rules: stop first. Send the log path and the last `STEP:`/`RESULT:` line
 - `429` (rate limit): the clients retry a few times; if it persists, wait a minute and retry once. A refused answer (`llm-refusal`), a prompt that is too large (`llm-prompt-too-large`, over about 100,000 tokens) or a model mismatch (`llm-model-mismatch`) is a typed failure, not retried: send the log line to the coordinator.
 - A vector or model mismatch error means stored and query vectors use a different provider, model or dimension: stop; the fix is a full re-embed and index rebuild (coordinator decision).
 - A provider spend limit you set in B3b.1 can also stop calls: read both consoles before changing anything.
+- **Session 2 (amended 2026-11-17):** the Anthropic secret holds a placeholder, so an Anthropic authentication failure means something attempted an Anthropic call by mistake. The provider rejected it and it was not billed; that is the intended safety. The sign is the closed code `llm-provider-rejected` in the query-api logs or the job result (`modules/rag` `AnthropicLlm.scala` line 248, as verified by the review of 2026-11-17). Stop the step that made the call, tell the coordinator, and do **not** re-enter a real key. No Anthropic spend limit was set in Session 2 (B3b.1 step 1 is skipped).
 
 **E7. An EMR run goes over 90 minutes, hangs, or the script died.**
 - Normally `run-experiment.sh` enforces the cap itself: at 90 minutes it cancels the step, kills the YARN application by its tag and exits 124. Each step also runs under a time limit on the node.

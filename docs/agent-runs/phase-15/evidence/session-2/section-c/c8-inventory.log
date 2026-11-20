@@ -1,0 +1,27 @@
+      83
+
+aws: [ERROR]: An error occurred (AccessDenied) when calling the ListBuckets operation: User: arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator is not authorized to perform: s3:ListAllMyBuckets because no identity-based policy allows the s3:ListAllMyBuckets action
+  35 ecs:task-definition
+  26 ec2:security-group-rule
+   6 elasticmapreduce:cluster
+   5 ecs:task
+   4 ecs:service
+   2 kms:key
+   2 ec2:vpc-endpoint
+   1 ecs:cluster
+   1 ec2:natgateway
+   1 ec2:instance
+artifacts: 404
+EXISTS
+curated: 404
+EXISTS
+graph: 404
+EXISTS
+logs: 404
+EXISTS
+rag: 404
+EXISTS
+raw: 404
+EXISTS
+reports: 404
+EXISTS

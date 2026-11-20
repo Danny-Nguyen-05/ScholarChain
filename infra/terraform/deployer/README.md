@@ -379,7 +379,7 @@ Authored offline; nothing here was planned against or applied to AWS (no AWS cal
 | operator-loader | No. It already holds Bedrock, DynamoDB, S3 Vectors and the Neptune loader; a pipeline run needs none of them and the loader needs no EMR. Mixing them breaks least privilege both ways. |
 | **new operator-pipeline role** | **Chosen.** Same flow as the other operator roles (console Switch Role from the IAM user with MFA, then `aws login --profile scholarchain-pipeline`; 4 h; no role chaining; the same same-device login policy), IAM-only, free, created and removed by the same toggle (`operator_roles_enabled`). |
 
-What `scripts/run-bounded-pipeline.sh --execute` calls from the laptop (read from the script; `sts get-caller-identity` needs no permission): `aws emr describe-cluster` (the CLI v2 customization also calls `ListInstanceGroups` and `ListBootstrapActions`, hence both are granted; `ListInstanceFleets` only for fleet clusters, which this project does not use), `get-auto-termination-policy`, `list-instance-groups` (cluster check), `add-steps`, `describe-step`, `cancel-steps`. Local files are hashed locally (`sc_sha256`); stage-in, copy-out and the bootstrap downloads run on the nodes with the EMR instance role, which already reads raw, curated, graph and artifacts and writes curated, graph, artifacts, logs and reports. `pipeline.py` and `scripts/emr/*.sh` make no AWS call from the laptop (`sc-step.sh` and `bootstrap.sh` call `aws s3 cp` on the node). `run-experiment.sh` delegates to the pipeline.
+What `scripts/run-bounded-pipeline.sh --execute` calls from the laptop (read from the script; `sts get-caller-identity` needs no permission): `aws emr describe-cluster` (the CLI v2 customization also calls `ListInstanceGroups` and `ListBootstrapActions`, hence both are granted; `ListInstanceFleets` only for fleet clusters, which this project does not use), `get-auto-termination-policy` (cluster check; AWS CLI v2 has no `list-instance-groups` command, so the instance groups come from `describe-cluster`), `add-steps`, `describe-step`, `cancel-steps`. Local files are hashed locally (`sc_sha256`); stage-in, copy-out and the bootstrap downloads run on the nodes with the EMR instance role, which already reads raw, curated, graph and artifacts and writes curated, graph, artifacts, logs and reports. `pipeline.py` and `scripts/emr/*.sh` make no AWS call from the laptop (`sc-step.sh` and `bootstrap.sh` call `aws s3 cp` on the node). `run-experiment.sh` delegates to the pipeline.
 
 | Sid (document `operator_pipeline`, 3187 characters; plus the 336-character login policy) | Actions | Resource | Conditions |
 |---|---|---|---|
@@ -539,7 +539,7 @@ terraform -chdir=infra/terraform/deployer validate
 terraform -chdir=infra/terraform/deployer test
 ```
 
-Tests run files `tests/gdeployer.tftest.hcl` (13 runs: G4 runtime artifact and the operator-pipeline role), `tests/replan_w5a.tftest.hcl` (28), `tests/deployer.tftest.hcl` (the `spike-emr` runs select that set explicitly; the `p14_*` runs select `phase14-main`) and `tests/default_set.tftest.hcl` (the variable default itself).
+Tests run files `tests/gdeployer.tftest.hcl` (13 runs: G4 runtime artifact and the operator-pipeline role), `tests/replan_w5a.tftest.hcl` (28), `tests/deployer.tftest.hcl` (the `spike-emr` runs select that set explicitly; the `p14_*` runs select `phase14-main`) and `tests/default_set.tftest.hcl` (the variable default itself). `tests/p39_inventory.tftest.hcl` (1 run) pins the config-derived inventory of this root after C4 (18 resources, no operator or pipeline role; see the P39 section). It reads no real state: block 2 of the P39 section checks that.
 
 The `p14_*` runs assert, each from a hand-derived expectation: seven named documents, each under 6144 characters (also with the longest allowed environment name), 7 managed attachments (quota 10); spike absent and not combinable; MFA trust and a 3600 s session; no `*`, `*:*`, `<svc>:*` or prefix action, and Resource `*` only for Describe/List/Get reads or the honest-list writes; the us-east-2 condition on every Allow outside IAM and Route 53 (and none on those two); IAM only on `scholarchain-course-*` roles, instance profiles, boundaries and six service-linked roles, never `scholarchain-deployer`; `CreateRole` requires the right boundary and the project tags; the boundary-tamper Denies exist and no Allow undoes them; PassRole is one service per statement; exact tag-condition values; request-tag scoping of `kms:CreateKey`, `RunJobFlow` and `RegisterTaskDefinition`; no IAM statement grants key administration, use or grants and no tag-only path reaches a security group (the two F2 negative runs); coverage of a hand-listed action set for every resource type; nothing for budgets or billing; boundary ceilings (EMR boundary covers every action of `environments/emr-service-policy.json.example`). Round 2 adds: the EMR managed-policies tag key is in `main_tag_keys` and no tag-on-create statement restricts it. The boundary documents are `boundaries/*.json.tftpl` (rendered here with `templatefile`, and by the main root's tests); `tests/default_set.tftest.hcl` asserts the variable default. The older runs assert: MFA and exact-principal trust; four spike policies each under the managed-policy size limit; no wildcard or prefix-wildcard action; region condition on regional statements; IAM statements only on the spike prefix; PassRole, boundary and attach conditions; nothing for budgets, Organizations, Cost Explorer or the billing deployer; unknown permission set, wildcard or foreign operator, wrong region, billing role name and bad account id all fail.
 
@@ -567,3 +567,199 @@ The main root now uses the Anthropic API (synthesis) and Voyage AI (embeddings) 
 3. **Operator-loader role.** `InvokeTitanTextEmbeddingsV2Only` exists only with `main_embedding_provider = "bedrock"`. With Voyage the loader has no Bedrock action (asserted for every operator role), and no operator role touches Secrets Manager.
 
 No role of this root holds a Marketplace permission in any configuration. Apply order is unchanged: deployer root first (it creates the boundary and the new statements), then the main root.
+
+## P39: deployer role removal (after Session 2)
+
+Authored offline on 2026-11-19; nothing here was planned against or applied to AWS. Source: `docs/runbooks/session-2-plan.md:285` and `:684`. Session 2 is over: the operator roles are already gone (C4, 13 resources), the secrets are deleted (C5), and `scholarchain-deployer` sits idle. P39 destroys what is left in **this root's state** with the admin profile, in **IAM window 3**. No Terraform code changed for P39 (the plain `terraform plan -destroy` of this root is already the right plan: no `-target`, no variable toggle); only the test `tests/p39_inventory.tftest.hcl` was added.
+
+### What is in the state after C4, and what P39 destroys (18 resources, no more, no less)
+
+C4 ran with `operator_roles_enabled = false`, so the state should hold only the default `phase14-main` set (`enabled_permission_sets` is not overridden in the local tfvars; block 2 checks the real state and the real tfvars):
+
+| Address | Count | Name in AWS |
+|---|---|---|
+| `aws_iam_role.deployer` | 1 | `scholarchain-deployer` |
+| `aws_iam_role_policy.login` | 1 | inline `scholarchain-deployer-same-device-login` |
+| `aws_iam_policy.permission_set["phase14-main--<part>"]` | 7 | `scholarchain-deployer-phase14-main--<part>`; parts: `compute`, `data`, `emr-efs`, `iam`, `keys-obs`, `network`, `network-mod` |
+| `aws_iam_role_policy_attachment.permission_set["phase14-main--<part>"]` | 7 | the same seven parts attached to the role |
+| `aws_iam_policy.main_boundary_runtime[0]` | 1 | `scholarchain-course-permissions-boundary` |
+| `aws_iam_policy.main_boundary_emr[0]` | 1 | `scholarchain-course-emr-service-boundary` |
+
+Expected plan line: `Plan: 0 to add, 0 to change, 18 to destroy.` Expected `jq` list: 18 lines, all starting with `delete `.
+
+**Kept, because they are not in this root:** the budget (`infra/terraform/billing-bootstrap`, `aws_budgets_budget.project`, its own state) and the billing roles (`scholarchain-billing-*`, created in Phase 12D; no resource of this root and no resource in `billing-execution`). A destroy of this root cannot touch them. The admin IAM user is not in any Terraform state either.
+
+**STOP conditions (the human checks every one before saying yes):** any count other than 18; any line that is not `delete`; any create, update or replace line; any address outside the table; any `budget`, `billing`, `operator` or `spike` address; `aws_iam_role.deployer` listed as anything but `delete`.
+
+**Left over after P39 (nothing here is a resource of this root):**
+
+| Item | Owner and effect |
+|---|---|
+| Inline policy `scholarchain-assume-deployer` on the admin IAM user (`sts:AssumeRole` on `scholarchain-deployer`, MFA) | Created by hand in Phase 12D (`docs/agent-runs/phase-12/evidence/12d-spike-live/human-approval.md:57`), not managed by any Terraform root. After P39 it points at a role that no longer exists and grants nothing. Leaving it is harmless. Removing it is a separate IAM change; the keep-or-remove decision is recorded at the P39 close (not decided here). |
+| KMS key policy of the main root's key (`infra/terraform/modules/identity/main.tf:27,197-210` names `arn:aws:iam::<acct>:role/scholarchain-deployer` in three statements) | Managed by the main root (`module.identity`). That key is already in `PendingDeletion` (C7), so a policy naming a deleted role has no effect. Nothing to do. |
+| Permissions boundaries `scholarchain-course-permissions-boundary` and `-emr-service-boundary` | Destroyed by P39. A policy can be deleted only when nothing uses it: no role, user or group may have it attached, and no role may carry it as a boundary. Block 4b checks all 9 customer-managed policies for this; if something remains, the apply would fail with `DeleteConflict`. |
+| AWS service-linked roles (`AWSServiceRole...`, created by ECS, ELB, Neptune, EMR and similar) | Not in any Terraform state, free, kept. They do not start with `scholarchain`, so the role lists below do not show them. |
+| Local profiles `scholarchain-deployer` and `scholarchain-deployer-tf` in `~/.aws/config` and the cached `aws login` session | Local files of the human, not AWS. They stop working. Optional tidy: `aws logout --profile scholarchain-deployer`. |
+| Local files: `deployer.local.tfvars`, the state file and its `*.bak` copies | Keep them (the backups are the evidence). After the destroy the state is empty. |
+
+### The commands (the human runs them, one block at a time)
+
+Names: `$E` evidence folder, `$PRIV` private folder, `$STATE` the deployer state file (the path contains a space, always quote it), `$ADMIN` the admin CLI profile (the same one as in C4), `$LOG` the P39 log in `$E`.
+
+**Privacy rule.** Raw command output, plans and error messages can hold the 12-digit account id (for example in `DeleteConflict` or `AccessDenied` errors). Raw output stays in `$PRIV` (`*.raw`, `*.out`, `*.err`, the plan files). Everything that goes into `$E` or `$LOG` passes through `mask` first (`sed -E 's/[0-9]{12}/<acct>/g'`, defined in block 1). **When you paste lines into the chat, copy them from `$LOG` or the masked files in `$E`, never from the raw files in `$PRIV` and never from the terminal scroll-back of a raw command.** Clock lines use `date -u +%H:%M:%SZ`.
+
+**Block 1. Set up the terminal (paste it again in any new Terminal).**
+```
+cd "<repository root>"   # replace with the folder that contains .git; the next lines set REPO from it
+setopt interactive_comments 2>/dev/null
+umask 077; set -o pipefail
+export REPO="$PWD" R=us-east-2
+export ADMIN="scholarchain-operator"     # your admin CLI profile; use the name your kit uses if it differs
+export E="$REPO/target/phase15/session2/evidence" PRIV="$REPO/target/phase15/session2/private"
+export STATE="$HOME/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate"
+export LOG="$E/p39-deployer-removal.log"
+mask() { sed -E 's/[0-9]{12}/<acct>/g'; }
+mkdir -p "$E"; mkdir -p -m 700 "$PRIV"
+for d in "$E" "$PRIV"; do git check-ignore -q "$d" && echo "IGNORED: $d" || echo "NOT IGNORED: $d"; done
+test -f "$STATE" && echo "STATE-FILE-OK" || echo "STATE-FILE-MISSING"
+echo "P39 start $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$LOG"
+```
+Expect: `IGNORED:` twice, then `STATE-FILE-OK`. `NOT IGNORED` or `STATE-FILE-MISSING` = STOP.
+
+**Block 2. Offline checks (no AWS call, no window needed).**
+```
+cd "$REPO/infra/terraform/deployer"
+grep -nE '^[[:space:]]*operator_roles_enabled' deployer.local.tfvars; grep -cE '^[[:space:]]*enabled_permission_sets' deployer.local.tfvars
+cat > "$PRIV/p39-expected.txt" <<'EXPECTED'
+aws_iam_policy.main_boundary_emr[0]
+aws_iam_policy.main_boundary_runtime[0]
+aws_iam_policy.permission_set["phase14-main--compute"]
+aws_iam_policy.permission_set["phase14-main--data"]
+aws_iam_policy.permission_set["phase14-main--emr-efs"]
+aws_iam_policy.permission_set["phase14-main--iam"]
+aws_iam_policy.permission_set["phase14-main--keys-obs"]
+aws_iam_policy.permission_set["phase14-main--network"]
+aws_iam_policy.permission_set["phase14-main--network-mod"]
+aws_iam_role.deployer
+aws_iam_role_policy.login
+aws_iam_role_policy_attachment.permission_set["phase14-main--compute"]
+aws_iam_role_policy_attachment.permission_set["phase14-main--data"]
+aws_iam_role_policy_attachment.permission_set["phase14-main--emr-efs"]
+aws_iam_role_policy_attachment.permission_set["phase14-main--iam"]
+aws_iam_role_policy_attachment.permission_set["phase14-main--keys-obs"]
+aws_iam_role_policy_attachment.permission_set["phase14-main--network"]
+aws_iam_role_policy_attachment.permission_set["phase14-main--network-mod"]
+EXPECTED
+LC_ALL=C sort -o "$PRIV/p39-expected.txt" "$PRIV/p39-expected.txt"
+terraform state list -state="$STATE" | LC_ALL=C sort > "$PRIV/p39-state-before.txt"; echo "exit=${pipestatus[1]}"
+wc -l < "$PRIV/p39-state-before.txt" | tee -a "$LOG"
+diff "$PRIV/p39-expected.txt" "$PRIV/p39-state-before.txt" && echo "STATE-MATCHES-EXPECTED" | tee -a "$LOG"
+cd "$REPO"
+```
+Expect: the first `grep` prints one line of the form `<line-number>:operator_roles_enabled = false` (the number in front is the line number in the file and does not matter; a line that starts with `#` is a comment and is not shown). The second `grep` prints `0` (no active `enabled_permission_sets` line; a commented one is not counted). Then `exit=0`, `18`, and `STATE-MATCHES-EXPECTED` with no `diff` lines. Anything else = STOP and send me the `diff` lines (they are addresses, not secrets). If `enabled_permission_sets` is set, send me that line.
+
+**Block 3. Open IAM window 3 (root, console only, private window).** Same mechanism as windows 1 and 2.
+1. Root signs in to the console in a private window and, on the admin IAM user `scholarchain-billing-operator`, attaches the AWS managed policy `IAMFullAccess` and adds the inline policy `scholarchain-operator-cli-login` (same document as in window 2). Nothing else.
+2. Root signs out of the console. Sign out of every other AWS console session in this browser too.
+3. Then:
+```
+date -u +%H:%M:%SZ | sed 's/^/IAM window 3 OPEN /' | tee -a "$LOG"
+aws login --profile "$ADMIN"          # answer region us-east-2 if asked
+aws sts get-caller-identity --profile "$ADMIN" --query Arn --output text | sed 's#.*:user/#user/#'
+```
+In the browser window that `aws login` opens: sign in as the **IAM user** `scholarchain-billing-operator` with its password and MFA code. Not as root, and not as a switched role. If the browser offers an existing session of another identity, choose "sign in with a different account" and use the IAM user.
+Expect: the last line prints exactly `user/scholarchain-billing-operator`. Anything else (a role, root, an error) = STOP, do nothing else, close the window (block 8). Send me the open time.
+
+**Block 4a. Read-only look at the role before the plan.** Raw output goes to `$PRIV`, the masked copy to `$E`. Read each `exit=` line: every one must be `0`.
+```
+ACCT="$(aws sts get-caller-identity --profile "$ADMIN" --query Account --output text)"; echo "exit=$?"   # held in a variable, never printed
+{ echo "role:"; aws iam get-role --role-name scholarchain-deployer --profile "$ADMIN" --query 'Role.RoleName' --output text; echo "exit=$?"
+  echo "attached (expect 7):"; aws iam list-attached-role-policies --role-name scholarchain-deployer --profile "$ADMIN" --query 'AttachedPolicies[].PolicyName' --output text; echo "exit=$?"
+  echo "inline (expect only the login policy):"; aws iam list-role-policies --role-name scholarchain-deployer --profile "$ADMIN" --query 'PolicyNames' --output text; echo "exit=$?"
+  echo "instance profiles (expect nothing):"; aws iam list-instance-profiles-for-role --role-name scholarchain-deployer --profile "$ADMIN" --query 'InstanceProfiles[].InstanceProfileName' --output text; echo "exit=$?"
+} > "$PRIV/p39-iam-before.raw" 2>&1
+mask < "$PRIV/p39-iam-before.raw" | tee "$E/p39-iam-before.txt"
+aws iam list-roles --profile "$ADMIN" --query "Roles[?starts_with(RoleName,'scholarchain')].RoleName" --output text 2> "$PRIV/p39-roles-before.err" | tr '\t' '\n' | LC_ALL=C sort > "$E/p39-roles-before.txt"; echo "exit=${pipestatus[1]}"
+cat "$E/p39-roles-before.txt"
+```
+Expect: `role:` then `scholarchain-deployer`; `attached` then seven names `scholarchain-deployer-phase14-main--...`; `inline` then `scholarchain-deployer-same-device-login`; nothing under `instance profiles`; every `exit=` is `0`. The role list holds `scholarchain-deployer` and the `scholarchain-billing-*` roles, and **no** `scholarchain-course-*` and no `scholarchain-spike-*` role (a remaining project role may still carry a boundary). STOP if the deployer role has other policies than these (a manual attachment would block the role delete), if any `scholarchain-course-*` or `scholarchain-spike-*` role remains, or if a command is refused.
+
+**Block 4b. Read-only check that nothing else uses the 9 policies (the `DeleteConflict` pre-check).** This lists every role, user and group that uses each of the 9 customer-managed policies (7 permission-set policies and 2 boundaries), as permissions policy or as boundary. The ARNs are read from AWS, so you never type the account id.
+```
+aws iam list-policies --scope Local --profile "$ADMIN" --query "Policies[?starts_with(PolicyName,'scholarchain-deployer-phase14-main--') || PolicyName=='scholarchain-course-permissions-boundary' || PolicyName=='scholarchain-course-emr-service-boundary'].[PolicyName,Arn]" --output text > "$PRIV/p39-policies.tsv" 2> "$PRIV/p39-policies.err"; echo "exit=$?"
+wc -l < "$PRIV/p39-policies.tsv"
+{ while IFS=$'\t' read -r pname parn; do
+    echo "== $pname"
+    aws iam list-entities-for-policy --policy-arn "$parn" --profile "$ADMIN" --output json < /dev/null | jq -c '{roles:[.PolicyRoles[].RoleName],users:[.PolicyUsers[].UserName],groups:[.PolicyGroups[].GroupName]}'
+    echo "aws-exit=${pipestatus[1]}"
+  done < "$PRIV/p39-policies.tsv"; } 2>&1 | mask | tee "$E/p39-policy-entities-before.txt"
+grep -c '"roles":\["scholarchain-deployer"\],"users":\[\],"groups":\[\]' "$E/p39-policy-entities-before.txt"
+grep -c '"roles":\[\],"users":\[\],"groups":\[\]' "$E/p39-policy-entities-before.txt"
+grep -c '^aws-exit=0$' "$E/p39-policy-entities-before.txt"
+```
+Expect: `exit=0`; `9` (nine policies); the three counts are `7`, `2` and `9`: the seven `scholarchain-deployer-phase14-main--...` policies each show only the role `scholarchain-deployer` (no users, no groups), the two boundaries show nothing at all, and all nine `aws-exit` lines are `0`. STOP on any other result: another role, user or group on any of the nine, or a role on a boundary. Send me `$E/p39-policy-entities-before.txt`.
+
+**Block 5. Back up the state and make the destroy plan (nothing is destroyed here).**
+```
+BACKUP="$STATE.pre-p39-$(date -u +%Y%m%dT%H%M%SZ).bak"; cp "$STATE" "$BACKUP"; echo "exit=$?"; shasum -a 256 "$BACKUP" | tee -a "$LOG"
+cd "$REPO/infra/terraform/deployer"
+AWS_PROFILE="$ADMIN" terraform init -input=false -lockfile=readonly > "$PRIV/p39-init.out" 2>&1; echo "exit=$?"
+AWS_PROFILE="$ADMIN" terraform plan -destroy -no-color -input=false -state="$STATE" -var-file=deployer.local.tfvars -out="$PRIV/p39-destroy.tfplan" > "$PRIV/p39-plan.out" 2>&1; echo "exit=$?"
+grep -E '^(Plan:|Error)' "$PRIV/p39-plan.out" | mask | tee -a "$LOG"
+terraform show -no-color "$PRIV/p39-destroy.tfplan" > "$PRIV/p39-destroy.plan.txt"; echo "exit=$?"
+terraform show -json "$PRIV/p39-destroy.tfplan" | jq -r '.resource_changes[] | select(.change.actions != ["no-op"]) | "\(.change.actions | join(",")) \(.address)"' | LC_ALL=C sort > "$PRIV/p39-plan-list.txt"; echo "exit=${pipestatus[1]}"
+mask < "$PRIV/p39-plan-list.txt" | tee -a "$LOG" | wc -l
+grep -vc '^delete ' "$PRIV/p39-plan-list.txt"
+sed 's/^delete //' "$PRIV/p39-plan-list.txt" | diff "$PRIV/p39-expected.txt" - && echo "PLAN-MATCHES-EXPECTED" | tee -a "$LOG"
+cd "$REPO"
+```
+Expect: all `exit=0`; the `Plan:` line is exactly `Plan: 0 to add, 0 to change, 18 to destroy.`; the list has `18` lines; the count of lines that are not `delete` is `0`; then `PLAN-MATCHES-EXPECTED` and no `diff` lines. Any `Error`, other count, `diff` line or address outside the table = STOP (see "STOP conditions" above).
+
+**GATE 1. Send me the `Plan:` line, the 18 address lines and the `PLAN-MATCHES-EXPECTED` result (copy them from `$LOG`), and wait.** The coordinator and the reviewer check them against the table. Do not apply yet. To go on, decide, then send me `apply P39` in chat and wait for my OK; the coordinator records your yes in `target/phase15/session2/evidence/coordinator-notes.log`, and the human-owned record (`docs/agent-runs/phase-15/human-gate.md`) is written by you. A reviewed plan is not an approval to apply. If the wait is longer than a few minutes, close the window (block 8), open it again (block 3) later, and repeat blocks 4a, 4b and 5 (the saved plan must be fresh, and the state must not change in between).
+
+**Block 6. Apply the saved plan (only after the recorded yes).**
+```
+cd "$REPO/infra/terraform/deployer"
+date -u +%H:%M:%SZ | sed 's/^/P39 apply start /' | tee -a "$LOG"
+AWS_PROFILE="$ADMIN" terraform apply -no-color -input=false -state="$STATE" "$PRIV/p39-destroy.tfplan" > "$PRIV/p39-apply.out" 2>&1; echo "exit=$?"
+grep -E '^(Apply complete|Error)' "$PRIV/p39-apply.out" | mask | tee -a "$LOG"
+grep -c 'Destruction complete' "$PRIV/p39-apply.out" | tee -a "$LOG"
+date -u +%H:%M:%SZ | sed 's/^/P39 apply end /' | tee -a "$LOG"
+cd "$REPO"
+shasum -a 256 "$STATE" | tee -a "$LOG"
+cp "$STATE" "$STATE.post-p39-$(date -u +%Y%m%dT%H%M%SZ).bak"; echo "exit=$?"
+terraform -chdir="$REPO/infra/terraform/deployer" state list -state="$STATE" | wc -l | tee -a "$LOG"
+```
+Expect: `exit=0`; `Apply complete! Resources: 0 added, 0 changed, 18 destroyed.`; then `18` (the number of `Destruction complete` lines); the last count is `0` (the state is empty). If the run stops with an `Error` (for example `DeleteConflict`): STOP, do not run it again and do not edit anything by hand; send me the masked `Error` lines from `$LOG`. Terraform writes the state while it runs (periodically and at the end, also when a run fails), so a partly finished run leaves a state that matches what AWS now holds, apart from at most the last resource. The repair is routed, and a new plan after a refresh is needed.
+
+**Block 7. Final read-only check, still in the window.**
+```
+aws iam get-role --role-name scholarchain-deployer --profile "$ADMIN" --query 'Role.RoleName' --output text > "$PRIV/p39-getrole.raw" 2>&1; GR=$?
+{ grep -o 'NoSuchEntity' "$PRIV/p39-getrole.raw" | head -1; echo "get-role exit=$GR"; } | mask | tee -a "$LOG"
+aws iam list-policies --scope Local --profile "$ADMIN" --query "Policies[?starts_with(PolicyName,'scholarchain-deployer') || PolicyName=='scholarchain-course-permissions-boundary' || PolicyName=='scholarchain-course-emr-service-boundary'].PolicyName" --output text > "$PRIV/p39-policies-after.raw" 2>&1; echo "exit=$?"
+mask < "$PRIV/p39-policies-after.raw" | tee "$E/p39-policies-after.txt" | wc -l
+aws iam list-roles --profile "$ADMIN" --query "Roles[?starts_with(RoleName,'scholarchain')].RoleName" --output text 2> "$PRIV/p39-roles-after.err" | tr '\t' '\n' | LC_ALL=C sort > "$E/p39-roles-after.txt"; echo "exit=${pipestatus[1]}"
+diff "$E/p39-roles-before.txt" "$E/p39-roles-after.txt" | tee -a "$LOG"
+aws budgets describe-budgets --account-id "$ACCT" --profile "$ADMIN" --query 'Budgets[].[BudgetName,BudgetLimit.Amount]' --output text 2>&1 | mask | tee "$E/p39-budget-after.txt"
+```
+Expect:
+- `NoSuchEntity` and `get-role exit=254` (any non-zero exit with `NoSuchEntity` is right). If `NoSuchEntity` is not printed, or `get-role exit=0`, the role still exists = STOP.
+- `0` (no policy is left; the file `p39-policies-after.txt` is empty); `exit=0`.
+- The `diff` prints exactly two lines: a position such as `2d1` and `< scholarchain-deployer`. Nothing else: the billing roles are unchanged. Any other line = STOP.
+- The budget line shows the project budget name and `25.0` (USD 25). P39 cannot touch it (it is not in this root); this is a sanity check. If the call is refused (`AccessDenied`), look at console Billing > Budgets instead and tell me what it shows and the time (`date -u +%H:%M:%SZ`).
+
+Send me `$E/p39-roles-after.txt`, the `diff` lines, and the `NoSuchEntity` line from `$LOG`.
+
+**Block 8. Close IAM window 3 (root, console only).**
+1. Root removes `IAMFullAccess` and the inline `scholarchain-operator-cli-login` from `scholarchain-billing-operator`. Nothing else is touched.
+2. Root signs out of the console.
+3. Then, read-only, and end the CLI session:
+```
+date -u +%H:%M:%SZ | sed 's/^/IAM window 3 CLOSED /' | tee -a "$LOG"
+U=scholarchain-billing-operator
+{ date -u; echo "attached:"; aws iam list-attached-user-policies --user-name "$U" --profile "$ADMIN" --query 'AttachedPolicies[].PolicyName' --output text; echo "inline:"; aws iam list-user-policies --user-name "$U" --profile "$ADMIN" --query 'PolicyNames' --output text; } 2>&1 | mask | tee "$E/iam-window3-closed.txt"
+aws logout --profile "$ADMIN"; echo "exit=$?"
+```
+Expect: under `attached:` nothing (`IAMFullAccess` is not there); under `inline:` only `scholarchain-assume-deployer` and `scholarchain-billing-assume-role`, and **not** `scholarchain-operator-cli-login`; `exit=0` for the logout. If the CLI call is refused (the user has no IAM read once the window is closed), check the same in the console (IAM, Users, `scholarchain-billing-operator`, Permissions) and tell me what the list shows. Send me the open and close times and the two lists. Then tell me whether to keep or remove the leftover `scholarchain-assume-deployer`; the decision is recorded at the P39 close.
+
+**Gate for P39 (reviewer and human):** the destroy plan listing of block 5 matches the table (18 `delete`, nothing else); `get-role` returned `NoSuchEntity` and the roles `diff` of block 7 shows only `scholarchain-deployer` removed; the window 3 close check shows the user without `IAMFullAccess` and without `scholarchain-operator-cli-login`; the budget sanity check shows the project budget. Acceptance is the reviewer's and the human's decision, not this section's.

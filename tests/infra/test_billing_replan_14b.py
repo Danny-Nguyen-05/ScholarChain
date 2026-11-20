@@ -1,7 +1,8 @@
 """Phase 14B replan (USD 25 course cap), workstream W3: billing, tested from the requirement (test-engineer).
 
 Requirement (user, 2026-11-08): the project budget is USD 25 (the professor's cap; created at 200 in Phase 12D and moved by an
-in-place modify) with exactly three ACTUAL-spend alerts at the ABSOLUTE_VALUE amounts 10, 15 and 20 (GREATER_THAN); alerts do not
+in-place modify). Alert amounts (human decision, 2026-11-15, replacing the never-applied 10/15/20 set of 2026-11-08): exactly three
+ACTUAL-spend alerts at the ABSOLUTE_VALUE amounts 18, 20 and 22 USD (GREATER_THAN); credits and refunds excluded; alerts do not
 stop charges. The tooling's public input template for the modify path carries no real account ID (a `<acct>` placeholder) and no
 12-digit number at all. "No raw account ID in any new or changed file" (answer 3): a repository scan of what the working tree adds
 (legacy Phase 12 evidence is excluded by decision). Findings never print the digits.
@@ -39,10 +40,14 @@ class BudgetPlan(unittest.TestCase):
         self.assertEqual(self.budget["time_unit"], "CUSTOM")
         self.assertEqual((self.budget["time_period_start"], self.budget["time_period_end"]), ("2026-10-01_00:00", "2027-01-01_00:00"))
 
-    def test_exactly_three_actual_absolute_value_alerts_at_10_15_and_20(self):
+    # Hand-written from the 2026-11-15 human decision (USD 18, 20, 22), not read from main.tf or budget_execution.py.
+    DECIDED_USD = [18, 20, 22]
+    SUPERSEDED_USD = (10, 15)  # the never-applied 2026-11-08 set was 10/15/20; 20 is kept by the new decision
+
+    def test_exactly_three_actual_absolute_value_alerts_at_18_20_and_22(self):
         notes = self.budget["notification"]
         self.assertEqual(len(notes), 3)
-        self.assertEqual(sorted(n["threshold"] for n in notes), [10, 15, 20])
+        self.assertEqual(sorted(float(n["threshold"]) for n in notes), [float(t) for t in self.DECIDED_USD])
         for n in notes:
             with self.subTest(threshold=n["threshold"]):
                 self.assertEqual(n["notification_type"], "ACTUAL")
@@ -54,7 +59,13 @@ class BudgetPlan(unittest.TestCase):
         for n in self.budget["notification"]:
             self.assertNotEqual(n["threshold_type"], "PERCENTAGE")
             self.assertNotEqual(n["notification_type"], "FORECASTED")
-            self.assertNotIn(n["threshold"], (50, 80, 100, 160, 200))
+            self.assertNotIn(float(n["threshold"]), (50.0, 80.0, 100.0, 160.0, 200.0))
+
+    def test_the_superseded_10_15_20_set_is_gone(self):
+        thresholds = sorted(float(n["threshold"]) for n in self.budget["notification"])
+        self.assertNotEqual(thresholds, [10.0, 15.0, 20.0])
+        for old in self.SUPERSEDED_USD:
+            self.assertNotIn(float(old), thresholds, "USD %d belonged to the superseded 2026-11-08 alert set" % old)
 
     def test_credits_stay_out_of_the_budget_so_it_tracks_usage(self):
         cost = self.budget["cost_types"][0]
@@ -122,11 +133,103 @@ class NoRealAccountIdIsAdded(unittest.TestCase):
         findings, scanned = scan.scan_tree()
         self.assertEqual(findings, [], "%d file(s) scanned; digits intentionally not shown" % len(scanned))
 
-    def test_the_scan_really_covers_changed_and_new_files(self):
-        findings, scanned = scan.scan_tree()
-        # the billing template is new in this work order, so a scan that reads untracked files must include it
-        self.assertIn("scripts/billing/modify-public-inputs.template.json", scanned)
+    def test_the_scan_covers_exactly_what_the_branch_adds_in_the_real_repository(self):
+        # Base-independent: the expected set is derived with separate git calls from the same merge base, so the check holds on a
+        # branch whose HEAD equals main (only uncommitted and untracked work) as well as on one with commits after the base.
+        base = scan.base_commit()
+        out = scan._git("diff", "--numstat", "-z", "--no-color", "--no-ext-diff", base, "--").decode("utf-8", "replace")
+        fields, expected, i = out.split("\0"), set(), 0
+        while i < len(fields) and fields[i]:
+            added, _deleted, path = fields[i].split("\t", 2)
+            if not path:  # rename or copy: the next two fields are the old and the new path
+                path, i = fields[i + 2], i + 3
+            else:
+                i += 1
+            if added not in ("-", "0"):  # "-" is a binary file (no text lines), "0" a file with only deletions
+                expected.add(path)
+        for path in scan.untracked_files():
+            file = scan.REPO / path
+            if file.is_symlink() or not file.is_file() or file.stat().st_size > scan.MAX_BYTES:
+                continue
+            try:
+                file.read_bytes().decode("utf-8")
+            except UnicodeDecodeError:
+                continue
+            expected.add(path)
+        expected = {p for p in expected if not p.startswith("docs/agent-runs/phase-12/")}
+        _findings, scanned = scan.scan_tree()
+        self.assertEqual(sorted(scanned), sorted(expected), "the scan must read every file the branch adds or changes, and nothing else")
         self.assertFalse([p for p in scanned if p.startswith("docs/agent-runs/phase-12/")])
+
+
+class AccountScanOnAControlledRepository(unittest.TestCase):
+    """The scan's coverage proven on a scratch git repository the test builds itself, so it does not depend on what the real branch
+    happens to change: a commit after the merge base, an uncommitted edit, an untracked file, the phase-12 exclusion, an unchanged
+    file, and a change made on main after the branch left it (which a diff against main's tip instead of the merge base would scan)."""
+
+    LEAK = "4" + "8" * 5 + "7" * 6  # twelve digits, not an allowed synthetic id; split so this file holds no literal run
+    GIT_ENV = {"GIT_CONFIG_GLOBAL": "/dev/null", "GIT_CONFIG_NOSYSTEM": "1", "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+               "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
+
+    @classmethod
+    def setUpClass(cls):
+        import os
+        import shutil
+        import tempfile
+        from pathlib import Path
+        from unittest import mock
+
+        cls.root = Path(tempfile.mkdtemp(prefix="sc-account-scan-"))
+        cls.addClassCleanup(shutil.rmtree, cls.root, True)
+        env_patch = mock.patch.dict(os.environ, cls.GIT_ENV)
+        env_patch.start()
+        cls.addClassCleanup(env_patch.stop)
+
+        def git(*args):
+            subprocess.run(["git", "-C", str(cls.root)] + list(args), check=True, capture_output=True)
+
+        def write(rel, text):
+            (cls.root / rel).parent.mkdir(parents=True, exist_ok=True)
+            (cls.root / rel).write_text(text)
+
+        leak = "role arn:aws:iam::%s:role/x\n" % cls.LEAK
+        git("init", "-q", "-b", "main")
+        git("config", "commit.gpgsign", "false")
+        write("committed.txt", "one\n")
+        write("uncommitted.txt", "one\n")
+        write("unchanged.txt", "one\n" + leak)  # an old mention on the main line is not "added" by the branch
+        write("main-moved.txt", "old\n" + leak)
+        git("add", "-A")
+        git("commit", "-q", "-m", "base")
+        git("checkout", "-q", "-b", "work")
+        write("committed.txt", "one\n" + leak)
+        git("commit", "-q", "-am", "work commit after the base")
+        git("checkout", "-q", "main")
+        write("main-moved.txt", "new\n")  # main changes this file after the branch left it
+        git("commit", "-q", "-am", "main moves on")
+        git("checkout", "-q", "work")
+        write("uncommitted.txt", "one\ntwo\n" + leak)
+        write("untracked/new.json", '{"aws_account_id": "%s"}\n' % cls.LEAK)
+        write("docs/agent-runs/phase-12/legacy.md", leak)
+
+        with mock.patch.object(scan, "REPO", cls.root):
+            cls.findings, cls.scanned = scan.scan_tree()
+
+    def test_committed_uncommitted_and_untracked_additions_are_scanned_and_nothing_else(self):
+        self.assertEqual(sorted(self.scanned), ["committed.txt", "uncommitted.txt", "untracked/new.json"])
+
+    def test_the_main_line_after_the_merge_base_is_not_mistaken_for_branch_work(self):
+        self.assertNotIn("main-moved.txt", self.scanned)
+        self.assertNotIn("unchanged.txt", self.scanned)
+
+    def test_the_phase_12_evidence_is_excluded(self):
+        self.assertFalse([p for p in self.scanned if p.startswith("docs/agent-runs/phase-12/")])
+
+    def test_each_planted_id_is_found_at_its_line_and_the_digits_are_never_reported(self):
+        got = sorted((f["path"], f["line"], f["category"]) for f in self.findings)
+        self.assertEqual(got, [("committed.txt", 2, "account-id-literal"), ("uncommitted.txt", 3, "account-id-literal"),
+                               ("untracked/new.json", 1, "account-id-literal")])
+        self.assertNotIn(self.LEAK, repr(self.findings))
 
 
 class AccountScanSelfTest(unittest.TestCase):

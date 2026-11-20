@@ -1,0 +1,12 @@
+# Session 2 demo clips (kept outside the repository, in <home>/Movies/scholarchain/; may show the account ID per the demo-privacy decision). Listed 2026-11-18T23:02:45Z.
+# name | duration_s | bytes | sha256
+REC09-hadoop-emr.mov | 81.8 | 6005191 | e927879e4d0ef7d48ec04ede897599990227dd79ba84c9d33bcbb26907a08f0f
+REC10-spark-graph.mov | 55.7 | 3880971 | 0e2c1d502bf0fb0ee7b70b9b02b9557032357c54ca4d0849fc3b6b48bcf29d93
+REC12-dynamodb-ledger.mov | 45.7 | 3548373 | ef262771baa2ac1a216aca179e5dd0d22ee30dba8b3403f5e6013332d39a0475
+REC13-vectors-query.mov | 46.3 | 3742705 | 3431f6799d0839d8951fec23b889e48ed2ee9089420248722f3ce34342dc6465
+REC18a-terraform-plan.mov | 27.6 | 2613467 | fd0b08a74f2191f98a1bd8a2abd247f25992a901c4be7fc6458e3e11319c2f90
+REC18b-running-system.mov | 45.4 | 3982716 | c122b620b64ef9a233d4ca242218f30cbf7b84aade9000b5ba5fee35072b7f7a
+REC19-dashboard.mov | 61.9 | 5660530 | 7c75c0df909172b87581e84d6b6402310bc9e0a78f071c3d5a39c039f5e4b261
+REC20-scaling.mov | 60.1 | 5196358 | eab8f592e484dcab7850c037b7e566cb4474b67b086e7d82ed0f7a8a8f35b7be
+REC21-failure-recovery.mov | 93.9 | 6695090 | c3995a2c92967417f634c85000dd5a7ae7b272228629531d58c2fe4c1db3a250
+REC22-cleanup.mov | 93.2 | 6956561 | a77ae918d80234842c3a638764685f2a1e3f71c4df86635553fa047c397f4e22

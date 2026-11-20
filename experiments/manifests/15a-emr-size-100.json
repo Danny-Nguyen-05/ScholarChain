@@ -1,11 +1,11 @@
 {
   "budget": {
     "max_capacity": 2,
-    "max_runtime_minutes": 90,
+    "max_runtime_minutes": 75,
     "max_usd": 0.84,
     "region": "us-east-2"
   },
-  "description": "Experiment 15A, run 3 of 3: Hadoop prep, entity resolution and Spark on EMR over 100 percent of the Phase 6 DBLP slice (first ceil(n_venue*P/100) records per venue of dblp-2026-10-03, nested sets; see experiments/README.md). One primary and one core m5.xlarge, 90 minutes at most, auto-termination. The other three sources are the committed Phase 4 samples, unscaled.",
+  "description": "Experiment 15A, size S (10,577 works, 100 percent of the Phase 6 DBLP slice dblp-2026-10-03; see experiments/README.md): Hadoop prep, entity resolution and Spark on EMR. One r5.xlarge primary (entity resolution runs there, 12g heap) and one m5.xlarge core node, 75 minutes at most, 900 s idle auto-termination, budget 0.84 USD (run and at most one retry). The other three sources are the committed Phase 4 samples, unscaled. Spark template: experiments/inputs/15a/spark-emr-template.json (64 shuffle partitions). Size L is not run on EMR (local evidence only).",
   "id": "15a-emr-size-100",
   "metrics": {
     "locations": [
@@ -17,23 +17,25 @@
       "er-config": "a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c",
       "er-jar": "e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768",
       "er-policy": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f",
+      "hadoop-config": "5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57",
       "hadoop-libjars": "76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a",
       "hadoop-submit-jar": "3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6",
       "job-jar": "22c1928ac6f64831a4798ec9b6999ca495e5d23742d413a84910a693a8042e44",
-      "spark-config-template": "753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458"
+      "spark-config-template": "9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a"
     },
     "core_count": 1,
     "datasets_manifest": "experiments/inputs/15a/datasets.json",
     "er_config": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/er-config.json",
     "er_jar": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/entity-resolution.jar",
     "er_policy": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/er-policy.json",
-    "hadoop_config": "experiments/inputs/15a/prep-config.json",
+    "hadoop_config": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/hadoop-config.json",
     "hadoop_libjars": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/hadoop-bundle.jar",
     "hadoop_submit_jar": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/hadoop-submit.jar",
     "input_prefix": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/input/size-100",
     "instance_type": "m5.xlarge",
     "max_task_count": 0,
     "output_prefix": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-100",
+    "primary_instance_type": "r5.xlarge",
     "spark_config_template": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/spark-config-template.json"
   },
   "schema": "scholarchain.experiment-manifest.v1",

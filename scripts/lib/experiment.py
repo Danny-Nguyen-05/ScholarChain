@@ -42,7 +42,10 @@ Manifest schema (JSON, "scholarchain.experiment-manifest.v1"). Unknown keys are 
   pipeline      REQUIRED object: instance_type, core_count, max_task_count (optional, default 0), input_prefix,
                 output_prefix, hadoop_submit_jar, hadoop_libjars, hadoop_config, er_jar, er_policy, er_config,
                 spark_config_template, datasets_manifest (each becomes the matching run-bounded-pipeline.sh flag), and
-                artifact_sha256 {name: 64 hex} (becomes --artifact-sha256 name=hex; "job-jar" is required)
+                artifact_sha256 {name: 64 hex} (becomes --artifact-sha256 name=hex; "job-jar" is required).
+                instance_type is the core (and task) node type. primary_instance_type (optional; default: instance_type)
+                is the primary node type and becomes --primary-instance-type (Phase 15 D3, prompt.md "S run cap and D3
+                go-ahead": r5.xlarge primary, m5.xlarge core)
   metrics       REQUIRED object: locations, a non-empty list of s3:// URIs where the metric exports will be
                 (the cluster id is NOT in the manifest: it is created by Terraform and passed with --cluster-id)
 """
@@ -63,7 +66,8 @@ PIPELINE_STRINGS = (
     "instance_type", "input_prefix", "output_prefix", "hadoop_submit_jar", "hadoop_libjars", "hadoop_config", "er_jar",
     "er_policy", "er_config", "spark_config_template", "datasets_manifest",
 )
-PIPELINE_KEYS = set(PIPELINE_STRINGS) | {"core_count", "max_task_count", "artifact_sha256"}
+PIPELINE_KEYS = set(PIPELINE_STRINGS) | {"core_count", "max_task_count", "artifact_sha256", "primary_instance_type"}
+INSTANCE_TYPE = re.compile(r"^[a-z][a-z0-9]{1,8}\.[a-z0-9]{3,12}$")
 ARTIFACT_NAMES = {"hadoop-submit-jar", "hadoop-libjars", "er-jar", "job-jar", "hadoop-config", "er-policy", "er-config", "spark-config-template"}
 ID = re.compile(r"^[a-z0-9][a-z0-9-]{2,29}$")
 REGION = re.compile(r"^[a-z]{2}(-[a-z0-9]+)+-[0-9]+$")
@@ -270,6 +274,8 @@ def problems_for(document, limits):
                 problems.append("pipeline.%s is required" % key)
             elif not isinstance(pipeline[key], str) or not SAFE_VALUE.match(pipeline[key]):
                 problems.append("pipeline.%s must be a plain string" % key)
+        if "primary_instance_type" in pipeline and (not isinstance(pipeline["primary_instance_type"], str) or not INSTANCE_TYPE.match(pipeline["primary_instance_type"])):
+            problems.append("pipeline.primary_instance_type must look like r5.xlarge")
         for key in ("input_prefix", "output_prefix"):
             if isinstance(pipeline.get(key), str) and not S3_URI.match(pipeline[key]):
                 problems.append("pipeline.%s must be s3://bucket/non-empty-prefix" % key)
@@ -331,6 +337,10 @@ def cmd_args(args):
         ("--max-runtime-minutes", str(budget["max_runtime_minutes"])),
         ("--max-idle-seconds", str(document["teardown"]["max_idle_timeout_seconds"])),
         ("--instance-type", pipeline["instance_type"]),
+    ]
+    if "primary_instance_type" in pipeline:
+        out.append(("--primary-instance-type", pipeline["primary_instance_type"]))
+    out += [
         ("--core-count", str(pipeline["core_count"])),
         ("--max-task-count", str(pipeline.get("max_task_count", 0))),
     ]
@@ -377,6 +387,7 @@ def cmd_write_record(args):
             "max_capacity": document["budget"]["max_capacity"],
             "teardown": document["teardown"],
             "instance_type": document["pipeline"]["instance_type"],
+            "primary_instance_type": document["pipeline"].get("primary_instance_type", document["pipeline"]["instance_type"]),
         },
         "metric_locations": document["metrics"]["locations"],
     }

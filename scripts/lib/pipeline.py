@@ -16,7 +16,9 @@
   check-hadoop-config FILE      the Phase 4 ceiling check on a local prep config (argv ceilings via --ceiling K=V)
   check-cluster ...             --execute only: the describe-cluster output (whose Cluster.InstanceGroups the AWS CLI v2
                                 customization fills from ListInstanceGroups) and the get-auto-termination-policy output must show a WAITING or RUNNING cluster WITH an auto-termination idle timeout
-                                (60..max) and only the approved instance type and counts
+                                (60..max) and only the approved instance types and counts: the MASTER group must be exactly
+                                --primary-instance-type (default --instance-type) and the CORE and TASK groups exactly
+                                --instance-type (Phase 15 D3: primary r5.xlarge, core m5.xlarge)
 
 Design notes
   * The run configuration is canonical JSON (sorted keys, no spaces). Its sha256 is what the human approves
@@ -426,6 +428,10 @@ def build_plan(args):
         raise Refused("the cluster id must look like j-XXXXXXXXXXXXX")
     if not INSTANCE_TYPE.match(args.instance_type or ""):
         raise Refused("--instance-type must look like m5.xlarge")
+    # Phase 15 D3: the primary node may have its own type (r5.xlarge for the 12g entity-resolution JVM); default: --instance-type.
+    primary_type = args.primary_instance_type or args.instance_type
+    if not INSTANCE_TYPE.match(primary_type):
+        raise Refused("--primary-instance-type must look like r5.xlarge")
     if args.core_count < 1 or args.core_count > 10 or args.max_task_count < 0 or args.max_task_count > 10:
         raise Refused("core count must be 1-10 and task count 0-10")
     capacity = 1 + args.core_count + args.max_task_count
@@ -500,6 +506,7 @@ def build_plan(args):
         "region": region,
         "cluster_id": cluster_id,
         "instance_type": args.instance_type,
+        "primary_instance_type": primary_type,
         "primary_count": 1,
         "core_count": args.core_count,
         "max_task_count": args.max_task_count,
@@ -623,6 +630,7 @@ def cmd_show(args):
         print("cluster-id: %s" % config["cluster_id"])
         print("region: %s" % config["region"])
         print("instance-type: %s primary=1 core=%d max-task=%d max-capacity=%d" % (config["instance_type"], config["core_count"], config["max_task_count"], config["max_capacity"]))
+        print("primary-instance-type: %s (core and task: %s)" % (config.get("primary_instance_type", config["instance_type"]), config["instance_type"]))
         print("max-runtime-minutes: %d" % config["max_runtime_minutes"])
         print("budget-usd: %s" % config["budget_usd"])
         print("estimate-usd: %s (%s)" % (config["estimate"]["estimate_usd"], config["estimate"]["formula"]))
@@ -708,6 +716,7 @@ def cmd_check_cluster(args):
         elif idle < 60 or idle > args.max_idle_seconds:
             problems.append("the auto-termination idle timeout %s s is outside 60..%d s" % (idle, args.max_idle_seconds))
     total = 0
+    primary_type = args.primary_instance_type or args.instance_type
     limits = {"MASTER": 1, "CORE": args.core_count, "TASK": args.max_task_count}
     if isinstance(groups, dict):
         found = groups.get("InstanceGroups")
@@ -722,8 +731,9 @@ def cmd_check_cluster(args):
             if kind not in limits:
                 problems.append("unknown instance group type %s" % kind)
                 continue
-            if group.get("InstanceType") != args.instance_type:
-                problems.append("%s group uses %s, not the approved %s" % (kind, group.get("InstanceType"), args.instance_type))
+            approved = primary_type if kind == "MASTER" else args.instance_type
+            if group.get("InstanceType") != approved:
+                problems.append("%s group uses %s, not the approved %s" % (kind, group.get("InstanceType"), approved))
             requested = group.get("RequestedInstanceCount")
             running = group.get("RunningInstanceCount")
             if not isinstance(requested, int) or not isinstance(running, int):
@@ -738,7 +748,7 @@ def cmd_check_cluster(args):
         print("CLUSTER-CHECK-FAILED: %s" % problem)
     if problems:
         return 1
-    print("CLUSTER-CHECK: ok state=%s auto_termination_idle_timeout_seconds=%s instances=%d type=%s" % (state, idle, total, args.instance_type))
+    print("CLUSTER-CHECK: ok state=%s auto_termination_idle_timeout_seconds=%s instances=%d type=%s primary_type=%s" % (state, idle, total, args.instance_type, primary_type))
     return 0
 
 
@@ -828,7 +838,7 @@ def build_parser():
         "run-id", "action", "region", "cluster-id", "instance-type", "budget-usd", "input-prefix", "output-prefix", "hadoop-submit-jar",
         "hadoop-libjars", "hadoop-config", "er-jar", "er-policy", "er-config", "spark-config-template", "datasets-manifest",
         "spark-conf-file", "efs-mount", "runtime-dir", "job-jar-path", "java-home-file", "er-xmx", "expected-spark-version",
-        "expected-scala-version", "step-weights", "runtime-archive-sha256", "estimate-json", "step-bin-dir",
+        "expected-scala-version", "step-weights", "runtime-archive-sha256", "estimate-json", "step-bin-dir", "primary-instance-type",
     ):
         p.add_argument("--" + name)
     for name in ("core-count", "max-task-count", "max-runtime-minutes", "max-capacity-cap", "max-runtime-cap", "max-input-bytes", "max-copyout-bytes", "max-idle-timeout-seconds", "max-executors-per-node", "kill-after-seconds", "min-step-seconds", "step-arg-max-chars"):
@@ -856,6 +866,7 @@ def build_parser():
     p = sub.add_parser("check-cluster")
     for name in ("describe", "policy", "cluster-id", "instance-type"):
         p.add_argument("--" + name, required=True)
+    p.add_argument("--primary-instance-type", default="")
     for name in ("core-count", "max-task-count", "max-capacity", "max-idle-seconds"):
         p.add_argument("--" + name, type=int, required=True)
     p.set_defaults(fn=cmd_check_cluster)

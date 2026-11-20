@@ -49,6 +49,19 @@ def scenario_g6_bounds(test, patch=None):
     test.assertTrue(big, "m5.2xlarge was accepted although its smallest cluster exceeds the cap\n" + text[-400:])
     unpriced, text = refused(tree({"instance_type": "m5.4xlarge"}))
     test.assertTrue(unpriced, "an instance type without a reviewed rate was accepted\n" + text[-400:])
+    # Phase 15 D3: the primary has its own type. Hand-derived from the reviewed rates: an r5.xlarge primary (0.252 + 0.063 = 0.315)
+    # with the core and the one allowed task node (0.240 each) costs 0.795 x 3.25 = 2.58375 <= 3; a second task node would make
+    # 1.035 x 3.25 = 3.36375 > 3, so the D3 cluster allows exactly the same task count.
+    r5 = per_instance["R5_XLARGE"]
+    test.assertEqual(r5, D("0.315"))
+    test.assertLessEqual((r5 + per_instance["M5_XLARGE"] * (1 + allowed_tasks)) * hours, cap)
+    test.assertGreater((r5 + per_instance["M5_XLARGE"] * (2 + allowed_tasks)) * hours, cap)
+    for primary in ("r5.xlarge", "m5.xlarge"):
+        accepted = tree({"primary_instance_type": primary}).plan_attempt()
+        test.assertEqual(accepted.returncode, 0, "primary %s must be accepted\n%s" % (primary, accepted.stderr[-400:]))
+    for primary in ("m5.2xlarge", "r5.2xlarge", "r6i.xlarge"):
+        was_refused, text = refused(tree({"primary_instance_type": primary}))
+        test.assertTrue(was_refused, "primary %s was accepted; only the reviewed r5.xlarge / m5.xlarge pair has a rate and cap check\n%s" % (primary, text[-400:]))
 
 
 def scenario_idle_cap(test, patch=None):
@@ -290,6 +303,13 @@ class EmrModuleMutations(InfraTestCase):
         with self.assertRaises(AssertionError):
             scenario_g6_bounds(self, patch=patch)
 
+    def test_the_primary_type_pin_relaxed_is_caught(self):
+        def patch(t):
+            t.replace(VARIABLES, 'contains(["m5.xlarge", "r5.xlarge"], var.config.primary_instance_type)',
+                      'contains(["m5.xlarge", "r5.xlarge", "m5.2xlarge", "r5.2xlarge", "r6i.xlarge"], var.config.primary_instance_type)')
+        with self.assertRaises(AssertionError):
+            scenario_g6_bounds(self, patch=patch)
+
     def test_the_idle_timeout_cap_relaxed_is_caught(self):
         def patch(t):
             t.replace(VARIABLES, "var.config.idle_timeout_seconds <= 900", "var.config.idle_timeout_seconds <= 3600")
@@ -307,6 +327,17 @@ class EmrModuleMutations(InfraTestCase):
             t.replace(EFS, "referenced_security_group_id = var.security_group_id\n  ip_protocol                  = \"tcp\"\n  from_port                    = 2049\n  to_port                      = 2049\n  description                  = \"NFS from the EMR node group only\"",
                       "cidr_ipv4                    = \"10.0.0.0/8\"\n  ip_protocol                  = \"tcp\"\n  from_port                    = 2049\n  to_port                      = 2049\n  description                  = \"NFS from the EMR node group only\"")
         self.run_mutation("efs_rule_cidr_source", mutate, ["efs_nfs_from_emr_only"])
+
+    def test_the_primary_default_reverted_to_m5_is_caught(self):
+        self.run_mutation("primary_default_m5", lambda t: t.replace(VARIABLES, 'primary_instance_type = optional(string, "r5.xlarge")',
+                                                                    'primary_instance_type = optional(string, "m5.xlarge")'),
+                          ["cluster_decision_12_10"])
+
+    def test_the_primary_group_wired_to_the_core_type_is_caught(self):
+        # scoped to the master group: the same text also ends the `primary_instance_type = ...` line of the caps locals
+        self.run_mutation("primary_uses_core_type", lambda t: t.replace_after(MAIN, "master_instance_group {", "instance_type = local.cfg.primary_instance_type",
+                                                                              "instance_type = local.cfg.instance_type"),
+                          ["cluster_decision_12_10"])
 
     def test_the_stack_tag_removed_from_the_cluster_is_caught(self):
         self.run_mutation("stack_tag_removed", lambda t: t.regex_sub(MAIN, r'^[ \t]*"scholarchain:stack"[ \t]*=[ \t]*local\.cfg\.stack_tag_value[ \t]*\n', ""),

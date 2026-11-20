@@ -5,6 +5,7 @@ Fake aws/yarn/hadoop/spark-submit/timeout binaries only. Every expected value is
 read back from the implementation: estimate = instances x (EC2 + EMR rate) x (runtime + idle tail) hours, for example 3 x (0.192 + 0.048) x (1.5 h + 900 s) = 1.26.
 """
 import datetime
+import hashlib
 import json
 import os
 import re
@@ -17,9 +18,16 @@ from helpers import FAKE_ACCOUNT, FAKE_SECRET, FAKE_TOKEN, REGION, SCRIPTS_DIR, 
 from pipeline_helpers import CLUSTER, JOB_SHA, PIPELINE_FIXTURES, RUN, PipelineFixture, read
 
 PIPELINE = os.path.join(SCRIPTS_DIR, "run-bounded-pipeline.sh")
+
+
+def hadoop_run_id(run_id):
+    """Independent of sc-step.sh: run:<uuid v4 form> from the first 32 hex digits of sha256(run_id), version 4, variant 8/9/a/b."""
+    h = hashlib.sha256(run_id.encode()).hexdigest()[:32]
+    u = h[:12] + "4" + h[13:16] + "89ab"[int(h[16], 16) & 3] + h[17:32]
+    return "run:%s-%s-%s-%s-%s" % (u[:8], u[8:12], u[12:16], u[16:20], u[20:32])
 STEPS = ("stage-in", "hadoop-prep", "entity-resolution", "spark-class-origin", "spark-job", "copy-out")
-# maxLocalSampleRecords is the one pipeline-specific exception (12000, replan G-MAIN); the Phase 4 smoke script keeps 1000.
-PIPELINE_LOCAL_SAMPLE_CEILING = 12000
+# maxLocalSampleRecords is the one pipeline-specific exception (60000 since Phase 15 P22; 12000 under replan G-MAIN); the Phase 4 smoke script keeps 1000.
+PIPELINE_LOCAL_SAMPLE_CEILING = 60000
 PHASE4_LOCAL_SAMPLE_CEILING = 1000
 CEILINGS = {
     "maxLocalSampleRecords": PIPELINE_LOCAL_SAMPLE_CEILING,
@@ -101,6 +109,8 @@ class DryRunTests(PipelineFixture):
             "spark.dynamicAllocation.enabled=true",
             "spark.dynamicAllocation.shuffleTracking.enabled=true",
             "spark.shuffle.service.enabled=false",
+            "spark.task.maxFailures=2",
+            "spark.yarn.maxAppAttempts=1",
             "spark.yarn.tags=${TAG}",
             "spark.hadoop.fs.defaultFS=file:///",
             "spark.yarn.appMasterEnv.JAVA_HOME=${JAVA_HOME}",
@@ -480,7 +490,7 @@ class ExecuteGateTests(PipelineFixture):
         cases = {
             "stale snapshot": {"cost_snapshot_utc": utc_hours_ago(30)},
             "monitoring not confirmed": {"monitoring_confirmed_active": False},
-            "headroom below 3 USD": {"remaining_headroom_usd": 2.99},
+            "headroom below the 2 USD floor": {"remaining_headroom_usd": 1.99},
             "headroom 1 USD (not enough for a paid run; cleanup-prepare has no floor)": {"remaining_headroom_usd": 1},
             "negative headroom": {"remaining_headroom_usd": -0.01},
         }
@@ -492,10 +502,11 @@ class ExecuteGateTests(PipelineFixture):
                 self.refused(result, "pre-spend receipt rejected before initial")
                 self.assertEqual(self.emr_ops(), [])
 
-    def test_prespend_headroom_of_exactly_the_pinned_3_usd_floor_is_accepted_and_the_cleanup_exemption_does_not_apply(self):
-        """Hand-derived: the floor is PRESPEND_MIN_HEADROOM_USD = 3 (inclusive). The absence of a floor is deploy.sh --stage
-        cleanup-prepare only; a bounded pipeline run keeps the normal floor, so 1 USD is refused (see the failures test above)."""
-        args = self.ready(prespend_override={"remaining_headroom_usd": 3})
+    def test_prespend_headroom_of_exactly_the_pinned_2_usd_floor_is_accepted_and_the_cleanup_exemption_does_not_apply(self):
+        """Hand-derived: the floor is PRESPEND_MIN_HEADROOM_USD = 2 (inclusive; it was 3 until the Phase 15 "R-b option decision", floor 2 /
+        project <= 23.00). The absence of a floor is deploy.sh --stage cleanup-prepare only; a bounded pipeline run keeps the normal floor,
+        so 1.99 and 1 USD are refused (see the failures test above)."""
+        args = self.ready(prespend_override={"remaining_headroom_usd": 2})
         self.assertEqual(self.execute(args).rc, 0)
 
     def test_a_dirty_tree_refuses_but_only_the_literal_record_path_is_exempt(self):
@@ -550,29 +561,30 @@ class ExecuteGateTests(PipelineFixture):
         env = self.execute(args, EMR_RATE_EC2_M5_XLARGE="0.1", EMR_RATE_EMR_M5_XLARGE="0.1")
         self.refused(env, "no reviewed hourly rate")
 
-    def test_g6_three_live_runs_in_the_ledger_refuse(self):
+    def test_g6_four_live_runs_in_the_ledger_refuse(self):
+        """Phase 15 P25 (user decision 2026-11-16): the live-run limit is 4. 4 x 0.50 + 1.26 = 3.26 stays under the 3.53 cap (repair round, user decision 2026-11-16), so only the count refuses."""
         args = self.ready()
-        self.write_ledger(["0.50", "0.50", "0.50"])
-        self.refused(self.execute(args), "3 live EMR runs are already recorded in the ledger (limit 3)")
+        self.write_ledger(["0.50", "0.50", "0.50", "0.50"])
+        self.refused(self.execute(args), "4 live EMR runs are already recorded in the ledger (limit 4)")
         self.assertEqual(self.calls(), [])
 
-    def test_g6_the_cumulative_estimate_may_not_exceed_2_52(self):
-        """Hand-derived with the pinned cap 2.52 (user decision 2026-11-09) and this run's estimate 1.26 (2 x 0.24 x 2.625 h)."""
+    def test_g6_the_cumulative_estimate_may_not_exceed_3_53(self):
+        """Hand-derived with the pinned cap 3.53 (user decision 2026-11-16, "Raise cap to 3.53") and this run's estimate 1.26 (2 x 0.24 x 2.625 h)."""
         args = self.ready()
-        self.write_ledger(["1.00", "0.27"])  # 1.27 + 1.26 = 2.53 > 2.52
-        self.refused(self.execute(args), "cumulative estimate 2.53 USD (recorded 1.27 + this run 1.26) would exceed the cap 2.52 USD")
-        self.write_ledger(["1.00", "0.26"])  # 1.26 + 1.26 = 2.52 <= 2.52: allowed (the cap is inclusive)
+        self.write_ledger(["1.00", "1.28"])  # 2.28 + 1.26 = 3.54 > 3.53
+        self.refused(self.execute(args), "cumulative estimate 3.54 USD (recorded 2.28 + this run 1.26) would exceed the cap 3.53 USD")
+        self.write_ledger(["1.00", "1.27"])  # 2.27 + 1.26 = 3.53 <= 3.53: allowed (the cap is inclusive)
         self.setUp_clean()
         self.assertEqual(self.execute(args).rc, 0)
 
-    def test_g6_a_third_run_that_the_count_allows_is_still_refused_when_it_would_pass_the_2_52_cap(self):
-        """Two recorded runs of 0.50 and 0.60 total 1.10; a third of 1.26 makes 2.36 (allowed); a ledger of 1.00, 1.00 makes 3.26 (refused)."""
+    def test_g6_a_third_run_that_the_count_allows_is_still_refused_when_it_would_pass_the_3_53_cap(self):
+        """Two recorded runs of 0.50 and 0.60 total 1.10; a third of 1.26 makes 2.36 (allowed); a ledger of 1.50, 1.00 makes 3.76 > 3.53 (refused)."""
         args = self.ready()
         self.write_ledger(["0.50", "0.60"])
         self.assertEqual(self.execute(args).rc, 0)
         self.setUp_clean()
-        self.write_ledger(["1.00", "1.00"])
-        self.refused(self.execute(args), "cumulative estimate 3.26 USD (recorded 2.00 + this run 1.26) would exceed the cap 2.52 USD")
+        self.write_ledger(["1.50", "1.00"])
+        self.refused(self.execute(args), "cumulative estimate 3.76 USD (recorded 2.50 + this run 1.26) would exceed the cap 3.53 USD")
 
     def test_g6_a_malformed_ledger_refuses_rather_than_reading_as_empty(self):
         args = self.ready()
@@ -581,18 +593,18 @@ class ExecuteGateTests(PipelineFixture):
             handle.write("not json\n")
         self.refused(self.execute(args), "the run ledger cannot be read")
 
-    def test_g6_each_execute_adds_one_ledger_line_so_the_fourth_run_is_refused(self):
-        # This test isolates the run COUNT limit: three runs of 1.26 (3.78) would exceed the 2.52 USD cumulative cap, which has its own tests.
+    def test_g6_each_execute_adds_one_ledger_line_so_the_fifth_run_is_refused(self):
+        # This test isolates the run COUNT limit (4, Phase 15 P25): four runs of 1.26 (5.04) would exceed the 3.53 USD cumulative cap, which has its own tests.
         self.use_config(EMR_CUMULATIVE_CAP_USD="9.50")
-        for index in range(3):
+        for index in range(4):
             args = self.ready(serial=index, **{"--run-id": "bp-test-%04d" % (index + 10)})
             self.setUp_clean()
             self.assertEqual(self.execute(args).rc, 0, index)
         with open(self.ledger_path(), encoding="utf-8") as handle:
-            self.assertEqual(len(handle.readlines()), 4, "the init record and three reservations")
+            self.assertEqual(len(handle.readlines()), 5, "the init record and four reservations")
         args = self.ready(serial=99, **{"--run-id": "bp-test-0099"})
         self.setUp_clean()
-        self.refused(self.execute(args), "3 live EMR runs")
+        self.refused(self.execute(args), "4 live EMR runs")
 
     # ---- forced auto-termination and capacity (read from the live cluster, before anything paid) -------------------------------
     def test_a_cluster_without_auto_termination_is_refused_before_any_step(self):
@@ -858,13 +870,16 @@ class StepBodyTests(PipelineFixture):
         for needle in (
             "edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain",
             "-Dmapreduce.job.tags=%s" % RUN,
-            "--once --execution-mode cluster --run-id %s" % RUN,
-            "--output-root file://%s/hadoop" % self.run_root,
+            # Phase 15 P6 D1/D2: the Hadoop run id is run:<uuid v4> derived from sha256(RUN); the output root is a plain absolute path
+            "--once --execution-mode cluster --run-id %s" % hadoop_run_id(RUN),
+            "--output-root %s/hadoop --config" % self.run_root,
             "--dblp file://%s/inputs/datasets/samples/dblp/linked-records.xml --dblp-snapshot dblp-snapshot-1 --dblp-retrieval 2026-10-05" % self.run_root,
             "--orcid file://%s/inputs/datasets/samples/orcid/records.jsonl --orcid-snapshot orcid-snapshot-1" % self.run_root,
         ):
             self.assertIn(needle, jar)
         self.assertTrue([c for c in self.node_calls() if c.startswith("timeout --kill-after=60 1080 hadoop jar")])
+        self.assertNotIn("file://%s/hadoop" % self.run_root, jar)
+        self.assertIn("Hadoop run id %s (derived from pipeline run id %s)" % (hadoop_run_id(RUN), RUN), result.stdout)
 
     def test_hadoop_prep_repeats_the_ceiling_check_on_the_cluster_before_hadoop_jar(self):
         late = os.path.join(self.tmp, "late-config.json")  # not there at plan time, so only the cluster check can see it
@@ -894,7 +909,7 @@ class StepBodyTests(PipelineFixture):
         result = self.run_body(body)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         java = [c for c in self.node_calls() if c.startswith("java ") and "-cp" in c][0]
-        self.assertIn("-Xmx3g -cp", java)
+        self.assertIn("-Xmx12g -cp", java)  # PIPELINE_ER_XMX, Phase 15 D3 (prompt.md "S run cap and D3 go-ahead"; was 3g)
         self.assertIn("edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve", java)
         self.assertIn("--input %s/hadoop/run-1" % self.run_root, java)
         self.assertIn("--llm-mode disabled --output %s/er/run" % self.run_root, java)
@@ -951,8 +966,13 @@ class StepBodyTests(PipelineFixture):
         result = self.run_body(body)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         cp = [a for a in self.aws_calls() if a.startswith("s3 cp")]
+        # Phase 15 P23: each part's upload carries its fixed filter table (hadoop and er only) and never follows links
+        filters = {
+            "hadoop": "--exclude intermediate/* --exclude */intermediate/* --exclude export/* --exclude */export/* --include export/*/reject/* --include */export/*/reject/* ",
+            "er": "--exclude */*/* --exclude evidence.jsonl --exclude */evidence.jsonl --exclude audit-details.jsonl --exclude */audit-details.jsonl ",
+        }
         for part in ("hadoop", "er", "spark", "results", "config"):
-            self.assertIn("s3 cp %s/%s/ s3://fixture-bucket/outputs/%s/%s/ --recursive --region %s --only-show-errors" % (self.run_root, part, RUN, part, REGION), cp)
+            self.assertIn("s3 cp %s/%s/ s3://fixture-bucket/outputs/%s/%s/ --recursive %s--no-follow-symlinks --region %s --only-show-errors" % (self.run_root, part, RUN, part, filters.get(part, ""), REGION), cp)
         self.assertTrue(any("copyout-manifest.sha256" in a and "s3://fixture-bucket/outputs/%s/copyout-manifest.sha256" % RUN in a for a in cp))
         with open(os.path.join(self.run_root, "copyout-manifest.sha256"), encoding="utf-8") as handle:
             lines = handle.read().splitlines()
@@ -1062,10 +1082,11 @@ class Phase4ParityTests(unittest.TestCase):
         )
 
     def test_the_largest_phase_15a_input_fits_the_pipeline_ceiling_and_the_exception_is_documented_in_the_config(self):
-        """The three 15A inputs hold 2648, 5290 and 10577 publications (user decision); the pin must admit the largest and no more than needed."""
+        """Phase 15 P22: the L slice holds at most 50000 DBLP works plus 3 other-source records (one line each); the pin must admit 50003
+        and stay bounded."""
         conf = read(os.path.join(SCRIPTS_DIR, "config", "release.conf"))
         pin = int(re.search(r"^PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS=(\d+)$", conf, re.M).group(1))
-        self.assertGreaterEqual(pin, 10577)
+        self.assertGreaterEqual(pin, 50003)
         self.assertLess(pin, 100000, "not an unbounded ceiling")
         self.assertIn("PIPELINE-SPECIFIC EXCEPTION", conf)
 
@@ -1074,8 +1095,8 @@ class Phase4ParityTests(unittest.TestCase):
         weights = re.search(r"^PIPELINE_STEP_WEIGHTS=(.*)$", conf, re.M).group(1).split()
         self.assertEqual(sum(int(w.split("=")[1]) for w in weights), 100)
         self.assertEqual(re.search(r"^EMR_MAX_RUN_USD=(.*)$", conf, re.M).group(1), "3")
-        self.assertEqual(re.search(r"^EMR_MAX_LIVE_RUNS=(.*)$", conf, re.M).group(1), "3")
-        self.assertEqual(re.search(r"^EMR_CUMULATIVE_CAP_USD=(.*)$", conf, re.M).group(1), "2.52")
+        self.assertEqual(re.search(r"^EMR_MAX_LIVE_RUNS=(.*)$", conf, re.M).group(1), "4")
+        self.assertEqual(re.search(r"^EMR_CUMULATIVE_CAP_USD=(.*)$", conf, re.M).group(1), "3.53")
 
     def test_the_committed_pricing_file_has_one_human_controlled_flag_and_cites_sources_and_a_retrieval_date(self):
         pricing = read(os.path.join(SCRIPTS_DIR, "config", "emr-pricing.conf"))
@@ -1091,7 +1112,10 @@ class Phase4ParityTests(unittest.TestCase):
         self.assertIn("https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/ElasticMapReduce/current/us-east-2/index.json", pricing)
         rates = dict(re.findall(r"^(EMR_RATE_[A-Z0-9_]+)=([0-9.]+)$", pricing, re.M))
         # hand-copied from the public price list on the retrieval date (us-east-2, Linux, on-demand): see the file header
-        self.assertEqual(rates, {"EMR_RATE_EC2_M5_XLARGE": "0.192", "EMR_RATE_EMR_M5_XLARGE": "0.048", "EMR_RATE_EC2_M5_2XLARGE": "0.384", "EMR_RATE_EMR_M5_2XLARGE": "0.096"})
+        # Phase 15 D3 (prompt.md "S run cap and D3 go-ahead"): r5.xlarge for the primary only, read 2026-11-16 (0.252 EC2 + 0.063 EMR).
+        self.assertEqual(rates, {"EMR_RATE_EC2_M5_XLARGE": "0.192", "EMR_RATE_EMR_M5_XLARGE": "0.048", "EMR_RATE_EC2_M5_2XLARGE": "0.384", "EMR_RATE_EMR_M5_2XLARGE": "0.096",
+                                 "EMR_RATE_EC2_R5_XLARGE": "0.252", "EMR_RATE_EMR_R5_XLARGE": "0.063"})
+        self.assertRegex(pricing, r"(?m)^EMR_PRICING_R5_XLARGE_RETRIEVED=2026-11-16$")
 
 
 if __name__ == "__main__":

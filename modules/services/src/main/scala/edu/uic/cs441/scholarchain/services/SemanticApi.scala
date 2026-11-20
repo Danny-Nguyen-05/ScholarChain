@@ -57,8 +57,10 @@ final class SemanticApi(
   private val deadline =
     new DownstreamClient(deadlineConfig, new CircuitBreaker(Int.MaxValue, config.timeoutMs))
   def retrieve(body: String, context: RequestContext): Either[ApiError, ApiReply] = try {
-    if (body.getBytes(java.nio.charset.StandardCharsets.UTF_8).length > config.maxBodyBytes)
-      return Left(ApiError.invalid)
+    if (
+      body.getBytes(java.nio.charset.StandardCharsets.UTF_8).length > config.maxBodyBytes ||
+      !RequestJson.withinDepth(body)
+    ) return Left(ApiError.invalid)
     val json = ujson.read(body)
     if (!json.obj.keySet.subsetOf(Set("question", "topK", "filters"))) return Left(ApiError.invalid)
     val question = json("question").str

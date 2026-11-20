@@ -22,12 +22,13 @@ locals {
 
   # G3/G6 caps, exposed for the cross-check tests.
   caps = {
-    primary_nodes        = 1
-    core_nodes           = 1
-    max_task_nodes       = local.cfg.max_task_nodes
-    max_instances        = 2 + local.cfg.max_task_nodes
-    instance_type        = local.cfg.instance_type
-    idle_timeout_seconds = local.cfg.idle_timeout_seconds
+    primary_nodes         = 1
+    core_nodes            = 1
+    max_task_nodes        = local.cfg.max_task_nodes
+    max_instances         = 2 + local.cfg.max_task_nodes
+    instance_type         = local.cfg.instance_type
+    primary_instance_type = local.cfg.primary_instance_type
+    idle_timeout_seconds  = local.cfg.idle_timeout_seconds
   }
 
   ebs = { type = "gp3", size = local.cfg.ebs_size_gb, iops = local.cfg.ebs_iops, throughput = local.cfg.ebs_throughput, volumes_per_instance = 1 }
@@ -76,7 +77,8 @@ resource "aws_emr_cluster" "pipeline" {
   master_instance_group {
     name           = "primary"
     instance_count = 1
-    instance_type  = local.cfg.instance_type
+    # D3: the primary type is separate from the core type (variables.tf, config.primary_instance_type).
+    instance_type = local.cfg.primary_instance_type
     ebs_config {
       type                 = local.ebs.type
       size                 = local.ebs.size
@@ -113,6 +115,8 @@ resource "aws_emr_cluster" "pipeline" {
     "for-use-with-amazon-emr-managed-policies" = "true"
   })
   lifecycle { ignore_changes = [core_instance_group[0].instance_count] }
+  # S1-F2: the bootstrap mounts the EFS staging file system; never start the nodes before its mount target exists.
+  depends_on = [aws_efs_mount_target.staging]
 }
 
 # G3: no task group unless tfvars allow task nodes; the initial count is task_node_count (default 0).

@@ -161,5 +161,6 @@ module "observability" {
   table_names           = module.dynamodb.table_names
   neptune_identifier    = module.neptune.cluster_identifier
   emr_cluster_id        = module.emr.cluster_id
+  alb_metric_dimensions = module.runtime.alb_metric_dimensions
   tags                  = module.foundation.tags
 }

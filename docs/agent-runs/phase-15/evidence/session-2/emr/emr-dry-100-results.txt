@@ -1,0 +1,16 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 1 source file(s); redacted.
+
+## <repo>/target/phase15/session2/evidence/emr-dry-100.log (299 lines, sha256 29dd6b9d0635e87865301c0ba2de679afd1498ba94579cb6d2abdf252bccff31)
+STEP: start
+[2026-11-18T16:31:40Z] [20261118T163140Z-86002] INFO script=run-experiment.sh mode=dry-run run_id=20261118T163140Z-86002 repo_root=<repo>
+STEP: inputs
+STEP: manifest-committed
+[2026-11-18T16:31:40Z] [20261118T163140Z-86002] INFO manifest experiments/manifests/15a-emr-size-100.json is tracked and identical to HEAD bd0b8180b919ed61f6234fa515f4c07d1137a641 (sha256 b73b896904a3460f075149c42373c9f1b274ff8085726037f680a7af5ed39423)
+STEP: manifest-tokens
+STEP: manifest-schema
+[2026-11-18T16:31:40Z] [20261118T163140Z-86002] INFO manifest 15a-emr-size-100 is valid: max_usd=0.84 max_runtime_minutes=75 max_capacity=2 region=us-east-2 idle_timeout_seconds<=900
+STEP: run-record
+STEP: delegate-pipeline
+[2026-11-18T16:31:40Z] [20261118T163140Z-86002] INFO delegating to run-bounded-pipeline.sh (run id 15a-emr-size-100-20261118T163140Z-86002)
+pipeline| RESULT: DRY-RUN run=15a-emr-size-100-20261118T163140Z-86002 steps=6 run_config_sha256=f064a3105ebfceb656b7d29f743fc8bf07e12a394a01a5c69eb4e3ca9de4ab60 estimate_usd=0.84; no aws, hadoop or spark command was run and nothing was written
+RESULT: DRY-RUN experiment=15a-emr-size-100 manifest_sha256=b73b896904a3460f075149c42373c9f1b274ff8085726037f680a7af5ed39423; the delegated pipeline dry run ran no aws, hadoop or spark command and nothing was written

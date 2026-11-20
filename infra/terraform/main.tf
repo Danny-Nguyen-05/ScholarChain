@@ -137,6 +137,9 @@ module "runtime" {
   runtime_artifact_source_run_id    = var.runtime_artifact_source_run_id
   capacity                          = var.service_capacity
   cpu_target                        = var.cpu_target_percent
+  query_requests_per_target_target  = var.query_requests_per_target_target
+  semantic_rate_limit_per_second    = var.query_semantic_rate_limit_per_second
+  semantic_rate_limit_burst         = var.query_semantic_rate_limit_burst
   container_insights_enabled        = var.container_insights_enabled
   backlog_target                    = var.worker_backlog_target
   service_port                      = var.service_port

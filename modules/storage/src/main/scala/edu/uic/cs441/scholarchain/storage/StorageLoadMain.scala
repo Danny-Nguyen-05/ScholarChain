@@ -377,6 +377,7 @@ object StorageLoadMain {
       )
   }
   def main(args: Array[String]): Unit = {
+    ToolLogging.install()
     val result = run(args.toVector);
     if (result != 0)
       throw new IllegalStateException("StorageLoadMain failed with exit code " + result)

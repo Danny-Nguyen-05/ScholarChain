@@ -246,12 +246,15 @@ object AwsComposition {
   ): Either[String, AwsComposition] = factory
     .semantic(config)
     .flatMap { ports =>
-      consistent(config.embeddingProvider, config.embedding, ports.embedding, ports)
+      // Only the query-type client is wrapped (P40): the cache reports the underlying identity,
+      // so the consistency check sees the same provider, model, version and dimension.
+      val cached = new CachingEmbeddingClient(ports.embedding, config.embeddingCacheMaxEntries)
+      consistent(config.embeddingProvider, config.embedding, cached, ports).map(p => (p, cached))
     }
-    .map { ports =>
-      val api =
-        SemanticApi.fromPorts(ports.embedding, config.embedding, ports.vectors, config.index)
+    .map { (ports, cached) =>
+      val api = SemanticApi.fromPorts(cached, config.embedding, ports.vectors, config.index)
       val metrics = new ServiceMetrics
+      metrics.registerEmbeddingCache(() => cached.stats)
       new AwsComposition(
         refusing(service, metrics),
         Some(

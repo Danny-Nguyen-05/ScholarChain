@@ -1,0 +1,314 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 9 source file(s); redacted.
+
+## <repo>/target/phase15/session2/evidence/stagea-base-plan.log (257 lines, sha256 499abd2e304d99999eb70f12d59540e638ff9ebf98f9120c7281f197a03b26fa)
+STEP: start
+[2026-11-18T14:47:13Z] [20261118T144713Z-72996] INFO script=plan.sh mode=execute run_id=20261118T144713Z-72996 repo_root=<repo>
+STEP: inputs
+STEP: output-paths
+[2026-11-18T14:47:13Z] [20261118T144713Z-72996] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261118T144713Z-72996
+STEP: terraform-version
+[2026-11-18T14:47:13Z] [20261118T144713Z-72996] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+[2026-11-18T14:47:13Z] [20261118T144713Z-72996] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T14:47:13Z] [20261118T144713Z-72996] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 548, "sha256": "f759ff6baffd621cd025fdfcc17b2107e408a836e7e220aa465914dbb9512444"}
+[2026-11-18T14:47:14Z] [20261118T144713Z-72996] INFO env=course region=us-east-2 source_commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 scripts_commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 clean=true plan=<repo>/target/plans/20261118T144713Z-72996/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan
+STEP: account-identity
+[2026-11-18T14:47:15Z] [20261118T144713Z-72996] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: terraform-init
+STEP: terraform-plan
+[2026-11-18T14:47:18Z] [20261118T144713Z-72996] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 548, "sha256": "f759ff6baffd621cd025fdfcc17b2107e408a836e7e220aa465914dbb9512444"}
+STEP: terraform-show
+STEP: terraform-show-text
+STEP: plan-receipt
+[2026-11-18T14:47:21Z] [20261118T144713Z-72996] INFO receipt: <repo>/target/plans/20261118T144713Z-72996/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan.receipt.json
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261118T144713Z-72996/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan.receipt.json plan_sha256=8e3a37045adf9b0a627b4c79f084fac8524493faacc238e7d97494b6202bf7ec
+
+## <repo>/target/phase15/session2/evidence/stagea-base-plan2.log (86 lines, sha256 276ba6215f58238c10b4604b6e48a3a2c131c3ad115ca4878ce97248c49495a6)
+STEP: start
+[2026-11-18T15:12:42Z] [20261118T151242Z-76267] INFO script=plan.sh mode=execute run_id=20261118T151242Z-76267 repo_root=<repo>
+STEP: inputs
+STEP: output-paths
+[2026-11-18T15:12:42Z] [20261118T151242Z-76267] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261118T151242Z-76267
+STEP: terraform-version
+[2026-11-18T15:12:43Z] [20261118T151242Z-76267] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+[2026-11-18T15:12:43Z] [20261118T151242Z-76267] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T15:12:43Z] [20261118T151242Z-76267] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 720, "sha256": "9d4807e9d412bfb39865e9b7ad9936eaddbcd2c7144239e5732d4e2bb95f5ac6"}
+[2026-11-18T15:12:43Z] [20261118T151242Z-76267] INFO env=course region=us-east-2 source_commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 scripts_commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 clean=true plan=<repo>/target/plans/20261118T151242Z-76267/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan
+STEP: account-identity
+[2026-11-18T15:12:44Z] [20261118T151242Z-76267] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: terraform-init
+STEP: terraform-plan
+[2026-11-18T15:13:01Z] [20261118T151242Z-76267] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 720, "sha256": "9d4807e9d412bfb39865e9b7ad9936eaddbcd2c7144239e5732d4e2bb95f5ac6"}
+STEP: terraform-show
+STEP: terraform-show-text
+STEP: plan-receipt
+[2026-11-18T15:13:03Z] [20261118T151242Z-76267] INFO receipt: <repo>/target/plans/20261118T151242Z-76267/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan.receipt.json
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261118T151242Z-76267/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan.receipt.json plan_sha256=9078b23b17b93e204cc2a1eeb5c8e0b73e3721c15a33da0d6ca9c0fa7092c17f
+
+## <repo>/target/phase15/session2/evidence/stagea-base-apply-dry.log (51 lines, sha256 8a0a99ed3cf773e7ce7f16a97b94a2409498c57f2bda783901f00b526272d794)
+STEP: start
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO script=deploy.sh mode=dry-run run_id=20261118T145000Z-73738 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 548 sha256 f759ff6baffd621cd025fdfcc17b2107e408a836e7e220aa465914dbb9512444
+STEP: plan-inspect
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize bd0b8180b919ed61f6234fa515f4c07d1137a641, compare its tree hash with the receipt, then run:
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: runtime-preservation
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+STEP: release-manifest
+[2026-11-18T14:50:00Z] [20261118T145000Z-73738] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO runtime archive verified in place (dry run: no copy is made): size=321876735 sha256=789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5
+STEP: account-check
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: terraform-apply
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+STEP: runtime-archive-upload
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO dry run: the pre-spend receipt would be re-verified immediately before archive-upload
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO dry run: after the upload the object's S3-computed ChecksumSHA256 is compared with the private copy (a multipart object also reads its part list: aws s3api get-object-attributes --object-attributes ObjectParts)
+STEP: write-deploy-manifest
+[2026-11-18T14:50:01Z] [20261118T145000Z-73738] INFO dry run: would write target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-base-apply-20261118T145000Z-73738.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+
+## <repo>/target/phase15/session2/evidence/stagea-base-apply.log (134 lines, sha256 9ca37e114c0d5fe006cd5bbabab81c815022e429656aceca855cfcce1f487606)
+STEP: start
+[2026-11-18T14:50:40Z] [20261118T145040Z-74189] INFO script=deploy.sh mode=execute run_id=20261118T145040Z-74189 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T14:50:40Z] [20261118T145040Z-74189] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T14:50:40Z] [20261118T145040Z-74189] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T14:50:40Z] [20261118T145040Z-74189] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T14:50:40Z] [20261118T145040Z-74189] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T14:50:41Z] [20261118T145040Z-74189] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 548 sha256 f759ff6baffd621cd025fdfcc17b2107e408a836e7e220aa465914dbb9512444
+STEP: plan-inspect
+[2026-11-18T14:50:41Z] [20261118T145040Z-74189] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+STEP: runtime-preservation
+STEP: release-manifest
+[2026-11-18T14:50:44Z] [20261118T145040Z-74189] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T14:50:45Z] [20261118T145040Z-74189] INFO runtime archive verified on its private copy: size=321876735 sha256=789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5
+STEP: account-check
+[2026-11-18T14:50:48Z] [20261118T145040Z-74189] INFO account sha256 matches the approval record
+STEP: terraform-apply
+[2026-11-18T14:50:48Z] [20261118T145040Z-74189] INFO pre-spend receipt re-verified before terraform-apply
+[2026-11-18T14:50:48Z] [20261118T145040Z-74189] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 548 sha256 f759ff6baffd621cd025fdfcc17b2107e408a836e7e220aa465914dbb9512444
+STEP: runtime-archive-upload
+[2026-11-18T14:53:07Z] [20261118T145040Z-74189] INFO pre-spend receipt re-verified before archive-upload
+  | upload failed: target/plans/20261118T145040Z-74189/verified/copy-scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz-74189-2-4-9545 to s3://scholarchain-course-<acct>-artifacts/emr/run-20261118/runtime/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz An error occurred (RequestTimeout) when calling the UploadPart operation (reached max retries: 2): Your socket connection to the server was not read from or written to within the timeout period. Idle connections will be closed.
+[2026-11-18T15:04:21Z] [20261118T145040Z-74189] ERROR failed at step runtime-archive-upload: command failed (exit 1) during the mutating sequence
+RESULT: FAIL step=runtime-archive-upload reason=command failed (exit 1) during the mutating sequence
+
+## <repo>/target/phase15/session2/evidence/stagea-base-apply2-dry.log (51 lines, sha256 681f9ac971ad71511c31c5f2baa5820747ab17d1ca279cc68f76589f4d9e3d6d)
+STEP: start
+[2026-11-18T15:14:04Z] [20261118T151404Z-76818] INFO script=deploy.sh mode=dry-run run_id=20261118T151404Z-76818 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T15:14:04Z] [20261118T151404Z-76818] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T15:14:04Z] [20261118T151404Z-76818] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T15:14:04Z] [20261118T151404Z-76818] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T15:14:04Z] [20261118T151404Z-76818] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 720 sha256 9d4807e9d412bfb39865e9b7ad9936eaddbcd2c7144239e5732d4e2bb95f5ac6
+STEP: plan-inspect
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize bd0b8180b919ed61f6234fa515f4c07d1137a641, compare its tree hash with the receipt, then run:
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: runtime-preservation
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+STEP: release-manifest
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO runtime archive verified in place (dry run: no copy is made): size=321876735 sha256=789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5
+STEP: account-check
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: terraform-apply
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+STEP: runtime-archive-upload
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: the pre-spend receipt would be re-verified immediately before archive-upload
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: after the upload the object's S3-computed ChecksumSHA256 is compared with the private copy (a multipart object also reads its part list: aws s3api get-object-attributes --object-attributes ObjectParts)
+STEP: write-deploy-manifest
+[2026-11-18T15:14:05Z] [20261118T151404Z-76818] INFO dry run: would write target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-base-apply-20261118T151404Z-76818.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+
+## <repo>/target/phase15/session2/evidence/stagea-base-apply2.log (137 lines, sha256 d389f53a127ad8ba195fc0ed750395d68bef1ab087ed47b24a008d460c0df841)
+STEP: start
+[2026-11-18T15:14:09Z] [20261118T151409Z-77117] INFO script=deploy.sh mode=execute run_id=20261118T151409Z-77117 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T15:14:09Z] [20261118T151409Z-77117] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T15:14:09Z] [20261118T151409Z-77117] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T15:14:09Z] [20261118T151409Z-77117] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T15:14:09Z] [20261118T151409Z-77117] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T15:14:10Z] [20261118T151409Z-77117] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 720 sha256 9d4807e9d412bfb39865e9b7ad9936eaddbcd2c7144239e5732d4e2bb95f5ac6
+STEP: plan-inspect
+[2026-11-18T15:14:10Z] [20261118T151409Z-77117] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+STEP: runtime-preservation
+STEP: release-manifest
+[2026-11-18T15:14:13Z] [20261118T151409Z-77117] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T15:14:14Z] [20261118T151409Z-77117] INFO runtime archive verified on its private copy: size=321876735 sha256=789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5
+STEP: account-check
+[2026-11-18T15:14:15Z] [20261118T151409Z-77117] INFO account sha256 matches the approval record
+STEP: terraform-apply
+[2026-11-18T15:14:15Z] [20261118T151409Z-77117] INFO pre-spend receipt re-verified before terraform-apply
+[2026-11-18T15:14:15Z] [20261118T151409Z-77117] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 720 sha256 9d4807e9d412bfb39865e9b7ad9936eaddbcd2c7144239e5732d4e2bb95f5ac6
+STEP: runtime-archive-upload
+[2026-11-18T15:14:17Z] [20261118T151409Z-77117] INFO pre-spend receipt re-verified before archive-upload
+[2026-11-18T16:07:24Z] [20261118T151409Z-77117] INFO runtime archive upload verified (size, sha256 metadata and the S3-computed composite ChecksumSHA256 (39 parts) equals the part-by-part sha256 of the verified private copy)
+STEP: write-deploy-manifest
+RESULT: PASS stage base-apply complete; manifest=<repo>/target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-base-apply-20261118T151409Z-77117.json
+
+## <repo>/target/phase15/session2/evidence/stagea-emr-plan.log (99 lines, sha256 e8711b0a4d7f7078a3a8a4bdf5b96fab5642cfbb1d2c69fbc85877ce5abd4256)
+STEP: start
+[2026-11-18T16:24:05Z] [20261118T162405Z-84268] INFO script=plan.sh mode=execute run_id=20261118T162405Z-84268 repo_root=<repo>
+STEP: inputs
+STEP: output-paths
+[2026-11-18T16:24:05Z] [20261118T162405Z-84268] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261118T162405Z-84268
+STEP: terraform-version
+[2026-11-18T16:24:05Z] [20261118T162405Z-84268] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+[2026-11-18T16:24:05Z] [20261118T162405Z-84268] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T16:24:05Z] [20261118T162405Z-84268] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 721, "sha256": "8adadddb366eeb9a88ef85db5d00e759d8b9266746ae76a4b06d7dbe0e709c74"}
+[2026-11-18T16:24:06Z] [20261118T162405Z-84268] INFO env=course region=us-east-2 source_commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 scripts_commit=bd0b8180b919ed61f6234fa515f4c07d1137a641 clean=true plan=<repo>/target/plans/20261118T162405Z-84268/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan
+STEP: account-identity
+[2026-11-18T16:24:06Z] [20261118T162405Z-84268] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: terraform-init
+STEP: terraform-plan
+[2026-11-18T16:24:15Z] [20261118T162405Z-84268] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 721, "sha256": "8adadddb366eeb9a88ef85db5d00e759d8b9266746ae76a4b06d7dbe0e709c74"}
+STEP: terraform-show
+STEP: terraform-show-text
+STEP: plan-receipt
+[2026-11-18T16:24:17Z] [20261118T162405Z-84268] INFO receipt: <repo>/target/plans/20261118T162405Z-84268/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan.receipt.json
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261118T162405Z-84268/course-bd0b8180b919ed61f6234fa515f4c07d1137a641.tfplan.receipt.json plan_sha256=62ce522ec5947078fccd551dfb25888f499e1a552565b6a73f2cc4f879c4545f
+
+## <repo>/target/phase15/session2/evidence/stagea-emr-apply-dry.log (48 lines, sha256 d3ea302be035197c72900632178d990b276ef3d21219808174e4e52254b17101)
+STEP: start
+[2026-11-18T16:25:12Z] [20261118T162512Z-84858] INFO script=deploy.sh mode=dry-run run_id=20261118T162512Z-84858 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T16:25:12Z] [20261118T162512Z-84858] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 721 sha256 8adadddb366eeb9a88ef85db5d00e759d8b9266746ae76a4b06d7dbe0e709c74
+STEP: plan-inspect
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize bd0b8180b919ed61f6234fa515f4c07d1137a641, compare its tree hash with the receipt, then run:
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: runtime-preservation
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+STEP: release-manifest
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO runtime archive upload skipped by --skip-runtime-archive
+STEP: account-check
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: terraform-apply
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+STEP: runtime-archive-upload
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO skipped by --skip-runtime-archive
+STEP: write-deploy-manifest
+[2026-11-18T16:25:13Z] [20261118T162512Z-84858] INFO dry run: would write target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-base-apply-20261118T162512Z-84858.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+
+## <repo>/target/phase15/session2/evidence/stagea-emr-apply.log (132 lines, sha256 808447c1661b91e540514e9e357f30f7a4fddcdec74d430e6c74eb5af050a708)
+STEP: start
+[2026-11-18T16:25:19Z] [20261118T162519Z-85153] INFO script=deploy.sh mode=execute run_id=20261118T162519Z-85153 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T16:25:19Z] [20261118T162519Z-85153] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T16:25:19Z] [20261118T162519Z-85153] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T16:25:19Z] [20261118T162519Z-85153] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T16:25:19Z] [20261118T162519Z-85153] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T16:25:19Z] [20261118T162519Z-85153] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 721 sha256 8adadddb366eeb9a88ef85db5d00e759d8b9266746ae76a4b06d7dbe0e709c74
+STEP: plan-inspect
+[2026-11-18T16:25:20Z] [20261118T162519Z-85153] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+STEP: runtime-preservation
+STEP: release-manifest
+[2026-11-18T16:25:22Z] [20261118T162519Z-85153] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T16:25:22Z] [20261118T162519Z-85153] INFO runtime archive upload skipped by --skip-runtime-archive
+STEP: account-check
+[2026-11-18T16:25:23Z] [20261118T162519Z-85153] INFO account sha256 matches the approval record
+STEP: terraform-apply
+[2026-11-18T16:25:23Z] [20261118T162519Z-85153] INFO pre-spend receipt re-verified before terraform-apply
+[2026-11-18T16:25:23Z] [20261118T162519Z-85153] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 721 sha256 8adadddb366eeb9a88ef85db5d00e759d8b9266746ae76a4b06d7dbe0e709c74
+STEP: runtime-archive-upload
+[2026-11-18T16:30:54Z] [20261118T162519Z-85153] INFO skipped by --skip-runtime-archive
+STEP: write-deploy-manifest
+RESULT: PASS stage base-apply complete; manifest=<repo>/target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-base-apply-20261118T162519Z-85153.json

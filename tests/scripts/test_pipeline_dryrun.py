@@ -187,10 +187,18 @@ class PipelineDryRun(unittest.TestCase):
         for source, info in S.DATASETS.items():
             self.assertEqual(hadoop[source.upper() + "_SNAPSHOT"], [info["snapshot"]])
             self.assertEqual(hadoop[source.upper() + "_RETRIEVAL"], [info["retrieval"]])
-        self.assertEqual(hadoop["CEILINGS"], ["12000 8 256 4096 64 8388608 8388608"])
+        # maxLocalSampleRecords first: 60000 since Phase 15 P22 (was 12000); the other six are the Phase 4 values
+        self.assertEqual(hadoop["CEILINGS"], ["60000 8 256 4096 64 8388608 8388608"])
         program = S.installed_program(self.fx, "sc-step.sh")
-        for token in ("HadoopPrepMain", "--once", "--execution-mode cluster", '--run-id "${RUN_ID}"', "file://"):
-            self.assertIn(token, program)
+        # Phase 15 P6 D1/D2: the Hadoop run id is the derived run:<uuid v4> (`hadoop_id`), not the pipeline RUN_ID, and the output
+        # root is a plain absolute path; the four input URIs keep file:// (test_hadoop_prep_args_15 replays the argv on the real parser)
+        hadoop_body = program[program.index("body_hadoop_prep() {"):program.index("body_entity_resolution() {")]
+        self.assertIn("HadoopPrepMain", program)
+        for token in ('"${HADOOP_MAIN}"', "--once", "--execution-mode cluster", '--run-id "${hadoop_id}"', '--output-root "${out_dir}"',
+                      '--dblp "file://', '--openalex "file://', '--crossref "file://', '--orcid "file://'):
+            self.assertIn(token, hadoop_body)
+        self.assertNotIn('--run-id "${RUN_ID}"', hadoop_body)
+        self.assertNotIn('--output-root "file://', hadoop_body)
         er = S.step_params(S.step_args(r, "entity-resolution"))
         self.assertEqual(er["JAVA_HOME_FILE"], ["/opt/scholarchain-spike/java-home"])
         for token in ("Phase5Main", "resolve", "--llm-mode disabled"):

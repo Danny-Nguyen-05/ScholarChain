@@ -41,6 +41,25 @@ object EmbeddingManifestMain {
         else Right(manifest)
       }
     }
+
+  /** Size evidence for session-2 plan P26: the canonical manifest bytes against the configured byte
+    * and item limits, and the exact UTF-8 text bytes. One embedding pass at one byte per token is
+    * at most `textBytesTotal` tokens.
+    */
+  private[rag] def sizeEvidence(
+      manifest: EmbeddingManifest,
+      manifestJson: String,
+      config: LocalEmbeddingConfig
+  ): ujson.Obj = {
+    val textBytes = manifest.items.map(_.document.text.getBytes(UTF_8).length.toLong)
+    ujson.Obj(
+      "manifestBytes" -> manifestJson.getBytes(UTF_8).length.toString,
+      "maxManifestBytes" -> config.maxManifestBytes.toString,
+      "maxManifestItems" -> config.maxManifestItems.toString,
+      "textBytesTotal" -> textBytes.sum.toString,
+      "textBytesMax" -> textBytes.maxOption.getOrElse(0L).toString
+    )
+  }
   private def output(path: Path, text: String): Unit = {
     Option(path.toAbsolutePath.getParent).foreach(Files.createDirectories(_))
     Files.writeString(path, text, UTF_8)
@@ -81,6 +100,7 @@ object EmbeddingManifestMain {
                 "sourceRunId" -> batch.context.runId,
                 "model" -> upickle.default.writeJs(config.model),
                 "selectedDocuments" -> manifest.items.size,
+                "sizeEvidence" -> sizeEvidence(manifest, manifestJson, config),
                 "documentTypes" -> ujson.Obj.from(
                   manifest.items
                     .groupMapReduce(_.document.documentType)(_ => 1)(_ + _)
@@ -107,8 +127,13 @@ object EmbeddingManifestMain {
       }
     }
   } catch { case NonFatal(_) => Left("invalid-render-input") }
-  def main(args: Array[String]): Unit = run(args.toSeq) match {
-    case Right(report) => println(report.render())
-    case Left(code)    => throw new IllegalArgumentException(code)
+  // P38: storage's ToolLogging selects the packaged tool logging (root INFO; AWS SDK, Apache HTTP
+  // and Netty at WARN) before any logger exists, unless the operator set logback.configurationFile.
+  def main(args: Array[String]): Unit = {
+    ToolLogging.install()
+    run(args.toSeq) match {
+      case Right(report) => println(report.render())
+      case Left(code)    => throw new IllegalArgumentException(code)
+    }
   }
 }

@@ -1,0 +1,634 @@
+{
+  "counts": {
+    "distinct_candidates": 44069,
+    "eligible_candidates": 675,
+    "min_df": 5,
+    "questions": 150
+  },
+  "note": "DBLP title phrases only; DBLP bibliographic metadata is public (CC0). No credential, account, host or personal value. Used as the fixed question set of the P42 semantic load (warm-up pass sends each once; the ramp draws from the same set).",
+  "outputs": {
+    "semantic-questions.txt": {
+      "lines": 150,
+      "sha256": "bde5f63b49e46c321dbbf958094646cf644fcef15516b6ee0e67822ccb9978af"
+    }
+  },
+  "phrases": [
+    {
+      "phrase": "sensor networks",
+      "titles": 152
+    },
+    {
+      "phrase": "federated learning",
+      "titles": 115
+    },
+    {
+      "phrase": "distributed systems",
+      "titles": 114
+    },
+    {
+      "phrase": "deep learning",
+      "titles": 102
+    },
+    {
+      "phrase": "machine learning",
+      "titles": 80
+    },
+    {
+      "phrase": "publish subscribe",
+      "titles": 77
+    },
+    {
+      "phrase": "data center",
+      "titles": 72
+    },
+    {
+      "phrase": "wireless networks",
+      "titles": 72
+    },
+    {
+      "phrase": "leader election",
+      "titles": 65
+    },
+    {
+      "phrase": "edge computing",
+      "titles": 63
+    },
+    {
+      "phrase": "byzantine agreement",
+      "titles": 58
+    },
+    {
+      "phrase": "radio networks",
+      "titles": 57
+    },
+    {
+      "phrase": "distributed algorithms",
+      "titles": 52
+    },
+    {
+      "phrase": "stream processing",
+      "titles": 52
+    },
+    {
+      "phrase": "transactional memory",
+      "titles": 51
+    },
+    {
+      "phrase": "distributed computing",
+      "titles": 50
+    },
+    {
+      "phrase": "file system",
+      "titles": 50
+    },
+    {
+      "phrase": "operating system",
+      "titles": 49
+    },
+    {
+      "phrase": "resource allocation",
+      "titles": 44
+    },
+    {
+      "phrase": "mutual exclusion",
+      "titles": 42
+    },
+    {
+      "phrase": "reinforcement learning",
+      "titles": 42
+    },
+    {
+      "phrase": "congestion control",
+      "titles": 40
+    },
+    {
+      "phrase": "dynamic networks",
+      "titles": 40
+    },
+    {
+      "phrase": "population protocols",
+      "titles": 40
+    },
+    {
+      "phrase": "large language",
+      "titles": 39
+    },
+    {
+      "phrase": "storage systems",
+      "titles": 39
+    },
+    {
+      "phrase": "lower bounds",
+      "titles": 38
+    },
+    {
+      "phrase": "persistent memory",
+      "titles": 37
+    },
+    {
+      "phrase": "load balancing",
+      "titles": 36
+    },
+    {
+      "phrase": "big data",
+      "titles": 34
+    },
+    {
+      "phrase": "data structures",
+      "titles": 34
+    },
+    {
+      "phrase": "fault tolerance",
+      "titles": 34
+    },
+    {
+      "phrase": "high performance",
+      "titles": 34
+    },
+    {
+      "phrase": "cloud computing",
+      "titles": 33
+    },
+    {
+      "phrase": "mobile devices",
+      "titles": 33
+    },
+    {
+      "phrase": "congested clique",
+      "titles": 32
+    },
+    {
+      "phrase": "virtual machines",
+      "titles": 31
+    },
+    {
+      "phrase": "neural networks",
+      "titles": 30
+    },
+    {
+      "phrase": "social networks",
+      "titles": 29
+    },
+    {
+      "phrase": "cloud storage",
+      "titles": 28
+    },
+    {
+      "phrase": "shared memory",
+      "titles": 28
+    },
+    {
+      "phrase": "ad hoc networks",
+      "titles": 26
+    },
+    {
+      "phrase": "distributed data",
+      "titles": 26
+    },
+    {
+      "phrase": "distributed storage",
+      "titles": 25
+    },
+    {
+      "phrase": "key-value stores",
+      "titles": 25
+    },
+    {
+      "phrase": "resource management",
+      "titles": 25
+    },
+    {
+      "phrase": "access control",
+      "titles": 24
+    },
+    {
+      "phrase": "byzantine consensus",
+      "titles": 24
+    },
+    {
+      "phrase": "massively parallel",
+      "titles": 24
+    },
+    {
+      "phrase": "memory management",
+      "titles": 24
+    },
+    {
+      "phrase": "serverless computing",
+      "titles": 24
+    },
+    {
+      "phrase": "web applications",
+      "titles": 24
+    },
+    {
+      "phrase": "video streaming",
+      "titles": 23
+    },
+    {
+      "phrase": "fault tolerant",
+      "titles": 22
+    },
+    {
+      "phrase": "low latency",
+      "titles": 22
+    },
+    {
+      "phrase": "data analytics",
+      "titles": 21
+    },
+    {
+      "phrase": "data processing",
+      "titles": 21
+    },
+    {
+      "phrase": "failure detectors",
+      "titles": 21
+    },
+    {
+      "phrase": "model training",
+      "titles": 21
+    },
+    {
+      "phrase": "distributed computation",
+      "titles": 20
+    },
+    {
+      "phrase": "distributed graph",
+      "titles": 20
+    },
+    {
+      "phrase": "large scale",
+      "titles": 20
+    },
+    {
+      "phrase": "network functions",
+      "titles": 20
+    },
+    {
+      "phrase": "video analytics",
+      "titles": 20
+    },
+    {
+      "phrase": "cloud services",
+      "titles": 19
+    },
+    {
+      "phrase": "congest model",
+      "titles": 19
+    },
+    {
+      "phrase": "datacenter networks",
+      "titles": 19
+    },
+    {
+      "phrase": "model checking",
+      "titles": 19
+    },
+    {
+      "phrase": "reliable broadcast",
+      "titles": 19
+    },
+    {
+      "phrase": "data management",
+      "titles": 18
+    },
+    {
+      "phrase": "deterministic distributed",
+      "titles": 18
+    },
+    {
+      "phrase": "fast distributed",
+      "titles": 18
+    },
+    {
+      "phrase": "overlay networks",
+      "titles": 18
+    },
+    {
+      "phrase": "privacy preserving",
+      "titles": 18
+    },
+    {
+      "phrase": "state machine replication",
+      "titles": 17
+    },
+    {
+      "phrase": "data storage",
+      "titles": 17
+    },
+    {
+      "phrase": "dnn training",
+      "titles": 17
+    },
+    {
+      "phrase": "energy efficiency",
+      "titles": 17
+    },
+    {
+      "phrase": "graph processing",
+      "titles": 17
+    },
+    {
+      "phrase": "bft consensus",
+      "titles": 16
+    },
+    {
+      "phrase": "causal consistency",
+      "titles": 16
+    },
+    {
+      "phrase": "communication complexity",
+      "titles": 16
+    },
+    {
+      "phrase": "content delivery",
+      "titles": 16
+    },
+    {
+      "phrase": "information flow",
+      "titles": 16
+    },
+    {
+      "phrase": "intrusion detection",
+      "titles": 16
+    },
+    {
+      "phrase": "mobile robots",
+      "titles": 16
+    },
+    {
+      "phrase": "tail latency",
+      "titles": 16
+    },
+    {
+      "phrase": "traffic engineering",
+      "titles": 16
+    },
+    {
+      "phrase": "web services",
+      "titles": 16
+    },
+    {
+      "phrase": "anomaly detection",
+      "titles": 15
+    },
+    {
+      "phrase": "clock synchronization",
+      "titles": 15
+    },
+    {
+      "phrase": "control plane",
+      "titles": 15
+    },
+    {
+      "phrase": "high throughput",
+      "titles": 15
+    },
+    {
+      "phrase": "independent set",
+      "titles": 15
+    },
+    {
+      "phrase": "packet processing",
+      "titles": 15
+    },
+    {
+      "phrase": "random walks",
+      "titles": 15
+    },
+    {
+      "phrase": "set agreement",
+      "titles": 15
+    },
+    {
+      "phrase": "space complexity",
+      "titles": 15
+    },
+    {
+      "phrase": "adaptive middleware",
+      "titles": 14
+    },
+    {
+      "phrase": "cloud data",
+      "titles": 14
+    },
+    {
+      "phrase": "data plane",
+      "titles": 14
+    },
+    {
+      "phrase": "distributed applications",
+      "titles": 14
+    },
+    {
+      "phrase": "distributed training",
+      "titles": 14
+    },
+    {
+      "phrase": "distributed transactions",
+      "titles": 14
+    },
+    {
+      "phrase": "intel sgx",
+      "titles": 14
+    },
+    {
+      "phrase": "llm serving",
+      "titles": 14
+    },
+    {
+      "phrase": "network coding",
+      "titles": 14
+    },
+    {
+      "phrase": "complex event processing",
+      "titles": 13
+    },
+    {
+      "phrase": "cloud systems",
+      "titles": 13
+    },
+    {
+      "phrase": "computing systems",
+      "titles": 13
+    },
+    {
+      "phrase": "embedded systems",
+      "titles": 13
+    },
+    {
+      "phrase": "flow control",
+      "titles": 13
+    },
+    {
+      "phrase": "information dissemination",
+      "titles": 13
+    },
+    {
+      "phrase": "message passing",
+      "titles": 13
+    },
+    {
+      "phrase": "mobile applications",
+      "titles": 13
+    },
+    {
+      "phrase": "mobile crowdsensing",
+      "titles": 13
+    },
+    {
+      "phrase": "mobile networks",
+      "titles": 13
+    },
+    {
+      "phrase": "network traffic",
+      "titles": 13
+    },
+    {
+      "phrase": "performance isolation",
+      "titles": 13
+    },
+    {
+      "phrase": "programmable switches",
+      "titles": 13
+    },
+    {
+      "phrase": "replicated data",
+      "titles": 13
+    },
+    {
+      "phrase": "shortest paths",
+      "titles": 13
+    },
+    {
+      "phrase": "state machines",
+      "titles": 13
+    },
+    {
+      "phrase": "cloud applications",
+      "titles": 12
+    },
+    {
+      "phrase": "cluster scheduling",
+      "titles": 12
+    },
+    {
+      "phrase": "compact routing",
+      "titles": 12
+    },
+    {
+      "phrase": "computation offloading",
+      "titles": 12
+    },
+    {
+      "phrase": "concurrency control",
+      "titles": 12
+    },
+    {
+      "phrase": "contention resolution",
+      "titles": 12
+    },
+    {
+      "phrase": "differential privacy",
+      "titles": 12
+    },
+    {
+      "phrase": "dominating set",
+      "titles": 12
+    },
+    {
+      "phrase": "energy consumption",
+      "titles": 12
+    },
+    {
+      "phrase": "live streaming",
+      "titles": 12
+    },
+    {
+      "phrase": "location privacy",
+      "titles": 12
+    },
+    {
+      "phrase": "management system",
+      "titles": 12
+    },
+    {
+      "phrase": "maximal independent",
+      "titles": 12
+    },
+    {
+      "phrase": "network monitoring",
+      "titles": 12
+    },
+    {
+      "phrase": "optimal resilience",
+      "titles": 12
+    },
+    {
+      "phrase": "routing schemes",
+      "titles": 12
+    },
+    {
+      "phrase": "serverless functions",
+      "titles": 12
+    },
+    {
+      "phrase": "smart contracts",
+      "titles": 12
+    },
+    {
+      "phrase": "software defined",
+      "titles": 12
+    },
+    {
+      "phrase": "symmetry breaking",
+      "titles": 12
+    },
+    {
+      "phrase": "transaction processing",
+      "titles": 12
+    },
+    {
+      "phrase": "trusted execution",
+      "titles": 12
+    },
+    {
+      "phrase": "approximate agreement",
+      "titles": 11
+    },
+    {
+      "phrase": "computing environments",
+      "titles": 11
+    },
+    {
+      "phrase": "data sharing",
+      "titles": 11
+    },
+    {
+      "phrase": "data stores",
+      "titles": 11
+    },
+    {
+      "phrase": "distributed approximation",
+      "titles": 11
+    }
+  ],
+  "rule": {
+    "candidates": "2-word and 3-word windows, document frequency counted once per title",
+    "count": 150,
+    "eligible": "document frequency >= 5, 8..60 characters",
+    "order": "(-document frequency, -words, phrase); greedy; a phrase that contains, or is part of, a selected phrase is skipped",
+    "tokens": "lowercase letter words with inner hyphens, 2+ letters; stop words and generic words break a window"
+  },
+  "schema": "scholarchain.experiment-inputs-provenance.v1",
+  "script": "experiments/scripts/derive_semantic_questions.py",
+  "source": {
+    "dataset": "dblp-2026-10-03 (DOI 10.4230/dblp.xml.2026-10-03), Phase 6 slice",
+    "file": "target/phase6-inputs/6fg-dblp/dblp.xml",
+    "license": "CC0 1.0 Universal (DBLP bibliographic metadata)",
+    "recorded_in": "datasets/phase6/dblp-slice-manifest.v1.json",
+    "sha256": "c25a1e1a0d517abaadf370c88b3528039c50ad8ec3790c27381a3c2e2ecde522",
+    "titles_read": 10575
+  }
+}

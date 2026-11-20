@@ -13,6 +13,10 @@ the Phase 6 slice (checked and recorded). This keeps the venue mix and the sourc
 sample. The three other sources are the committed Phase 4 samples, copied unchanged and checked against
 datasets/samples/SHA256SUMS; they are NOT scaled, so scaling is by DBLP publications only.
 
+The same builder makes the size-L tree (P21): --source <L slice XML> --slice-manifest <L slice manifest> --sizes 100 --tree-label size-l
+(experiments/scripts/build_l_input.py runs exactly that, then re-renders the manifests). --tree-label names the tree and its subset file
+instead of size-<P> and needs exactly one size.
+
 Nothing here touches the network or AWS. Existing output directories are refused, never overwritten.
 """
 import argparse
@@ -35,6 +39,7 @@ AUTHOR = re.compile(r"<author\b[^>]*>(.*?)</author>", re.DOTALL)
 YEAR = re.compile(r"<year>(\d{4})</year>")
 VENUE_ALIASES = {"wdag": "disc"}
 HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n<dblp>\n'
+TREE_LABEL = re.compile(r"^size-[a-z0-9]{1,8}$")
 FOOTER = "</dblp>\n"
 
 
@@ -151,11 +156,15 @@ def build(args):
         raise Refused("parsed %d records, the slice manifest declares %d" % (len(records), declared))
     sample_bytes = verify_samples(samples)
     percents = [int(p) for p in args.sizes.split(",")]
+    label = getattr(args, "tree_label", None)
+    if label is not None and (len(percents) != 1 or not TREE_LABEL.match(label)):
+        raise Refused("--tree-label needs exactly one size and must match %s" % TREE_LABEL.pattern)
+    names = {p: label or "size-%d" % p for p in percents}
     for p in percents:
         if not 1 <= p <= 100:
             raise Refused("size %d is not a percentage from 1 to 100" % p)
-        if os.path.lexists(os.path.join(out_root, "size-%d" % p)) or os.path.lexists(os.path.join(out_root, "size-%d.subset.json" % p)):
-            raise Refused("size-%d already exists under %s: choose a new --output-root" % (p, args.output_root))
+        if os.path.lexists(os.path.join(out_root, names[p])) or os.path.lexists(os.path.join(out_root, "%s.subset.json" % names[p])):
+            raise Refused("%s already exists under %s: choose a new --output-root" % (names[p], args.output_root))
     results = []
     previous = set()
     for p in sorted(percents):
@@ -164,7 +173,7 @@ def build(args):
             raise Refused("selection is not nested at %d percent" % p)
         previous = set(indexes)
         dblp = (HEADER + "".join(records[i][1] + "\n" for i in indexes) + FOOTER).encode("utf-8")
-        tree = os.path.join(out_root, "size-%d" % p)
+        tree = os.path.join(out_root, names[p])
         files = {"dblp/linked-records.xml": dblp}
         files.update({name: data for name, data in sample_bytes.items() if name != "dblp/linked-records.xml"})
         for relative, data in files.items():
@@ -173,6 +182,7 @@ def build(args):
         info = {
             "schema": "scholarchain.experiment-input-subset.v1",
             "size_percent": p,
+            "tree_label": names[p],
             "source": {
                 "path": args.source,
                 "sha256": sha256_bytes(raw),
@@ -189,7 +199,7 @@ def build(args):
             "other_sources": "committed Phase 4 samples copied unchanged (not scaled)",
             "files": {"datasets/samples/" + name: {"sha256": sha256_bytes(data), "bytes": len(data)} for name, data in sorted(files.items())},
         }
-        write_new(os.path.join(out_root, "size-%d.subset.json" % p), (json.dumps(info, indent=2, sort_keys=True) + "\n").encode("utf-8"))
+        write_new(os.path.join(out_root, "%s.subset.json" % names[p]), (json.dumps(info, indent=2, sort_keys=True) + "\n").encode("utf-8"))
         results.append(info)
     return results
 
@@ -201,6 +211,7 @@ def main(argv):
     parser.add_argument("--samples-dir", default=DEFAULT_SAMPLES)
     parser.add_argument("--output-root", default=DEFAULT_OUTPUT)
     parser.add_argument("--sizes", default="25,50,100", help="comma separated percentages (default 25,50,100)")
+    parser.add_argument("--tree-label", help="name of the tree and subset file instead of size-<P> (one size only), e.g. size-l")
     parser.add_argument("--skip-source-check", action="store_true", help="tests only: skip the slice manifest sha256 and count check")
     args = parser.parse_args(argv)
     try:
@@ -211,8 +222,8 @@ def main(argv):
     for info in results:
         c = info["counts"]
         print(
-            "SUBSET size=%d%% publications=%d authorships=%d distinct_author_strings=%d dblp_bytes=%d identical_to_source=%s"
-            % (info["size_percent"], c["publications"], c["authorships"], c["distinct_exact_author_strings"], info["dblp_file_bytes"], info["byte_identical_to_source"])
+            "SUBSET %s size=%d%% publications=%d authorships=%d distinct_author_strings=%d dblp_bytes=%d identical_to_source=%s"
+            % (info["tree_label"], info["size_percent"], c["publications"], c["authorships"], c["distinct_exact_author_strings"], info["dblp_file_bytes"], info["byte_identical_to_source"])
         )
     return 0
 

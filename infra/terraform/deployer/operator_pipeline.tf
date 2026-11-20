@@ -9,8 +9,9 @@
 #     no role chaining, exactly like the other operator roles.
 #
 # What the pipeline calls from the laptop (read from scripts/run-bounded-pipeline.sh; sts:GetCallerIdentity needs no permission):
-#   aws emr describe-cluster, get-auto-termination-policy, list-instance-groups   (cluster check, before any paid step)
-#   (the AWS CLI v2 describe-cluster customization also calls ListInstanceGroups and ListBootstrapActions; add-steps calls DescribeCluster first)
+#   aws emr describe-cluster, get-auto-termination-policy                         (cluster check, before any paid step; AWS CLI v2 has no
+#   list-instance-groups command: the instance groups come from describe-cluster, whose CLI v2 customization calls ListInstanceGroups and
+#   ListBootstrapActions; add-steps calls DescribeCluster first)
 #   aws emr add-steps, describe-step, cancel-steps                                (submit, poll, cancel)
 # The steps themselves (S3 stage-in, copy-out, the bootstrap downloads) run on the nodes with the EMR instance role, not with this role.
 # Local files are hashed locally. So this role needs: those seven EMR actions on the project cluster, an upload path for the EMR

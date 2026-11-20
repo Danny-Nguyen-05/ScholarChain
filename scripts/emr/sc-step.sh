@@ -251,10 +251,26 @@ body_stage_in() {
   log "staged ${total} bytes from ${INPUT_PREFIX} to ${dest}"
 }
 
+# Phase 15 P6 defect D1: HadoopPrepPipeline accepts only `run:<uuid version 4>` (StableIds runPattern), while the pipeline run id may not
+# contain ':'. The Hadoop run id is therefore derived DETERMINISTICALLY from RUN_ID: the first 32 hex digits of sha256(RUN_ID) with the
+# version nibble set to 4 and the variant nibble to 8, 9, a or b (the same construction as StableIds' deterministic Spark run id). The
+# directory under hadoop/ is found later by its completion marker (discover_run), so nothing downstream needs the two ids to be equal.
+hadoop_run_id() { # pipeline run id -> run:<uuid v4 form>
+  local f h variant
+  # hashed from a file (sha256sum FILE), the form every sha256sum and the offline test shims support
+  f="$(mktemp "${TMPDIR:-/tmp}/scholarchain-run-id.XXXXXX")"
+  printf '%s' "$1" >"${f}"
+  h="$(sha256sum "${f}" | cut -c1-32)"
+  rm -f "${f}"
+  [[ "${h}" =~ ^[0-9a-f]{32}$ ]] || die "could not derive the Hadoop run id"
+  variant="$(printf '%x' $(((16#${h:16:1} & 3) | 8)))"
+  printf 'run:%s-%s-4%s-%s%s-%s\n' "${h:0:8}" "${h:8:4}" "${h:13:3}" "${variant}" "${h:17:3}" "${h:20:12}"
+}
+
 body_hadoop_prep() {
   yarn_traps
   require_mount
-  local work in_dir out_dir ceil
+  local work in_dir out_dir ceil hadoop_id
   work="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"
   localize "${SUBMIT_JAR_REF}" "${work}/job.jar" "${SUBMIT_JAR_SHA}"
   localize "${LIBJARS_REF}" "${work}/bundle.jar" "${LIBJARS_SHA}"
@@ -268,10 +284,14 @@ body_hadoop_prep() {
   in_dir="${RUN_ROOT}/inputs"
   out_dir="${RUN_ROOT}/hadoop"
   [[ ! -e "${out_dir}" ]] || die "${out_dir} already exists"
+  hadoop_id="$(hadoop_run_id "${RUN_ID}")"
+  log "Hadoop run id ${hadoop_id} (derived from pipeline run id ${RUN_ID})"
+  # Phase 15 P6 defect D2: --output-root is a plain absolute path. FsPaths.runPath treats every non-remote root as a local path, so a
+  # file:// URI would become a relative path named "file:" under the step's working directory.
   run_bounded "${STEP_SECONDS}" hadoop jar "${work}/job.jar" "${HADOOP_MAIN}" \
     "-Dmapreduce.job.tags=${TAG}" -libjars "${work}/bundle.jar" \
-    --once --execution-mode cluster --run-id "${RUN_ID}" \
-    --output-root "file://${out_dir}" --config "${work}/prep-config.json" \
+    --once --execution-mode cluster --run-id "${hadoop_id}" \
+    --output-root "${out_dir}" --config "${work}/prep-config.json" \
     --dblp "file://${in_dir}/${SAMPLE_DBLP}" --dblp-snapshot "${DBLP_SNAPSHOT}" --dblp-retrieval "${DBLP_RETRIEVAL}" \
     --openalex "file://${in_dir}/${SAMPLE_OPENALEX}" --openalex-snapshot "${OPENALEX_SNAPSHOT}" --openalex-retrieval "${OPENALEX_RETRIEVAL}" \
     --crossref "file://${in_dir}/${SAMPLE_CROSSREF}" --crossref-snapshot "${CROSSREF_SNAPSHOT}" --crossref-retrieval "${CROSSREF_RETRIEVAL}" \
@@ -330,29 +350,81 @@ body_spark_job() {
   run_bounded "${STEP_SECONDS}" "${SPARK_CMD[@]}"
 }
 
+# Phase 15 P23: copy out only what the report and the loaders need. Per part, an ordered filter table in the `aws s3 cp` filter
+# language (relative to the part directory; `*` also matches `/`; every file is included unless a filter matches; the LAST matching
+# filter wins). The SAME table drives both the size, manifest selection below (copyout_keep, bash glob matching with identical
+# semantics) and the --exclude/--include arguments of the upload, so what is sized, hashed and copied is one set.
+#   hadoop : counters, run manifest, completion marker and stats; rejects (export/.../reject/); NOT intermediate/ and NOT the
+#            record export (Spark already consumed it; about 0.46 GB of the 1.0 GB local output at 10,577 works was export,
+#            0.61 GB intermediate)
+#   er     : the small top-level files of the ER run (manifest, diagnostics, effective config and policy, marker); NOT the work/ and
+#            researcher/ trees and NOT evidence.jsonl or audit-details.jsonl (about 0.66 GB of the 0.76 GB local output)
+#   spark, results, config : everything (the Spark export the loaders read, with load-manifests/, the neptune-opencypher-csv/ sidecar
+#            and the event logs under .event-logs/)
+copyout_rules() { # part -> COPYOUT_RULES: action pattern action pattern ...
+  COPYOUT_RULES=()
+  case "$1" in
+    hadoop) COPYOUT_RULES=(exclude 'intermediate/*' exclude '*/intermediate/*' exclude 'export/*' exclude '*/export/*'
+      include 'export/*/reject/*' include '*/export/*/reject/*') ;;
+    er) COPYOUT_RULES=(exclude '*/*/*' exclude 'evidence.jsonl' exclude '*/evidence.jsonl' exclude 'audit-details.jsonl'
+      exclude '*/audit-details.jsonl') ;;
+  esac
+}
+
+copyout_keep() { # relative-path (uses COPYOUT_RULES) -> 0 when the file is copied out
+  local i=0 keep=0
+  while [[ "${i}" -lt "${#COPYOUT_RULES[@]}" ]]; do
+    # shellcheck disable=SC2053 # the right side is a glob on purpose
+    if [[ "$1" == ${COPYOUT_RULES[i + 1]} ]]; then
+      if [[ "${COPYOUT_RULES[i]}" == "exclude" ]]; then keep=1; else keep=0; fi
+    fi
+    i=$((i + 2))
+  done
+  return "${keep}"
+}
+
 body_copy_out() {
   require_mount
-  local total=0 parts="" part size manifest="${RUN_ROOT}/copyout-manifest.sha256" f
-  # Only the parts that exist are sized, listed in the manifest and copied (a salvaged partial run may lack some).
+  local total=0 parts="" part rel size manifest="${RUN_ROOT}/copyout-manifest.sha256" f list i
+  local -a filters
+  [[ ! -e "${manifest}" ]] || die "${manifest} already exists"
+  list="$(mktemp "${TMPDIR:-/tmp}/scholarchain-copyout.XXXXXX")"
+  # Only the parts that exist are selected, sized, listed in the manifest and copied (a salvaged partial run may lack some).
+  # Symbolic links are never followed or copied (find -type f; --no-follow-symlinks), so the ceiling bounds every copied byte.
   for part in hadoop er spark results config; do
     [[ -d "${RUN_ROOT}/${part}" ]] || continue
     parts="${parts} ${part}"
-    size="$(du -sk "${RUN_ROOT}/${part}" | awk '{print $1 * 1024}')"
-    total=$((total + size))
+    copyout_rules "${part}"
+    ( cd "${RUN_ROOT}/${part}" && find . -type f -print ) >"${list}.${part}" || die "could not list ${RUN_ROOT}/${part}"
+    while IFS= read -r rel; do
+      rel="${rel#./}"
+      copyout_keep "${rel}" || continue
+      size="$(wc -c <"${RUN_ROOT}/${part}/${rel}")" || die "could not size ${part}/${rel}"
+      size="${size//[[:space:]]/}"
+      is_uint "${size}" || die "could not size ${part}/${rel}"
+      total=$((total + size))
+      printf '%s/%s\n' "${part}" "${rel}" >>"${list}"
+    done <"${list}.${part}"
+    rm -f "${list}.${part}"
   done
   [[ -n "${parts}" ]] || die "nothing to copy out: none of hadoop, er, spark, results, config exists under ${RUN_ROOT}"
   [[ "${total}" -le "${MAX_COPYOUT_BYTES}" ]] || die "copy-out ${total} bytes exceeds the ${MAX_COPYOUT_BYTES} byte ceiling"
-  [[ ! -e "${manifest}" ]] || die "${manifest} already exists"
-  # shellcheck disable=SC2086 # parts is a space-separated list of fixed names, split on purpose
-  ( cd "${RUN_ROOT}" && find ${parts} -type f -print | LC_ALL=C sort | while IFS= read -r f; do
+  ( cd "${RUN_ROOT}" && LC_ALL=C sort "${list}" | while IFS= read -r f; do
     printf '%s  %s\n' "$(sha256sum "${f}" | cut -d' ' -f1)" "${f}"
-  done ) >"${manifest}" || die "could not build the copy-out manifest (find, sort or sha256sum failed)"
-  for part in hadoop er spark results config; do
-    [[ -d "${RUN_ROOT}/${part}" ]] || continue
-    aws s3 cp "${RUN_ROOT}/${part}/" "${OUTPUT_PREFIX}/${part}/" --recursive --region "${REGION}" --only-show-errors
+  done ) >"${manifest}" || die "could not build the copy-out manifest (sort or sha256sum failed)"
+  rm -f "${list}"
+  for part in ${parts}; do
+    copyout_rules "${part}"
+    filters=()
+    i=0
+    while [[ "${i}" -lt "${#COPYOUT_RULES[@]}" ]]; do
+      filters+=("--${COPYOUT_RULES[i]}" "${COPYOUT_RULES[i + 1]}")
+      i=$((i + 2))
+    done
+    aws s3 cp "${RUN_ROOT}/${part}/" "${OUTPUT_PREFIX}/${part}/" --recursive ${filters[@]+"${filters[@]}"} --no-follow-symlinks --region "${REGION}" --only-show-errors
   done
   aws s3 cp "${manifest}" "${OUTPUT_PREFIX}/copyout-manifest.sha256" --region "${REGION}" --only-show-errors
-  log "copied ${total} bytes (hadoop, er, spark, results, config) to ${OUTPUT_PREFIX}"
+  log "copied ${total} bytes (selected files of${parts}) to ${OUTPUT_PREFIX}"
 }
 
 case "${STEP_NAME}" in

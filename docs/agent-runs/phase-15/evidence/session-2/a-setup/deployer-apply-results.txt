@@ -1,0 +1,18 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 1 source file(s); redacted.
+
+## <repo>/target/phase15/session2/evidence/deployer-apply.log (1451 lines, sha256 8c19079aa6b498b13c428f3bc1aff6955897a945f32d735d38f4508c91c6d3b8)
+Plan: 13 to add, 0 to change, 0 to destroy.
+aws_iam_role.operator["reader"]: Creation complete after 1s [id=scholarchain-course-operator-reader]
+aws_iam_role.operator_pipeline[0]: Creation complete after 1s [id=scholarchain-course-operator-pipeline]
+aws_iam_role.operator["loader"]: Creation complete after 1s [id=scholarchain-course-operator-loader]
+aws_iam_role.operator["cleanup"]: Creation complete after 1s [id=scholarchain-course-operator-cleanup]
+aws_iam_role_policy.operator_login["cleanup"]: Creation complete after 1s [id=scholarchain-course-operator-cleanup:scholarchain-course-operator-cleanup-same-device-login]
+aws_iam_role_policy.operator_login["reader"]: Creation complete after 1s [id=scholarchain-course-operator-reader:scholarchain-course-operator-reader-same-device-login]
+aws_iam_role_policy.operator["loader--tunnel"]: Creation complete after 1s [id=scholarchain-course-operator-loader:scholarchain-course-operator-loader-tunnel]
+aws_iam_role_policy.operator_pipeline_login[0]: Creation complete after 1s [id=scholarchain-course-operator-pipeline:scholarchain-course-operator-pipeline-same-device-login]
+aws_iam_role_policy.operator_pipeline[0]: Creation complete after 1s [id=scholarchain-course-operator-pipeline:scholarchain-course-operator-pipeline-data]
+aws_iam_role_policy.operator["reader--data"]: Creation complete after 1s [id=scholarchain-course-operator-reader:scholarchain-course-operator-reader-data]
+aws_iam_role_policy.operator_login["loader"]: Creation complete after 1s [id=scholarchain-course-operator-loader:scholarchain-course-operator-loader-same-device-login]
+aws_iam_role_policy.operator["cleanup--data"]: Creation complete after 1s [id=scholarchain-course-operator-cleanup:scholarchain-course-operator-cleanup-data]
+aws_iam_role_policy.operator["loader--data"]: Creation complete after 1s [id=scholarchain-course-operator-loader:scholarchain-course-operator-loader-data]
+Apply complete! Resources: 13 added, 0 changed, 0 destroyed.

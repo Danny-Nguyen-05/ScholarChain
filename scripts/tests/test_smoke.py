@@ -20,6 +20,10 @@ QUERY_ID = "qry-" + "ab" * 32
 JOB_ID = "job-" + "ab" * 32
 EVIDENCE_ID = "evidence:metric:" + "cd" * 32
 FIXTURE_BODY = {"question": "Synthetic fixture: publication count for A", "output": {"includeScores": False}}
+SEMANTIC_BODY = {"question": "Synthetic fixture: semantic retrieval smoke for A", "topK": 5}
+SEMANTIC_PATH = "/v1/semantic/retrieve"
+SEMANTIC_STEPS = ["smoke-semantic", "smoke-semantic-cache"]
+SIX_STEPS = ["smoke-healthz", "smoke-readyz", "smoke-query", "smoke-evidence", "smoke-idempotency", "smoke-error-path"]
 
 
 class Stub:
@@ -31,6 +35,9 @@ class Stub:
         self.requests = []
         self.bound = {}  # idempotency key -> (body, queryId)
         self.counter = 0
+        self.semantic_seen = set()  # questions embedded once (the stub's query-embedding cache)
+        self.cache_hits = 0
+        self.semantic_bodies = []  # (authorised, parsed body) per semantic POST
         stub = self
 
         class Handler(http.server.BaseHTTPRequestHandler):
@@ -71,6 +78,8 @@ class Stub:
                     return self.send(200, {"status": "ready"})
                 if not self.authorised():
                     return self.unauthorized()
+                if path == "/metrics":
+                    return self.metrics()
                 if path.startswith("/v1/evidence/"):
                     if stub.flags.get("evidence_404"):
                         return self.send(404, {"error": "NOT_FOUND", "message": "n", "traceId": "t", "retryable": False})
@@ -93,10 +102,56 @@ class Stub:
                     claims = []
                 return {"queryId": QUERY_ID, "mode": "synchronous", "answer": {"summary": "A: publications: 3"}, "claims": claims, "links": {"explain": "e", "evidence": "v", "result": "r"}}
 
+            def metrics(self):
+                lines = ["# HELP api_rate_limited_total x", "api_rate_limited_total 0", "embedding_cache_misses_total %d" % len(stub.semantic_seen)]
+                if not stub.flags.get("semantic_no_metric"):
+                    lines += ["# TYPE embedding_cache_hits_total counter", "embedding_cache_hits_total %d" % stub.cache_hits]
+                payload = ("\n".join(lines) + "\n").encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; version=0.0.4")
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+
+            def semantic(self, body):
+                parsed = json.loads(body.decode() or "null")
+                stub.semantic_bodies.append((self.authorised(), parsed))
+                if stub.flags.get("semantic_missing"):
+                    return self.send(404, {"error": "NOT_FOUND", "message": "n", "traceId": "t", "retryable": False})
+                if not self.authorised() and not stub.flags.get("semantic_open"):
+                    return self.unauthorized()
+                if stub.flags.get("semantic_429"):
+                    payload = json.dumps({"error": "RATE_LIMITED", "message": "m", "traceId": "t", "retryable": True}).encode()
+                    self.send_response(429)
+                    self.send_header("Retry-After", "1")
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(payload)))
+                    self.end_headers()
+                    return self.wfile.write(payload)
+                question = parsed.get("question")
+                if question in stub.semantic_seen and not stub.flags.get("semantic_no_cache_hit"):
+                    stub.cache_hits += 1
+                stub.semantic_seen.add(question)
+                document = {"hits": [{"key": "researcher:a", "distance": 0.125, "metadata": {"name": "A"}}], "model": {"modelId": "synthetic-embedder", "version": "1", "dimension": 8}}
+                shape = stub.flags.get("semantic_shape")
+                if shape == "extra_key":
+                    document["debug"] = {"question": question}
+                elif shape == "no_model":
+                    del document["model"]
+                elif shape == "bad_hit":
+                    document["hits"] = [{"key": "researcher:a", "distance": "near", "metadata": {}}]
+                elif shape == "bad_model":
+                    document["model"] = {"modelId": "m", "version": "1"}
+                elif shape == "not_object":
+                    document = [document]
+                self.send(200, document)
+
             def do_POST(self):
                 length = int(self.headers.get("Content-Length", "0"))
                 body = self.rfile.read(length)
                 stub.requests.append(("POST", self.path, dict(self.headers)))
+                if self.path == SEMANTIC_PATH:
+                    return self.semantic(body)
                 if self.path != "/v1/query":
                     return self.send(404, {"error": "NOT_FOUND"})
                 if stub.flags.get("accept_without_auth"):
@@ -338,6 +393,136 @@ class SmokeStubTests(SmokeBase):
             self.assertIn(needle, text)
 
 
+class SmokeSemanticTests(SmokeBase):
+    """P40-I: the opt-in public semantic route checks (--semantic route|offline-synthetic). The default stays the six."""
+
+    def semantic_paths(self, stub):
+        return [(m, p) for m, p in stub.paths() if p in (SEMANTIC_PATH, "/metrics")]
+
+    def test_the_default_sends_no_semantic_or_metrics_request_and_keeps_the_six_check_result(self):
+        stub = self.start()
+        result = self.smoke(stub)
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual(self.semantic_paths(stub), [], "the deployed-environment smoke is unchanged without --semantic")
+        self.assertEqual(result.result_line(), "RESULT: PASS all 6 checks passed against %s" % stub.url)
+        self.assertNotIn("smoke-semantic", result.steps())
+
+    def test_offline_synthetic_mode_passes_with_the_fixed_question_401_and_a_cache_hit(self):
+        stub = self.start()
+        result = self.smoke(stub, "--semantic", "offline-synthetic")
+        self.assertEqual(result.rc, 0, result.out)
+        steps = [s for s in result.steps() if s.startswith("smoke-")]
+        self.assertEqual(steps, SIX_STEPS + SEMANTIC_STEPS + ["smoke-complete"], "the semantic checks run after the six")
+        self.assertEqual(result.result_line(), "RESULT: PASS all 6 checks plus 2 semantic check(s) (semantic semantic-cache, mode offline-synthetic) passed against %s" % stub.url)
+        self.assertIn("CHECK-OK: semantic: POST /v1/semantic/retrieve 200 exactly {hits, model} (hits=1, model=synthetic-embedder); without a key 401 UNAUTHORIZED", result.stdout)
+        self.assertIn("CHECK-OK: semantic-cache: repeat of the same semantic question increased embedding_cache_hits_total from 0 to 1", result.stdout)
+        self.assertEqual([body for _auth, body in stub.semantic_bodies], [SEMANTIC_BODY] * 3, "the one fixed synthetic question, three times")
+        self.assertEqual([auth for auth, _body in stub.semantic_bodies], [True, False, True], "keyed, without a key, keyed repeat")
+        semantic_posts = [h for m, p, h in stub.requests if m == "POST" and p == SEMANTIC_PATH]
+        self.assertEqual(semantic_posts[0]["Authorization"], "Bearer " + KEY)
+        self.assertNotIn("Authorization", semantic_posts[1], "the 401 probe sends no key at all")
+        metrics = [h for m, p, h in stub.requests if m == "GET" and p == "/metrics"]
+        self.assertEqual(len(metrics), 2, "/metrics before and after the repeat")
+        self.assertTrue(all(h["Authorization"] == "Bearer " + KEY for h in metrics), "/metrics needs the key")
+        self.assertNotIn(KEY, result.out)
+        self.assertNotIn(SEMANTIC_BODY["question"], result.out, "the question text is not logged")
+
+    def test_route_mode_runs_only_the_route_check_and_reads_no_metrics(self):
+        stub = self.start()
+        result = self.smoke(stub, "--semantic", "route")
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual([s for s in result.steps() if s.startswith("smoke-")], SIX_STEPS + ["smoke-semantic", "smoke-complete"])
+        self.assertNotIn(("GET", "/metrics"), stub.paths())
+        self.assertIn("plus 1 semantic check(s) (semantic, mode route)", result.result_line())
+
+    def test_the_route_must_refuse_a_request_without_the_key(self):
+        result = self.smoke(self.start(semantic_open=True), "--semantic", "offline-synthetic")
+        self.failed(result, "smoke-semantic")
+        self.assertIn("POST /v1/semantic/retrieve without a key returned 200, expected 401", result.stdout)
+
+    def test_a_401_body_that_echoes_the_key_fails_and_the_key_is_never_printed(self):
+        stub = self.start(echo_key=True)
+        result = self.smoke(stub, "--checks", "healthz,readyz", "--semantic", "route")
+        self.failed(result, "smoke-semantic")
+        self.assertIn("the semantic 401 body echoed the API key", result.stdout)
+
+    def test_a_wrong_reply_shape_fails_the_semantic_check(self):
+        cases = {
+            "extra_key": "exactly the top-level keys hits and model, got [debug,hits,model]",
+            "no_model": "exactly the top-level keys hits and model, got [hits]",
+            "bad_hit": "a semantic hit has a malformed key, distance or metadata",
+            "bad_model": "the semantic reply model is not exactly {modelId, version, dimension}",
+            "not_object": "the semantic reply is not a JSON object",
+        }
+        for shape, message in cases.items():
+            with self.subTest(shape):
+                stub = self.start(semantic_shape=shape)
+                result = self.smoke(stub, "--semantic", "offline-synthetic")
+                self.failed(result, "smoke-semantic")
+                self.assertIn(message, result.stdout)
+                self.assertNotIn(("GET", "/metrics"), stub.paths(), "the cache check never runs after a failed route check")
+
+    def test_a_cache_hit_counter_that_does_not_increase_fails_the_cache_check(self):
+        result = self.smoke(self.start(semantic_no_cache_hit=True), "--semantic", "offline-synthetic")
+        self.failed(result, "smoke-semantic-cache")
+        self.assertIn("did not increase embedding_cache_hits_total (before 0, after 0)", result.stdout)
+
+    def test_a_metrics_page_without_the_cache_counter_fails_the_cache_check(self):
+        result = self.smoke(self.start(semantic_no_metric=True), "--semantic", "offline-synthetic")
+        self.failed(result, "smoke-semantic-cache")
+        self.assertIn("GET /metrics has no embedding_cache_hits_total sample", result.stdout)
+
+    def test_rate_limited_and_missing_routes_fail_the_semantic_check(self):
+        limited = self.smoke(self.start(semantic_429=True), "--semantic", "route")
+        self.failed(limited, "smoke-semantic")
+        self.assertIn("returned 429 (rate limited, Retry-After 1)", limited.stdout)
+        missing = self.smoke(self.start(semantic_missing=True), "--semantic", "route")
+        self.failed(missing, "smoke-semantic")
+        self.assertIn("POST /v1/semantic/retrieve returned 404, expected 200", missing.stdout)
+
+    def test_a_partial_run_with_semantic_says_so_and_needs_the_key(self):
+        stub = self.start()
+        result = self.smoke(stub, "--checks", "healthz,readyz", "--semantic", "offline-synthetic")
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual([s for s in result.steps() if s.startswith("smoke-")], ["smoke-healthz", "smoke-readyz"] + SEMANTIC_STEPS + ["smoke-complete"])
+        self.assertEqual(result.result_line(), "RESULT: PASS only 2 of 6 checks ran (healthz readyz) plus 2 semantic check(s) (semantic semantic-cache, mode offline-synthetic) and passed against %s; this is not the full smoke test" % stub.url)
+        refused = self.smoke(self.start(), "--checks", "healthz,readyz", "--semantic", "route", key=None)
+        self.assertEqual(refused.rc, 3, refused.out)
+        self.assertIn("holds no API key", refused.out)
+
+    def test_offline_synthetic_mode_refuses_a_non_loopback_target_before_any_request(self):
+        stub = self.start()
+        result = self.smoke(stub, "--semantic", "offline-synthetic", url="https://example.com")
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertIn("needs a loopback target", result.out)
+        self.assertEqual(stub.requests, [])
+        for host in ("127.0.0.1", "localhost"):
+            with self.subTest(host):
+                self.assertEqual(self.smoke(stub, "--semantic", "offline-synthetic", "--checks", "healthz", url="http://%s:%d" % (host, stub.port)).rc, 0)
+
+    def test_bad_semantic_values_are_usage_errors(self):
+        for value in ("bogus", "", "Route", "on"):
+            with self.subTest(value):
+                result = self.run_script("smoke-test.sh", "--url", "http://127.0.0.1:1", "--semantic", value, SCHOLARCHAIN_SMOKE_API_KEY=KEY)
+                self.assertEqual(result.rc, 2, result.out)
+                self.assertIn("--semantic must be one of: off, route, offline-synthetic", result.out)
+        as_check = self.run_script("smoke-test.sh", "--url", "http://127.0.0.1:1", "--checks", "semantic", SCHOLARCHAIN_SMOKE_API_KEY=KEY)
+        self.assertEqual(as_check.rc, 2, as_check.out)
+        self.assertEqual(self.run_script("smoke-test.sh", "--url", "http://127.0.0.1:1", "--semantic").rc, 2)
+
+    def test_semantic_off_is_the_default(self):
+        stub = self.start()
+        result = self.smoke(stub, "--semantic", "off")
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual(self.semantic_paths(stub), [])
+        self.assertEqual(result.result_line(), "RESULT: PASS all 6 checks passed against %s" % stub.url)
+
+    def test_help_documents_the_semantic_mode(self):
+        text = subprocess.run(["bash", os.path.join(SCRIPTS_DIR, "smoke-test.sh"), "--help"], capture_output=True, text=True, env={"PATH": "/usr/bin:/bin"}).stdout
+        for needle in ("--semantic MODE", "smoke-semantic", "smoke-semantic-cache", "/v1/semantic/retrieve", "embedding_cache_hits_total", "offline-synthetic", "loopback"):
+            self.assertIn(needle, text)
+
+
 class SmokeLocalTests(SmokeBase):
     """smoke-local.sh with a fake java that serves the stub contract: proves only the sha256 of the key reaches the service,
     the mode is offline-synthetic, the service is stopped and a missing distribution is refused."""
@@ -351,10 +536,13 @@ log = os.environ["FAKE_JAVA_LOG"]
 with open(log, "w") as handle:
     handle.write(json.dumps({"mode": os.environ.get("SCHOLARCHAIN_SERVICE_MODE"), "hash": os.environ.get("SCHOLARCHAIN_API_KEY_SHA256"),
         "internal": os.environ.get("SCHOLARCHAIN_INTERNAL_TOKEN_SHA256"), "host": os.environ.get("SCHOLARCHAIN_HTTP_HOST"), "port": os.environ.get("SCHOLARCHAIN_HTTP_PORT"),
-        "argv": sys.argv[1:], "cwd": os.getcwd(), "env_names": sorted(os.environ)}))
+        "argv": sys.argv[1:], "cwd": os.getcwd(), "env_names": sorted(os.environ),
+        "rate": os.environ.get("SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND"), "burst": os.environ.get("SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST")}))
 want = os.environ["SCHOLARCHAIN_API_KEY_SHA256"]
 QUERY = "qry-" + "ab" * 32
 EVIDENCE = "evidence:metric:" + "cd" * 32
+SEEN = set()
+HITS = [0]
 class H(http.server.BaseHTTPRequestHandler):
     def log_message(self, *a): pass
     def send(self, status, doc):
@@ -368,12 +556,20 @@ class H(http.server.BaseHTTPRequestHandler):
         if self.path == "/healthz": return self.send(200, {"status": "alive"})
         if self.path == "/readyz": return self.send(200, {"status": "ready"})
         if not self.ok(): return self.err()
+        if self.path == "/metrics":
+            data = ("embedding_cache_hits_total %d\\nembedding_cache_misses_total %d\\n" % (HITS[0], len(SEEN))).encode()
+            self.send_response(200); self.send_header("Content-Type", "text/plain"); self.send_header("Content-Length", str(len(data))); self.end_headers(); self.wfile.write(data)
+            return
         if self.path.startswith("/v1/evidence/"): return self.send(200, {"evidenceId": self.path[len("/v1/evidence/"):], "sourceDataset": "S", "provenance": {"a": 1}})
         if self.path.endswith("/evidence"): return self.send(200, {"queryId": QUERY, "evidenceIds": [EVIDENCE]})
         self.send(404, {})
     def do_POST(self):
-        self.rfile.read(int(self.headers.get("Content-Length", "0")))
+        body = json.loads(self.rfile.read(int(self.headers.get("Content-Length", "0"))) or b"null")
         if not self.ok(): return self.err()
+        if self.path == "/v1/semantic/retrieve":
+            if body["question"] in SEEN and not os.environ.get("FAKE_JAVA_NO_CACHE_HIT"): HITS[0] += 1
+            SEEN.add(body["question"])
+            return self.send(200, {"hits": [], "model": {"modelId": "offline-synthetic", "version": "1", "dimension": 8}})
         self.send(200, {"queryId": QUERY, "mode": "synchronous", "answer": {"summary": "s"}, "claims": [{"claimId": "c", "evidenceIds": [EVIDENCE]}], "links": {}})
 http.server.ThreadingHTTPServer(("127.0.0.1", int(os.environ["SCHOLARCHAIN_HTTP_PORT"])), H).serve_forever()
 '''
@@ -404,8 +600,11 @@ http.server.ThreadingHTTPServer(("127.0.0.1", int(os.environ["SCHOLARCHAIN_HTTP_
         result = self.local("--startup-seconds", "20")
         self.assertEqual(result.rc, 0, result.out)
         self.assertTrue(result.result_line().startswith("RESULT: PASS local offline-synthetic query-api passed all smoke checks"), result.result_line())
-        for marker in ("smoke| STEP: smoke-healthz", "smoke| STEP: smoke-error-path", "smoke| RESULT: PASS all 6 checks"):
+        for marker in ("smoke| STEP: smoke-healthz", "smoke| STEP: smoke-error-path", "smoke| STEP: smoke-semantic", "smoke| STEP: smoke-semantic-cache",
+                       "smoke| RESULT: PASS all 6 checks plus 2 semantic check(s) (semantic semantic-cache, mode offline-synthetic)"):
             self.assertIn(marker, result.stdout)
+        self.assertIn("smoke| CHECK-OK: semantic-cache: repeat of the same semantic question increased embedding_cache_hits_total from 0 to 1", result.stdout)
+        self.assertIn("semantic rate limit: service code defaults (no override set)", result.stdout)
         with open(self.javalog, encoding="utf-8") as handle:
             run = json.load(handle)
         self.assertEqual(run["mode"], "offline-synthetic")
@@ -418,7 +617,46 @@ http.server.ThreadingHTTPServer(("127.0.0.1", int(os.environ["SCHOLARCHAIN_HTTP_
         self.assertTrue(run["cwd"].endswith("modules/services/target/distribution"))
         self.assertNotIn("SCHOLARCHAIN_SMOKE_API_KEY", run["env_names"], "the raw key is not in the service environment")
         self.assertNotIn("SCHOLARCHAIN_API_KEY", run["env_names"])
+        self.assertIsNone(run["rate"], "unset by default: the service code default applies")
+        self.assertIsNone(run["burst"])
+        self.assertNotIn("SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND", run["env_names"])
+        self.assertNotIn("SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST", run["env_names"])
         self.assertTrue(self.tree_clean_local())
+
+    def test_semantic_rate_limit_overrides_pass_through_to_the_local_service(self):
+        self.make_distribution()
+        result = self.local("--startup-seconds", "20", SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND="100000", SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST="1000000")
+        self.assertEqual(result.rc, 0, result.out)
+        with open(self.javalog, encoding="utf-8") as handle:
+            run = json.load(handle)
+        self.assertEqual((run["rate"], run["burst"]), ("100000", "1000000"), "the upper bounds are accepted and passed as given")
+        self.assertIn("passing SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND=100000 to the local query-api", result.stdout)
+        self.assertIn("passing SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST=1000000 to the local query-api", result.stdout)
+        os.remove(self.javalog)
+        only_one = self.local("--startup-seconds", "20", SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST="1")
+        self.assertEqual(only_one.rc, 0, only_one.out)
+        with open(self.javalog, encoding="utf-8") as handle:
+            run = json.load(handle)
+        self.assertEqual((run["rate"], run["burst"]), (None, "1"), "only the variable the caller set is passed")
+
+    def test_invalid_semantic_rate_limit_values_are_refused_before_the_service_starts(self):
+        self.make_distribution()
+        cases = [("SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND", v) for v in ("0", "-1", "+5", "abc", "01", "1.5", "", " 5", "100001", "99999999999999999999")]
+        cases += [("SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST", v) for v in ("0", "1000001", "1e3", "10 ")]
+        for name, value in cases:
+            with self.subTest(name=name, value=value):
+                result = self.local(**{name: value})
+                self.assertEqual(result.rc, 2, result.out)
+                self.assertIn("RESULT: REFUSED step=usage reason=%s must be a whole number from 1 to" % name, result.stdout)
+                self.assertFalse(os.path.exists(self.javalog), "the service was never started")
+
+    def test_a_cache_counter_that_does_not_increase_fails_the_local_smoke(self):
+        self.make_distribution()
+        result = self.local("--startup-seconds", "20", FAKE_JAVA_NO_CACHE_HIT="1")
+        self.assertEqual(result.rc, 4, result.out)
+        self.assertIn("smoke| STEP: smoke-semantic-cache", result.stdout)
+        self.assertIn("did not increase embedding_cache_hits_total", result.stdout)
+        self.assertTrue(result.result_line().startswith("RESULT: FAIL"), result.result_line())
 
     def tree_clean_local(self):
         return subprocess.run(["git", "-C", self.repo, "status", "--porcelain=v1", "--untracked-files=all"], capture_output=True, text=True).stdout.strip() == ""
@@ -455,7 +693,8 @@ http.server.ThreadingHTTPServer(("127.0.0.1", int(os.environ["SCHOLARCHAIN_HTTP_
 
     def test_help_and_usage_errors(self):
         text = subprocess.run(["bash", os.path.join(SCRIPTS_DIR, "smoke-local.sh"), "--help"], capture_output=True, text=True, env={"PATH": "/usr/bin:/bin"}).stdout
-        for needle in ("offline-synthetic", "throwaway", "SCHOLARCHAIN_API_KEY_SHA256", "Exit codes", "Human approval points", "Evidence produced", "--build"):
+        for needle in ("offline-synthetic", "throwaway", "SCHOLARCHAIN_API_KEY_SHA256", "Exit codes", "Human approval points", "Evidence produced", "--build",
+                       "/v1/semantic/retrieve", "embedding_cache_hits_total", "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND", "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST"):
             self.assertIn(needle, text)
         self.assertEqual(self.run_script("smoke-local.sh", "--bogus").rc, 2)
         self.assertEqual(self.run_script("smoke-local.sh", "--port", "x").rc, 2)

@@ -31,6 +31,11 @@ def load(name, relative):
 subsets = load("subsets_under_test", "experiments/scripts/make_dblp_subsets.py")
 render = load("render_under_test", "experiments/scripts/render_manifests.py")
 check = load("check_under_test", "experiments/scripts/check_manifests.py")
+build_l = load("build_l_under_test", "experiments/scripts/build_l_input.py")
+LABELS = ("size-25", "size-50", "size-100")  # the EMR set: Session 1 history (25, 50) and size S (100); L is local evidence only
+L_EVIDENCE = os.path.join(EXPERIMENTS, "inputs", "15a", "size-l-local-evidence.json")
+TOKEN_ROOT = "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}"
+PATH_KEYS = ("hadoopRunRoot", "entityResolutionRunRoot", "outputRoot", "checkpointDirectory")
 HEX_A = "a" * 64
 FAKE_ACCOUNT = "1" * 6 + "2" * 6  # built at runtime: no 12-digit literal in the source
 DIGIT_HASH = ("1234" * 4) * 4  # a 64-character sha256 made of digits only
@@ -72,8 +77,8 @@ def validate_with_run_experiments_validator(path):
 
 class CommittedManifests(unittest.TestCase):
     def test_each_15a_manifest_passes_the_run_experiment_validator(self):
-        for size in (25, 50, 100):
-            path = os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-%d.json" % size)
+        for label in LABELS:
+            path = os.path.join(EXPERIMENTS, "manifests", "15a-emr-%s.json" % label)
             rc, out = validate_with_run_experiments_validator(path)
             self.assertEqual((rc, out), (0, ""), path)
 
@@ -93,37 +98,69 @@ class CommittedManifests(unittest.TestCase):
         self.assertEqual(check.placeholder_problems('{"j": "%s"}' % ("0" * 64)), ["an all-zero sha256 placeholder remains"])
 
     def test_15a_limits_match_the_approved_caps(self):
-        total = 0
-        for size in (25, 50, 100):
-            manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-%d.json" % size))
-            self.assertEqual(manifest["id"], "15a-emr-size-%d" % size)
-            self.assertEqual(manifest["budget"]["max_runtime_minutes"], 90)  # 90 minutes of cluster time per run
-            self.assertEqual(manifest["teardown"]["mode"], "auto-termination")
+        for label in LABELS:
+            size = label[len("size-"):]
+            manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-%s.json" % label))
+            self.assertEqual(manifest["id"], "15a-emr-size-%s" % size)
+            self.assertEqual(manifest["teardown"], {"mode": "auto-termination", "max_idle_timeout_seconds": 900})
             self.assertEqual(manifest["budget"]["max_capacity"], 1 + manifest["pipeline"]["core_count"] + manifest["pipeline"]["max_task_count"])
-            self.assertEqual(manifest["budget"]["max_capacity"], 2)
-            self.assertEqual(manifest["pipeline"]["input_prefix"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/input/size-%d" % size)
-            self.assertEqual(manifest["pipeline"]["output_prefix"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-%d" % size)
-            self.assertEqual(manifest["pipeline"]["er_jar"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/entity-resolution.jar")
-            self.assertEqual(manifest["pipeline"]["er_policy"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/er-policy.json")
-            self.assertEqual(manifest["metrics"]["locations"], ["s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-%d/metrics/" % size])
-            total += manifest["budget"]["max_usd"]
-        self.assertAlmostEqual(total, 2.52)  # three runs x 0.84 = 2.52, within the 2.52 cumulative cap
+            self.assertEqual((manifest["budget"]["max_capacity"], manifest["budget"]["max_usd"], manifest["pipeline"]["instance_type"]), (2, 0.84, "m5.xlarge"))
+            self.assertEqual(manifest["pipeline"]["input_prefix"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/input/size-%s" % size)
+            self.assertEqual(manifest["pipeline"]["output_prefix"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-%s" % size)
+            self.assertEqual(manifest["metrics"]["locations"], ["s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-%s/metrics/" % size])
+
+    def test_size_s_is_the_75_minute_r5_primary_run(self):
+        manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-100.json"))
+        # user, 2026-11-16 ("S run cap and D3 go-ahead"): 75 min, r5.xlarge primary, m5.xlarge core, no task nodes
+        self.assertEqual(manifest["budget"]["max_runtime_minutes"], 75)
+        self.assertEqual((manifest["pipeline"]["primary_instance_type"], manifest["pipeline"]["instance_type"]), ("r5.xlarge", "m5.xlarge"))
+        self.assertEqual((manifest["pipeline"]["core_count"], manifest["pipeline"]["max_task_count"]), (1, 0))
+        # P1: the Hadoop prep config is an uploaded artifact (the key the infra-engineer's --hadoop-config option writes), pinned by sha256
+        self.assertEqual(manifest["pipeline"]["hadoop_config"], TOKEN_ROOT + "/config/hadoop-config.json")
+        self.assertEqual(manifest["pipeline"]["spark_config_template"], TOKEN_ROOT + "/config/spark-config-template.json")
+        self.assertIn("hadoop-config", manifest["pipeline"]["artifact_sha256"])
+
+    def test_session1_history_manifests_are_the_committed_bytes(self):
+        # Session 1's m5.xlarge runs stay as the ledger history: unchanged since commit 7a02de2 (hashes taken from that commit)
+        expected = {"15a-emr-size-25.json": "a6ff25a35888685e3007a37d2c9de01c8779c330cbbac1c1d8ff7b38dab5e102",
+                    "15a-emr-size-50.json": "0d7fe029b4bad906d7b37af1e09ed05f573964556cb67ee0f1a5fecdcd0902a0"}
+        for name, digest in expected.items():
+            with open(os.path.join(EXPERIMENTS, "manifests", name), "rb") as handle:
+                self.assertEqual(hashlib.sha256(handle.read()).hexdigest(), digest, name)
+            self.assertEqual(read_json(os.path.join(EXPERIMENTS, "manifests", name))["budget"]["max_runtime_minutes"], 90)
+
+    def test_no_emr_manifest_exists_for_size_l(self):
+        self.assertFalse(any("size-l" in n for n in os.listdir(os.path.join(EXPERIMENTS, "manifests"))))
+        evidence = read_json(L_EVIDENCE)
+        self.assertTrue(evidence["emr"].startswith("NOT an EMR run"))
+        self.assertEqual(evidence["identityBypassSpark"]["disclosure"], "ER bypassed: identity pass-through (no cross-source resolution), local only, not the EMR path")
+        self.assertEqual(evidence["slice"]["publicationCount"], 48187)
 
     def test_g6_estimate_is_hand_derived(self):
         manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-25.json"))
-        pricing = {"EMR_RATE_EC2_M5_XLARGE": "0.192", "EMR_RATE_EMR_M5_XLARGE": "0.048"}
+        pricing = {"EMR_RATE_EC2_M5_XLARGE": "0.192", "EMR_RATE_EMR_M5_XLARGE": "0.048", "EMR_RATE_EC2_R5_XLARGE": "0.252", "EMR_RATE_EMR_R5_XLARGE": "0.063"}
         # 2 instances x 0.240 USD/h x (90 min + 900 s idle = 6300 s = 1.75 h) = 0.84
         self.assertEqual(str(check.g6_estimate(manifest, pricing)), "0.84")
         manifest["pipeline"]["max_task_count"] = 1
         self.assertEqual(str(check.g6_estimate(manifest, pricing)), "1.26")  # 3 x 0.24 x 1.75
+        s = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-100.json"))
+        # D3: primary r5.xlarge 0.252 + 0.063 = 0.315/h, core m5.xlarge 0.240/h; (75 min + 900 s) = 1.5 h; 0.555 x 1.5 = 0.8325 -> 0.84
+        self.assertEqual(str(check.g6_estimate(s, pricing)), "0.84")
+        s["budget"]["max_runtime_minutes"] = 90  # 0.555 x 1.75 = 0.97125 -> 0.98, above the 0.84 budget: why S is capped at 75
+        self.assertEqual(str(check.g6_estimate(s, pricing)), "0.98")
+        s["budget"]["max_runtime_minutes"] = 60  # 0.555 x 1.25 = 0.69375 -> 0.70
+        self.assertEqual(str(check.g6_estimate(s, pricing)), "0.70")
 
     def test_committed_prep_config_passes_every_ceiling_except_the_sample_bound(self):
         prep = read_json(os.path.join(EXPERIMENTS, "inputs", "15a", "prep-config.json"))
         conf = check.read_conf(os.path.join(REPO, "scripts", "config", "release.conf"))
         over = [field for field, key in check.CEILING_KEYS if prep[field] > int(conf[key])]
-        # Today the only violation may be maxLocalSampleRecords (BLOCKED-ON infra-engineer); any other field over its ceiling is a defect here.
+        # The only violation may be maxLocalSampleRecords until the infra-engineer's matching pin lands (BLOCKED-ON); any other field is a defect.
         self.assertTrue(set(over) <= {"maxLocalSampleRecords"}, over)
-        self.assertGreaterEqual(prep["maxLocalSampleRecords"], 10577 + 100)  # the 100 percent slice plus the small samples is never truncated
+        # P22: L at most 50,000 DBLP records (TARGET_MAX of the dataset-engineer's selector) + 3 one-line committed samples = 50,003, rounded up to 60,000
+        self.assertEqual(prep["maxLocalSampleRecords"], 60000)
+        self.assertEqual(check.other_source_records(REPO), 3)
+        self.assertGreaterEqual(prep["maxLocalSampleRecords"], check.L_PLANNING_MAX + 3)
 
     def test_datasets_manifest_names_the_four_sources(self):
         datasets = read_json(os.path.join(EXPERIMENTS, "inputs", "15a", "datasets.json"))
@@ -205,6 +242,29 @@ class Fixture(unittest.TestCase):
         for name in ("loadgen.py", "llm_budget.py"):
             shutil.copy(os.path.join(REPO, "load-tests", name), os.path.join(self.root, "load-tests", name))
         self.conf = os.path.join(self.root, "scripts", "config", "release.conf")
+        for entry in read_json(os.path.join(EXPERIMENTS, "inputs", "15a", "config-sources.json"))["files"].values():  # files outside experiments/
+            target = os.path.join(self.root, entry["path"])
+            if not os.path.exists(target):
+                os.makedirs(os.path.dirname(target), exist_ok=True)
+                shutil.copy(os.path.join(REPO, entry["path"]), target)
+
+    def pin_session2(self):
+        """The pins the infra-engineer is asked for: the P22 sample ceiling and the P25 ledger (4 runs, 3.53 USD cap)."""
+        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "60000")
+        self.set_pin("EMR_MAX_LIVE_RUNS", "4")
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")
+
+    def write_l_slice(self, count=48187, sha=None):
+        evidence = read_json(L_EVIDENCE)["slice"]
+        path = os.path.join(self.root, "datasets", "phase15", "dblp-l-slice-manifest.v1.json")
+        write_text(path, json.dumps({"selection": {"publicationCount": count}, "output": {"sha256": sha or evidence["sha256"]}, "nestingCheck": {"result": "PASS"}}))
+        return path
+
+    def render_into_fixture(self, *extra):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            rc = render.main(["--out-dir", os.path.join(self.root, "experiments", "manifests"), "--overwrite"] + list(extra))
+        return rc, out.getvalue()
 
     def set_pin(self, key, value):
         with open(self.conf, encoding="utf-8") as handle:
@@ -223,37 +283,148 @@ class Fixture(unittest.TestCase):
 
 
 class RenderAndCheck(Fixture):
-    SHAS = ["--sha", "hadoop-submit-jar=%s" % ("1" * 64), "--sha", "hadoop-libjars=%s" % ("2" * 64), "--sha", "er-jar=%s" % ("3" * 64), "--sha", "job-jar=%s" % ("4" * 64),
-            "--sha", "er-policy=%s" % ("5" * 64), "--sha", "er-config=%s" % ("6" * 64), "--sha", "spark-config-template=%s" % ("7" * 64)]
+    SHAS = ["--sha", "hadoop-submit-jar=%s" % ("1" * 64), "--sha", "hadoop-libjars=%s" % ("2" * 64), "--sha", "er-jar=%s" % ("3" * 64), "--sha", "job-jar=%s" % ("4" * 64)]
+
+    def config_sha(self, name):
+        entry = read_json(os.path.join(EXPERIMENTS, "inputs", "15a", "config-sources.json"))["files"][name]
+        with open(os.path.join(REPO, entry["path"]), "rb") as handle:
+            return hashlib.sha256(handle.read()).hexdigest()
 
     def test_rendering_real_hashes_keeps_tokens_and_passes_the_final_check(self):
-        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "12000")  # what the infra-engineer is asked to pin
-        out = io.StringIO()
-        with contextlib.redirect_stdout(out):
-            rc = render.main(["--out-dir", os.path.join(self.root, "experiments", "manifests"), "--overwrite"] + self.SHAS)
-        self.assertEqual(rc, 0, out.getvalue())
-        manifest = read_json(self.manifest_path("15a-emr-size-50.json"))
+        self.pin_session2()
+        history = {n: read_json(self.manifest_path(n)) for n in ("15a-emr-size-25.json", "15a-emr-size-50.json")}
+        rc, out = self.render_into_fixture(*self.SHAS)
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(out.count("RENDERED"), 1)  # only size S; the Session 1 history is never rewritten
+        for name, document in history.items():
+            self.assertEqual(read_json(self.manifest_path(name)), document, name)
+        manifest = read_json(self.manifest_path("15a-emr-size-100.json"))
         self.assertEqual(manifest["pipeline"]["artifact_sha256"]["job-jar"], "4" * 64)
-        self.assertEqual(manifest["pipeline"]["artifact_sha256"]["er-policy"], "5" * 64)
+        # the four configuration hashes come from the repository files themselves, not from --sha
+        for name in ("hadoop-config", "er-policy", "er-config", "spark-config-template"):
+            self.assertEqual(manifest["pipeline"]["artifact_sha256"][name], self.config_sha(name), name)
         self.assertIn("${SCHOLARCHAIN_ARTIFACTS_BUCKET}", manifest["pipeline"]["input_prefix"])  # tokens survive rendering
-        for size in (25, 50, 100):
-            rc, out_text = validate_with_run_experiments_validator(self.manifest_path("15a-emr-size-%d.json" % size))
+        for label in LABELS:
+            rc, out_text = validate_with_run_experiments_validator(self.manifest_path("15a-emr-%s.json" % label))
             self.assertEqual((rc, out_text), (0, ""))
         failed, blocked, lines = self.run_check(final=True)
         self.assertFalse(failed or blocked, "\n".join(lines))
 
     def test_zero_hashes_pass_the_normal_check_but_fail_final(self):
-        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "12000")
-        with contextlib.redirect_stdout(io.StringIO()):  # the committed manifests may carry real hashes: start from the default all-zero render
-            self.assertEqual(render.main(["--out-dir", os.path.join(self.root, "experiments", "manifests"), "--overwrite"]), 0)
+        self.pin_session2()
+        self.assertEqual(self.render_into_fixture()[0], 0)  # the default all-zero JAR hashes
         failed, blocked, lines = self.run_check(final=False)
         self.assertFalse(failed or blocked, "\n".join(lines))
         failed, blocked, lines = self.run_check(final=True)
         self.assertTrue(failed)
-        self.assertTrue(any("all-zero sha256" in line for line in lines))
+        self.assertTrue(any("15a-emr-size-100.json: an all-zero sha256" in line for line in lines))
+
+    def test_a_config_sha_that_differs_from_the_repository_file_is_refused_by_render_and_check(self):
+        self.pin_session2()
+        rc, out = self.render_into_fixture("--sha", "er-policy=%s" % ("5" * 64))
+        self.assertEqual(rc, 1)
+        self.assertIn("RENDER-REFUSED: --sha er-policy=", out)
+        rc, out = self.render_into_fixture("--sha", "hadoop-config=%s" % self.config_sha("hadoop-config"))  # the same value is accepted
+        self.assertEqual(rc, 0, out)
+        path = self.manifest_path("15a-emr-size-100.json")
+        manifest = read_json(path)
+        manifest["pipeline"]["artifact_sha256"]["spark-config-template"] = "753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458"  # the old Phase 6 pin
+        write_text(path, json.dumps(manifest))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("artifact_sha256.spark-config-template=753adaec" in line and "re-render" in line for line in lines))
+
+    def test_hadoop_config_must_be_the_uploaded_s3_key(self):
+        self.pin_session2()
+        path = self.manifest_path("15a-emr-size-100.json")
+        manifest = read_json(path)
+        manifest["pipeline"]["hadoop_config"] = "experiments/inputs/15a/prep-config.json"  # the old local form
+        write_text(path, json.dumps(manifest))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("pipeline.hadoop_config must be s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/hadoop-config.json" in line for line in lines))
+
+    def test_a_drifted_config_file_fails(self):
+        self.pin_session2()
+        prep_path = os.path.join(self.root, "experiments", "inputs", "15a", "prep-config.json")
+        prep = read_json(prep_path)
+        prep["maxLocalSampleRecords"] = 59999
+        write_text(prep_path, json.dumps(prep))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("hadoop-config (experiments/inputs/15a/prep-config.json) has sha256" in line for line in lines))
+
+    def test_l_slice_manifest_binds_the_evidence_record_and_the_sample_bound(self):
+        self.pin_session2()
+        self.write_l_slice(count=48187)
+        failed, blocked, lines = self.run_check()
+        self.assertFalse(failed or blocked, "\n".join(lines))
+        self.assertTrue(any("maxLocalSampleRecords=60000 >= 48190 = the L slice manifest publicationCount 48187 + 3 other-source records" in line for line in lines))
+        self.assertTrue(any("size L is local evidence only" in line for line in lines))
+        self.write_l_slice(count=48188)  # the slice changed: the evidence record is stale
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("size-l-local-evidence.json states 48187 publications" in line for line in lines))
+        self.write_l_slice(count=59998)  # 59,998 + 3 = 60,001 > 60,000
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("maxLocalSampleRecords=60000 < 60001" in line for line in lines))
+
+    def test_an_emr_manifest_for_size_l_or_any_other_size_is_refused(self):
+        self.pin_session2()
+        s = read_json(self.manifest_path("15a-emr-size-100.json"))
+        s["id"] = "15a-emr-size-l"
+        write_text(self.manifest_path("15a-emr-size-l.json"), json.dumps(s))
+        failed, _, lines = self.run_check(final=True)
+        self.assertTrue(failed)
+        self.assertTrue(any("CHECK-FAILED: 15a-emr-size-l.json is not in the EMR run set" in line and "local evidence only" in line for line in lines))
+        self.assertTrue(any("15A ledger 3.36 USD over 4 runs" in line for line in lines))  # the refused manifest is not charged
+
+    def test_size_s_is_required_and_must_keep_the_d3_types_and_the_75_minute_cap(self):
+        self.pin_session2()
+        path = self.manifest_path("15a-emr-size-100.json")
+        original = read_json(path)
+        mutated = json.loads(json.dumps(original))
+        del mutated["pipeline"]["primary_instance_type"]  # an m5.xlarge primary
+        write_text(path, json.dumps(mutated))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("primary/core types are m5.xlarge/m5.xlarge; D3 approved r5.xlarge primary and m5.xlarge core" in line for line in lines))
+        mutated = json.loads(json.dumps(original))
+        mutated["budget"]["max_runtime_minutes"] = 90
+        write_text(path, json.dumps(mutated))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("G6 estimate 0.98 exceeds budget.max_usd 0.84" in line for line in lines))
+        self.assertTrue(any("max_runtime_minutes is 90 but the approved cap for size S run and one retry is 75 minutes" in line for line in lines))
+        os.remove(path)
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("needs 15a-emr-size-100.json (size S)" in line for line in lines))
+
+    def test_a_missing_or_wrong_l_evidence_record_fails(self):
+        self.pin_session2()
+        path = os.path.join(self.root, "experiments", "inputs", "15a", "size-l-local-evidence.json")
+        evidence = read_json(path)
+        evidence["emr"] = "planned on EMR"
+        write_text(path, json.dumps(evidence))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("must be scholarchain.experiment-local-evidence.v1 and state that L is NOT an EMR run" in line for line in lines))
+        os.remove(path)
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("size-l-local-evidence.json is missing" in line for line in lines))
+
+    def test_keep_jar_shas_copies_the_jar_hashes_from_size_s(self):
+        self.pin_session2()
+        self.assertEqual(self.render_into_fixture(*self.SHAS)[0], 0)
+        self.assertEqual(self.render_into_fixture("--keep-jar-shas")[0], 0)
+        shas = read_json(self.manifest_path("15a-emr-size-100.json"))["pipeline"]["artifact_sha256"]
+        self.assertEqual([shas[n] for n in render.JAR_SHA_NAMES], ["1" * 64, "2" * 64, "3" * 64, "4" * 64])
 
     def test_a_literal_bucket_or_account_id_in_a_manifest_fails_even_without_final(self):
-        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "12000")
+        self.pin_session2()
         path = self.manifest_path("15a-emr-size-25.json")
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
@@ -264,14 +435,19 @@ class RenderAndCheck(Fixture):
         self.assertTrue(any("not the committed token" in line for line in lines))
 
     def test_a_ceiling_below_the_prep_config_is_reported_as_blocked_not_failed(self):
-        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "1000")
+        self.pin_session2()
+        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "12000")  # the pre-P22 pin
         failed, blocked, lines = self.run_check()
         self.assertFalse(failed)
         self.assertTrue(blocked)
-        self.assertTrue(any("CHECK-BLOCKED" in line and "maxLocalSampleRecords=12000" in line for line in lines))
+        self.assertTrue(any("CHECK-BLOCKED" in line and "maxLocalSampleRecords=60000" in line for line in lines))
 
     def test_budget_runtime_and_cumulative_violations_fail(self):
-        self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "12000")
+        self.pin_session2()
+        failed, blocked, lines = self.run_check()
+        self.assertFalse(failed or blocked, "\n".join(lines))
+        # Session 1 history 0.84 + 0.84, then S and one S retry 0.84 + 0.84 = 3.36 against the 3.53 USD / 4-run P25 cap: margin 0.17 USD and 0 runs
+        self.assertTrue(any("15A ledger 3.36 USD over 4 runs (Session 1 history + S + one S retry) <= cumulative cap 3.53 USD / 4 runs (margin 0.17 USD, 0 runs)" in line for line in lines))
         path = self.manifest_path("15a-emr-size-25.json")
         original = read_json(path)
         mutated = json.loads(json.dumps(original))
@@ -285,12 +461,17 @@ class RenderAndCheck(Fixture):
         write_text(path, json.dumps(mutated))
         failed, _, lines = self.run_check()
         self.assertTrue(failed)
-        self.assertTrue(any("90 minutes" in line for line in lines))
+        self.assertTrue(any("max_runtime_minutes is 120 but the approved cap for Session 1 history is 90 minutes" in line for line in lines))
         write_text(path, json.dumps(original))
-        self.set_pin("EMR_CUMULATIVE_CAP_USD", "2.00")  # 3 x 0.84 = 2.52 no longer fits
-        failed, _, lines = self.run_check()
-        self.assertTrue(failed)
-        self.assertTrue(any("cumulative cap" in line for line in lines))
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "2.52")  # the pre-P25 ledger: a pin owned elsewhere
+        failed, blocked, lines = self.run_check()
+        self.assertFalse(failed, "\n".join(lines))
+        self.assertTrue(blocked)
+        self.assertTrue(any("CHECK-BLOCKED: 15A ledger 3.36 USD over 4 runs" in line and "cumulative cap 2.52 USD" in line and "P25" in line for line in lines))
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")
+        self.set_pin("EMR_MAX_LIVE_RUNS", "3")  # a second S attempt would be run 4
+        failed, blocked, lines = self.run_check()
+        self.assertTrue(blocked and not failed)
 
     def test_allocation_over_the_shared_cap_fails(self):
         path = self.manifest_path("llm-allocation.json")
@@ -334,8 +515,9 @@ class RenderAndCheck(Fixture):
             self.assertEqual(render.main(["--out-dir", target]), 1)  # exists
             self.assertEqual(render.main(["--out-dir", target + "2", "--sha", "job-jar=xyz"]), 1)
             self.assertEqual(render.main(["--out-dir", target + "3", "--sha", "unknown=" + HEX_A]), 1)
-        committed = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-25.json"))
-        self.assertEqual(read_json(os.path.join(target, "15a-emr-size-25.json")), zero_artifact_hashes(committed))  # equal in structure whether the committed hashes are zero or real
+        self.assertEqual(sorted(os.listdir(target)), ["15a-emr-size-100.json"])
+        committed = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-100.json"))
+        self.assertEqual(zero_artifact_hashes(read_json(os.path.join(target, "15a-emr-size-100.json"))), zero_artifact_hashes(committed))  # equal in structure whether the hashes are zero or real
 
 
 class SubsetBuilder(unittest.TestCase):
@@ -448,6 +630,124 @@ class SubsetBuilder(unittest.TestCase):
         self.assertEqual(got[100]["counts"]["distinct_exact_author_strings"], manifest["selection"]["distinctExactAuthorStrings"])
         self.assertTrue(got[100]["byte_identical_to_source"])
         self.assertEqual(got[100]["dblp_file_sha256"], manifest["output"]["sha256"])
+
+
+class SparkEmrTemplate(unittest.TestCase):
+    """P24: the experiment-owned EMR Spark template (both sizes) is the Phase 6 first-run config with 64 shuffle partitions and neutral path keys."""
+
+    def setUp(self):
+        self.template = read_json(os.path.join(EXPERIMENTS, "inputs", "15a", "spark-emr-template.json"))
+        self.phase6 = read_json(os.path.join(REPO, "docs", "agent-runs", "phase-06", "evidence", "6fg", "local-spark-first-config.json"))
+
+    def test_only_the_shuffle_partitions_and_the_four_replaced_path_keys_differ_from_phase6(self):
+        self.assertEqual(list(self.template), list(self.phase6))  # same keys, same order
+        differ = sorted(k for k in self.template if self.template[k] != self.phase6[k])
+        self.assertEqual(differ, sorted(PATH_KEYS + ("shufflePartitions",)))
+        self.assertEqual((self.phase6["shufflePartitions"], self.template["shufflePartitions"]), (4, 64))  # the accepted 14C export value
+        for key in PATH_KEYS:
+            self.assertEqual(self.template[key], "/replaced-at-run-time/" + key)  # no local user path is uploaded
+
+    def test_the_phase6_evidence_file_is_unchanged(self):
+        with open(os.path.join(REPO, "docs", "agent-runs", "phase-06", "evidence", "6fg", "local-spark-first-config.json"), "rb") as handle:
+            self.assertEqual(hashlib.sha256(handle.read()).hexdigest(), "753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458")
+
+    def test_the_template_has_exactly_the_fields_of_the_core_contract(self):
+        contract = read_json(os.path.join(REPO, "modules", "core", "src", "main", "resources", "scholarchain.spark-analytics-config.v1.json"))
+        self.assertEqual(sorted(self.template), sorted(contract))  # SparkAnalyticsConfigLoader rejects unknown and missing fields
+        self.assertEqual(self.template["configSchemaVersion"], contract["configSchemaVersion"])
+
+    def test_the_emr_render_step_replaces_exactly_the_four_path_keys(self):
+        with tempfile.TemporaryDirectory(prefix="spark-render-") as scratch:
+            out = os.path.join(scratch, "rendered.json")
+            args = ["/mnt/x/hadoop", "/mnt/x/er", "/mnt/x/spark", "/mnt/x/checkpoints"]
+            done = subprocess.run([sys.executable, "-I", os.path.join(REPO, "scripts", "emr", "sc-render-spark-config.py"),
+                                   os.path.join(EXPERIMENTS, "inputs", "15a", "spark-emr-template.json"), out] + args, capture_output=True, text=True, timeout=60)
+            self.assertEqual(done.returncode, 0, done.stderr)
+            rendered = read_json(out)
+        self.assertEqual([rendered[k] for k in PATH_KEYS], args)
+        self.assertEqual({k: v for k, v in rendered.items() if k not in PATH_KEYS}, {k: v for k, v in self.template.items() if k not in PATH_KEYS})
+
+
+class LInput(unittest.TestCase):
+    """P21: --tree-label and the one-command L build (synthetic S and L slices; the real run is recorded in the lane report)."""
+
+    RECORD = '<inproceedings mdate="2020-01-01" key="conf/%s/k%05d">\n<author>A%d</author>\n<author>B%d</author>\n<title>T.</title>\n<year>2010</year>\n</inproceedings>'
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="exp-l-input-")
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        # L: 10,600 records (the renderer requires more than the 10,577-work S slice); S: the podc records, a strict subset
+        records = [self.RECORD % ("podc" if i < 300 else "usenix", i, i, i) for i in range(10600)]
+        frame = lambda rs: '<?xml version="1.0" encoding="UTF-8"?>\n<dblp>\n' + "\n".join(rs) + "\n</dblp>\n"
+        self.l_xml = os.path.join(self.tmp, "l", "dblp.xml")
+        self.s_xml = os.path.join(self.tmp, "s", "dblp.xml")
+        write_text(self.l_xml, frame(records))
+        write_text(self.s_xml, frame(records[:300]))
+        sha = build_l.sha256_file
+        self.s_manifest = os.path.join(self.tmp, "s-manifest.json")
+        write_text(self.s_manifest, json.dumps({"output": {"sha256": sha(self.s_xml)}, "selection": {"publicationCount": 300}}))
+        self.l_manifest = os.path.join(self.tmp, "l-manifest.json")
+        self.l_doc = {"output": {"path": self.l_xml, "sha256": sha(self.l_xml)}, "selection": {"publicationCount": 10600},
+                      "nestingCheck": {"result": "PASS", "sManifest": {"sha256": sha(self.s_manifest)}}}
+        write_text(self.l_manifest, json.dumps(self.l_doc))
+        self.evidence = os.path.join(self.tmp, "size-l-local-evidence.json")
+        write_text(self.evidence, json.dumps({"slice": {"publicationCount": 10600, "sha256": sha(self.l_xml)}}))
+        self.out = os.path.join(self.tmp, "trees")
+
+    def run_build(self):
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            rc = build_l.main(["--l-slice-manifest", self.l_manifest, "--s-slice-manifest", self.s_manifest, "--s-xml", self.s_xml,
+                               "--output-root", self.out, "--evidence", self.evidence])
+        return rc, buffer.getvalue()
+
+    def test_one_command_builds_the_tree_checks_nesting_and_the_evidence_record(self):
+        manifests_before = sorted(os.listdir(os.path.join(EXPERIMENTS, "manifests")))
+        rc, out = self.run_build()
+        self.assertEqual(rc, 0, out)
+        self.assertIn("L-NESTING PASS (300 S keys, all in the 10600 size-l keys)", out)
+        info = read_json(os.path.join(self.out, "size-l.subset.json"))
+        self.assertEqual((info["tree_label"], info["counts"]["publications"], info["byte_identical_to_source"]), ("size-l", 10600, True))
+        base = os.path.join(self.out, "size-l", "datasets", "samples")
+        for name in ("dblp/linked-records.xml", "openalex/works.jsonl", "crossref/works.jsonl", "orcid/records.jsonl"):
+            self.assertTrue(os.path.isfile(os.path.join(base, name)), name)
+        self.assertIn("L-EVIDENCE", out)
+        self.assertEqual(sorted(os.listdir(os.path.join(EXPERIMENTS, "manifests"))), manifests_before)  # no EMR manifest is written for L
+        rc, out = self.run_build()  # an existing tree is never overwritten
+        self.assertEqual(rc, 1)
+        self.assertIn("already exists", out)
+
+    def test_a_missing_or_unproven_l_slice_is_refused(self):
+        os.remove(self.l_manifest)
+        rc, out = self.run_build()
+        self.assertEqual(rc, 1)
+        self.assertIn("is not delivered yet", out)
+        self.l_doc["nestingCheck"]["sManifest"]["sha256"] = HEX_A
+        write_text(self.l_manifest, json.dumps(self.l_doc))
+        rc, out = self.run_build()
+        self.assertEqual(rc, 1)
+        self.assertIn("is not the committed S manifest", out)
+        self.assertFalse(os.path.exists(self.out))
+
+    def test_a_stale_evidence_record_is_refused(self):
+        write_text(self.evidence, json.dumps({"slice": {"publicationCount": 10599, "sha256": self.l_doc["output"]["sha256"]}}))
+        rc, out = self.run_build()
+        self.assertEqual(rc, 1)
+        self.assertIn("update the evidence record", out)
+
+    def test_an_l_slice_that_does_not_match_its_manifest_is_refused(self):
+        with open(self.l_xml, "a", encoding="utf-8") as handle:
+            handle.write(" ")
+        rc, out = self.run_build()
+        self.assertEqual(rc, 1)
+        self.assertIn("does not match the slice manifest sha256", out)
+
+    def test_tree_label_needs_exactly_one_size(self):
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            rc = subsets.main(["--source", self.l_xml, "--slice-manifest", self.l_manifest, "--output-root", self.out, "--sizes", "50,100", "--tree-label", "size-l"])
+        self.assertEqual(rc, 1)
+        self.assertIn("--tree-label needs exactly one size", buffer.getvalue())
 
 
 if __name__ == "__main__":

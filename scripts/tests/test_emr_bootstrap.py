@@ -494,6 +494,74 @@ class JavaHomeSeparatorTests(BootstrapCase):
         self.assertEqual((keys.count(self.AM), keys.count(self.EX)), (1, 1))
         self.assertEqual(len(keys), len(lines) + 2)
 
+    def test_the_real_decision_12_10_conf_pins_one_task_retry_and_one_application_attempt(self):
+        """Phase 15: spark.task.maxFailures is 2 (one retry of a transient task failure) and spark.yarn.maxAppAttempts stays 1."""
+        with open(os.path.join(SCRIPTS_DIR, "config", "spark-12-10.conf"), encoding="utf-8") as handle:
+            settings = {}
+            for line in handle:
+                if line.strip() and not line.startswith("#"):
+                    key, _, value = line.rstrip("\n").partition(" ")
+                    self.assertNotIn(key, settings, "duplicate key " + key)
+                    settings[key] = value
+        self.assertEqual(settings.get("spark.task.maxFailures"), "2")
+        self.assertEqual(settings.get("spark.yarn.maxAppAttempts"), "1")
+
+
+class EfsMountRetryTests(BootstrapCase):
+    """Phase 15 P7 (Session 1 finding S1-F2, BOOTSTRAP_FAILURE "EFS mount failed"): the EFS mount is retried at most 10 times, 15 s apart
+    (9 sleeps, 135 s of waiting), each attempt logged, then the bootstrap fails with exit 5. A fake mount fails its first N-1 calls
+    (a counter file) and a fake sleep only logs, so the test does not wait."""
+
+    def setUp(self):
+        super().setUp()
+        self.counter = os.path.join(self.tmp, "mount-count")
+        self.add_shim("sleep", "exit 0")
+        self.add_shim("mount", 'n=$(( $(cat "$MOUNT_COUNTER" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$MOUNT_COUNTER"\n'
+                               'if [[ "$n" -lt "$MOUNT_SUCCEEDS_AT" ]]; then echo "mount.nfs4: Failed to resolve server" >&2; exit 32; fi\n'
+                               'for last; do :; done; echo "fs $last efs rw 0 0" >> "$SC_PROC_MOUNTS"; exit 0')
+
+    def run_with(self, succeeds_at):
+        return self.run_bs(self.args(), MOUNT_COUNTER=self.counter, MOUNT_SUCCEEDS_AT=str(succeeds_at))
+
+    def mounts(self):
+        return [line for line in self.order() if line.startswith("mount ")]
+
+    def sleeps(self):
+        return [line for line in self.order() if line.startswith("sleep ")]
+
+    def test_the_first_attempt_succeeds_without_sleeping(self):
+        result = self.run_with(1)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(self.mounts()), 1)
+        self.assertEqual(self.sleeps(), [])
+        self.assertIn("EFS mount attempt 1/10: fs-0123abcd access point fsap-0123abcd", result.stderr)
+
+    def test_a_mount_that_succeeds_on_the_fourth_attempt_completes_the_bootstrap(self):
+        result = self.run_with(4)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(self.mounts()), 4)
+        self.assertEqual(self.sleeps(), ["sleep 15"] * 3)
+        for attempt in (1, 2, 3):
+            self.assertIn("EFS mount attempt %d failed; retrying in 15 s" % attempt, result.stderr)
+        self.assertIn("EFS mount attempt 4/10", result.stderr)
+        self.assertIn("EFS mounted at %s" % self.mnt, result.stderr)
+        self.assertIn("bootstrap complete", result.stderr)
+        self.assertTrue(os.path.isdir(os.path.join(self.mnt, "runs")), "the primary prepares EFS after the late mount")
+
+    def test_the_tenth_attempt_is_the_last_one_that_can_succeed(self):
+        result = self.run_with(10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((len(self.mounts()), len(self.sleeps())), (10, 9))
+
+    def test_a_mount_that_never_succeeds_fails_loudly_with_exit_5_after_10_attempts(self):
+        result = self.run_with(11)
+        self.assertEqual(result.returncode, 5, result.stderr)
+        self.assertEqual(len(self.mounts()), 10, "bounded: never an 11th attempt")
+        self.assertEqual(self.sleeps(), ["sleep 15"] * 9, "135 s of waiting in total, no sleep after the last attempt")
+        self.assertIn("FATAL: EFS mount failed after 10 attempts (15 s apart)", result.stderr)
+        self.assertNotIn("bootstrap complete", result.stderr)
+        self.assertFalse(os.path.exists(os.path.join(self.mnt, "runs")), "nothing is prepared on a local directory")
+
 
 class SyntaxTests(unittest.TestCase):
     def test_bash_syntax_and_shellcheck_zero_findings_and_strict_mode(self):

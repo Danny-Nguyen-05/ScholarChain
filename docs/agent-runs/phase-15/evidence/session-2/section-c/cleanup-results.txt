@@ -1,0 +1,652 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 7 source file(s); redacted.
+
+## <repo>/target/phase15/session2/evidence/cleanup-prepare-plan.log (169 lines, sha256 4d908854d0945b73004b51178a742a91cfac48460c30c6ee3d7845b478fc14bf)
+STEP: start
+[2026-11-18T21:50:01Z] [20261118T215001Z-25148] INFO script=cleanup.sh mode=execute run_id=20261118T215001Z-25148 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T21:50:01Z] [20261118T215001Z-25148] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+STEP: output-paths
+[2026-11-18T21:50:01Z] [20261118T215001Z-25148] INFO plan outputs go to the fresh target/plans/20261118T215001Z-25148 (ignored); evidence goes to target/cleanup-evidence/20261118T215001Z-25148 (absent beforehand)
+STEP: account-identity
+[2026-11-18T21:50:02Z] [20261118T215001Z-25148] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+[2026-11-18T21:50:03Z] [20261118T215001Z-25148] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T21:50:03Z] [20261118T215001Z-25148] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 784, "sha256": "bcf4d0fbaa0fceecc8735c7bac62f9598c2fba4a000e1fb245925589f4922fc5"}
+STEP: protection-check
+STEP: prepare-plan
+STEP: prepare-policy
+STEP: plan-receipt
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+RESULT: PASS preparation plan recorded, NOT applied; apply it with scripts/deploy.sh --stage cleanup-prepare after the approval record, then re-run the cleanup listing
+
+## <repo>/target/phase15/session2/evidence/cleanup-prepare-dry.log (44 lines, sha256 af7dbfaf4b3119320eacf3654db1fae9bf49324f4ea89766e0cc6941805c1f8a)
+STEP: start
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO script=deploy.sh mode=dry-run run_id=20261118T215106Z-25981 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 784 sha256 bcf4d0fbaa0fceecc8735c7bac62f9598c2fba4a000e1fb245925589f4922fc5
+STEP: plan-inspect
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize bd0b8180b919ed61f6234fa515f4c07d1137a641, compare its tree hash with the receipt, then run:
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: release-manifest
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO cleanup-prepare pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: account-check
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: terraform-apply
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO NEXT: re-run scripts/cleanup.sh (listing); the protection check must now pass
+STEP: write-deploy-manifest
+[2026-11-18T21:51:06Z] [20261118T215106Z-25981] INFO dry run: would write target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-cleanup-prepare-20261118T215106Z-25981.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage cleanup-prepare: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+
+## <repo>/target/phase15/session2/evidence/cleanup-prepare.log (148 lines, sha256 6d33171c0128f0ff5cdb18f0e0f9a3de65382c6730159b04227d52e578ea4fd4)
+STEP: start
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO script=deploy.sh mode=execute run_id=20261118T215122Z-26347 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO clean tree at bd0b8180b919ed61f6234fa515f4c07d1137a641
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+STEP: plan-checksum
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+STEP: state-binding
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 784 sha256 bcf4d0fbaa0fceecc8735c7bac62f9598c2fba4a000e1fb245925589f4922fc5
+STEP: plan-inspect
+[2026-11-18T21:51:22Z] [20261118T215122Z-26347] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+STEP: release-manifest
+[2026-11-18T21:51:25Z] [20261118T215122Z-26347] INFO cleanup-prepare pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-18T21:51:25Z] [20261118T215122Z-26347] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: account-check
+[2026-11-18T21:51:26Z] [20261118T215122Z-26347] INFO account sha256 matches the approval record
+STEP: terraform-apply
+[2026-11-18T21:51:26Z] [20261118T215122Z-26347] INFO pre-spend receipt re-verified before terraform-apply
+[2026-11-18T21:51:26Z] [20261118T215122Z-26347] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 784 sha256 bcf4d0fbaa0fceecc8735c7bac62f9598c2fba4a000e1fb245925589f4922fc5
+[2026-11-18T21:52:00Z] [20261118T215122Z-26347] INFO NEXT: re-run scripts/cleanup.sh (listing); the protection check must now pass
+STEP: write-deploy-manifest
+RESULT: PASS stage cleanup-prepare complete for bd0b8180b919ed61f6234fa515f4c07d1137a641; manifest=<repo>/target/release/bd0b8180b919ed61f6234fa515f4c07d1137a641/deploy-manifest-cleanup-prepare-20261118T215122Z-26347.json
+
+## <repo>/target/phase15/session2/evidence/cleanup-list-1.log (626 lines, sha256 58821fa533d1e126d9d872479a0f2d04b7b4271bee5a756e37d28ffb1cdc1f7e)
+STEP: start
+[2026-11-18T21:52:34Z] [20261118T215234Z-26875] INFO script=cleanup.sh mode=execute run_id=20261118T215234Z-26875 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T21:52:34Z] [20261118T215234Z-26875] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+STEP: output-paths
+[2026-11-18T21:52:34Z] [20261118T215234Z-26875] INFO plan outputs go to the fresh target/plans/20261118T215234Z-26875 (ignored); evidence goes to target/cleanup-evidence/20261118T215234Z-26875 (absent beforehand)
+STEP: account-identity
+[2026-11-18T21:52:35Z] [20261118T215234Z-26875] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+[2026-11-18T21:52:35Z] [20261118T215234Z-26875] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T21:52:35Z] [20261118T215234Z-26875] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 805, "sha256": "e32e65cf705a9894f74813bdb97d3b86ee242e8694e2ecf37380fb8d9766a68a"}
+STEP: before-inventory
+[2026-11-18T21:52:37Z] [20261118T215234Z-26875] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T21:52:37Z] [20261118T215234Z-26875] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+[2026-11-18T21:52:37Z] [20261118T215234Z-26875] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+[2026-11-18T21:52:38Z] [20261118T215234Z-26875] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T21:52:38Z] [20261118T215234Z-26875] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+[2026-11-18T21:57:21Z] [20261118T215234Z-26875] INFO before inventory: 298 entries
+STEP: classify-state
+STEP: protection-check
+STEP: destroy-plan
+STEP: destroy-policy
+DESTROY-ACTION: delete aws_acm_certificate.api[0]
+DESTROY-ACTION: delete aws_acm_certificate_validation.api[0]
+DESTROY-ACTION: delete aws_secretsmanager_secret.<redacted>[0]
+DESTROY-ACTION: delete aws_secretsmanager_secret.<redacted>[0]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["reports"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+DESTROY-ACTION: delete module.identity.aws_iam_instance_profile.emr
+DESTROY-ACTION: delete module.identity.aws_iam_role.deployment
+DESTROY-ACTION: delete module.identity.aws_iam_role.emr_ec2
+DESTROY-ACTION: delete module.identity.aws_iam_role.emr_service
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.neptune_loader
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.emr_data
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.neptune_loader
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_kms_alias.data
+DESTROY-ACTION: delete module.identity.aws_kms_key.data
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue.dead_letter
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue.embedding
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_policy.tls["dead_letter"]
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_policy.tls["embedding"]
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter
+DESTROY-ACTION: delete module.neptune.aws_neptune_cluster.data[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_cluster_instance.writer[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_cluster_parameter_group.data[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_parameter_group.data[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_subnet_group.data[0]
+DESTROY-ACTION: delete module.network.aws_eip.nat
+DESTROY-ACTION: delete module.network.aws_internet_gateway.course
+DESTROY-ACTION: delete module.network.aws_nat_gateway.course
+DESTROY-ACTION: delete module.network.aws_route.default["application"]
+DESTROY-ACTION: delete module.network.aws_route.default["public"]
+DESTROY-ACTION: delete module.network.aws_route_table.application
+DESTROY-ACTION: delete module.network.aws_route_table.data
+DESTROY-ACTION: delete module.network.aws_route_table.public
+DESTROY-ACTION: delete module.network.aws_route_table_association.application["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.application["1"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.data["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.data["1"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.public["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.public["1"]
+DESTROY-ACTION: delete module.network.aws_security_group.emr_service_access
+DESTROY-ACTION: delete module.network.aws_security_group.role["alb"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["emr"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["endpoints"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["neptune"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_subnet.application["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.application["1"]
+DESTROY-ACTION: delete module.network.aws_subnet.data["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.data["1"]
+DESTROY-ACTION: delete module.network.aws_subnet.public["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.public["1"]
+DESTROY-ACTION: delete module.network.aws_vpc.course
+DESTROY-ACTION: delete module.network.aws_vpc_endpoint.gateway["dynamodb"]
+DESTROY-ACTION: delete module.network.aws_vpc_endpoint.gateway["s3"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["alb_query"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["graph_neptune"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["query_graph"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["query_semantic"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_self
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["emr"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.neptune_s3
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.alb["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["alb_query"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["graph_neptune"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["query_graph"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["query_semantic"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_self
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["emr"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_dashboard.elasticity[0]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.neptune_audit
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.api_errors
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.latency["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.latency["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.queue_age
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.http_cpu["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.http_cpu["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.http_cpu["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.query_requests[0]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_cluster.course
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_lb.query[0]
+DESTROY-ACTION: delete module.runtime.aws_lb_listener.https[0]
+DESTROY-ACTION: delete module.runtime.aws_lb_target_group.query[0]
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_private_dns_namespace.course
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_service.http["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_service.http["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_service.http["<redacted>"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["collaboration-community-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["collaboration-path-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["<redacted>"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["topic-institution-summary-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_vector_bucket_policy.tls
+DESTROY-ACTION: delete module.workflow.aws_iam_role.producer
+DESTROY-ACTION: delete module.workflow.aws_iam_role_policy.producer
+DESTROY-ACTION: delete module.workflow.aws_sfn_state_machine.embedding_dispatch
+DESTROY-ACTION: delete terraform_data.phase12b_guard
+CONFIRM-TOKEN: b0d4a4219c58f156925bbfda9c3fc31c18b03b626b8ae36dfac9ae53bfbb1750
+STEP: confirm
+[2026-11-18T21:57:37Z] [20261118T215234Z-26875] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm b0d4a4219c58f156925bbfda9c3fc31c18b03b626b8ae36dfac9ae53bfbb1750 --plan <repo>/target/plans/20261118T215234Z-26875/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm b0d4a4219c58f156925bbfda9c3fc31c18b03b626b8ae36dfac9ae53bfbb1750 --plan <repo>/target/plans/20261118T215234Z-26875/destroy-course.tfplan; nothing was destroyed
+
+## <repo>/target/phase15/session2/evidence/cleanup-pass-1.log (423 lines, sha256 e2b21c398b6bf79675ebbb909736e6cd2be6728e1a44624d866039bc20859693)
+STEP: start
+[2026-11-18T22:10:38Z] [20261118T221038Z-29957] INFO script=cleanup.sh mode=execute run_id=20261118T221038Z-29957 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T22:10:39Z] [20261118T221038Z-29957] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+STEP: output-paths
+[2026-11-18T22:10:39Z] [20261118T221038Z-29957] INFO plan outputs go to the fresh target/plans/20261118T221038Z-29957 (ignored); evidence goes to target/cleanup-evidence/20261118T221038Z-29957 (absent beforehand)
+STEP: account-identity
+[2026-11-18T22:10:39Z] [20261118T221038Z-29957] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+[2026-11-18T22:10:40Z] [20261118T221038Z-29957] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T22:10:40Z] [20261118T221038Z-29957] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 805, "sha256": "e32e65cf705a9894f74813bdb97d3b86ee242e8694e2ecf37380fb8d9766a68a"}
+STEP: before-inventory
+[2026-11-18T22:10:42Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:10:42Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+[2026-11-18T22:10:42Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+[2026-11-18T22:10:43Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:10:43Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+[2026-11-18T22:15:36Z] [20261118T221038Z-29957] INFO before inventory: 297 entries
+STEP: verify-saved-plan
+DESTROY-ACTION: delete aws_acm_certificate.api[0]
+DESTROY-ACTION: delete aws_acm_certificate_validation.api[0]
+DESTROY-ACTION: delete aws_secretsmanager_secret.<redacted>[0]
+DESTROY-ACTION: delete aws_secretsmanager_secret.<redacted>[0]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["reports"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+DESTROY-ACTION: delete module.identity.aws_iam_instance_profile.emr
+DESTROY-ACTION: delete module.identity.aws_iam_role.deployment
+DESTROY-ACTION: delete module.identity.aws_iam_role.emr_ec2
+DESTROY-ACTION: delete module.identity.aws_iam_role.emr_service
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.neptune_loader
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.emr_data
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.neptune_loader
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["<redacted>"]
+DESTROY-ACTION: delete module.identity.aws_kms_alias.data
+DESTROY-ACTION: delete module.identity.aws_kms_key.data
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue.dead_letter
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue.embedding
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_policy.tls["dead_letter"]
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_policy.tls["embedding"]
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter
+DESTROY-ACTION: delete module.neptune.aws_neptune_cluster.data[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_cluster_instance.writer[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_cluster_parameter_group.data[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_parameter_group.data[0]
+DESTROY-ACTION: delete module.neptune.aws_neptune_subnet_group.data[0]
+DESTROY-ACTION: delete module.network.aws_eip.nat
+DESTROY-ACTION: delete module.network.aws_internet_gateway.course
+DESTROY-ACTION: delete module.network.aws_nat_gateway.course
+DESTROY-ACTION: delete module.network.aws_route.default["application"]
+DESTROY-ACTION: delete module.network.aws_route.default["public"]
+DESTROY-ACTION: delete module.network.aws_route_table.application
+DESTROY-ACTION: delete module.network.aws_route_table.data
+DESTROY-ACTION: delete module.network.aws_route_table.public
+DESTROY-ACTION: delete module.network.aws_route_table_association.application["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.application["1"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.data["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.data["1"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.public["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.public["1"]
+DESTROY-ACTION: delete module.network.aws_security_group.emr_service_access
+DESTROY-ACTION: delete module.network.aws_security_group.role["alb"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["emr"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["endpoints"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["neptune"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_subnet.application["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.application["1"]
+DESTROY-ACTION: delete module.network.aws_subnet.data["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.data["1"]
+DESTROY-ACTION: delete module.network.aws_subnet.public["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.public["1"]
+DESTROY-ACTION: delete module.network.aws_vpc.course
+DESTROY-ACTION: delete module.network.aws_vpc_endpoint.gateway["dynamodb"]
+DESTROY-ACTION: delete module.network.aws_vpc_endpoint.gateway["s3"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["alb_query"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["graph_neptune"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["query_graph"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["query_semantic"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_self
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["emr"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.neptune_s3
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.alb["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["alb_query"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["graph_neptune"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["query_graph"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["query_semantic"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_self
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["emr"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_dashboard.elasticity[0]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.neptune_audit
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.api_errors
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.latency["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.latency["<redacted>"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.queue_age
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.http_cpu["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.http_cpu["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.http_cpu["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_policy.query_requests[0]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_appautoscaling_target.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_cluster.course
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_service.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_task_definition.service["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_lb.query[0]
+DESTROY-ACTION: delete module.runtime.aws_lb_listener.https[0]
+DESTROY-ACTION: delete module.runtime.aws_lb_target_group.query[0]
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_private_dns_namespace.course
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_service.http["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_service.http["<redacted>"]
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_service.http["<redacted>"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["collaboration-community-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["collaboration-path-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["<redacted>"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["topic-institution-summary-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_vector_bucket_policy.tls
+DESTROY-ACTION: delete module.workflow.aws_iam_role.producer
+DESTROY-ACTION: delete module.workflow.aws_iam_role_policy.producer
+DESTROY-ACTION: delete module.workflow.aws_sfn_state_machine.embedding_dispatch
+DESTROY-ACTION: delete terraform_data.phase12b_guard
+[2026-11-18T22:15:38Z] [20261118T221038Z-29957] INFO confirmation token matches the exact saved plan, the live account hash, region, environment and action list
+STEP: protection-check
+STEP: destroy-apply
+  | module.network.aws_subnet.public["1"]: Destruction complete after 0s
+  | module.network.aws_security_group.role["endpoints"]: Destruction complete after 0s
+  | module.network.aws_security_group.emr_service_access: Destruction complete after 1s
+  | module.network.aws_security_group.role["neptune"]: Destruction complete after 2s
+  | module.network.aws_security_group.role["<redacted>"]: Destruction complete after 1s
+  | module.network.aws_vpc.course: Destruction complete after 1s
+  | module.messaging.aws_sqs_queue.dead_letter: Destruction complete after 2m10s
+  | module.identity.aws_kms_key.data: Destruction complete after 1s
+  | │ Error: disassociating EC2 EIP (eipassoc-03750b44246bae20b): operation error EC2: DisassociateAddress, https response error StatusCode: 403, RequestID: 99a9372f-4f13-40e8-8120-87bfe589187a, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator is not authorized to perform: ec2:DisassociateAddress on resource: arn:aws:ec2:us-east-2:<acct>:*/* because no identity-based policy allows the ec2:DisassociateAddress action. Encoded authorization failure message: EKlG2S7gYGe_V5RzXuAcDLzsOgqS6m8tSVIwjC-CvDkKkwppU8VUyqN01OAMFAF1UQOhaeGY1WiP-JjrPtoNcnMb6fElCRp_Z-eUvG8Pw_9oeMSmAwYDgyONdqEbXmSodtEMqp0Bwp-CshFChJ0ap1jPMysuuFM3mZ_u_0nJxnPk4vExo5CKNEe6CQNVeMljPdpCdgkpGPtKxHHAKjHBh6RfdukZx8c9dTINP2ZhbYMOG-YiwGbrocL6WFsbI2HlvjP9vxvPRJWGpJ1hFiu0StDHxSE9Rnze1kjwWGYkAKCKvezNzzzrBTWu1ZjkoZbLIOcV1bc_5Msw8-1i5yl3Ho8T4BuwkRbnx75DIDlFCZfLGOQ3cz2m70QxZ-UYrK_kyBoy1mHXwf4hMabwwjNvkmJFBOKWiTcaOQMZf5aB4r1m263pcW2lXZWsHgOD8RXflGoAclHkL-5-WvxTgs3pPuBAMCH42_WSirj5bUgNPI98cpgKIvumARQFYPs9I6DsbhdgA1M1roz23DLtXPgLg5lPEi6FKI0
+[2026-11-18T22:27:30Z] [20261118T221038Z-29957] WARN destroy apply failed for infra/terraform (exit 1); on pass 1 aws_eip.nat DisassociateAddress 403 is the expected carried item 24; do not widen IAM
+STEP: after-inventory
+[2026-11-18T22:27:31Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:27:31Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+[2026-11-18T22:27:31Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+[2026-11-18T22:27:32Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:27:32Z] [20261118T221038Z-29957] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+[2026-11-18T22:27:36Z] [20261118T221038Z-29957] INFO after inventory: 65 entries
+[2026-11-18T22:27:36Z] [20261118T221038Z-29957] INFO before=297 entries, after=65 entries; files in <repo>/target/cleanup-evidence/20261118T221038Z-29957
+RESULT: PARTIAL destroy pass incomplete (apply exit 1); run the listing again for the second pass; before=297 after=65
+
+## <repo>/target/phase15/session2/evidence/cleanup-list-2.log (139 lines, sha256 e5b3d25113792b05ee77e702135af532444dec75bdecfa0a2d0507e3099fd1ee)
+STEP: start
+[2026-11-18T22:32:24Z] [20261118T223224Z-34185] INFO script=cleanup.sh mode=execute run_id=20261118T223224Z-34185 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T22:32:24Z] [20261118T223224Z-34185] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+STEP: output-paths
+[2026-11-18T22:32:24Z] [20261118T223224Z-34185] INFO plan outputs go to the fresh target/plans/20261118T223224Z-34185 (ignored); evidence goes to target/cleanup-evidence/20261118T223224Z-34185 (absent beforehand)
+STEP: account-identity
+[2026-11-18T22:32:25Z] [20261118T223224Z-34185] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+[2026-11-18T22:32:25Z] [20261118T223224Z-34185] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T22:32:25Z] [20261118T223224Z-34185] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1007, "sha256": "73d90bc2dcd8f24b285264bea5ba35821d45ac9111d5e1d60b5713b9850015a1"}
+STEP: before-inventory
+[2026-11-18T22:32:27Z] [20261118T223224Z-34185] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:32:27Z] [20261118T223224Z-34185] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+[2026-11-18T22:32:27Z] [20261118T223224Z-34185] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+[2026-11-18T22:32:28Z] [20261118T223224Z-34185] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:32:28Z] [20261118T223224Z-34185] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+[2026-11-18T22:32:32Z] [20261118T223224Z-34185] INFO before inventory: 65 entries
+STEP: classify-state
+STEP: protection-check
+STEP: destroy-plan
+STEP: destroy-policy
+DESTROY-ACTION: delete module.network.aws_eip.nat
+CONFIRM-TOKEN: 52881220c8f4e85cbe1201e918860e17da8b4587a8f755f05567611a19f768de
+STEP: confirm
+[2026-11-18T22:32:39Z] [20261118T223224Z-34185] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 52881220c8f4e85cbe1201e918860e17da8b4587a8f755f05567611a19f768de --plan <repo>/target/plans/20261118T223224Z-34185/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 52881220c8f4e85cbe1201e918860e17da8b4587a8f755f05567611a19f768de --plan <repo>/target/plans/20261118T223224Z-34185/destroy-course.tfplan; nothing was destroyed
+
+## <repo>/target/phase15/session2/evidence/cleanup-pass-2.log (222 lines, sha256 973687fed39c50ea3a6734769e7b937a39f31e4099e9d81e4b95f118f785a917)
+STEP: start
+[2026-11-18T22:33:17Z] [20261118T223317Z-34981] INFO script=cleanup.sh mode=execute run_id=20261118T223317Z-34981 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-18T22:33:17Z] [20261118T223317Z-34981] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+STEP: output-paths
+[2026-11-18T22:33:17Z] [20261118T223317Z-34981] INFO plan outputs go to the fresh target/plans/20261118T223317Z-34981 (ignored); evidence goes to target/cleanup-evidence/20261118T223317Z-34981 (absent beforehand)
+STEP: account-identity
+[2026-11-18T22:33:18Z] [20261118T223317Z-34981] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+[2026-11-18T22:33:18Z] [20261118T223317Z-34981] INFO materialized infra/terraform at bd0b8180b919ed61f6234fa515f4c07d1137a641 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=236c8af58d2ba1762451e69811940f8973511af152f2e735e81bcc0068e6c450
+[2026-11-18T22:33:18Z] [20261118T223317Z-34981] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1007, "sha256": "73d90bc2dcd8f24b285264bea5ba35821d45ac9111d5e1d60b5713b9850015a1"}
+STEP: before-inventory
+[2026-11-18T22:33:20Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:33:20Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+[2026-11-18T22:33:21Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+[2026-11-18T22:33:21Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:33:21Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+[2026-11-18T22:33:25Z] [20261118T223317Z-34981] INFO before inventory: 65 entries
+STEP: verify-saved-plan
+DESTROY-ACTION: delete module.network.aws_eip.nat
+[2026-11-18T22:33:26Z] [20261118T223317Z-34981] INFO confirmation token matches the exact saved plan, the live account hash, region, environment and action list
+STEP: protection-check
+STEP: destroy-apply
+STEP: after-inventory
+[2026-11-18T22:33:31Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:33:31Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+[2026-11-18T22:33:32Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+[2026-11-18T22:33:32Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+  | │ Error: Required plugins are not installed
+[2026-11-18T22:33:32Z] [20261118T223317Z-34981] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+[2026-11-18T22:33:36Z] [20261118T223317Z-34981] INFO after inventory: 63 entries
+[2026-11-18T22:33:36Z] [20261118T223317Z-34981] INFO before=65 entries, after=63 entries; files in <repo>/target/cleanup-evidence/20261118T223317Z-34981
+RESULT: PASS destroy pass complete; before=65 after=63; evidence=<repo>/target/cleanup-evidence/20261118T223317Z-34981

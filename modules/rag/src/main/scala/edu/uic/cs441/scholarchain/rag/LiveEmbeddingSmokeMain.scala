@@ -352,7 +352,8 @@ object LiveEmbeddingSmokeMain {
         val p = Path.of(path); require(Files.size(p) <= max); Files.readString(p, UTF_8)
       }
       val configText = bounded(input("--config"), 65536)
-      val manifestText = bounded(input("--manifest"), 16L * 1024 * 1024)
+      val manifestText =
+        bounded(input("--manifest"), LiveEmbeddingConfig.MaxManifestBytesCeiling.toLong)
       val approvalText = bounded(input("--approval"), 65536)
       val approval = read[LiveEmbeddingApproval](approvalText)
       if (
@@ -454,8 +455,13 @@ object LiveEmbeddingSmokeMain {
     case e: ProviderConfigurationError => Left(e.code)
     case NonFatal(_)                   => Left("smoke-input-or-execution-failed")
   }
-  def main(args: Array[String]): Unit = run(args.toSeq) match {
-    case Right(report) => println(report.render())
-    case Left(code)    => throw new IllegalArgumentException(code)
+  // P38: storage's ToolLogging selects the packaged tool logging (root INFO; AWS SDK, Apache HTTP
+  // and Netty at WARN) before any logger exists, unless the operator set logback.configurationFile.
+  def main(args: Array[String]): Unit = {
+    ToolLogging.install()
+    run(args.toSeq) match {
+      case Right(report) => println(report.render())
+      case Left(code)    => throw new IllegalArgumentException(code)
+    }
   }
 }

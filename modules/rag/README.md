@@ -603,6 +603,43 @@ would pass the cap, 15,000,000 tokens at the defaults, before it is sent. The fi
 tokens per account are free, but the counter and every bound still price all tokens. The counter
 is a local control and not the provider invoice.
 
+### Query-embedding cache: `CachingEmbeddingClient` (P40)
+
+Purpose (session-2 plan P40, finding F25): the semantic route embeds every question, and the
+elasticity load repeats a fixed set of about 100-200 questions, so without a cache every request
+calls Voyage. `CachingEmbeddingClient(underlying, maxEntries)` wraps the query client and calls it
+once per distinct question while the entry stays cached. It is a decorator only; wiring, the size
+setting and `/metrics` belong to the services.
+
+- **Identity.** It reports the underlying `model` (id, version, dimension) and `provider` unchanged
+  (a client without a declared provider gets the one `VectorConsistency.checkClient` would infer),
+  so the startup consistency check gives the same answer with or without it.
+- **Keying.** Underlying provider and model tag plus the SHA-256 of the exact text (no trimming or
+  case folding). The clear text is never stored in a key. The `EmbeddingClient` interface has no
+  query/document input type; it is fixed when the underlying client is built, and one cache wraps
+  one client, so wrap the query client only.
+- **Bounds.** In-memory LRU per process, `maxEntries` > 0 (default
+  `CachingEmbeddingClient.DefaultMaxEntries` = 1,024), least recently used evicted first, no TTL.
+  Memory is roughly entries x dimension boxed floats (about 5 MB at 1,024 x 256).
+- **Calls.** One underlying call per `embed` with only the distinct misses, in first-occurrence
+  order; none when every text hits. Results keep input order and cardinality.
+- **Counters.** `stats: EmbeddingCacheStats(hits, misses, evictions, size, capacity)`, read under
+  the cache lock. `misses` equals the number of texts sent to the underlying client; `hits` counts
+  input texts answered without their own underlying request. The counters never decrease.
+- **Not cached.** `EmbeddingFailure` results; a success with another model, wrong dimension or a non
+  finite value (then nothing from that response is cached and it is returned unchanged); null
+  texts (passed through each time). If the underlying client throws, the exception propagates
+  unchanged and nothing is cached; a wrong-length or null-element response throws
+  `IllegalStateException` with the closed code `embedding-cache-result-count-mismatch` or
+  `embedding-cache-null-result`, and nothing is cached. A failed text is retried on the next call.
+- **Concurrency.** Thread-safe; the underlying call runs outside the lock. Racing misses for the
+  same text are not coalesced: each racing thread may call the underlying client once (each counts
+  as a miss, the later insert replaces the earlier one), so warm-up can cost up to one extra call
+  per concurrent request for a question. Cached results keep the original `attempts`.
+- **No text in output.** Nothing logs; `toString` and `stats` show identity and numbers only.
+
+`CachingEmbeddingClientSpec` covers these rules with a counting in-memory fake.
+
 ### Tests
 
 `AnthropicLlmSpec`, `VoyageEmbeddingSpec`, `ProviderSelectionSpec` and `LiveEmbeddingProviderSpec`

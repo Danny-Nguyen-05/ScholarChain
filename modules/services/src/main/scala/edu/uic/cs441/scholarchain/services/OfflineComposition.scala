@@ -17,7 +17,8 @@ final class OfflineComposition(
     config: ServiceConfig,
     remoteGraph: Option[GraphEndpoints] = None,
     remoteSemantic: Option[SemanticEndpoints] = None,
-    sharedMetrics: Option[ServiceMetrics] = None
+    sharedMetrics: Option[ServiceMetrics] = None,
+    embeddingCacheEntries: Int = EmbeddingCacheSettings.default
 ) {
   val sessions = new InMemoryQuerySessionStore
   val evidence = new InMemoryIndexedEvidenceBundleStore
@@ -68,8 +69,14 @@ final class OfflineComposition(
   private val vectors = new InMemoryVectorStore
   private val index = "synthetic-offline-services-v1"
   vectors.ensureIndex(index, 8, "cosine")
-  val semantic: SemanticEndpoints =
-    remoteSemantic.getOrElse(SemanticApi.fromPorts(embedding, embedding.model, vectors, index))
+  // The in-process semantic route embeds questions through the same bounded cache as aws mode,
+  // so a local rehearsal reads hit and miss counters from /metrics. A remote semantic service
+  // owns its own cache; nothing is registered here then.
+  val semantic: SemanticEndpoints = remoteSemantic.getOrElse {
+    val cached = new CachingEmbeddingClient(embedding, embeddingCacheEntries)
+    metrics.registerEmbeddingCache(() => cached.stats)
+    SemanticApi.fromPorts(cached, embedding.model, vectors, index)
+  }
   val extended = ExtendedApi(new EvidenceApi(evidence, audits, Some(sessions)), graph, semantic)
 
   val workflow: QueryWorkflow = new QueryWorkflow {

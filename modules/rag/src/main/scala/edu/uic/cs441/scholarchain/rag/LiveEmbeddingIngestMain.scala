@@ -45,8 +45,11 @@ final case class LiveEmbeddingConfig(
     assumedUsdPerMillionEmbeddingTokens: Double = VoyageDefaults.UsdPerMillionTokens.toDouble,
     minBytesPerEmbeddingToken: Int = 1,
     embeddingProvider: String = "",
-    embeddingCapUsd: Double = VoyageDefaults.CapUsd.toDouble
-) derives ReadWriter {
+    embeddingCapUsd: Double = VoyageDefaults.CapUsd.toDouble,
+    // Session-2 plan P26 (b): work items the storage runner processes at once (1 = sequential).
+    // Bound by the approval's concurrencyCap in preflight.
+    ingestConcurrency: Int = 1
+) {
   require(schemaVersion == "scholarchain.embedding-live.v1")
   require(embeddingCapUsd.isFinite && embeddingCapUsd > 0)
   require(
@@ -76,8 +79,18 @@ final case class LiveEmbeddingConfig(
   require(
     maxVectors > 0 && maxConcurrentCalls > 0 && maxEmbeddingAttempts > 0 && maxEmbeddingCalls > 0
   )
-  require(requestTimeoutMillis > 0 && maxManifestBytes > 0 && maxManifestBytes <= 16 * 1024 * 1024)
+  require(
+    requestTimeoutMillis > 0 && maxManifestBytes > 0 &&
+      maxManifestBytes <= LiveEmbeddingConfig.MaxManifestBytesCeiling
+  )
+  // `batchSize` (1..500) is both the vectors per S3 Vectors put and, since session-2 plan P26, the
+  // texts per embedding request of the ingest lookahead batcher; 500 is below Voyage's documented
+  // 1,000-text request limit (`VoyageDefaults.MaxTextsPerRequest`).
   require(batchSize > 0 && batchSize <= 500)
+  require(
+    ingestConcurrency >= 1 && ingestConcurrency <= EmbeddingIngestConfig.MaxIngestConcurrency,
+    "invalid-ingest-concurrency"
+  )
   require(
     Vector(dollarCapUsd, assumedMaxDollarsPerEmbeddingAttempt, assumedMaxStorageDollarsPerVector)
       .forall(v => v.isFinite && v > 0) && fixedOverheadUsd.isFinite && fixedOverheadUsd >= 0
@@ -116,14 +129,51 @@ final case class LiveEmbeddingConfig(
     metric,
     maxManifestItems = maxVectors,
     maxManifestBytes = maxManifestBytes,
-    batchSize = batchSize
+    batchSize = batchSize,
+    ingestConcurrency = ingestConcurrency
   )
+
+  /** Storage adapter settings of the live ingest. One SDK attempt (the runner owns retries). The
+    * run ledger reads a run back as one DynamoDB Query (root row plus one stage row per item), so
+    * the page size times the page limit must hold `maxVectors + 1` rows: at the storage default of
+    * 100 x 100 a 10,000-item run failed `completeRun` with `query-page-limit`. 1,000 rows per page
+    * (each page also stays under DynamoDB's 1 MB page cap at these row sizes) gives 100,000 rows.
+    */
+  def storageSettings: edu.uic.cs441.scholarchain.storage.StorageConfig =
+    edu.uic.cs441.scholarchain.storage.StorageConfig(
+      textBucket,
+      tables,
+      retry = RetryConfig(maxAttempts = 1),
+      queryPageSize = LiveEmbeddingConfig.LedgerQueryPageSize
+    )
+
+  /** Rows one ledger read must return for this run: the root plus one stage per manifest item. */
+  def ledgerRowsFit(items: Int): Boolean =
+    BigInt(items) + 1 <= BigInt(storageSettings.queryPageSize) * BigInt(
+      storageSettings.maxQueryPages
+    )
 }
 object LiveEmbeddingConfig {
+  // Reader and writer are derived separately and joined: one `derives ReadWriter` over 29 fields
+  // exceeds Scala 3's 32 successive inlines. Same field names, defaults and omission rules.
+  implicit val readWriter: ReadWriter[LiveEmbeddingConfig] =
+    ReadWriter.join(
+      upickle.default.macroR[LiveEmbeddingConfig],
+      upickle.default.macroW[LiveEmbeddingConfig]
+    )
 
   /** DynamoDB index-name rule: 3 to 255 characters from letters, digits, underscore, dot, hyphen.
     */
   val IndexNamePattern: scala.util.matching.Regex = "[A-Za-z0-9_.-]{3,255}".r
+
+  /** Hard ceiling for `maxManifestBytes` and for the manifest file read by both live mains. The
+    * default stays 16 MiB; about 10,000 Phase 6 items render to about 20.5 MB (session-2 plan P26,
+    * `Phase15VectorScaleSpec`), so a 10,000-item run sets `maxManifestBytes` explicitly.
+    */
+  val MaxManifestBytesCeiling: Int = 64 * 1024 * 1024
+
+  /** DynamoDB Query page size of the live ingest's storage adapters (see `storageSettings`). */
+  val LedgerQueryPageSize: Int = 1000
 }
 final case class LiveEmbeddingApproval(
     executionApproved: Boolean,
@@ -269,6 +319,7 @@ object LiveEmbeddingIngestMain {
               .forall((ordinal, index) => ordinal == index)
           }
         if (!validItems || !validGroups) Left("live-manifest-invalid-or-partial-group")
+        else if (!config.ledgerRowsFit(items.size)) Left("live-ledger-page-capacity")
         else Right(manifest)
       }
 
@@ -300,7 +351,9 @@ object LiveEmbeddingIngestMain {
     else {
       val config = read[LiveEmbeddingConfig](configText)
       val embedding = config.embedding
-      if (
+      if (config.ingestConcurrency > approval.concurrencyCap)
+        Left("live-approval-ingest-concurrency-cap")
+      else if (
         config.environment != approval.environment || approval.vectorCap < 1 || approval.concurrencyCap < 1 ||
         approval.embeddingCallCap < 1 || !approval.dollarCapUsd.isFinite || approval.dollarCapUsd <= 0 ||
         config.maxVectors > approval.vectorCap || config.maxConcurrentCalls > approval.concurrencyCap ||
@@ -336,15 +389,52 @@ object LiveEmbeddingIngestMain {
     }
   } catch { case NonFatal(_) => Left("invalid-live-config-manifest-or-approval") }
 
-  /** Pure formatting seam; it neither executes ingestion nor constructs providers. */
+  /** The ingest embedder: the ports' client behind the lookahead batcher (session-2 plan P26 (b)).
+    * Texts per call are the config's `batchSize`, in manifest order.
+    */
+  private[rag] def batchingEmbedder(
+      plan: LiveEmbeddingPlan,
+      embedder: EmbeddingClient
+  ): LookaheadBatchingEmbeddingClient =
+    new LookaheadBatchingEmbeddingClient(
+      embedder,
+      plan.manifest.items.map(_.document.text),
+      plan.config.batchSize
+    )
+
+  /** Pure formatting seam; it neither executes ingestion nor constructs providers. `batch` adds the
+    * ingest batcher's counters; `embeddingCalls` stays the runner's per-item attempt sum.
+    */
   def report(
       plan: LiveEmbeddingPlan,
       result: EmbeddingIngestReport,
       runId: String,
       configSha256: String,
       manifestSha256: String,
+      approvalSha256: String,
+      batch: Option[EmbeddingBatchStats] = None
+  ): ujson.Value = {
+    val base = baseReport(plan, result, runId, configSha256, manifestSha256, approvalSha256)
+    batch.foreach { b =>
+      base("embeddingBatch") = ujson.Obj(
+        "batchSize" -> b.batchSize,
+        "underlyingCalls" -> b.underlyingCalls.toString,
+        "textsSent" -> b.textsSent.toString,
+        "servedFromBatch" -> b.servedFromBatch.toString,
+        "passThrough" -> b.passThrough.toString,
+        "unusedPrefetched" -> b.unusedPrefetched.toString
+      )
+    }
+    base
+  }
+  private def baseReport(
+      plan: LiveEmbeddingPlan,
+      result: EmbeddingIngestReport,
+      runId: String,
+      configSha256: String,
+      manifestSha256: String,
       approvalSha256: String
-  ): ujson.Value = ujson.Obj(
+  ): ujson.Obj = ujson.Obj(
     "schemaVersion" -> "scholarchain.embedding-live-report.v1",
     "mode" -> "approved-live",
     "runId" -> runId,
@@ -358,6 +448,7 @@ object LiveEmbeddingIngestMain {
     "embeddingModelVersion" -> plan.config.model.version,
     "dimension" -> plan.config.model.dimension,
     "selectedVectors" -> plan.manifest.items.size,
+    "ingestConcurrency" -> plan.config.ingestConcurrency,
     "maxEmbeddingRequests" -> plan.maxEmbeddingRequests.toString,
     "embeddingTokenBound" -> plan.plannedEmbeddingTokens.toString,
     "assumedUpperBoundUsd" -> plan.assumedUpperBoundUsd.toString,
@@ -421,9 +512,7 @@ object LiveEmbeddingIngestMain {
       sys.env.get(EmbeddingClientFactory.VoyageKeyEnvName),
       () => bedrock
     ).fold(code => throw new ProviderConfigurationError(code), identity)
-    val storageConfig =
-      edu.uic.cs441.scholarchain.storage
-        .StorageConfig(config.textBucket, config.tables, retry = RetryConfig(maxAttempts = 1))
+    val storageConfig = config.storageSettings
     val objectStore = new S3ObjectStore(s3, storageConfig)
     val artifacts = new DynamoArtifactRegistry(dynamo, storageConfig)
     val vectorConfig = VectorAdapterConfig(
@@ -488,7 +577,8 @@ object LiveEmbeddingIngestMain {
         val p = Path.of(path); require(Files.size(p) <= max); Files.readString(p, UTF_8)
       }
       val configText = bounded(input("--config"), 65536)
-      val manifestText = bounded(input("--manifest"), 16L * 1024 * 1024)
+      val manifestText =
+        bounded(input("--manifest"), LiveEmbeddingConfig.MaxManifestBytesCeiling.toLong)
       val approvalText = bounded(input("--approval"), 65536)
       val approval = read[LiveEmbeddingApproval](approvalText)
       if (!approval.executionApproved || !approval.pricingValidated || !approval.budgetValidated)
@@ -505,6 +595,7 @@ object LiveEmbeddingIngestMain {
         ).flatMap { plan =>
           val ports = factory(plan.config)
           try {
+            val embedder = batchingEmbedder(plan, ports.embedder)
             consistency(plan.config, ports.embedder)
               .flatMap(_ => value(ports.indexesReady()))
               .flatMap { _ =>
@@ -515,7 +606,7 @@ object LiveEmbeddingIngestMain {
                     ports.vectors,
                     ports.registry,
                     ports.ledger,
-                    ports.embedder
+                    embedder
                   ).run(plan.manifest, input("--run-id"))
                 ).flatMap { result =>
                   val report = this.report(
@@ -524,7 +615,8 @@ object LiveEmbeddingIngestMain {
                     input("--run-id"),
                     StableIds.sha256Hex(configText),
                     StableIds.sha256Hex(manifestText),
-                    StableIds.sha256Hex(approvalText)
+                    StableIds.sha256Hex(approvalText),
+                    Some(embedder.stats)
                   )
                   val path = Path.of(input("--report"));
                   Option(path.toAbsolutePath.getParent).foreach(Files.createDirectories(_))
@@ -542,8 +634,13 @@ object LiveEmbeddingIngestMain {
     case e: ProviderConfigurationError => Left(e.code)
     case NonFatal(_)                   => Left("live-input-or-execution-failed")
   }
-  def main(args: Array[String]): Unit = run(args.toSeq) match {
-    case Right(report) => println(report.render())
-    case Left(code)    => throw new IllegalArgumentException(code)
+  // P38: storage's ToolLogging selects the packaged tool logging (root INFO; AWS SDK, Apache HTTP
+  // and Netty at WARN) before any logger exists, unless the operator set logback.configurationFile.
+  def main(args: Array[String]): Unit = {
+    ToolLogging.install()
+    run(args.toSeq) match {
+      case Right(report) => println(report.render())
+      case Left(code)    => throw new IllegalArgumentException(code)
+    }
   }
 }

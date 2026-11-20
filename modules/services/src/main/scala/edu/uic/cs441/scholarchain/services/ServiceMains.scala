@@ -80,8 +80,17 @@ object ServiceBootstrap {
         if (!modes(mode)) {
           System.err.println("unsupported-service-mode"); return Left(2)
         }
-        if (mode == "aws") launchAws(role, env, config, factory)
-        else launchLocal(role, env, config, mode == "offline-synthetic")
+        RateLimitSettings.fromEnvironment(env) match {
+          case Left(code)  => System.err.println(code); Left(2)
+          case Right(rate) =>
+            // One limiter per process: the public semantic route's per-key token buckets.
+            val route = new PublicSemanticRoute(
+              PublicSemanticLimits(),
+              new TokenBucketRateLimiter(rate)
+            )
+            if (mode == "aws") launchAws(role, env, config, factory, route)
+            else launchLocal(role, env, config, mode == "offline-synthetic", route)
+        }
     }
   } catch { case NonFatal(_) => System.err.println("invalid-service-configuration"); Left(2) }
 
@@ -89,7 +98,8 @@ object ServiceBootstrap {
       role: String,
       env: Map[String, String],
       config: ServiceConfig,
-      factory: AwsPortFactory
+      factory: AwsPortFactory,
+      route: PublicSemanticRoute
   ): Either[Int, RunningService] = {
     val refusal = (code: String) => { System.err.println(code); Left(2) }
     AwsServiceConfig.fromEnvironment(role, env, config) match {
@@ -103,7 +113,8 @@ object ServiceBootstrap {
               config,
               readiness = () => composition.ready,
               serviceRole = role,
-              extended = composition.extended
+              extended = composition.extended,
+              semanticRoute = route
             )
             val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
             val worker = composition.worker.map { w =>
@@ -121,39 +132,35 @@ object ServiceBootstrap {
       role: String,
       env: Map[String, String],
       config: ServiceConfig,
-      validMode: Boolean
+      validMode: Boolean,
+      route: PublicSemanticRoute
   ): Either[Int, RunningService] = {
     val workerConfig = BootstrapConfig.worker(env)
-    val composition = new OfflineComposition(config)
+    val cacheEntries = EmbeddingCacheSettings.fromEnvironment(env) match {
+      case Left(code)  => System.err.println(code); return Left(2)
+      case Right(size) => size
+    }
     // In explicit offline mode query-api can call independently running graph/semantic
     // artifacts through real HTTP clients. Raw runtime token is required only for those calls.
+    // The remote decision is made before any composition is built, so no discarded composition
+    // registers an embedding cache on the shared metrics.
     val graphUri = env.get("SCHOLARCHAIN_GRAPH_BASE_URI")
     val semanticUri = env.get("SCHOLARCHAIN_SEMANTIC_BASE_URI")
     val configuredRemote = role == "query-api" && (graphUri.nonEmpty || semanticUri.nonEmpty)
+    val metrics = new ServiceMetrics
     val bundle = if (configuredRemote) {
-      if (graphUri.isEmpty || semanticUri.isEmpty) {
-        composition.queries.close(); composition.extended.close(); return Left(2)
-      }
+      if (graphUri.isEmpty || semanticUri.isEmpty) return Left(2)
       val token =
         env.getOrElse("SCHOLARCHAIN_INTERNAL_TOKEN", throw new IllegalArgumentException)
       if (Auth.sha256(token) != config.internalTokenSha256) throw new IllegalArgumentException
       val graph = new RemoteGraphApi(
-        new RemoteService(URI.create(graphUri.get), token, config, composition.metrics, "graph")
+        new RemoteService(URI.create(graphUri.get), token, config, metrics, "graph")
       )
       val semantic = new RemoteSemanticApi(
-        new RemoteService(
-          URI.create(semanticUri.get),
-          token,
-          config,
-          composition.metrics,
-          "semantic"
-        )
+        new RemoteService(URI.create(semanticUri.get), token, config, metrics, "semantic")
       )
-      val remoteComposition =
-        new OfflineComposition(config, Some(graph), Some(semantic), Some(composition.metrics))
-      composition.queries.close(); composition.extended.close()
-      remoteComposition
-    } else composition
+      new OfflineComposition(config, Some(graph), Some(semantic), Some(metrics), cacheEntries)
+    } else new OfflineComposition(config, None, None, Some(metrics), cacheEntries)
     val workflow =
       if (validMode) bundle.workflow
       else
@@ -172,7 +179,8 @@ object ServiceBootstrap {
       config,
       readiness = () => validMode && bundle.ready,
       serviceRole = role,
-      extended = if (validMode) Some(bundle.extended) else None
+      extended = if (validMode) Some(bundle.extended) else None,
+      semanticRoute = route
     )
     val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
     val worker = if (role == "embedding-worker" && validMode) {

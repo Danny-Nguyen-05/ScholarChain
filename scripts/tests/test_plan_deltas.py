@@ -44,7 +44,9 @@ class Expected(unittest.TestCase):
         self.assertIn("not an approval", self.doc["status"])
         self.assertEqual(self.doc["provenance"]["source_test"], "infra/terraform/tests/phase14b_plan_deltas.tftest.hcl")
         self.assertEqual(self.doc["provenance"]["terraform_version"], "1.13.5")
-        self.assertEqual(set(self.doc["stages"]), {"pointer-apply", "emr-apply"})
+        # Phase 15 P7 added the Session 2 stages; each carries its own provenance (scripts/tests/test_stagea_apply_path.py).
+        self.assertEqual(set(self.doc["stages"]), {"pointer-apply", "emr-apply", "stagea-base", "stagea-emr-enable", "rb-base"})
+        self.assertEqual(set(self.doc["stages"]), set(pd.STAGES))
 
     def test_the_pointer_apply_is_one_replaced_task_definition_and_one_updated_service_of_query_api(self):
         stage = self.doc["stages"]["pointer-apply"]
@@ -78,11 +80,14 @@ class Expected(unittest.TestCase):
     def test_every_listed_address_names_a_resource_that_exists_in_the_terraform_source(self):
         for stage in self.doc["stages"].values():
             for entry in stage["actions"]:
-                module, rtype, name = re.match(r"^module\.([a-z_]+)\.([a-z0-9_]+)\.([a-z_0-9]+)(\[.*\])?$", entry["address"]).groups()[:3]
+                # Module resources are looked up in their module; root resources (the Phase 15 stage-a base plan lists the
+                # ACM certificate, the provider-key secrets and the guards) in the root directory.
+                module, rtype, name = re.match(r"^(?:module\.([a-z0-9_]+)\.)?([a-z0-9_]+)\.([a-z_0-9]+)(\[.*\])?$", entry["address"]).groups()[:3]
+                directory = os.path.join(REAL_REPO, "infra", "terraform", *(["modules", module] if module else []))
                 found = False
-                for fname in os.listdir(os.path.join(REAL_REPO, "infra", "terraform", "modules", module)):
+                for fname in os.listdir(directory):
                     if fname.endswith(".tf"):
-                        with open(os.path.join(REAL_REPO, "infra", "terraform", "modules", module, fname), encoding="utf-8") as handle:
+                        with open(os.path.join(directory, fname), encoding="utf-8") as handle:
                             found = found or ('resource "%s" "%s"' % (rtype, name)) in handle.read()
                 self.assertTrue(found, entry["address"])
 

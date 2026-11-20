@@ -1,0 +1,20 @@
+<!--
+  Storage test and AwsIntegration logging. AwsIntegration is forked and reads this directory, so without
+  this file logback would fall back to DEBUG and print SDK wire and signer lines with session tokens.
+  Same levels as scholarchain/tools-logback.xml; an explicit -Dlogback.configurationFile still wins.
+-->
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <pattern>%d{ISO8601} %-5level [%thread] %logger{20} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <logger name="org.apache.http" level="WARN"/>
+  <logger name="org.apache.hc" level="WARN"/>
+  <logger name="software.amazon.awssdk" level="WARN"/>
+  <logger name="io.netty" level="WARN"/>
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

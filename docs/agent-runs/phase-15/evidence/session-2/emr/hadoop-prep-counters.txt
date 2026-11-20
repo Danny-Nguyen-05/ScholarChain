@@ -1,0 +1,6 @@
+# Excerpt (generated): lines matching the RESULT/STEP/Plan/Apply/Error pattern of 2 source file(s); redacted.
+
+## <home>/Documents/scholarchain-session2-downloads/emr-step-logs/emr-hadoop-prep-stdout.txt (17 lines, sha256 ab0baaef836d9dcbda82ca57926c5f5be73a3977ac4f77b74d7fd96fad83390d)
+counters=INPUT:290343,ACCEPTED:515309,REJECTED:1243,DUPLICATE:0,CONFLICT:0,OVERSIZE_BLOCK:517,OVERSIZE_TEAM:63,EMITTED_PAIR:243321,MISSING_KEY:0,SCHEMA_FAILURE:21
+
+## <home>/Documents/scholarchain-session2-downloads/emr-step-logs/emr-entity-resolution-stdout.txt (2 lines, sha256 e0dcab5c9691aa5608b35443a8096a81cf9e35e543eca4c5fa9916f7e2c698a3)

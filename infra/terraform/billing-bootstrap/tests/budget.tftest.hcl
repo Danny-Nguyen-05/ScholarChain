@@ -50,15 +50,35 @@ run "one_cumulative_before_credit_account_budget" {
     error_message = "Credits/refunds must not hide pre-credit project usage; include taxes and support."
   }
   assert {
-    condition     = length(output.controls.budget.notifications) == 3 && toset([for n in output.controls.budget.notifications : n.threshold]) == toset([10, 15, 20]) && alltrue([for n in output.controls.budget.notifications : n.comparison == "GREATER_THAN" && n.type == "ABSOLUTE_VALUE" && n.basis == "ACTUAL"])
-    error_message = "Require exactly the three actual-spend absolute-value alerts: USD 10, 15 and 20."
+    condition     = length(output.controls.budget.notifications) == 3
+    error_message = "Require exactly three budget notifications."
   }
   assert {
-    condition     = !anytrue([for n in output.controls.budget.notifications : n.type == "PERCENTAGE"]) && !anytrue([for n in output.controls.budget.notifications : n.basis == "FORECASTED"]) && !anytrue([for n in output.controls.budget.notifications : contains([50, 80, 100], n.threshold)])
-    error_message = "No percentage, forecasted or legacy 50/80/100 alert may remain after the USD 25 replan."
+    condition     = alltrue([for n in output.controls.budget.notifications : n.comparison == "GREATER_THAN" && n.type == "ABSOLUTE_VALUE" && n.basis == "ACTUAL"])
+    error_message = "Every notification must be ACTUAL, ABSOLUTE_VALUE and GREATER_THAN."
+  }
+  # Hand-written expectation from the 2026-11-15 human decision, not derived
+  # from main.tf: USD 18, 20 and 22.
+  assert {
+    condition     = toset([for n in output.controls.budget.notifications : tonumber(n.threshold)]) == toset([18, 20, 22])
+    error_message = "Require exactly the actual-spend dollar alerts USD 18, 20 and 22 (2026-11-15 decision)."
   }
   assert {
-    condition     = alltrue([for n in output.controls.budget.notifications : n.threshold < tonumber(output.controls.budget.amount)])
+    condition     = !anytrue([for n in output.controls.budget.notifications : n.type == "PERCENTAGE"]) && !anytrue([for n in output.controls.budget.notifications : n.basis == "FORECASTED"])
+    error_message = "No PERCENTAGE or FORECASTED alert may remain after the USD 25 replan."
+  }
+  # USD 20 belongs to both the superseded 10/15/20 set and the new set, so the
+  # superseded set is refused as a whole and through its two unique members.
+  assert {
+    condition     = toset([for n in output.controls.budget.notifications : tonumber(n.threshold)]) != toset([10, 15, 20]) && !anytrue([for n in output.controls.budget.notifications : contains([10, 15], tonumber(n.threshold))])
+    error_message = "The superseded, never-applied USD 10/15/20 alert set must not remain."
+  }
+  assert {
+    condition     = !anytrue([for n in output.controls.budget.notifications : contains([50, 80, 100], tonumber(n.threshold))])
+    error_message = "No legacy 50/80/100 alert may remain after the USD 25 replan."
+  }
+  assert {
+    condition     = alltrue([for n in output.controls.budget.notifications : tonumber(n.threshold) < 25]) && alltrue([for n in output.controls.budget.notifications : tonumber(n.threshold) < tonumber(output.controls.budget.amount)])
     error_message = "Every dollar alert must sit strictly below the USD 25 ceiling."
   }
 }

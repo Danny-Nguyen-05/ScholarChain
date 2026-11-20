@@ -263,8 +263,8 @@ Activation flags do not authorize any cloud action; the human gates still apply.
 | --- | --- |
 | Neptune | One private serverless writer, IAM authentication, project CMK, audit export, subnet/cluster/instance parameter groups,7-day backups,1–2.5NCU, deletion protection and final snapshot outside cleanup. `neptune_enabled=false` until the user selects `neptune_engine_version` and matching `neptune_parameter_family`; no implicit latest engine or regional support claim. |
 | Vectors | Native vector bucket and exactly five float32 indexes,256 dimensions,cosine,project CMK,TLS Deny. Names match `VectorIndexes` in `modules/storage/.../Phase7Configs.scala:86-93`; planned dimension/metric match `modules/rag/README.md:57-61`. Every index marks exactly `textS3Uri` non-filterable, matching `VectorAdapterConfig` (`Phase7Configs.scala:67`) and live ingest/query GetIndex preflight. Changing dimension/metric/metadata requires an explicitly reviewed index migration. Since the USD 25 replan (W4) there is **no `prevent_destroy`** on the vector bucket or the indexes; `force_destroy` on the bucket follows `cleanup_mode`, so they can be deleted only after the cleanup preparation. |
-| EMR | Disabled by default. 13C: one primary plus one core on `emr-7.8.0` with applications `["Hadoop"]` only and the portable Spark runtime installed by `scripts/emr/bootstrap.sh`; **no task nodes and no managed scaling unless tfvars enable them**, at most one task node, `m5.xlarge` only (G3/G6 caps below); on-demand only; idle termination at most 900 s; encrypted S3, local disks and EBS; **in-transit TLS disabled** (disclosed limitation below); an encrypted EFS staging file system (G1 option ii). See "Phase 13C" below. |
-| ECS | One cluster with private DNS and Container Insights (`container_insights_enabled`, default true; the USD 25 cap tfvars sets false, which also removes the worker backlog policy because RunningTaskCount exists only with Container Insights). Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB; `service_capacity` also accepts cpu 256 with memory 1024 or 2048 (0.25 vCPU / 1 GiB for the cap plan). HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
+| EMR | Disabled by default. 13C: one primary plus one core on `emr-7.8.0` with applications `["Hadoop"]` only and the portable Spark runtime installed by `scripts/emr/bootstrap.sh`; **no task nodes and no managed scaling unless tfvars enable them**, at most one task node, core and task `m5.xlarge` only and the primary `r5.xlarge` by default (`m5.xlarge` allowed; Phase 15 D3) (G3/G6 caps below); on-demand only; idle termination at most 900 s; encrypted S3, local disks and EBS; **in-transit TLS disabled** (disclosed limitation below); an encrypted EFS staging file system (G1 option ii). See "Phase 13C" below. |
+| ECS | One cluster with private DNS and Container Insights (`container_insights_enabled`, default true; the USD 25 cap tfvars sets false, which also removes the worker backlog policy because RunningTaskCount exists only with Container Insights). Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB; `service_capacity` also accepts cpu 256 with memory 1024 or 2048 (0.25 vCPU / 1 GiB for the cap plan). HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; query-api can also track ALB requests per target when `query_requests_per_target_target` is set (Phase 15 P41, below); worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
 | Ingress | No HTTP listener. HTTPS443 requires an ACM certificate (an existing same-account/region ARN in `https_certificate_arn`, or one Terraform requests for `api_domain_name`; exactly one of the two, see "Phase 14B replan W5b") and approved CIDRs. Certificate remains unset and CIDRs empty. ALB access logging is intentionally OFF because the existing logs bucket uses SSE-KMS; ALB/S3 server access logs require an SSE-S3 destination. Ordinary application/EMR logs can still use that bucket. |
 | Workflow | Standard Step Functions dispatches one serialized EmbeddingWorkItem to the fixed embedding queue, with120s overall timeout,20s tasks, two retries and fixed DLQ failure routing. The separate `embedding-producer` execution identity trusts only this exact state machine/account and has queue-only SendMessage plus CMK rights. The Phase13 pipeline invokes it; no caller identity/StartExecution grant or production enqueue caller is invented here. |
 | Bedrock | Embedding participants only may InvokeModel on configured TitanV2 foundation-model ARN. `synthesis_model_id=null` means no query-api invocation grant. Model IDs are configurable, never wildcard; actual regional availability/model access is unverified. |
@@ -359,9 +359,9 @@ match task X86_64; Phase13 packaging owns that validation.
 
 ## Observability contract and honest missing data
 
-The dashboard separates task counts, utilization, queue depth/age, EMR nodes,
-Neptune, DynamoDB, API percentiles, graph/vector/LLM latency, usage/errors and
-workflow failures/timeouts. `dashboard_enabled` (default true; the USD 25 cap tfvars sets false) gates the
+The dashboard (reduced by Phase 15 P9 to at most 50 free native metrics; see "Phase 15 P9" below) shows HTTP-service
+utilization, queue depth/age, workflow failures/timeouts, DynamoDB throttles and, when their source exists, the query-api
+ALB panels, EMR nodes and Neptune. `dashboard_enabled` (default true; the USD 25 cap tfvars sets false) gates the
 dashboard resource; the alarms and log groups do not depend on it. Native EMR charts use300s intervals; Container Insights
 provides RunningTaskCount for worker metric math (policy absent when `container_insights_enabled=false`). The worker never scales to zero
 when activated, so a missing divisor does not deadlock scale-out; the metric math
@@ -380,8 +380,8 @@ contract**, not a claim about emitted names today:
 | LlmLatencySeconds / LlmInputTokens / LlmOutputTokens | Query service model-call latency samples / observed interval token counts. |
 | LlmEstimatedCostUsd | Explicitly computed publisher estimate using configured current model rates; absent until those inputs exist. Tokens are not silently converted to cost here. |
 
-Until Phase13/14 supplies and verifies that publisher, these panels/alarms remain
-empty or INSUFFICIENT_DATA. They are not measured performance, zero errors or an
+Until Phase13/14 supplies and verifies that publisher, these alarms remain
+INSUFFICIENT_DATA (Phase 15 P9 removed the matching dashboard panels, which never had data). They are not measured performance, zero errors or an
 operational alert. No PutMetricData wildcard grant or collector image is invented.
 DynamoDB charts use ReadThrottleEvents/WriteThrottleEvents with TableName; the
 ThrottledRequests metric would instead require Operation and is deliberately absent.
@@ -503,7 +503,9 @@ requirements in `tests/phase12c.tftest.hcl`; original12A/12B safety runs remain.
   DBClusterIdentifier and Average. DynamoDB conditional-write failures use
   TableName/Sum; successful-request latency uses TableName/Operation/Average,
   with seven adapter-relevant operations for each of six tables. Missing telemetry
-  and application publisher requirements are unchanged.
+  and application publisher requirements are unchanged. (Phase 15 P9 removed the
+  N12 conditional-write and per-operation latency panels from the dashboard; the
+  metrics stay readable in the CloudWatch console.)
 - N14: the workflow checks IsPresent before IsString in an ordered And condition;
   a missing workItem reaches InvalidWork rather than evaluating a missing string.
 - N17: service indexing decrypt is allowed for exactly this project's vector
@@ -540,7 +542,7 @@ are not established by this plan. N13 and optional N3/N4/N6 were not expanded.
 | --- | --- | --- |
 | Release and applications | `emr-7.8.0` (a validated tfvars value, pinned), `applications = ["Hadoop"]` only: the stock Spark 3.5.4-amzn / Scala 2.12 is never installed | `tests/phase13c.tftest.hcl` `main_emr_matches_decision_12_10`, `release_label_other_than_emr_7_8_0_is_rejected` |
 | Bootstrap | the real `scripts/emr/bootstrap.sh` (a human uploads it in Phase 14); Terraform passes its S3 URI and sha256, the runtime archive URI and sha256 (G5), the job JAR URI and sha256, the rendered spark-defaults with its sha256, the EFS ids and optional `extra_artifacts` (step scripts and config, each with sha256 and an allowed destination) | `bootstrap_args` assertions; `scripts/tests/test_emr_bootstrap.py` (36 tests) |
-| Spark settings | rendered by the module (variable `spark_defaults`, validated): `spark.yarn.jars=local:/opt/scholarchain-runtime/jars/*`, `populateHadoopClasspath=false`, codecs without LZO, `spark.authenticate`, AES-CTR with `authEngineVersion=1`, IO encryption, G2 `spark.dynamicAllocation.shuffleTracking.enabled=true`, YARN cluster mode (set by the pipeline step). JAVA_HOME is resolved on each node by the bootstrap and never rendered | `spark_settings_rendered_by_the_module_equal_scripts_config_spark_12_10_conf` FAILS when the rendered text differs from `scripts/config/spark-12-10.conf` (same keys, same values, 22 settings) |
+| Spark settings | rendered by the module (variable `spark_defaults`, validated): `spark.yarn.jars=local:/opt/scholarchain-runtime/jars/*`, `populateHadoopClasspath=false`, codecs without LZO, `spark.authenticate`, AES-CTR with `authEngineVersion=1`, IO encryption, `spark.task.maxFailures=2` (one task retry) with `spark.yarn.maxAppAttempts=1`, G2 `spark.dynamicAllocation.shuffleTracking.enabled=true`, YARN cluster mode (set by the pipeline step). JAVA_HOME is resolved on each node by the bootstrap and never rendered | `spark_settings_rendered_by_the_module_equal_scripts_config_spark_12_10_conf` FAILS when the rendered text differs from `scripts/config/spark-12-10.conf` (same keys, same values, 22 settings) |
 | Node paths | runtime `/opt/scholarchain-runtime`, job JAR under it, Java-home file `/opt/scholarchain-spike/java-home`, step-program directory `/opt/scholarchain-spike/bin` (`PIPELINE_STEP_BIN_DIR`), EFS mount `/mnt/scholarchain`: the values pinned in `scripts/config/release.conf` | `node_paths_equal_the_pinned_release_conf_paths`, `emr_step_programs_are_pinned_artifacts_in_the_release_conf_directory` |
 | EMR step programs (finding C1) | EMR accepts at most 10,280 characters per step argument, so the step runner `sc-step.sh` and three Python programs are installed on the primary node as sha256-pinned `extra_artifacts` in `/opt/scholarchain-spike/bin/` and each EMR step is only a short launcher plus parameters (see `scripts/README.md`). `infra/terraform/emr-step-programs.json` (inside the root, so the plan materialization contains it) pins the hashes; the root guard requires every program exactly once with that hash and directory when `emr_config.enabled` | `emr_without_the_step_programs_is_rejected`, `a_step_program_with_a_stale_sha256_is_rejected`, `a_step_program_installed_in_the_wrong_directory_is_rejected`, `a_missing_step_program_is_rejected`, `a_step_program_listed_twice_is_rejected`; the manifest equals `filesha256` of the files under `scripts/emr/` (asserted in the test) |
 | EFS staging (G1 option ii) | encrypted with the project CMK, elastic throughput, backups disabled, one mount target, a security group admitting NFS 2049 only from the EMR group (with a matching NFS-only egress rule on the EMR group), an access point fixing uid/gid 1500 and the root directory, and a file-system policy that denies non-TLS and admits the EMR instance role only through the access point. Created under the same flag as the cluster | `efs_staging_is_ported_and_scoped`, `emr_disabled_by_default_creates_nothing` |
@@ -562,6 +564,14 @@ the private subnet (the EMR security group admits only its own members and the s
 * **G3** `max_task_nodes` defaults to 0 and managed scaling to off; both are enabled only through `emr_config` in tfvars, with
   validated caps: `max_task_nodes` at most 1, `task_node_count` at most `max_task_nodes`, `managed_scaling_max_capacity`
   (core plus task, primary excluded) at most `1 + max_task_nodes`, idle timeout 60 to 900 s, instance type `m5.xlarge`.
+* **Phase 15 D3: primary type.** `emr_config.instance_type` is the core (and task) type, pinned to `m5.xlarge`;
+  `emr_config.primary_instance_type` is the primary (master) type, default `r5.xlarge`, validated to exactly `m5.xlarge` or
+  `r5.xlarge` (human decision and go-ahead, `docs/agent-runs/phase-15/prompt.md` "D3 decision" and "S run cap and D3
+  go-ahead", 2026-11-16): the single-JVM entity-resolution step runs on the primary with `PIPELINE_ER_XMX=12g`, which needs the
+  32 GiB r5.xlarge (supported from emr-7.0.0, so on the pinned emr-7.8.0). G6 with the r5 primary (0.252 + 0.063 USD/h): r5 +
+  core + one task m5 cost 0.795 x 3.25 h = 2.59 USD (2.58375 rounded up), inside the 3 USD cap; a fourth instance would cost 3.37 USD (3.36375 rounded up), so the one-task
+  bound stays the tightest. `tests/phase15_emr_primary.tftest.hcl` pins the default plan (master r5.xlarge, core m5.xlarge),
+  the refusals of every other primary and core type, and this arithmetic from the pinned files.
 * **G6 cross-check.** The estimate the scripts use is instances x (EC2 + EMR rate) x (maximum runtime + idle timeout). Under the
   pinned rates (m5.xlarge 0.192 + 0.048 USD/h), 180 minutes and 900 s, three instances cost 2.34 USD and four cost 3.12 USD,
   above the 3 USD per-run cap, so the Terraform bound is **one** task node (not the 12B bound of two). m5.2xlarge is rejected
@@ -876,3 +886,86 @@ Asserted by `tests/phase14b_providers.tftest.hcl` (`egress_to_the_provider_apis_
 ### Tests
 
 `cd infra/terraform && terraform init -backend=false && terraform test` (new test runs that use a `module` block need `terraform init` once so the test modules are registered). New: `tests/phase14b_providers.tftest.hcl` (defaults and identifiers, empty containers, no version/secret value, execution-role patterns, no Bedrock/Marketplace, environment and `secrets`, the Bedrock selections, guards, boundary closure, egress), three module runs in `tests/phase14b_cost_runtime.tftest.hcl`, and `deployer/tests/providers.tftest.hcl`. The earlier test files that assert the Bedrock path now select `synthesis_provider = "bedrock"` and `embedding_provider = "bedrock"` explicitly.
+
+## Phase 15 P41: ALB request-count scaling and the semantic rate-limit override (authored offline, nothing applied)
+
+Source: `docs/runbooks/session-2-plan.md` rows F26 and P41 and section 5.3 step 2; Work order 3 in `docs/agent-runs/phase-15/prompt.md`
+(defaults accepted 2026-11-16). Three optional root variables in `phase12b-variables.tf` (end of file), all default `null`. With all three `null`
+there is no new resource and no new environment variable; when the ALB exists and the dashboard is on, the dashboard gains the ALB panels
+regardless of these variables (P41 review 1 F2). Their Session 2 values come from the P35 rehearsal record and go in
+the private `course.local.tfvars` (commented template in `environments/course.local.tfvars.example`).
+
+| Root variable | Unit and range | Where it goes | `null` |
+| --- | --- | --- | --- |
+| `query_requests_per_target_target` | requests per target (query-api task) per **minute**, whole number 1-100000 | `module.runtime.aws_appautoscaling_policy.query_requests[0]`, target value | no request-count policy |
+| `query_semantic_rate_limit_per_second` | requests per **second** per API key per query-api task, whole number 1-100000 (r_S2) | `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND` on query-api | unset; service default 50 |
+| `query_semantic_rate_limit_burst` | token-bucket burst in requests, whole number 1-1000000 (2 x r_S2) | `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST` on query-api | unset; service default 100 |
+
+**Request-count policy.** A second target-tracking policy on the query-api scalable target, named `<prefix>-query-api-requests`, with the
+predefined metric `ALBRequestCountPerTarget`, `resource_label = "<ALB arn_suffix>/<target group arn_suffix>"`
+(`app/<name>/<id>/targetgroup/<name>/<id>`), scale-in cooldown 300 s, scale-out cooldown 60 s and scale-in enabled. Its count is
+`enabled && image_revision != null && query_requests_per_target_target != null`: the first two terms are the count of `aws_lb.query` and
+`aws_lb_target_group.query`, so the `[0]` references exist whenever the policy does, and with count 0 they are never evaluated. AWS accepts
+the label only when the target group is attached to the ECS service; here that needs HTTPS (a listener certificate), so a precondition
+refuses a plan that sets the target without HTTPS rather than failing at apply. The three CPU policies (`http_cpu`, target
+`cpu_target_percent`, 60 by default) are unchanged. With both policies on query-api, Application Auto Scaling scales out when either asks and
+scales in only when both allow it ([target tracking, "Multiple scaling policies"](https://docs.aws.amazon.com/autoscaling/application/userguide/target-tracking-scaling-policy-overview.html), read 2026-11-16).
+The deployer's existing `AppAutoScalingEcsServices` (`PutScalingPolicy`, `DeleteScalingPolicy` on `scalable-target/*`) and
+`CloudWatchAlarmsDashboardsOfTheMainStack` (`alarm:TargetTracking-*`) statements already cover it; no IAM change. Not live-verified.
+
+**Rate-limit override.** Each value reaches the query-api task environment as a decimal string, only in the aws service mode
+(`runtime_composition_verified`), and only when its own variable is set; no other role receives it. Neither is a secret. The module input
+names are `semantic_rate_limit_per_second` and `semantic_rate_limit_burst`.
+
+**Dashboard panel.** When the ALB exists (`module.runtime.alb_metric_dimensions` is non-null) and `dashboard_enabled = true`, the elasticity
+dashboard gains one panel "ALB requests per target and target 4XX (query-api)", period 60, statistic Sum, with two metrics:
+`AWS/ApplicationELB RequestCountPerTarget` by `TargetGroup`, and `HTTPCode_Target_4XX_Count` by `LoadBalancer` + `TargetGroup` (that
+metric has no TargetGroup-only dimension set; [ALB CloudWatch metrics](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html), read 2026-11-16).
+Both counts include 429 replies of the P40 rate limiter. The dimension values are ARN suffixes, so the dashboard body is "known after
+apply" in the plan that creates the ALB. **Metric count:** at P41 the dashboard had 109 metrics without Neptune, EMR and the ALB (116 with
+Neptune and this panel, 122 with all optional sources); Phase 15 P9 (below) reduced it to at most 43.
+
+**Tests.** `tests/phase15_p41.tftest.hcl` (root, 19 runs) and `tests/phase15_p41_runtime.tftest.hcl` (module, 13 runs); run
+`terraform init -backend=false` once so the module runs are registered, then `terraform test`. P41 review 1 F3 added the fractional-burst
+refusal (root and module) and the module run on the Session 2 ACM path (`https_enabled = true`, `certificate_arn = null`, target 600:
+exactly one request-count policy).
+
+## Phase 15 P9: elasticity dashboard on free native metrics, at most 50 (authored offline, nothing applied)
+
+Source: `docs/runbooks/session-2-plan.md` rows F5 and P9 (CloudWatch free tier: 3 dashboards of up to 50 metrics each per month). The
+dashboard (`modules/observability/main.tf`, still `count = dashboard_enabled ? 1 : 0`) now holds only `AWS/*` metrics:
+
+| Panel | Metrics | Condition |
+| --- | --- | --- |
+| ECS CPU and memory utilization (%), HTTP services | `AWS/ECS` CPUUtilization, MemoryUtilization by ClusterName + ServiceName for query-api, graph-service, semantic-service (6) | always |
+| Embedding queue and DLQ depth; oldest message age | `AWS/SQS` (3) | always |
+| Step Functions failures/timeouts | `AWS/States` (2) | always |
+| DynamoDB table throttle events | `AWS/DynamoDB` ReadThrottleEvents, WriteThrottleEvents by TableName, six tables (12) | always |
+| ALB healthy query-api targets | HealthyHostCount by LoadBalancer + TargetGroup, Minimum (1) | ALB exists |
+| ALB requests and 5XX (query-api) | RequestCount and HTTPCode_Target_5XX_Count by LoadBalancer + TargetGroup, HTTPCode_ELB_5XX_Count by LoadBalancer, Sum (3) | ALB exists |
+| ALB target response time p50/p95/p99 | TargetResponseTime by LoadBalancer + TargetGroup (3) | ALB exists |
+| ALB requests per target and target 4XX (P41) | RequestCountPerTarget by TargetGroup, HTTPCode_Target_4XX_Count by LoadBalancer + TargetGroup, Sum (2) | ALB exists |
+| EMR running/pending/requested nodes | `AWS/ElasticMapReduce` (6) | EMR cluster exists |
+| Neptune capacity and utilization; client/server errors | `AWS/Neptune` (3 + 2) | Neptune exists |
+
+Dimensions and statistics follow [ALB CloudWatch metrics](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html)
+(read 2026-11-16). **Counts** (before, after): base (109, 23), with the ALB (111, 32), with Neptune (114, 28), with EMR (115, 29), ALB +
+Neptune, the Session 2 R-b shape (116, 37), ALB + EMR (117, 38), Neptune + EMR (120, 34), all three (122, 43).
+
+**Dropped, with the reason.** 12 `ECS/ContainerInsights` task counts (Container Insights is off on the cap plan, so no data; when on they
+are billed custom metrics; the query-api task count is read from HealthyHostCount); 2 embedding-worker utilization series (not an HTTP
+service, fixed at one task in R-b); 12 custom-namespace application series (no publisher exists; the latency and error-percent alarms that
+read them are kept); 12 DynamoDB ConsumedRead/WriteCapacityUnits (on-demand tables: a cost signal, not a scaling limit; throttles are kept);
+6 ConditionalCheckFailedRequests and 42 per-operation SuccessfulRequestLatency series (Phase 12C N12: correctness and adapter latency, not
+elasticity; still readable in the CloudWatch console).
+
+**Tests.** `tests/phase15_elasticity_dashboard.tftest.hcl` (module, 9 runs: all 8 combinations with exact counts and `<= 50`, the ALB panel
+shapes, native namespaces only, dashboard off) and `tests/phase15_elasticity.tftest.hcl` (root: smallest plan 23 and largest plan 43).
+`tests/phase12b.tftest.hcl` and `tests/phase12c.tftest.hcl` were updated for the renamed throttle panel and the removed N12 panels.
+
+**Neptune capacity (P34, not changed).** P34 asked to allow `neptune_max_ncu = 1`. The Amazon Neptune User Guide, "Capacity scaling in a
+Neptune Serverless DB cluster" (read 2026-11-16), states that the smallest value for the maximum capacity is 2.5 NCUs and the lowest
+minimum is 1.0 NCU. The root guard (`phase12b.tf`, min >= 1, max exactly 2.5) therefore stays as it is, and
+`tests/phase15_elasticity.tftest.hcl` pins it (max 1 and max 3 refused by the guard; 1 to 2.5 accepted; min 0.5 is refused earlier by
+the AWS provider's own schema validation). The capacity ceiling remains 2.5 NCU
+(USD 0.402/hour at the 12B price above). The P34 decision is returned to the human.

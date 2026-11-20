@@ -1,7 +1,9 @@
 package edu.uic.cs441.scholarchain.services
 
+import edu.uic.cs441.scholarchain.rag.EmbeddingCacheStats
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.atomic.LongAdder
 import scala.jdk.CollectionConverters.*
 import scala.util.control.NonFatal
@@ -17,6 +19,24 @@ final class ServiceMetrics {
   private val downstreamTimeouts = new LongAdder
   private val graphDeadlines = new LongAdder
   private val breakers = new ConcurrentHashMap[String, () => String]()
+  private val routeStatuses = new ConcurrentHashMap[(String, Int), LongAdder]()
+  private val rateLimitedReplies = new LongAdder
+  private val embeddingCache = new AtomicReference[Option[() => EmbeddingCacheStats]](None)
+
+  /** Route labels come only from the application's closed route-template set, never from input. */
+  def observeRoute(route: String, status: Int): Unit = {
+    require(route.matches("[a-zA-Z0-9/{}_-]{1,64}"))
+    routeStatuses.computeIfAbsent((route, status), _ => new LongAdder).increment()
+  }
+
+  /** One 429 reply produced by the query-api semantic rate limiter (not downstream throttling). */
+  def rateLimited(): Unit = rateLimitedReplies.increment()
+
+  /** The query-embedding cache whose counters `/metrics` reports. One per process; a later
+    * registration replaces the earlier one.
+    */
+  def registerEmbeddingCache(stats: () => EmbeddingCacheStats): Unit =
+    embeddingCache.set(Some(stats))
   def registerBreaker(name: String, state: () => String): Unit = {
     require(name.matches("[a-zA-Z0-9_]{1,64}")); breakers.put(name, state); ()
   }
@@ -53,8 +73,24 @@ final class ServiceMetrics {
         s"api_downstream_errors_total ${downstreamErrors.sum()}",
         s"downstream_timeouts_total ${downstreamTimeouts.sum()}",
         s"graph_request_deadlines_total ${graphDeadlines.sum()}",
-        s"workflow_abstentions_total ${abstentions.sum()}"
+        s"workflow_abstentions_total ${abstentions.sum()}",
+        s"api_rate_limited_total ${rateLimitedReplies.sum()}"
       ) ++
+      routeStatuses.asScala.toVector
+        .sortBy((key, _) => key)
+        .map { case ((route, status), n) =>
+          s"api_route_requests_total{route=\"$route\",status=\"$status\"} ${n.sum()}"
+        } ++
+      embeddingCache.get.toVector.flatMap { stats =>
+        val s = stats()
+        Vector(
+          s"embedding_cache_hits_total ${s.hits}",
+          s"embedding_cache_misses_total ${s.misses}",
+          s"embedding_cache_evictions_total ${s.evictions}",
+          s"embedding_cache_size ${s.size}",
+          s"embedding_cache_capacity ${s.capacity}"
+        )
+      } ++
       verification.asScala.toVector
         .sortBy(_._1)
         .map((s, n) => s"workflow_verification_total{status=\"$s\"} ${n.sum()}") ++
@@ -91,16 +127,18 @@ final class ApiApplication(
     readiness: () => Boolean = () => true,
     logSink: String => Unit = s => org.slf4j.LoggerFactory.getLogger("scholarchain.http").info(s),
     serviceRole: String = "query-api",
-    extended: Option[ExtendedApi] = None
+    extended: Option[ExtendedApi] = None,
+    semanticRoute: PublicSemanticRoute = new PublicSemanticRoute()
 ) extends AutoCloseable {
   def requestByteLimit: Int = config.maxRequestBytes
   def requestReadTimeoutMs: Int = config.requestReadTimeoutMs
   private def safeId(value: Option[String], prefix: String): String =
     value.filter(_.matches("[a-zA-Z0-9._:-]{1,128}")).getOrElse(prefix + UUID.randomUUID().toString)
   private def routeLabel(path: String): String = path match {
-    case "/healthz" | "/readyz" | "/metrics" | "/v1/query" => path
-    case p if p.startsWith("/v1/jobs/")                    => "/v1/jobs/{jobId}"
-    case _                                                 => "unmatched"
+    case "/healthz" | "/readyz" | "/metrics" | "/v1/query"           => path
+    case PublicSemanticRoute.Path | "/internal/v1/semantic/retrieve" => path
+    case p if p.startsWith("/v1/jobs/")                              => "/v1/jobs/{jobId}"
+    case _                                                           => "unmatched"
   }
   def handle(
       method: String,
@@ -123,6 +161,7 @@ final class ApiApplication(
       "X-Trace-Id" -> context.traceId,
       "Cache-Control" -> "no-store"
     )
+    var extraHeaders = Map.empty[String, String]
     val result: Either[ApiError, ApiReply] =
       try {
         val open = method == "GET" && Set("/healthz", "/readyz")(path)
@@ -158,6 +197,32 @@ final class ApiApplication(
               .flatMap { key =>
                 QueryRequest.parse(body, config).flatMap(queries.submit(_, key, context))
               }
+        } else if (
+          serviceRole == "query-api" && method == "POST" && path == PublicSemanticRoute.Path
+        ) {
+          // Authenticated above with the public API key. The rate limit is checked before any
+          // validation or downstream call; the bucket key is the hash of the presented key.
+          extended match {
+            case None => Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
+            case Some(api) =>
+              val keyHash =
+                Auth.sha256(normalized.getOrElse("authorization", "").stripPrefix("Bearer "))
+              semanticRoute.limiter.acquire(keyHash) match {
+                case RateDecision.Limited(seconds) =>
+                  queries.metrics.rateLimited()
+                  extraHeaders = Map("Retry-After" -> seconds.toString)
+                  Left(PublicSemanticRoute.rateLimited)
+                case RateDecision.Allowed =>
+                  params
+                    .flatMap(p => if (p.isEmpty) Right(()) else Left(ApiError.invalid))
+                    .flatMap(_ => semanticRoute.validate(body))
+                    .flatMap(forwarded =>
+                      api.semantic
+                        .retrieve(forwarded.body, context)
+                        .flatMap(semanticRoute.project(_, forwarded.topK))
+                    )
+              }
+          }
         } else if (serviceRole == "query-api" && method == "GET" && path.startsWith("/v1/jobs/")) {
           val parts = path.stripPrefix("/v1/jobs/").split("/", -1).toVector
           parts match {
@@ -168,10 +233,17 @@ final class ApiApplication(
         } else if (extended.nonEmpty)
           params.flatMap(p => routeExtended(method, path, p, body, context, extended.get))
         else Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
-      } catch { case NonFatal(_) => Left(ApiError.internal) }
+      } catch {
+        case NonFatal(_) => Left(ApiError.internal)
+        // Backstop only: request bodies are depth-bounded before parsing (RequestJson), so this is
+        // not the defence against deep JSON. It keeps any residual overflow a typed 500 with a
+        // trace ID instead of escaping to the transport, which prints a stack trace.
+        case _: StackOverflowError => Left(ApiError.internal)
+      }
     val reply = result.fold(e => ApiReply(e.status, e.json(context.traceId)), identity)
     val elapsed = System.nanoTime() - start
     queries.metrics.observe(reply.status, elapsed)
+    queries.metrics.observeRoute(routeLabel(path), reply.status)
     try logSink(SafeLog.request(context, routeLabel(path), reply.status, elapsed / 1000000L))
     catch { case NonFatal(_) => () }
     if (path == "/metrics" && reply.status == 200)
@@ -180,7 +252,7 @@ final class ApiApplication(
         reply.body.str,
         responseHeaders.updated("Content-Type", "text/plain; version=0.0.4")
       )
-    else HttpReply(reply.status, reply.body.render(), responseHeaders)
+    else HttpReply(reply.status, reply.body.render(), responseHeaders ++ extraHeaders)
   }
   private def routeExtended(
       method: String,

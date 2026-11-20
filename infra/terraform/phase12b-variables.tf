@@ -76,6 +76,7 @@ variable "emr_config" {
     job_jar_sha256               = optional(string)
     extra_artifacts              = optional(list(object({ uri = string, sha256 = string, dest = string })), [])
     instance_type                = optional(string, "m5.xlarge")
+    primary_instance_type        = optional(string, "r5.xlarge")
     max_task_nodes               = optional(number, 0)
     task_node_count              = optional(number, 0)
     managed_scaling_enabled      = optional(bool, false)
@@ -98,6 +99,13 @@ variable "emr_config" {
   validation {
     condition     = var.emr_config.instance_type == "m5.xlarge"
     error_message = "Only m5.xlarge keeps the smallest cluster (primary + core) inside the USD 3 per-run cap at the maximum runtime plus idle tail (G6); m5.2xlarge would not."
+  }
+  # Phase 15 D3 (human decision, docs/agent-runs/phase-15/prompt.md, "D3 decision" and "S run cap and D3 go-ahead", 2026-11-16):
+  # instance_type is the core (and task) type; the primary node has its own type, r5.xlarge by default, for the 12g single-JVM
+  # entity-resolution step that runs on the primary. Exactly the reviewed pair: primary m5.xlarge or r5.xlarge, core m5.xlarge.
+  validation {
+    condition     = contains(["m5.xlarge", "r5.xlarge"], var.emr_config.primary_instance_type)
+    error_message = "D3: the primary instance type must be r5.xlarge (the reviewed default) or m5.xlarge; no other type has a reviewed rate and cap check."
   }
   validation {
     condition     = floor(var.emr_config.max_task_nodes) == var.emr_config.max_task_nodes && var.emr_config.max_task_nodes >= 0 && var.emr_config.max_task_nodes <= 1
@@ -425,5 +433,41 @@ variable "runtime_audit_prefix" {
   validation {
     condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.runtime_audit_prefix))
     error_message = "A literal key prefix without wildcard, leading or trailing slash."
+  }
+}
+
+# Phase 15 P41 (docs/runbooks/session-2-plan.md rows F26 and P41, section 5.3 step 2; Work order 3 defaults accepted 2026-11-16).
+# Three optional runtime inputs for the Session 2 elasticity experiment (R-b). All default to null: no new resource and no new
+# environment variable (no request-count policy, no rate-limit variable in any task environment). When the ALB exists and the dashboard
+# is on, the dashboard gains the ALB panels regardless of these variables. The values are derived in the P35 rehearsal
+# and go in the private runtime tfvars (environments/course.local.tfvars.example documents them). Passed to modules/runtime.
+variable "query_requests_per_target_target" {
+  type        = number
+  default     = null
+  nullable    = true
+  description = "Target of the query-api target-tracking policy on the predefined metric ALBRequestCountPerTarget: requests per target (query-api task) per minute, a whole number from 1 to 100000, derived from P35. The policy exists only when the runtime is deployed (runtime_enabled and image_revision) with HTTPS and this is non-null; it sits beside the unchanged CPU policy (cpu_target_percent). null: no request-count policy."
+  validation {
+    condition     = var.query_requests_per_target_target == null ? true : (var.query_requests_per_target_target >= 1 && var.query_requests_per_target_target <= 100000 && var.query_requests_per_target_target == floor(var.query_requests_per_target_target))
+    error_message = "query_requests_per_target_target must be null or a whole number of requests per target per minute from 1 to 100000."
+  }
+}
+variable "query_semantic_rate_limit_per_second" {
+  type        = number
+  default     = null
+  nullable    = true
+  description = "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND on query-api only, in the aws service mode: the P40 public semantic route's token-bucket rate per API key per task, requests per second, a whole number from 1 to 100000 (r_S2 from P35). null: unset, the service default 50 applies."
+  validation {
+    condition     = var.query_semantic_rate_limit_per_second == null ? true : (var.query_semantic_rate_limit_per_second >= 1 && var.query_semantic_rate_limit_per_second <= 100000 && var.query_semantic_rate_limit_per_second == floor(var.query_semantic_rate_limit_per_second))
+    error_message = "query_semantic_rate_limit_per_second must be null or a whole number of requests per second from 1 to 100000."
+  }
+}
+variable "query_semantic_rate_limit_burst" {
+  type        = number
+  default     = null
+  nullable    = true
+  description = "SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST on query-api only, in the aws service mode: the token-bucket burst (requests) per API key per task, a whole number from 1 to 1000000 (2 x r_S2 from P35). Independent of the rate: null leaves it unset, the service default 100 applies."
+  validation {
+    condition     = var.query_semantic_rate_limit_burst == null ? true : (var.query_semantic_rate_limit_burst >= 1 && var.query_semantic_rate_limit_burst <= 1000000 && var.query_semantic_rate_limit_burst == floor(var.query_semantic_rate_limit_burst))
+    error_message = "query_semantic_rate_limit_burst must be null or a whole number of requests from 1 to 1000000."
   }
 }

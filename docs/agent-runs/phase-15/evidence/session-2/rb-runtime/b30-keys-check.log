@@ -1,0 +1,21 @@
+{
+    "Name": "scholarchain-course/anthropic-api-key",
+    "Versions": {
+        "89248cd3-2bdb-47d0-be78-f5291d71b4a8": [
+            "AWSCURRENT"
+        ]
+    },
+    "Changed": "2026-11-18T10:15:02.776000-06:00"
+}
+{
+    "Name": "scholarchain-course/voyage-api-key",
+    "Versions": {
+        "4b9c1245-5fbc-4626-a5aa-3d196b7b178d": [
+            "AWSPREVIOUS"
+        ],
+        "a0dc8edc-bb08-446e-b6be-95fb45d17cd8": [
+            "AWSCURRENT"
+        ]
+    },
+    "Changed": "2026-11-18T12:27:29.914000-06:00"
+}

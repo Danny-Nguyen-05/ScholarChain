@@ -42,7 +42,10 @@ if pathlib.Path(sys.argv[0]).name.startswith('terraform'):
    path.write_bytes(b'opaque recovery fixture');path.chmod(0o600)
   sys.exit(1)
  if scenario.get('write_tf_backup') and state.exists():
-  backup=state.with_name(state.name+'.backup');backup.write_bytes(b'unrelated bytes' if scenario.get('bad_tf_backup') else state.read_bytes());backup.chmod(0o600)
+  data=state.read_bytes()
+  # Terraform re-serializes its own .backup: same size, other bytes (observed live 2026-11-16).
+  if scenario.get('reserialized_tf_backup'):data=bytes(reversed(data))
+  backup=state.with_name(state.name+'.backup');backup.write_bytes(b'unrelated bytes' if scenario.get('bad_tf_backup') else data);backup.chmod(scenario.get('tf_backup_mode',0o600))
  if not scenario.get('apply_keeps_state'):
   state.write_bytes(b'opaque completed fixture state');state.chmod(0o600)
  (root/'applied').write_text('1')
@@ -564,6 +567,14 @@ class Features(Harness):
         with self.assertRaises(b.Blocked):self.ex.apply()
         self.assertEqual(len(self.calls()),3)
 
+    def test_create_apply_failure_records_the_fixed_cause_in_the_preservation_receipt(self):
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        self.ex.p3_check()
+        with self.assertRaisesRegex(b.Blocked, '^APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'): self.ex.apply()
+        receipt = json.loads((self.backups/'initial-ab9f141e83058209/preservation.receipt.json').read_text())
+        self.assertEqual(receipt['cause'], 'APPLY_FAILED_PARTIAL_POSSIBLE')
+        self.assertTrue(receipt['incident_required'])
+
     def test_backup_fsync_failure_stops_no_readback_no_retry(self):
         self.ex.p3_check()
         original=b.opaque_copy
@@ -956,13 +967,18 @@ OTHER = 'other@example.invalid'  # synthetic reserved-domain fixture, never a re
 
 
 def usd25_responses():
-    """Hand-derived USD 25 shape: amount 25, three ACTUAL ABSOLUTE_VALUE alerts at 10, 15, 20."""
+    """Hand-written USD 25 shape (human decision 2026-11-15): amount 25, three ACTUAL ABSOLUTE_VALUE alerts at 18, 20, 22."""
+    return usd25_responses_with((18, 20, 22))
+
+
+def usd25_responses_with(thresholds):
+    """USD 25 readback with the given dollar alert thresholds (used for the target and for refused sets)."""
     responses = fixture_responses()
     responses['describe-budget']['Budget']['BudgetLimit']['Amount'] = '25.0'
     responses['describe-notifications-for-budget']['Notifications'] = [
-        b.expected_notification(x, 'ABSOLUTE_VALUE') for x in (10, 15, 20)]
+        b.expected_notification(x, 'ABSOLUTE_VALUE') for x in thresholds]
     responses['subscribers'] = {str(x): {'Subscribers': [{'SubscriptionType': 'EMAIL', 'Address': FIXTURE_ADDRESS}]}
-                                for x in (10, 15, 20)}
+                                for x in thresholds}
     return responses
 
 
@@ -987,7 +1003,7 @@ def plan_json(actions=('update',), after_over=None, before_over=None, notificati
     elif notification == 'visible':
         after['notification'] = [{'comparison_operator': 'GREATER_THAN', 'threshold': t,
                                   'threshold_type': 'ABSOLUTE_VALUE', 'notification_type': 'ACTUAL'}
-                                 for t in (10, 15, 20)]
+                                 for t in (18, 20, 22)]
     elif notification != 'absent':
         after['notification'] = notification
     entry = {'address': b.MODIFY_ADDRESS, 'mode': 'managed', 'type': 'aws_budgets_budget', 'name': 'project',
@@ -1006,10 +1022,15 @@ def other_resource_entry():
 
 
 class ModifyShapeFeatures(unittest.TestCase):
-    """The single shape switch: initial (200, PERCENTAGE 50/80/100) versus usd25 (25, ABSOLUTE_VALUE 10/15/20)."""
+    """The single shape switch: initial (200, PERCENTAGE 50/80/100) versus usd25 (25, ABSOLUTE_VALUE 18/20/22)."""
     def test_usd25_shape_constants_are_hand_derived(self):
+        # Hand-written from the 2026-11-15 human decision; not derived from the implementation.
         self.assertEqual((b.USD25_SHAPE.amount, b.USD25_SHAPE.threshold_type, b.USD25_SHAPE.thresholds),
-                         (25, 'ABSOLUTE_VALUE', (10, 15, 20)))
+                         (25, 'ABSOLUTE_VALUE', (18, 20, 22)))
+        self.assertEqual(len(b.USD25_SHAPE.thresholds), 3)
+        self.assertTrue(all(t < 25 for t in b.USD25_SHAPE.thresholds))
+        self.assertNotEqual(set(b.USD25_SHAPE.thresholds), {10, 15, 20})
+        self.assertFalse({10, 15, 50, 80, 100} & set(b.USD25_SHAPE.thresholds))
         self.assertEqual((b.INITIAL_SHAPE.amount, b.INITIAL_SHAPE.threshold_type, b.INITIAL_SHAPE.thresholds),
                          (200, 'PERCENTAGE', (50, 80, 100)))
         self.assertLess(max(b.USD25_SHAPE.thresholds), b.USD25_SHAPE.amount)
@@ -1027,6 +1048,13 @@ class ModifyShapeFeatures(unittest.TestCase):
         with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
             b.sanitize_readback(*read_args(fixture_responses()), shape=b.USD25_SHAPE)
 
+    def test_superseded_10_15_20_set_fails_the_usd25_shape(self):
+        # The never-applied 2026-11 authoring target must not pass as the 2026-11-15 target.
+        with self.assertRaisesRegex(b.Blocked, 'NOTIFICATION_THRESHOLD'):
+            b.sanitize_readback(*read_args(usd25_responses_with((10, 15, 20))), shape=b.USD25_SHAPE)
+        with self.assertRaisesRegex(b.Blocked, 'NOTIFICATION_THRESHOLD'):
+            b.sanitize_readback(*read_args(usd25_responses_with((18, 20, 25))), shape=b.USD25_SHAPE)
+
     def test_usd25_amount_alone_with_old_alerts_fails(self):
         responses = fixture_responses(); responses['describe-budget']['Budget']['BudgetLimit']['Amount'] = '25'
         with self.assertRaisesRegex(b.Blocked, 'NOTIFICATION_THRESHOLD'):
@@ -1037,7 +1065,9 @@ class ModifyShapeFeatures(unittest.TestCase):
         cases = {
             'threshold_25': (alert(2, Threshold=25), 'NOTIFICATION_THRESHOLD'),
             'threshold_50_legacy': (alert(0, Threshold=50), 'NOTIFICATION_THRESHOLD'),
-            'duplicate_threshold': (alert(1, Threshold=10), 'NOTIFICATION_THRESHOLD'),
+            'duplicate_threshold': (alert(1, Threshold=18), 'NOTIFICATION_THRESHOLD'),
+            'threshold_10_superseded': (alert(0, Threshold=10), 'NOTIFICATION_THRESHOLD'),
+            'threshold_15_superseded': (alert(0, Threshold=15), 'NOTIFICATION_THRESHOLD'),
             'percentage_type_left': (alert(0, ThresholdType='PERCENTAGE'), 'NOTIFICATION_DRIFT'),
             'type_omitted': (lambda r: r['describe-notifications-for-budget']['Notifications'][0].pop('ThresholdType'), 'NOTIFICATION_DRIFT'),
             'forecasted': (alert(1, NotificationType='FORECASTED'), 'NOTIFICATION_DRIFT'),
@@ -1046,8 +1076,8 @@ class ModifyShapeFeatures(unittest.TestCase):
             'four_alerts': (lambda r: r['describe-notifications-for-budget']['Notifications'].append(b.expected_notification(5, 'ABSOLUTE_VALUE')), 'NOTIFICATION_COUNT'),
             'amount_200': (lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount='200'), 'BUDGET_AMOUNT'),
             'amount_26': (lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount='26'), 'BUDGET_AMOUNT'),
-            'wrong_recipient': (lambda r: r['subscribers']['15']['Subscribers'][0].update(Address=OTHER), 'SUBSCRIBER_DRIFT'),
-            'sns_subscriber': (lambda r: r['subscribers']['20']['Subscribers'][0].update(SubscriptionType='SNS'), 'SUBSCRIBER_DRIFT'),
+            'wrong_recipient': (lambda r: r['subscribers']['20']['Subscribers'][0].update(Address=OTHER), 'SUBSCRIBER_DRIFT'),
+            'sns_subscriber': (lambda r: r['subscribers']['22']['Subscribers'][0].update(SubscriptionType='SNS'), 'SUBSCRIBER_DRIFT'),
             'tag_drift': (lambda r: r['list-tags-for-resource']['ResourceTags'][0].update(Value='wrong'), 'TAGS_DRIFT'),
             'date_drift': (lambda r: r['describe-budget']['Budget']['TimePeriod'].update(End='2027-01-02T00:00:00Z'), 'BUDGET_DATE'),
         }
@@ -1078,6 +1108,10 @@ class ModifyShapeFeatures(unittest.TestCase):
             b.detect_shape(omitted['describe-budget'], omitted['describe-notifications-for-budget'])
         with self.assertRaisesRegex(b.Blocked, 'LIVE_STATE_UNEXPECTED'):
             b.detect_shape(new['describe-budget'], new['describe-notifications-for-budget'], b.INITIAL_SHAPE)
+        # USD 25 with the superseded 10/15/20 alerts is neither known shape: refused, never 'already at target'.
+        superseded = usd25_responses_with((10, 15, 20))
+        with self.assertRaisesRegex(b.Blocked, 'LIVE_STATE_UNEXPECTED'):
+            b.detect_shape(superseded['describe-budget'], superseded['describe-notifications-for-budget'])
         mixed = [(new['describe-budget'], old['describe-notifications-for-budget']),
                  (old['describe-budget'], new['describe-notifications-for-budget']),
                  ({'Budget': {'BudgetLimit': {'Amount': '100'}}}, old['describe-notifications-for-budget']),
@@ -1207,11 +1241,13 @@ class ModifyPlanFeatures(unittest.TestCase):
     def test_alert_blocks_must_be_masked_or_exactly_the_usd25_set(self):
         def visible(**kw):
             return [dict({'comparison_operator': 'GREATER_THAN', 'threshold': t, 'threshold_type': 'ABSOLUTE_VALUE',
-                          'notification_type': 'ACTUAL'}, **kw) for t in (10, 15, 20)]
+                          'notification_type': 'ACTUAL'}, **kw) for t in (18, 20, 22)]
         bad = {'percentage_type': visible(threshold_type='PERCENTAGE'), 'forecasted': visible(notification_type='FORECASTED'),
                'less_than': visible(comparison_operator='LESS_THAN'),
                'old_thresholds': [dict(n, threshold=t) for n, t in zip(visible(), (50, 80, 100))],
-               'top_threshold_25': [dict(n, threshold=t) for n, t in zip(visible(), (10, 15, 25))],
+               'top_threshold_25': [dict(n, threshold=t) for n, t in zip(visible(), (18, 20, 25))],
+               'superseded_10_15_20': [dict(n, threshold=t) for n, t in zip(visible(), (10, 15, 20))],
+               'one_superseded_15': [dict(n, threshold=t) for n, t in zip(visible(), (15, 20, 22))],
                'two_alerts': visible()[:2], 'empty': [], 'not_dicts': ['x', 'y', 'z']}
         for name, alerts in bad.items():
             with self.subTest(name=name):
@@ -1309,7 +1345,7 @@ class ModifyFeatures(Harness):
         def selectors(rows): return [(x['Threshold'], x['ThresholdType']) for x in
                                      (json.loads(c['argv'][c['argv'].index('--notification')+1]) for c in rows if '--notification' in c['argv'])]
         self.assertEqual(selectors(calls[:7]), [(50, 'PERCENTAGE'), (80, 'PERCENTAGE'), (100, 'PERCENTAGE')])
-        self.assertEqual(selectors(calls[8:]), [(10, 'ABSOLUTE_VALUE'), (15, 'ABSOLUTE_VALUE'), (20, 'ABSOLUTE_VALUE')])
+        self.assertEqual(selectors(calls[8:]), [(18, 'ABSOLUTE_VALUE'), (20, 'ABSOLUTE_VALUE'), (22, 'ABSOLUTE_VALUE')])
         self.assertEqual({k: v for k, v in calls[7]['env'].items() if k not in ('LC_CTYPE', '__CF_USER_TEXT_ENCODING')}, self.policy.env())
         self.assertEqual(calls[7]['cwd'], str(self.policy.config))
         self.assertNotIn('AWS_ACCESS_KEY_ID', calls[7]['env'])
@@ -1356,6 +1392,7 @@ class ModifyFeatures(Harness):
         cases = {
             'amount_100': (amount('100'), 'LIVE_STATE_UNEXPECTED'),
             'amount_25_old_alerts': (amount('25'), 'LIVE_STATE_UNEXPECTED'),
+            'amount_25_superseded_10_15_20': (lambda r: r.update(usd25_responses_with((10, 15, 20))), 'LIVE_STATE_UNEXPECTED'),
             'amount_200_new_alerts': (lambda r: r['describe-notifications-for-budget'].update(
                 Notifications=usd25_responses()['describe-notifications-for-budget']['Notifications']), 'LIVE_STATE_UNEXPECTED'),
             'two_old_alerts': (lambda r: r['describe-notifications-for-budget']['Notifications'].pop(), 'LIVE_STATE_UNEXPECTED'),
@@ -1575,15 +1612,82 @@ class ModifyFeatures(Harness):
         self.assertEqual(len(self.calls()), 8)
         with self.assertRaises(FileExistsError): self.mex.op.mkdir(mode=0o700)
 
-    def test_unchanged_state_or_foreign_terraform_backup_after_apply_is_an_incident(self):
-        for flag, operation in (('apply_keeps_state', 'modify-same-state'), ('bad_tf_backup', 'modify-bad-backup')):
-            with self.subTest(flag=flag):
-                ex = self.modify_execution({**self.mgate, 'operation': operation})
-                self.scenario[flag] = True; self.save_scenario()
-                with self.assertRaisesRegex(b.Blocked, 'INCIDENT_REQUIRED'): ex.modify()
-                self.assertFalse((ex.op/'modify.receipt.json').exists())
-                self.assertTrue((self.backups/operation/'preservation.receipt.json').exists())
-                self.fresh()
+    def preservation(self, operation='modify-fixture'):
+        return json.loads((self.backups/operation/'preservation.receipt.json').read_text())
+
+    def test_unchanged_state_after_apply_is_an_incident_with_the_cause_recorded(self):
+        self.scenario['apply_keeps_state'] = True; self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'): self.mex.modify()
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        self.assertFalse((self.mex.op/'modify-apply.receipt.json').exists())
+        self.assertEqual(self.preservation()['cause'], 'STATE_UNCHANGED_AFTER_APPLY')
+        self.assertTrue(self.preservation()['incident_required'])
+
+    def test_terraform_rewriting_its_backup_with_same_size_other_bytes_is_not_an_incident(self):
+        # Regression for modify-20261116-01: Terraform re-serializes its own .backup; the wrapper's
+        # pre-apply copy (verified equal to the initial state) is the authoritative backup.
+        self.scenario['reserialized_tf_backup'] = True; self.save_scenario()
+        tf_backup = self.policy.state.with_name(self.policy.state.name + '.backup')
+        receipt = self.mex.modify()
+        self.assertTrue(receipt['result']['applied'])
+        for stage in ('modify-apply', 'modify'):
+            self.assertTrue((self.mex.op/f'{stage}.receipt.json').exists())
+        self.assertFalse((self.backup_dir()/'preservation.receipt.json').exists())
+        self.assertEqual(b.hash_file(self.backup_dir()/'pre-apply.billing.execution.tfstate'), b.INITIAL_STATE_SHA256)
+        self.assertTrue((self.backup_dir()/'post-apply.billing.execution.tfstate').exists())
+        self.assertEqual(tf_backup.stat().st_size, b.INITIAL_STATE_BYTES)
+        self.assertNotEqual(b.hash_file(tf_backup), b.INITIAL_STATE_SHA256)
+        observed = json.loads((self.mex.op/'modify-apply.receipt.json').read_text())['result']['terraform_backup_observed']
+        self.assertEqual(observed, {'sha256': b.hash_file(tf_backup), 'bytes': b.INITIAL_STATE_BYTES, 'observed_only': True})
+
+    def test_terraform_backup_of_any_content_is_only_observed_but_its_type_and_mode_are_enforced(self):
+        self.scenario['bad_tf_backup'] = True; self.save_scenario()  # other size and bytes: still only observed
+        self.assertTrue(self.mex.modify()['result']['applied'])
+        observed = json.loads((self.mex.op/'modify-apply.receipt.json').read_text())['result']['terraform_backup_observed']
+        self.assertEqual(observed['bytes'], len(b'unrelated bytes'))
+        self.fresh()
+        self.scenario['tf_backup_mode'] = 0o644; self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'): self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'FILE_TYPE_MODE_OWNER')
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        self.fresh()
+        self.scenario['write_tf_backup'] = False; self.save_scenario()  # absent .backup: observed is None
+        self.assertTrue(self.mex.modify()['result']['applied'])
+        self.assertIsNone(json.loads((self.mex.op/'modify-apply.receipt.json').read_text())['result']['terraform_backup_observed'])
+
+    def test_preservation_receipt_records_only_a_fixed_cause_for_every_failure_kind(self):
+        # (a) the apply process exits non-zero; (b) a non-Blocked exception after the apply.
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        with self.assertRaises(b.Blocked): self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'APPLY_FAILED_PARTIAL_POSSIBLE')
+        self.fresh()
+        original = b.opaque_copy; count = []
+        def boom(*args, **kwargs):
+            count.append(1)
+            if len(count) == 2: raise PermissionError('/private-dir/with/a-private-value')
+            return original(*args, **kwargs)
+        # The second copy is the post-apply backup; the preservation copies after it run normally.
+        with mock.patch.object(b, 'opaque_copy', side_effect=boom), \
+             self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'):
+            self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'PermissionError')
+        text = (self.backup_dir()/'preservation.receipt.json').read_text()
+        self.assertNotIn('private-dir', text); self.assertNotIn('a-private-value', text)
+        self.assertEqual(set(json.loads(text)), {'artifacts', 'incident_required', 'cause'})
+
+    def test_a_failing_cause_computation_never_skips_the_preservation(self):
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        with mock.patch.object(b, 'failure_cause', side_effect=RuntimeError('boom')), \
+             self.assertRaisesRegex(b.Blocked, '^MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED$'):
+            self.mex.modify()
+        self.assertEqual(self.preservation()['cause'], 'Exception')
+        self.assertTrue((self.backup_dir()/'recovery-000.opaque').exists())
+
+    def test_failure_cause_is_a_fixed_identifier_never_a_message(self):
+        self.assertEqual(b.failure_cause(b.Blocked('SOME_FIXED_CODE')), 'SOME_FIXED_CODE')
+        self.assertEqual(b.failure_cause(b.Blocked('has a path /x and spaces')), 'Blocked')
+        self.assertEqual(b.failure_cause(KeyboardInterrupt()), 'KeyboardInterrupt')
+        self.assertEqual(b.failure_cause(OSError('/private/path')), 'OSError')
 
     def test_applied_but_old_shape_still_live_fails_the_post_verify_and_keeps_backups(self):
         self.scenario['responses_after'] = fixture_responses(); self.save_scenario()
@@ -1591,6 +1695,12 @@ class ModifyFeatures(Harness):
         self.assertTrue((self.mex.op/'modify-apply.receipt.json').exists())
         self.assertFalse((self.mex.op/'modify.receipt.json').exists())
         self.assertTrue((self.backup_dir()/'post-apply.billing.execution.tfstate').exists())
+
+    def test_post_verify_refuses_the_superseded_10_15_20_alerts(self):
+        self.scenario['responses_after'] = usd25_responses_with((10, 15, 20)); self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, 'APPLIED_BUT_POST_VERIFY_FAILED:LIVE_STATE_UNEXPECTED'): self.mex.modify()
+        self.assertTrue((self.mex.op/'modify-apply.receipt.json').exists())
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
 
     def test_post_verify_requires_the_exact_usd25_shape(self):
         broken = usd25_responses(); broken['describe-notifications-for-budget']['Notifications'][2]['Threshold'] = 25

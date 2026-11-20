@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -uo pipefail
+cd /Users/danny/Documents/UIC/CS441/ScholarChain
+EV=target/p35-rehearsal/run-1
+mkdir -p "$EV"
+CN=scholarchain-p35-query-api
+PORT=18435
+export SCHOLARCHAIN_LOAD_API_KEY="p35-$(python3 -I -c 'import secrets;print(secrets.token_urlsafe(32))')"
+INTERNAL="p35i-$(python3 -I -c 'import secrets;print(secrets.token_urlsafe(32))')"
+export SCHOLARCHAIN_API_KEY_SHA256="$(python3 -I -c 'import os,hashlib;print(hashlib.sha256(os.environ["SCHOLARCHAIN_LOAD_API_KEY"].encode()).hexdigest())')"
+export SCHOLARCHAIN_INTERNAL_TOKEN_SHA256="$(INTERNAL="$INTERNAL" python3 -I -c 'import os,hashlib;print(hashlib.sha256(os.environ["INTERNAL"].encode()).hexdigest())')"
+unset INTERNAL
+docker rm -f $CN >/dev/null 2>&1
+docker run -d --name $CN --cpus 0.25 --memory 1g -p 127.0.0.1:$PORT:8080 \
+  -e SCHOLARCHAIN_SERVICE_MODE=offline-synthetic -e SCHOLARCHAIN_API_KEY_SHA256 -e SCHOLARCHAIN_INTERNAL_TOKEN_SHA256 \
+  -e SCHOLARCHAIN_HTTP_HOST=0.0.0.0 -e SCHOLARCHAIN_HTTP_PORT=8080 \
+  -e SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND=100000 -e SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST=100000 \
+  scholarchain-local-p35/query-api:p35 > "$EV/container-id.txt"
+for i in $(seq 1 60); do curl -fsS -m 2 http://127.0.0.1:$PORT/healthz >/dev/null 2>&1 && break; sleep 1; done
+curl -fsS -m 2 http://127.0.0.1:$PORT/healthz >/dev/null 2>&1 || { echo "not healthy"; docker logs $CN | tail -20; exit 3; }
+docker inspect $CN --format 'NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}} Image={{.Image}}' > "$EV/container-limits.txt"
+docker exec $CN cat /sys/fs/cgroup/cpu.max > "$EV/cgroup-cpu-max.txt" 2>&1
+metrics() { curl -fsS -m 5 -H "Authorization: Bearer $SCHOLARCHAIN_LOAD_API_KEY" http://127.0.0.1:$PORT/metrics; }
+metrics > "$EV/metrics-before.txt"
+docker exec $CN sh -c 'while true; do echo "$(date +%s.%N) $(grep -E "^(usage_usec|nr_periods|nr_throttled|throttled_usec) " /sys/fs/cgroup/cpu.stat | tr "\n" " ")"; sleep 2; done' > "$EV/cgroup-cpu-samples.txt" 2>"$EV/sampler.err" &
+SAMP=$!
+date -u +%FT%TZ > "$EV/load-start.txt"
+python3 -I load-tests/loadgen.py run --manifest experiments/manifests/15b-ecs-scaling-semantic.json \
+  --questions-file experiments/inputs/15b/semantic-questions.txt --run-id p35-local-1 \
+  --base-url http://127.0.0.1:$PORT --observe-seconds 30 > "$EV/loadgen-stdout.txt" 2>&1
+echo "loadgen exit $?" > "$EV/loadgen-exit.txt"
+date -u +%FT%TZ > "$EV/load-end.txt"
+metrics > "$EV/metrics-after.txt"
+kill $SAMP 2>/dev/null; docker exec $CN pkill -f "sleep 2" >/dev/null 2>&1
+docker logs $CN > "$EV/container-log-raw.txt" 2>&1
+docker rm -f $CN >/dev/null 2>&1
+echo done > "$EV/DONE"

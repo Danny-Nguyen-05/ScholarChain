@@ -265,7 +265,9 @@ class CopyOutPartialRunTests(PipelineFixture):
         write_exec(os.path.join(self.nodebin, "find"), "#!/bin/bash\necho 'find: simulated failure' >&2\nexit 2\n")
         result = self.run_body(self.step_body("copy-out"))
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("STEP-FAIL copy-out: could not build the copy-out manifest", result.stderr)
+        # Phase 15 P23: the selective copy-out lists each part before sizing it, so a find failure now stops the step at the listing
+        self.assertIn("STEP-FAIL copy-out: could not list %s/results" % self.run_root, result.stderr)
+        self.assertFalse(os.path.exists(os.path.join(self.run_root, "copyout-manifest.sha256")), "no manifest is written")
         self.assertEqual([a for a in self.aws_calls() if a.startswith("s3 cp")], [])
 
 

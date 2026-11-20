@@ -1,0 +1,2 @@
+
+aws: [ERROR]: An error occurred (AccessDeniedException) when calling the DescribeBudgets operation: User: arn:aws:iam::<acct>:user/scholarchain-billing-operator is not authorized to perform: budgets:ViewBudget on resource: arn:aws:budgets::<acct>:budget/* because no identity-based policy allows the budgets:ViewBudget action

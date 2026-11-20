@@ -28,6 +28,7 @@
     "graph_node": {"method": "GET", "path": "/v1/graph/nodes/{node_id}", "auth": true, "weight": 4, "needs": "node_ids", "llm": false},
     "graph_neighbors": {"method": "GET", "path": "/v1/graph/nodes/{node_id}/neighbors?direction=both&depth=1&limit=50", "auth": true, "weight": 4, "needs": "node_ids", "llm": false},
     "evidence": {"method": "GET", "path": "/v1/evidence/{evidence_id}", "auth": true, "weight": 2, "needs": "evidence_ids", "llm": false},
+    "semantic": {"method": "POST", "path": "/v1/semantic/retrieve", "auth": true, "weight": 40, "needs": "semantic_questions", "llm": false, "note": "P42: used only by a manifest with a semantic block (fixed question set, required per-level request limits); weight 40 against 4 for the other routes with no ID files (healthz 2, readyz 1, metrics 1: 90.9 percent semantic) and 14 with both ID files (74.1 percent)"},
     "query": {"method": "POST", "path": "/v1/query", "auth": true, "weight": 0, "needs": "questions", "llm": true}
   },
   "llm": {

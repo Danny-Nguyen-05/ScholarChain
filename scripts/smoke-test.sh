@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/lib/common.sh"
 
 usage() {
   cat <<'EOF2'
-Usage: scripts/smoke-test.sh --url URL [--api-key-env NAME] [--query-body FILE] [--checks LIST] [--request-timeout S] [--job-timeout S] [--help]
+Usage: scripts/smoke-test.sh --url URL [--api-key-env NAME] [--query-body FILE] [--checks LIST] [--semantic MODE] [--request-timeout S] [--job-timeout S] [--help]
 
 Purpose
   Check a running query-api through its public contract (modules/services/README.md and the OpenAPI file). Six
@@ -25,6 +25,13 @@ Purpose
                              error bodies do not echo the key
   Every request has a timeout. This script is read-mostly: the only writes are the idempotent query POSTs.
 
+  Opt-in public semantic route checks (P40; never part of the default six, run after them, only with --semantic):
+    STEP: smoke-semantic        POST /v1/semantic/retrieve with the key and one fixed synthetic question
+                                ("Synthetic fixture: semantic retrieval smoke for A", topK 5) is 200 with exactly the
+                                top-level keys hits and model; the same request without a key is 401 UNAUTHORIZED
+    STEP: smoke-semantic-cache  (offline-synthetic mode only) repeating the same question increases
+                                embedding_cache_hits_total on GET /metrics (key required)
+
 Inputs
   --url URL              target base URL (or SCHOLARCHAIN_SMOKE_URL): http(s)://host[:port]. Plain http is accepted only
                          for a loopback host, so the bearer key never travels in clear text to a remote host.
@@ -37,6 +44,11 @@ Inputs
                          path. evidence and idempotency read the state of query, so naming either without query is a usage
                          error (exit 2). No API key is needed (and none is read) when only healthz and/or readyz are selected.
                          The RESULT line names the number of checks that ran, so a partial run is never mistaken for the full six.
+  --semantic MODE        off (default: the deployed-environment smoke is unchanged), route (smoke-semantic only; usable
+                         against any target that serves the P40 route) or offline-synthetic (smoke-semantic then
+                         smoke-semantic-cache; the URL host must be loopback, because embedding_cache_hits_total is exposed
+                         only by the local offline-synthetic query-api; scripts/smoke-local.sh passes this mode). Any mode
+                         other than off needs the API key. "semantic" is not a --checks name.
   --request-timeout S    seconds per HTTP request (default TIMEOUT_SMOKE_REQUEST_SECONDS)
   --job-timeout S        seconds for an asynchronous job to finish (default TIMEOUT_SMOKE_JOB_SECONDS)
   Environment variable names: SCHOLARCHAIN_SMOKE_URL, SCHOLARCHAIN_SMOKE_API_KEY (or the name given), SCHOLARCHAIN_REPO_ROOT.
@@ -44,7 +56,8 @@ Inputs
 Modes
   Real run only. It sends HTTP requests to the target and nothing else (no AWS call). Against the local service use
   scripts/smoke-local.sh, which starts query-api in offline-synthetic mode with a throwaway key and runs this script.
-  Phase 14 runs it against the deployed endpoint with the real key supplied through the environment.
+  Phase 14 runs it against the deployed endpoint with the real key supplied through the environment. Without
+  --semantic (the default, off) the requests and the RESULT line are exactly those of the six-check smoke.
 
 Human approval points (plan Section 7.3)
   None for a local or stub target. Pointing it at a deployed endpoint belongs to the Phase 14 gate: the key comes
@@ -53,7 +66,8 @@ Human approval points (plan Section 7.3)
 Exit codes
   0    every check passed
   2    usage error
-  3    refused: no key in the environment variable, or an unsafe target URL
+  3    refused: no key in the environment variable, or an unsafe target URL (or a non-loopback one for
+       --semantic offline-synthetic)
   4    a check failed (the last STEP: marker names it)
   124  a request or job timed out
 
@@ -63,10 +77,10 @@ EOF2
 }
 
 URL="${SCHOLARCHAIN_SMOKE_URL:-}" KEY_ENV="SCHOLARCHAIN_SMOKE_API_KEY" BODY_FILE=""
-REQUEST_TIMEOUT="" JOB_TIMEOUT="" CHECKS_OPT=""
+REQUEST_TIMEOUT="" JOB_TIMEOUT="" CHECKS_OPT="" SEMANTIC_MODE="off"
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --url | --api-key-env | --query-body | --checks | --request-timeout | --job-timeout)
+    --url | --api-key-env | --query-body | --checks | --semantic | --request-timeout | --job-timeout)
       if [[ $# -lt 2 ]]; then
         sc_usage_exit "smoke-test.sh" "$1 needs a value"
       fi
@@ -75,6 +89,7 @@ while [[ $# -gt 0 ]]; do
         --api-key-env) KEY_ENV="$2" ;;
         --query-body) BODY_FILE="$2" ;;
         --checks) CHECKS_OPT="$2" ;;
+        --semantic) SEMANTIC_MODE="$2" ;;
         --request-timeout) REQUEST_TIMEOUT="$2" ;;
         --job-timeout) JOB_TIMEOUT="$2" ;;
       esac
@@ -121,10 +136,18 @@ else
     sc_usage_error "--checks: evidence and idempotency need the query check (add query)"
   fi
 fi
+SEMANTIC_CHECKS=()
+case "${SEMANTIC_MODE}" in
+  off) ;;
+  route) SEMANTIC_CHECKS=(semantic) ;;
+  offline-synthetic) SEMANTIC_CHECKS=(semantic semantic-cache) ;;
+  *) sc_usage_error "--semantic must be one of: off, route, offline-synthetic" ;;
+esac
 NEEDS_KEY=0
 for name in "${SELECTED[@]}"; do
   [[ "${name}" == "healthz" || "${name}" == "readyz" ]] || NEEDS_KEY=1
 done
+[[ "${#SEMANTIC_CHECKS[@]}" -eq 0 ]] || NEEDS_KEY=1
 KEY_VALUE=""
 if [[ "${NEEDS_KEY}" -eq 1 ]]; then
   KEY_VALUE="${!KEY_ENV:-}"
@@ -132,6 +155,9 @@ if [[ "${NEEDS_KEY}" -eq 1 ]]; then
   sc_register_secret "${KEY_VALUE}"
 fi
 URL_OUT="$(python3 -I "${SC_LIB_DIR}/smoke_client.py" validate-url "${URL}")" || sc_refuse "${EX_REFUSED}" "${URL_OUT}"
+if [[ "${SEMANTIC_MODE}" == "offline-synthetic" ]]; then
+  URL_OUT="$(python3 -I "${SC_LIB_DIR}/smoke_client.py" validate-url --require-loopback "${URL}")" || sc_refuse "${EX_REFUSED}" "${URL_OUT}"
+fi
 URL="${URL%/}"
 sc_info "target ${URL}; the API key is read from ${KEY_ENV} and is never printed"
 
@@ -159,9 +185,16 @@ _check() { # name step
 for name in "${SELECTED[@]}"; do
   _check "${name}" "smoke-${name}"
 done
+for name in ${SEMANTIC_CHECKS[@]+"${SEMANTIC_CHECKS[@]}"}; do
+  _check "${name}" "smoke-${name}"
+done
 
 sc_step "smoke-complete"
-if [[ "${#SELECTED[@]}" -eq "${#ALL_CHECKS[@]}" ]]; then
-  sc_result PASS "all 6 checks passed against ${URL}" "${EX_OK}"
+SEMANTIC_NOTE=""
+if [[ "${#SEMANTIC_CHECKS[@]}" -gt 0 ]]; then
+  SEMANTIC_NOTE=" plus ${#SEMANTIC_CHECKS[@]} semantic check(s) (${SEMANTIC_CHECKS[*]}, mode ${SEMANTIC_MODE})"
 fi
-sc_result PASS "only ${#SELECTED[@]} of 6 checks ran (${SELECTED[*]}) and passed against ${URL}; this is not the full smoke test" "${EX_OK}"
+if [[ "${#SELECTED[@]}" -eq "${#ALL_CHECKS[@]}" ]]; then
+  sc_result PASS "all 6 checks${SEMANTIC_NOTE} passed against ${URL}" "${EX_OK}"
+fi
+sc_result PASS "only ${#SELECTED[@]} of 6 checks ran (${SELECTED[*]})${SEMANTIC_NOTE} and passed against ${URL}; this is not the full smoke test" "${EX_OK}"

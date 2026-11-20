@@ -270,6 +270,7 @@ object RuntimeArtifactMain {
     (ujson.write(value, indent = 2) + "\n").getBytes(UTF_8)
 
   def main(args: Array[String]): Unit = {
+    ToolLogging.install()
     val result = run(args.toVector)
     if (result != 0)
       throw new IllegalStateException("RuntimeArtifactMain failed with exit code " + result)

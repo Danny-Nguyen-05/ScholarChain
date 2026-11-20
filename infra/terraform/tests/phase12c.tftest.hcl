@@ -115,15 +115,18 @@ run "disabled_sources_have_no_empty_dashboard_widgets" {
     error_message = "N11: Disabled EMR/Neptune must omit their widgets; no metric widget may have an empty metric array."
   }
 }
-run "dynamodb_native_failure_and_latency_panels" {
+# Phase 15 P9 supersedes the N12 DynamoDB panels: the elasticity dashboard keeps at most 50 free native metrics, so the 6
+# ConditionalCheckFailedRequests and 42 per-operation SuccessfulRequestLatency series were dropped (rationale in
+# modules/observability/main.tf). The six-table read/write throttle series stay (pinned in phase12b "dashboard_metric_shapes_...").
+run "dynamodb_failure_and_latency_panels_removed_by_phase15_p9" {
   command = plan
   assert {
-    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB conditional write failures" && try(w.properties.stat, "") == "Sum" && try(length(w.properties.metrics), 0) == 6 && alltrue([for m in w.properties.metrics : m[0] == "AWS/DynamoDB" && m[1] == "ConditionalCheckFailedRequests" && m[2] == "TableName" && length(m) == 4])]) == 1
-    error_message = "N12: All six tables need native conditional-write failure counts with TableName and Sum."
+    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if contains(["DynamoDB conditional write failures", "DynamoDB successful request latency (milliseconds)"], try(w.properties.title, ""))]) == 0 && !strcontains(output.phase12b_controls.observability.dashboard, "ConditionalCheckFailedRequests") && !strcontains(output.phase12b_controls.observability.dashboard, "SuccessfulRequestLatency")
+    error_message = "P9: the N12 conditional-write and per-operation latency panels are no longer on the elasticity dashboard."
   }
   assert {
-    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB successful request latency (milliseconds)" && try(w.properties.stat, "") == "Average" && try(length(w.properties.metrics), 0) == 42 && alltrue([for m in w.properties.metrics : m[0] == "AWS/DynamoDB" && m[1] == "SuccessfulRequestLatency" && m[2] == "TableName" && m[4] == "Operation" && contains(["GetItem", "PutItem", "UpdateItem", "DeleteItem", "Query", "BatchGetItem", "BatchWriteItem"], m[5]) && length(m) == 6])]) == 1
-    error_message = "N12: Six tables and seven adapter operations need native successful latency with TableName/Operation and Average."
+    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB table throttle events" && try(w.properties.stat, "") == "Sum" && try(length(w.properties.metrics), 0) == 12]) == 1
+    error_message = "P9: one DynamoDB panel remains, read/write throttle events for each of the six tables, Sum."
   }
 }
 run "neptune_native_errors_when_enabled" {

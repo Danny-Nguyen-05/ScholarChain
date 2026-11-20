@@ -36,7 +36,13 @@ paths:
       summary: Authenticated Prometheus metrics including cumulative latency buckets
       responses:
         '200':
-          description: Request/status/latency, timeouts, downstream failures, circuit state, verification and abstention counters
+          description: >-
+            Request/status/latency, timeouts, downstream failures, circuit state, verification and abstention
+            counters; per-route status counts api_route_requests_total{route,status}; query-api semantic
+            rate-limit replies api_rate_limited_total; and, where a query-embedding cache is composed
+            (semantic-service, or offline-synthetic query-api without a remote semantic service),
+            embedding_cache_hits_total, embedding_cache_misses_total (underlying embedding calls),
+            embedding_cache_evictions_total, embedding_cache_size and embedding_cache_capacity
           content:
             text/plain:
               schema: {type: string}
@@ -58,6 +64,10 @@ paths:
         - {$ref: '#/components/parameters/TraceId'}
       requestBody:
         required: true
+        description: >-
+          At most 32 levels of JSON nesting (arrays and objects open at once, the root object
+          counting as 1), checked on the raw text before parsing; a deeper body is 400
+          INVALID_REQUEST
         content:
           application/json:
             schema: {$ref: '#/components/schemas/QueryRequest'}
@@ -227,6 +237,48 @@ paths:
         '502': {$ref: '#/components/responses/Error'}
         '503': {$ref: '#/components/responses/Error'}
         '504': {$ref: '#/components/responses/Error'}
+  /v1/semantic/retrieve:
+    post:
+      summary: Public semantic retrieval through query-api with the public API key
+      description: >-
+        Authenticated with the same public API key as the other /v1 routes (401 otherwise). An
+        in-memory token bucket per API-key hash in each query-api process is checked next, before
+        validation and before any downstream call: default 50 requests/s sustained with a burst of
+        100 (SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND, SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST);
+        over the limit is a retryable 429 RATE_LIMITED with Retry-After. The body is then checked
+        against the public limits (narrower than the internal route), re-serialized and forwarded
+        to semantic-service /internal/v1/semantic/retrieve with the internal token. The reply is
+        rebuilt from exactly hits[].key, hits[].distance, hits[].metadata and model. The question
+        is never logged or used as a metric label. Semantic-service embeds questions through a
+        bounded query-embedding cache, so a repeated question makes no new embedding call.
+      parameters:
+        - {$ref: '#/components/parameters/RequestId'}
+        - {$ref: '#/components/parameters/TraceId'}
+      requestBody:
+        required: true
+        description: >-
+          At most 8192 UTF-8 bytes and at most 32 levels of JSON nesting (arrays and objects open
+          at once, the root object counting as 1), checked on the raw text before parsing; a
+          deeper body is 400 INVALID_REQUEST. No query string is accepted
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PublicSemanticRequest'}
+      responses:
+        '200':
+          description: Actual vector hits with distances and metadata, and the embedding model identity; similarity is not graph evidence
+          headers:
+            X-Request-Id: {schema: {type: string}}
+            X-Trace-Id: {schema: {type: string}}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/PublicSemanticResponse'}
+        '400': {$ref: '#/components/responses/Error'}
+        '401': {$ref: '#/components/responses/Error'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '500': {$ref: '#/components/responses/Error'}
+        '502': {$ref: '#/components/responses/Error'}
+        '503': {$ref: '#/components/responses/Error'}
+        '504': {$ref: '#/components/responses/Error'}
   /internal/v1/graph/nodes/{nodeId}:
     get:
       security: [{InternalBearer: []}]
@@ -306,6 +358,9 @@ paths:
       summary: Embed query text and retrieve bounded actual vector hits
       requestBody:
         required: true
+        description: >-
+          At most 32 levels of JSON nesting, checked on the raw text before parsing; a deeper body
+          is 400 INVALID_REQUEST
         content:
           application/json:
             schema: {$ref: '#/components/schemas/SemanticRequest'}
@@ -355,6 +410,17 @@ components:
           examples:
             syntheticFixture:
               externalValue: ./examples/error.json
+    RateLimited:
+      description: >-
+        Typed safe error. RATE_LIMITED (retryable true) is the query-api per-key rate limit and
+        carries Retry-After in whole seconds; THROTTLED is downstream throttling and carries none
+      headers:
+        Retry-After: {schema: {type: integer, minimum: 1}, description: Present on RATE_LIMITED only}
+        X-Request-Id: {schema: {type: string}}
+        X-Trace-Id: {schema: {type: string}}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
   schemas:
     Error:
       type: object
@@ -499,6 +565,45 @@ components:
         question: {type: string, minLength: 1, maxLength: 8192}
         topK: {type: integer, minimum: 1, maximum: 50, default: 50}
         filters: {type: object, additionalProperties: {type: string}}
+    PublicSemanticRequest:
+      type: object
+      additionalProperties: false
+      required: [question]
+      description: Public limits; the question and filter values count Unicode code points
+      properties:
+        question: {type: string, minLength: 1, maxLength: 1000, description: Must contain a non-whitespace character}
+        topK: {type: integer, minimum: 1, maximum: 20, default: 20}
+        filters:
+          type: object
+          maxProperties: 16
+          description: Same shape as the internal route; keys non-empty
+          additionalProperties: {type: string, maxLength: 1000}
+    PublicSemanticResponse:
+      type: object
+      additionalProperties: false
+      required: [hits, model]
+      properties:
+        hits:
+          type: array
+          description: >-
+            At most the forwarded topK hits, as returned by the vector store; if the downstream
+            returns more, query-api keeps the first topK in downstream order
+          items:
+            type: object
+            additionalProperties: false
+            required: [key, distance, metadata]
+            properties:
+              key: {type: string}
+              distance: {type: number}
+              metadata: {type: object, additionalProperties: {type: string}}
+        model:
+          type: object
+          additionalProperties: false
+          required: [modelId, version, dimension]
+          properties:
+            modelId: {type: string}
+            version: {type: string}
+            dimension: {type: integer}
     SemanticResponse:
       type: object
       required: [hits]
