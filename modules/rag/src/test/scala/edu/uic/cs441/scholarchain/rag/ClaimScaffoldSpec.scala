@@ -89,7 +89,7 @@ class ClaimScaffoldSpec extends AnyFunSuite {
       output(f(ujson.read(request.userData)("claimScaffold").arr.pipe(ujson.Arr.from(_))))
   }
   private def scaffoldOf(plan: QueryPlan, bundle: EvidenceBundle) =
-    ClaimScaffold.build(plan, bundle, cfg.retrieval.contextTokenBudget)
+    ClaimScaffold.build(plan, bundle, ContextBudget.scaffoldBytes(plan, cfg))
 
   /** Echo every scaffold claim, then require each one to be VERIFIED by the real verifier. */
   private def assertAllVerified(

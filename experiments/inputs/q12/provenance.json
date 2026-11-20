@@ -1,0 +1,196 @@
+{
+  "counts": {
+    "affiliated_with_researchers": 0,
+    "all_years_coauthor_pairs": 81181,
+    "eligible": 16537,
+    "has_topic_works": 1,
+    "include_ids": 22,
+    "include_total_degree": 364,
+    "institution_nodes": 1,
+    "questions": 33,
+    "researchers": 21819,
+    "topic_nodes": 3
+  },
+  "note": "IDs, DBLP author names, topic and institution names and fixed question text only; DBLP is public (CC0). No credential, account or host value.",
+  "outputs": {
+    "include-ids.txt": {
+      "lines": 22,
+      "sha256": "30b3b78ddcc0571446a82f813ae40d2b6b4d4003247d628687cdec8d4c2efb26"
+    },
+    "question-specs.json": {
+      "lines": 452,
+      "sha256": "e9b770d2da88f30d088087492a4b57f746f24330992c03e27ff6589c55b1d5df"
+    },
+    "questions.txt": {
+      "lines": 33,
+      "sha256": "0a6bfe2671347ca6014c103c53ddedb872ed4153330027812e57df15443c51d9"
+    }
+  },
+  "rule": {
+    "band": [
+      10,
+      22
+    ],
+    "eligible": "unique normalized name, ASCII letters/space/hyphen/apostrophe, 3..60 chars, researcher:<source>:<key> id",
+    "evidence_type": "explain form (SemanticExplanation) naming one researcher; also every question is scored on its evidence trail",
+    "hub_band": [
+      26,
+      35
+    ],
+    "per_type": 3,
+    "pick": "candidates sorted by id (pairs by (id_a, id_b)); start = int(sha256(seed|slot)[:8],16) mod n; first unused candidate cyclically",
+    "planner_routes": {
+      "fallback": "accepted by the deterministic QueryPlannerAgent fallback grammar",
+      "llm": "needs the planner LLM (temporal, community comparison and named explain are not in the fallback grammar)"
+    },
+    "thin_data": "topic and institution questions: the export has 3 TOPIC nodes on one work with no AUTHORED edge and 1 INSTITUTION node with 0 AFFILIATED_WITH edges, so the expected outcome is a verified abstention",
+    "total": 33,
+    "types": [
+      "coauthor_breadth",
+      "topic",
+      "max_team_size",
+      "direct_collab",
+      "institution",
+      "shortest_path",
+      "component",
+      "community",
+      "bridge",
+      "temporal",
+      "evidence"
+    ],
+    "windows_stored": [
+      "all-years",
+      "through-2009",
+      "2010-2014",
+      "2015-2019",
+      "2020-2026",
+      "since-2015"
+    ]
+  },
+  "schema": "scholarchain.q12-inputs-provenance.v1",
+  "seed": "q12-v1",
+  "source": {
+    "files_read": 58,
+    "files_read_listing_sha256": "98379ee35d535cf358a52fce5b5c4cfd3aade8a200bd7ab362372825d9d315f1",
+    "files_read_sha256": {
+      "neptune-opencypher-csv/data/coauthor-edges/part-00000-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "f47e13e77871f355f34409839fbe2965729de097102783b9739dbed4e009129e",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00001-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "9f25670e77b2e856e9b774f56bb739a83a2d9720f40a777fac57ce220db40ac9",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00002-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "c3c1d04629ac2351c62601a6fc636d87b6ae8758c0db7d145987ecaad40615d3",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00003-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "4a1183d051d516f6cbe449392e9c5cfdd5479f3d65fa79a6597b03187d678f1f",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00004-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "b0d51ee0688e3eaee65fd7fade1511de3e89b4b90998175e2d6d1d10245645f6",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00005-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "0ffe250b2d43dd620e65982d761046040e6c25b2cefb3f72236a65fd33b75d19",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00006-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "d60f8048b4a5efe7a6be0433ce776645ce45a60198120a335ad7d165a9d25c63",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00007-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "17a94ae2608125eab772213752b6aac66a1d22ac46fc0c2b35676d5a9d682951",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00008-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "df62b0175ff9796a9e82ba4b76fe6ebe50f09b222f1c3b92d6f3fa81cabf23df",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00009-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "153a572ab0ad1ba96de16f87622d8e6cb65cb5fe3ef866a9b23bea54e1a79e85",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00010-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "97520d6c62d6dade665b2f137d5478f5e01511bbb158300ed98ca0c758cc7a28",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00011-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "83c4ef4139cd271f5f83770ac64b7fce1a8dfc1e369678ba596d150890461b14",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00012-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "2231d62afa5976a17559caf2ee57dbde032d72feff331945fcf17ebe1e593a4e",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00013-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "2e55ec8af17381432d9adabbbdefd3ec2b4a4602ccf343b997e96a0d36db271f",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00014-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "233803274e2d463841d5904a389e30d947ea08ba0690fc1c1119e7b80e75f025",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00015-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "37ce7e9f07e343806948904c10f890f83c21818b4e5a19922d4dda395e5878b2",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00016-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "217e818e92fdb25d23e807cfba424fb59b76c2aa7a0fa2d9e1651b77d8c35300",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00017-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "2a80102b2d9e287da18182745587cddfe595ad906dce6b46bfecfda05b4183ac",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00018-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "dc4e5c868544a209f7726b109134c920ef35a233a8bacea3793de7d66d5ffb36",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00019-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "fefd343ae91101a15e5dfcfa7b82caa1cc5727f72b2bf03cb1659ca89c864fc3",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00020-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "02aedfc20d49608ff99a3088781e420e9a3c423c90af5c8cd57833b66023c510",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00021-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "ff8a9bcaa8b3d6ca837f4fb3e17568190e28d0f8b2f47784dec75406fecbc578",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00022-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "6b8dd491f6259aacecf04eaf08ebb9429735485299fc4901be4eb1f4e492a983",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00023-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "ed8b16b77ff2df0a40dec940ff9f5e7128ee81b48652fcf1cd3b15f8d545b361",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00024-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "92295a1a92313cb51b89a29f5a28ed48533ebddc473c5a61f0730eb480dc50d5",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00025-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "fd6ad1483088a3e389893119400cdf03e5caf06ac78bd568d9c89f197e82c154",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00026-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "d66567406959baab6e64b2d31ec21af92b94f64f2b6f21dd14ec709c7bc03e2c",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00027-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "2aa415a1b8941da2b4c4b188fa416c901b68ffa98da61a8a290073a76b8966be",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00028-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "25685d3f388668e52bc4d986176548e0c4fafa701e8fa5709bb649cf4038dd94",
+      "neptune-opencypher-csv/data/coauthor-edges/part-00029-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv": "d6c5160d2802646942777d8fea4bd9d7979abcc9cbc06aca4262b6efc39efc3e",
+      "neptune-opencypher-csv/data/graph-edges/part-00000-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "ee93cfa32e59bcba847cde0fbea5f3d373314247eaf5b12e6d4b8121e43ce0b2",
+      "neptune-opencypher-csv/data/graph-edges/part-00001-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "cb9c41d28c1cb369c1ff3c6187d23e141748cadb96c8df72ad8d346a5b83f8fc",
+      "neptune-opencypher-csv/data/graph-edges/part-00002-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "b92a0c0e4bcc705623b18fae6942e88ef110860e4560edae1631ac407ebbb667",
+      "neptune-opencypher-csv/data/graph-edges/part-00003-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "daa24e9a2332582c318b72523d2682b8f9e8d12260068c0362e7c37345a32068",
+      "neptune-opencypher-csv/data/graph-edges/part-00004-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "fac05538eb8192a9f28754e819e9e3e1756ecfd207caf31c84207181d2d0d990",
+      "neptune-opencypher-csv/data/graph-edges/part-00005-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "b836ea42cc7d0fbda62f1f366914e4db514d85513c74d176bec79d352db1ba1a",
+      "neptune-opencypher-csv/data/graph-edges/part-00006-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "bb5afb9eaad58c4fd732fb93991eb61db110e598eef3ea50fa30156d7332da92",
+      "neptune-opencypher-csv/data/graph-edges/part-00007-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "47f5ce43318ba545a121b66fec68dc3cfb454450d3418ab1e7e5997c003d5ad2",
+      "neptune-opencypher-csv/data/graph-edges/part-00008-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "7654c0536f7931e31364b1bbba87ebf9d1ced5852262ac3ffbd4e8408d16559a",
+      "neptune-opencypher-csv/data/graph-edges/part-00009-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "4575196e9e86a741f8df62cd331bddb7b4b0a0a4ce13ccb7017fda75d5c626c3",
+      "neptune-opencypher-csv/data/graph-edges/part-00010-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "1827e01218c79d778c75e757a65b10963b01b96cc6d5153120494b09a9648c12",
+      "neptune-opencypher-csv/data/graph-edges/part-00011-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "d7badf08baf1a78e5918d808ed2bbfbd2a3376bc10258e6ab9a82484a97d9b6a",
+      "neptune-opencypher-csv/data/graph-edges/part-00012-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "1afd1100ec8ade17d284dd4992670291a1340c3a7f7b6378bbce5d703bc51934",
+      "neptune-opencypher-csv/data/graph-edges/part-00013-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "82b94991d70873b9952d8e385bcf329173fbed2faa0c4dc8a952cd670d41b858",
+      "neptune-opencypher-csv/data/graph-edges/part-00014-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "d4023208bad5d51b9db89480d1d530df0a234fecd899d0ca03e968f7b30ec184",
+      "neptune-opencypher-csv/data/graph-edges/part-00015-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv": "b067f24a798e562d6014f70bca27db052cf267dab26f362291ff261538c124c5",
+      "neptune-opencypher-csv/data/nodes/part-00000-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "b570e141bfb566dd0c40cb281d5791f1c0310028efd953ded5b90b498d14aab3",
+      "neptune-opencypher-csv/data/nodes/part-00001-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "53091919e808148c084b2789e3d9e14d1dfdc7506262a09dab8189fd5039a9db",
+      "neptune-opencypher-csv/data/nodes/part-00002-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "b0a7f5b34fa2958a04ea875621a086902a88a8b7a13bee926202d2723479b426",
+      "neptune-opencypher-csv/data/nodes/part-00003-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "db6e5cc489323ef76b217f8c39fd8dc11aa1cae42a0661d5156113bed3ca66c7",
+      "neptune-opencypher-csv/data/nodes/part-00004-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "2b8d71e7fdedb84755cd90bb23225ebfc529cb029fbf8dc2838f1f16929ec194",
+      "neptune-opencypher-csv/data/nodes/part-00005-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "e90538f7b1e3ee51a6f93332786c178d4293db8294ba9ea8ba22a9f6808130b2",
+      "neptune-opencypher-csv/data/nodes/part-00006-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "1f17364d6c03b3b09ce3628e26b617d0a1926b81cc84b41ea17c5c7555136751",
+      "neptune-opencypher-csv/data/nodes/part-00007-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "8373f50c75b4ebcc012a5e28d9f3aee39f7250cf236e0324aa2f381055836030",
+      "neptune-opencypher-csv/data/nodes/part-00008-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "50aa69b5903b0f8a0323c7532c4679784bd6b28d888f34c8099f460157a52485",
+      "neptune-opencypher-csv/data/nodes/part-00009-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "2f264bfaf02d5c0d34455d8efc596fd767ab283e01af1f7a8dd215cd5fd4701b",
+      "neptune-opencypher-csv/data/nodes/part-00010-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv": "b965c82ee0e11840ce1107b8aba72bcc26c46ba4ca1f15bcb799f0a0d2080df4",
+      "run-manifest.json": "eef8b1a5e27701388de92c6e27c9277bd1e18fc7b966a8d600772b1ab13f7e10"
+    },
+    "format": "Phase 6 Spark export, neptune-opencypher-csv sidecar (plain CSV)",
+    "run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa"
+  },
+  "tool": "experiments/scripts/derive_q12_inputs.py",
+  "types": {
+    "bridge": [
+      "q09",
+      "q20",
+      "q31"
+    ],
+    "coauthor_breadth": [
+      "q01",
+      "q12",
+      "q23"
+    ],
+    "community": [
+      "q08",
+      "q19",
+      "q30"
+    ],
+    "component": [
+      "q07",
+      "q18",
+      "q29"
+    ],
+    "direct_collab": [
+      "q04",
+      "q15",
+      "q26"
+    ],
+    "evidence": [
+      "q11",
+      "q22",
+      "q33"
+    ],
+    "institution": [
+      "q05",
+      "q16",
+      "q27"
+    ],
+    "max_team_size": [
+      "q03",
+      "q14",
+      "q25"
+    ],
+    "shortest_path": [
+      "q06",
+      "q17",
+      "q28"
+    ],
+    "temporal": [
+      "q10",
+      "q21",
+      "q32"
+    ],
+    "topic": [
+      "q02",
+      "q13",
+      "q24"
+    ]
+  }
+}

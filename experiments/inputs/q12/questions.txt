@@ -1,0 +1,33 @@
+Which researchers have the most distinct coauthors?
+Which researchers have the most distinct coauthors topic "Cognitive Computing and Networks"?
+Which researchers have the largest team size?
+Who are the direct coauthors of "Michael Kaminsky"?
+Which researchers have the most distinct coauthors institution "University of Louisiana at Lafayette"?
+What is the shortest coauthor path between "Niraj Tolia" and "Zhikui Wang"?
+What is the component of "Changyu Lin"?
+Compare communities of "Ales Kubicek"
+Which researchers are the strongest bridges?
+Did "Praveen Yalagandula" change from through-2009 to 2010-2014?
+Explain the research collaboration of "Vo Quoc Bao Bui"
+Which researchers have the most distinct coauthors since 2015?
+Which researchers have the most distinct coauthors topic "Computability, Logic, AI Algorithms" since 2015?
+Which researchers have the maximum team size since 2015?
+Who are the direct coauthors of "Alexandru Manea"?
+Rank bridge researchers institution "University of Louisiana at Lafayette" since 2015
+What is the shortest coauthor path between "Geoff Outhred" and "Umesh Krishnaswamy" since 2015?
+What is the component of "Frank Sherwood" in window through-2009?
+Compare communities of "Shengdong Dai" since 2015
+Which researchers are the strongest bridges since 2015?
+Did "Nisha Talagala" change from 2010-2014 to 2015-2019?
+Explain the research collaboration of "Aleksey Pesterev"
+Which researchers have the most distinct coauthors in window 2010-2014?
+Rank researchers by distinct coauthors topic "Language and cultural evolution" in window 2020-2026
+Rank researchers by maximum team size in window 2020-2026
+Who are the direct coauthors of "Bin Niu" since 2015?
+Which researchers have the largest team size institution "University of Louisiana at Lafayette"?
+What is the shortest coauthor path between "Ming-Chang Yang" and "Chenxiao Liu"?
+What is the component of "Teruo Higashino" since 2015?
+Compare communities of "Soo-Mook Moon" in window 2020-2026
+Which researchers are the strongest bridges in window 2020-2026?
+Did "Dinesh Bharadia" change from 2015-2019 to 2020-2026?
+Explain the research collaboration of "Qizhe Cai"

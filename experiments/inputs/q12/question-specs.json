@@ -1,0 +1,452 @@
+{
+  "questions": [
+    {
+      "id": "q01",
+      "params": {
+        "metric": "DISTINCT_COAUTHOR_COUNT",
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the most distinct coauthors?",
+      "slot": "breadth-all-years",
+      "type": "coauthor_breadth"
+    },
+    {
+      "id": "q02",
+      "params": {
+        "thin_data": true,
+        "topic": "Cognitive Computing and Networks",
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the most distinct coauthors topic \"Cognitive Computing and Networks\"?",
+      "slot": "topic-1",
+      "type": "topic"
+    },
+    {
+      "id": "q03",
+      "params": {
+        "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the largest team size?",
+      "slot": "team-all-years",
+      "type": "max_team_size"
+    },
+    {
+      "id": "q04",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:5e28765449666a71246e10748ac88496be123ca000147acf492497303097efe1",
+          "name": "Michael Kaminsky"
+        },
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Who are the direct coauthors of \"Michael Kaminsky\"?",
+      "slot": "direct-hub",
+      "type": "direct_collab"
+    },
+    {
+      "id": "q05",
+      "params": {
+        "institution": "University of Louisiana at Lafayette",
+        "metric": "DISTINCT_COAUTHOR_COUNT",
+        "thin_data": true,
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the most distinct coauthors institution \"University of Louisiana at Lafayette\"?",
+      "slot": "institution-1",
+      "type": "institution"
+    },
+    {
+      "id": "q06",
+      "params": {
+        "a": {
+          "id": "researcher:dblp:7e6a425558ec33641d89f0004a761e16418508ba812c5e7cae31a820d544b095",
+          "name": "Niraj Tolia"
+        },
+        "b": {
+          "id": "researcher:dblp:e9a8491d797e7c42a5bf390efebf80c1aeea9f40e29a3b660edeb8810d5c880d",
+          "name": "Zhikui Wang"
+        },
+        "expected_hops": 1,
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "What is the shortest coauthor path between \"Niraj Tolia\" and \"Zhikui Wang\"?",
+      "slot": "path-1",
+      "type": "shortest_path"
+    },
+    {
+      "id": "q07",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:3c08e39edd49e103f84b6af19a6022cbeab779426f0a63e4a315c934144d9d9a",
+          "name": "Changyu Lin"
+        },
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "What is the component of \"Changyu Lin\"?",
+      "slot": "component-all",
+      "type": "component"
+    },
+    {
+      "id": "q08",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:a275848fd4b2ce2c575cbe229c4b4feb79a9e6ed7c85e23595ac717a2d6dd6ce",
+          "name": "Ales Kubicek"
+        },
+        "window": "all-years"
+      },
+      "planner": "llm",
+      "question": "Compare communities of \"Ales Kubicek\"",
+      "slot": "community-all",
+      "type": "community"
+    },
+    {
+      "id": "q09",
+      "params": {
+        "measure": "CROSS_COMMUNITY_DEGREE",
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Which researchers are the strongest bridges?",
+      "slot": "bridge-all-years",
+      "type": "bridge"
+    },
+    {
+      "id": "q10",
+      "params": {
+        "from": "through-2009",
+        "researcher": {
+          "id": "researcher:dblp:0079cadd7d70d742113e43063c97b213cb55fd16b0a0c984c8cc42e30c57e80b",
+          "name": "Praveen Yalagandula"
+        },
+        "to": "2010-2014"
+      },
+      "planner": "llm",
+      "question": "Did \"Praveen Yalagandula\" change from through-2009 to 2010-2014?",
+      "slot": "temporal-1",
+      "type": "temporal"
+    },
+    {
+      "id": "q11",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:6f5dd1dc70ef8d694ce1f3e0c16d8669a09865f60b162df4929be53fc08732e7",
+          "name": "Vo Quoc Bao Bui"
+        },
+        "window": "all-years"
+      },
+      "planner": "llm",
+      "question": "Explain the research collaboration of \"Vo Quoc Bao Bui\"",
+      "slot": "evidence-1",
+      "type": "evidence"
+    },
+    {
+      "id": "q12",
+      "params": {
+        "metric": "DISTINCT_COAUTHOR_COUNT",
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the most distinct coauthors since 2015?",
+      "slot": "breadth-since-2015",
+      "type": "coauthor_breadth"
+    },
+    {
+      "id": "q13",
+      "params": {
+        "thin_data": true,
+        "topic": "Computability, Logic, AI Algorithms",
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the most distinct coauthors topic \"Computability, Logic, AI Algorithms\" since 2015?",
+      "slot": "topic-2",
+      "type": "topic"
+    },
+    {
+      "id": "q14",
+      "params": {
+        "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the maximum team size since 2015?",
+      "slot": "team-since-2015",
+      "type": "max_team_size"
+    },
+    {
+      "id": "q15",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:b4cd20d76c58a602967e703911203d8ad33089df20ccef6484e3569a9c890dfd",
+          "name": "Alexandru Manea"
+        },
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Who are the direct coauthors of \"Alexandru Manea\"?",
+      "slot": "direct-all",
+      "type": "direct_collab"
+    },
+    {
+      "id": "q16",
+      "params": {
+        "institution": "University of Louisiana at Lafayette",
+        "metric": "CROSS_COMMUNITY_DEGREE",
+        "thin_data": true,
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "Rank bridge researchers institution \"University of Louisiana at Lafayette\" since 2015",
+      "slot": "institution-2",
+      "type": "institution"
+    },
+    {
+      "id": "q17",
+      "params": {
+        "a": {
+          "id": "researcher:dblp:06fcef7f16a0c100029972c945247152095c13c7146cb9c36539e89c9aee24db",
+          "name": "Geoff Outhred"
+        },
+        "b": {
+          "id": "researcher:dblp:69a3223f695233ef91251726eb11e5b39bebe0358ab2a727f0396d3832c1059c",
+          "name": "Umesh Krishnaswamy"
+        },
+        "expected_hops": 2,
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "What is the shortest coauthor path between \"Geoff Outhred\" and \"Umesh Krishnaswamy\" since 2015?",
+      "slot": "path-2",
+      "type": "shortest_path"
+    },
+    {
+      "id": "q18",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:982bec09febf3c2ab988d719a5e94865442658f56213c3956a3232f013a4978b",
+          "name": "Frank Sherwood"
+        },
+        "window": "through-2009"
+      },
+      "planner": "fallback",
+      "question": "What is the component of \"Frank Sherwood\" in window through-2009?",
+      "slot": "component-through-2009",
+      "type": "component"
+    },
+    {
+      "id": "q19",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927",
+          "name": "Shengdong Dai"
+        },
+        "window": "since-2015"
+      },
+      "planner": "llm",
+      "question": "Compare communities of \"Shengdong Dai\" since 2015",
+      "slot": "community-since-2015",
+      "type": "community"
+    },
+    {
+      "id": "q20",
+      "params": {
+        "measure": "CROSS_COMMUNITY_DEGREE",
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "Which researchers are the strongest bridges since 2015?",
+      "slot": "bridge-since-2015",
+      "type": "bridge"
+    },
+    {
+      "id": "q21",
+      "params": {
+        "from": "2010-2014",
+        "researcher": {
+          "id": "researcher:dblp:c9c817537488c6e023a46649f381730495432435dc860b0955d45a968afa1de9",
+          "name": "Nisha Talagala"
+        },
+        "to": "2015-2019"
+      },
+      "planner": "llm",
+      "question": "Did \"Nisha Talagala\" change from 2010-2014 to 2015-2019?",
+      "slot": "temporal-2",
+      "type": "temporal"
+    },
+    {
+      "id": "q22",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:cd25bdfb3f2fcda5408a673ea4eed8d775aab8054644ef48807e4d2115224978",
+          "name": "Aleksey Pesterev"
+        },
+        "window": "all-years"
+      },
+      "planner": "llm",
+      "question": "Explain the research collaboration of \"Aleksey Pesterev\"",
+      "slot": "evidence-2",
+      "type": "evidence"
+    },
+    {
+      "id": "q23",
+      "params": {
+        "metric": "DISTINCT_COAUTHOR_COUNT",
+        "window": "2010-2014"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the most distinct coauthors in window 2010-2014?",
+      "slot": "breadth-2010-2014",
+      "type": "coauthor_breadth"
+    },
+    {
+      "id": "q24",
+      "params": {
+        "thin_data": true,
+        "topic": "Language and cultural evolution",
+        "window": "2020-2026"
+      },
+      "planner": "fallback",
+      "question": "Rank researchers by distinct coauthors topic \"Language and cultural evolution\" in window 2020-2026",
+      "slot": "topic-3",
+      "type": "topic"
+    },
+    {
+      "id": "q25",
+      "params": {
+        "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+        "window": "2020-2026"
+      },
+      "planner": "fallback",
+      "question": "Rank researchers by maximum team size in window 2020-2026",
+      "slot": "team-2020-2026",
+      "type": "max_team_size"
+    },
+    {
+      "id": "q26",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:07ea4103d2304274cbf530055d836b0d94287d69b63b653148c160ad4f3a3d3b",
+          "name": "Bin Niu"
+        },
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "Who are the direct coauthors of \"Bin Niu\" since 2015?",
+      "slot": "direct-since",
+      "type": "direct_collab"
+    },
+    {
+      "id": "q27",
+      "params": {
+        "institution": "University of Louisiana at Lafayette",
+        "metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+        "thin_data": true,
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "Which researchers have the largest team size institution \"University of Louisiana at Lafayette\"?",
+      "slot": "institution-3",
+      "type": "institution"
+    },
+    {
+      "id": "q28",
+      "params": {
+        "a": {
+          "id": "researcher:dblp:01fde7473f4d670a296b0be0beef2dd7a15cccfdb4407feef4700192a8c936e1",
+          "name": "Ming-Chang Yang"
+        },
+        "b": {
+          "id": "researcher:dblp:262af4d49bb63bbbef18a5da6d14466e14f3aac0c5a90ca4c34f197828ee81ba",
+          "name": "Chenxiao Liu"
+        },
+        "expected_hops": 3,
+        "support_include_id": "researcher:dblp:634aa7606284d5117daaeae16b033781312058bd5a3b95446859f87bf0cc1bee",
+        "window": "all-years"
+      },
+      "planner": "fallback",
+      "question": "What is the shortest coauthor path between \"Ming-Chang Yang\" and \"Chenxiao Liu\"?",
+      "slot": "path-3",
+      "type": "shortest_path"
+    },
+    {
+      "id": "q29",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:9706bf15b6147bd09ff1ad796f89d639e5e0fb2976c792563a6dd007b773338a",
+          "name": "Teruo Higashino"
+        },
+        "window": "since-2015"
+      },
+      "planner": "fallback",
+      "question": "What is the component of \"Teruo Higashino\" since 2015?",
+      "slot": "component-since-2015",
+      "type": "component"
+    },
+    {
+      "id": "q30",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:ec49df63d46fc66b324115ca155965fd807cbb8fee1eca3c5ba3cf4b7258a105",
+          "name": "Soo-Mook Moon"
+        },
+        "window": "2020-2026"
+      },
+      "planner": "llm",
+      "question": "Compare communities of \"Soo-Mook Moon\" in window 2020-2026",
+      "slot": "community-2020-2026",
+      "type": "community"
+    },
+    {
+      "id": "q31",
+      "params": {
+        "measure": "CROSS_COMMUNITY_DEGREE",
+        "window": "2020-2026"
+      },
+      "planner": "fallback",
+      "question": "Which researchers are the strongest bridges in window 2020-2026?",
+      "slot": "bridge-2020-2026",
+      "type": "bridge"
+    },
+    {
+      "id": "q32",
+      "params": {
+        "from": "2015-2019",
+        "researcher": {
+          "id": "researcher:dblp:044b72b416f5f986a31e2518075b99a3755dc444800dc9ff42e3ac335785c376",
+          "name": "Dinesh Bharadia"
+        },
+        "to": "2020-2026"
+      },
+      "planner": "llm",
+      "question": "Did \"Dinesh Bharadia\" change from 2015-2019 to 2020-2026?",
+      "slot": "temporal-3",
+      "type": "temporal"
+    },
+    {
+      "id": "q33",
+      "params": {
+        "researcher": {
+          "id": "researcher:dblp:59c89f2898dcf02f8666089064efbac74339c579a4ed9ffc41806a66540950f2",
+          "name": "Qizhe Cai"
+        },
+        "window": "all-years"
+      },
+      "planner": "llm",
+      "question": "Explain the research collaboration of \"Qizhe Cai\"",
+      "slot": "evidence-3",
+      "type": "evidence"
+    }
+  ],
+  "run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
+  "schema": "scholarchain.q12-question-specs.v1",
+  "seed": "q12-v1"
+}

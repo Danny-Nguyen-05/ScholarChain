@@ -30,6 +30,14 @@ final class PathFinderAgent(
         page.items.size <= limit && page.items.map(_.nodeId).distinct.size == page.items.size,
         "invalid-neighbor-page"
       )
+      // The stored window total must agree with the returned page, or "showing N of M" would be a
+      // claim the evidence contradicts: a page never exceeds the total, and an untruncated page is
+      // the whole total. A disagreement between graph and metrics is a failed stage, not an answer.
+      val total = first.detail.distinctCoauthorCount
+      RuntimeRead.check(
+        page.items.size <= total && (page.cursor.nonEmpty || page.items.size == total),
+        "coauthor-count-mismatch"
+      )
       val edges = page.items.map { n =>
         RuntimeRead.check(n.edgeType == "COAUTHORED_WITH", "unexpected-edge-type")
         val record = RuntimeRead.value(artifacts.edgeSupport(n.edgeId, window))
@@ -45,9 +53,14 @@ final class PathFinderAgent(
         Vector(
           ids("coauthorIds", page.items.map(_.nodeId)),
           number("returnedCount", page.items.size),
-          flag("truncated", page.cursor.nonEmpty)
+          flag("truncated", page.cursor.nonEmpty),
+          // The stored window total makes a truncated page verifiable as "showing N of M".
+          number("distinctCoauthorCount", first.detail.distinctCoauthorCount)
         ),
-        Vector(ref("nodes/type=researcher", a)),
+        Vector(
+          ref("nodes/type=researcher", a),
+          ref("metrics/type=researcher_collaboration", a, "distinctCoauthorCount")
+        ),
         sourceContext = Some(first.detail.context)
       )
       RetrievalOutput("path", Vector(item) ++ edges, truncated = page.cursor.nonEmpty)

@@ -56,6 +56,7 @@ private[rag] object ClaimContract {
     "coauthorIds",
     "returnedCount",
     "truncated",
+    "distinctCoauthorCount",
     "researcherA",
     "researcherB",
     "jointPublicationCount",

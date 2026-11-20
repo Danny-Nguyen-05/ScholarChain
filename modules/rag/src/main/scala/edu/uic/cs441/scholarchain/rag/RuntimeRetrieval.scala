@@ -282,6 +282,7 @@ private[rag] object RuntimeEvidenceItems {
 object EvidenceContext {
   private def view(item: EvidenceItem): ujson.Value = {
     val r = item.runtime.get
+    val isEdge = r.values.exists(v => v.field == "kind" && v.text.contains("edge"))
     val result = ujson.Obj(
       "evidenceId" -> item.evidenceId,
       "type" -> item.evidenceType.wire,
@@ -296,14 +297,19 @@ object EvidenceContext {
       "windows" -> ujson.Arr.from(r.windowIds),
       "runId" -> r.runId,
       "values" -> ujson.Obj.from(
-        r.values.map(v =>
-          v.field -> v.number
-            .map(ujson.Str(_))
-            .orElse(v.text.map(ujson.Str(_)))
-            .orElse(v.ids.map(xs => ujson.Arr.from(xs)))
-            .orElse(v.flag.map(ujson.Bool(_)))
-            .get
-        )
+        // Per-work detail of an edge (work ids and one year per work) is omitted from the model
+        // view: the edge row keeps its joint publication count, the stored evidence keeps every
+        // work, and a claim over those fields is still verified against the stored item.
+        r.values
+          .filterNot(v => isEdge && (v.field == "workIds" || v.field.startsWith("year:")))
+          .map(v =>
+            v.field -> v.number
+              .map(ujson.Str(_))
+              .orElse(v.text.map(ujson.Str(_)))
+              .orElse(v.ids.map(xs => ujson.Arr.from(xs)))
+              .orElse(v.flag.map(ujson.Bool(_)))
+              .get
+          )
       ),
       "approximate" -> r.approximate,
       "descriptive" -> r.descriptive,
@@ -333,12 +339,13 @@ object EvidenceContext {
       if (!runtime.descriptive) data.remove("descriptive")
       ujson.Obj.from(data)
     }
+    // Model view only: source IDs and evidence references are provenance, not claim material. The
+    // persisted bundle and the audit keep every resolved candidate in full; only the identifier,
+    // name, run and confidence reach the model, which keeps two-researcher path questions in budget.
     val identities = candidates.map { candidate =>
       val value = ujson.Obj(
         "researcherId" -> candidate.researcherId,
         "displayName" -> candidate.displayName,
-        "sourceIds" -> ujson.Arr.from(candidate.sourceIds),
-        "evidenceRefs" -> ujson.Arr.from(candidate.evidenceRefs),
         "runs" -> ujson.Arr.from(candidate.runIds.map(r => ujson.Num(runs.indexOf(r)))),
         "confidence" -> candidate.confidence.map(ujson.Num(_)).getOrElse(ujson.Null)
       )

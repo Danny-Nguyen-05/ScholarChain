@@ -2,6 +2,8 @@
 
 `loadgen.py` is the Phase 15 query-load generator (experiment D / 15B); `eval16b.py` is the Phase 16B live-evaluation runner (bucket 16b). Python 3 standard library only, no install step. Owner: experiment-engineer. It has **not** been run against the deployed stack; its tests use a fake query-api on `127.0.0.1`.
 
+`evalq12.py` is the Q12 benchmark runner (33 questions, bucket 16b): a parameterised variant of `eval16b.py` (same plan/run commands, hard stops and ledger charging) that also fetches `/v1/explain/{queryId}` and every cited `/v1/evidence/{id}` (GET only, at most 60 per question) and keeps the raw responses in `answers.jsonl` for `experiments/scripts/q12_score.py`. It refuses a questions file that differs from the sha256 pinned in `experiments/manifests/q12-benchmark.json`, a non-loopback base URL, and (before the first ledger charge) a running artifact that lacks an include ID (GET `/v1/graph/nodes/{id}`); `--only q04` asks one question as a bounded probe; an expected 422 `UNSUPPORTED_QUERY` on a topic or institution question does not count toward the consecutive-failure stop. See "Q12 benchmark" in `experiments/README.md`; tests: `tests/test_evalq12.py` (fake query-api on `127.0.0.1`, never run against a service).
+
 Run everything from the repository root with `python3 -I` (isolated mode).
 
 ## What it does
