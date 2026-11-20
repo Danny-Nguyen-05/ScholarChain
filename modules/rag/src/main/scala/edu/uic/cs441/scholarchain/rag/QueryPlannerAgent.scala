@@ -588,7 +588,10 @@ final class QueryPlannerAgent(
       "(?i)(?:what is the )?shortest (?:coauthor )?path between \"([^\"]+)\" and \"([^\"]+)\"".r
     val coauthors = "(?i)(?:who are the )?direct coauthors of \"([^\"]+)\"".r
     val component = "(?i)(?:what is the )?component (?:of|for) \"([^\"]+)\"".r
-    val semantic = "(?i)explain the (?:research )?topic \"([^\"]+)\"".r
+    // The quoted `topic "..."` clause is removed from `remaining` above, so the explanation form is
+    // what is left of "explain the (research) topic "X"": the verb phrase plus exactly one topic.
+    val semantic = "(?i)explain the(?: research)?".r
+    val topicFilters = filters.filter(_.group(1).equalsIgnoreCase("topic"))
     val repeated = "(?i)(?:show|rank) (?:the )?strongest repeated collaboration(?:s)?".r
     val parsed: Option[
       (Vector[QueryOperation], Vector[String], Option[CollaborationMetric], Option[String])
@@ -596,7 +599,7 @@ final class QueryPlannerAgent(
       case path(a, b)   => Some((Vector(QueryOperation.ShortestPath), Vector(a, b), None, None))
       case coauthors(a) => Some((Vector(QueryOperation.DirectCoauthors), Vector(a), None, None))
       case component(a) => Some((Vector(QueryOperation.ComponentLookup), Vector(a), None, None))
-      case semantic(_) =>
+      case semantic() if topicFilters.size == 1 =>
         Some((Vector(QueryOperation.SemanticExplanation), Vector.empty, None, None))
       case repeated() =>
         Some(
@@ -650,9 +653,7 @@ final class QueryPlannerAgent(
         PlannerResult.Unsupported("fallback-unrecognized-or-unrepresentable-constraint", attempts)
       case Some((ops, names, metric, measure)) =>
         def filter(kind: String) = filters.filter(_.group(1).equalsIgnoreCase(kind)).map(_.group(2))
-        val topics = filter("topic") ++ (remaining match {
-          case semantic(topic) => Vector(topic); case _ => Vector.empty
-        })
+        val topics = filter("topic")
         val value = ujson.Obj(
           "schemaVersion" -> config.plannerSchemaVersion,
           "status" -> "SUPPORTED",
