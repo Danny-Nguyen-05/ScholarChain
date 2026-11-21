@@ -58,7 +58,8 @@ The USD 25 project limit covers all three bills: AWS, Anthropic and Voyage AI. T
 |---|---|
 | `claude-haiku-5-5` price | USD 0.10 input / 0.50 output per 1M tokens (prompts up to 100,000 tokens) |
 | Estimated cost per answer | USD 0.001365 (tokens raised 30% for the new tokenizer) |
-| Answer buckets | 14c 10, 15b 60, 16b 40, 17 5 = 115 answers = USD 0.156975 |
+| Answer buckets | 14c 10, 15b 60, 16b 80, 17 10 = 160 answers = USD 0.2184 (raised from 115 answers = USD 0.156975 by the user decision of 2026-11-21, option A: a full Q12 benchmark rerun of 33 questions + 1 probe, and room for the Phase 17 demo) |
+| Observed cost per answer | Not metered in full (planner tokens are not recorded). Synthesis call only, from local raw run evidence: 1 probe answer 27,359 in / 264 out, about USD 0.0029 (about 2.1 times the unit); 15 of 33 benchmark answers record usage, mean 8,664 in / 316 out, about USD 0.0010 (about 0.75 times). Varies with retrieval context; the Anthropic console is the cost of record |
 | Synthesis cap | USD 1.33, a conservative upper bound; the bucket counts bind first |
 | `voyage-4-lite` price and cap | USD 0.02 per 1M tokens; embedding cap USD 0.30 enforced with a token counter |
 
