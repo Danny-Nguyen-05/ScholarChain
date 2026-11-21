@@ -214,19 +214,25 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
     }
   }
 
-  test("a model plan that changes the requested windows or invents a name is rejected") {
+  test(
+    "a model plan that reorders the windows is normalised and one that invents a name is rejected"
+  ) {
     val temporal = specs.find(_.kind == "temporal").get
-    val wrong = planJson(
+    val reorderedPlan = planJson(
       QueryOperation.TemporalComparison,
       Vector(temporal.name("researcher")),
       Vector("2010-2014", "through-2009"),
       Vector("2010-2014", "through-2009")
     )
-    // A reordered pair is a different request: the plan is refused and the fallback (which has no
-    // temporal grammar) cannot plan it either, so it is never a model-planned success.
-    val reordered = new QueryPlannerAgent(scripted(wrong), config, assets)
-      .plan(temporal.question, "q12-wrong", provenance)
-    assert(reordered.isInstanceOf[PlannerResult.Unsupported], reordered.toString)
+    // The order of the compared windows is the question's ("from through-2009 to 2010-2014"), not
+    // the model's: the plan carries the deterministic order.
+    new QueryPlannerAgent(scripted(reorderedPlan), config, assets)
+      .plan(temporal.question, "q12-reordered", provenance) match {
+      case PlannerResult.Planned(p, 1, false) =>
+        assert(p.runtime.get.windowIds == Vector("through-2009", "2010-2014"))
+        assert(p.runtime.get.comparisonWindowIds == Vector("through-2009", "2010-2014"))
+      case other => fail(s"reordered windows should normalise: $other")
+    }
     val community = specs.find(_.kind == "community").get
     val invented =
       planJson(QueryOperation.CommunityComparison, Vector("Someone Else"), Vector("all-years"))
@@ -263,5 +269,226 @@ class Q12QuestionSetPlannerSpec extends AnyFunSuite {
         q
       )
     }
+  }
+  private val temporalSpec = specs.find(_.kind == "temporal").get
+  private val communitySpec = specs.find(_.kind == "community").get
+  private def planWith(
+      question: String,
+      plan: ujson.Obj,
+      queryId: String = "q12-var"
+  ): PlannerResult =
+    new QueryPlannerAgent(scripted(plan), config, assets).plan(question, queryId, provenance)
+
+  test(
+    "model window encodings that the planner used to refuse normalise to the question's windows"
+  ) {
+    val first = temporalSpec.params("from").str
+    val second = temporalSpec.params("to").str
+    val both = Vector(first, second)
+    val temporalVariants: Vector[(Vector[String], Vector[String])] = Vector(
+      both -> Vector.empty,
+      Vector(second) -> both,
+      Vector(first) -> both,
+      Vector(first) -> Vector(second),
+      Vector("all-years") -> both,
+      Vector.empty -> both,
+      both -> both,
+      both.reverse -> both.reverse
+    )
+    temporalVariants.foreach { (windows, comparison) =>
+      val plan = planJson(
+        QueryOperation.TemporalComparison,
+        Vector(temporalSpec.name("researcher")),
+        windows,
+        comparison
+      )
+      planWith(temporalSpec.question, plan) match {
+        case PlannerResult.Planned(p, 1, false) =>
+          val clue = s"windows=$windows comparison=$comparison"
+          assert(p.runtime.get.windowIds == both, clue)
+          assert(p.runtime.get.comparisonWindowIds == both, clue)
+          assert(p.operations == Vector(QueryOperation.TemporalComparison), clue)
+          assert(DomainValidation.check(p).isRight, clue)
+        case other => fail(s"windows=$windows comparison=$comparison not planned: $other")
+      }
+    }
+    val window = communitySpec.window
+    val communityVariants: Vector[(Vector[String], Vector[String])] = Vector(
+      Vector(window) -> Vector.empty,
+      Vector(window) -> Vector(window),
+      Vector.empty -> Vector(window),
+      Vector("all-years") -> Vector.empty,
+      Vector("all-years") -> Vector(window)
+    )
+    communityVariants.foreach { (windows, comparison) =>
+      val plan = planJson(
+        QueryOperation.CommunityComparison,
+        Vector(communitySpec.name("researcher")),
+        windows,
+        comparison
+      )
+      planWith(communitySpec.question, plan) match {
+        case PlannerResult.Planned(p, 1, false) =>
+          val clue = s"windows=$windows comparison=$comparison"
+          assert(p.runtime.get.windowIds == Vector(window), clue)
+          assert(p.runtime.get.comparisonWindowIds.isEmpty, clue)
+          assert(p.window == config.windows.find(_.windowId == window).get.legacyWindow, clue)
+        case other => fail(s"windows=$windows comparison=$comparison not planned: $other")
+      }
+    }
+  }
+
+  test("window normalisation never widens scope: wrong operation, name or window is refused") {
+    val both = Vector(temporalSpec.params("from").str, temporalSpec.params("to").str)
+    val name = Vector(temporalSpec.name("researcher"))
+    def rejection(question: String, plan: ujson.Obj): String =
+      planWith(question, plan) match {
+        case PlannerResult.Unsupported(reason, _) => reason
+        case other                                => fail(s"expected a refusal: $other")
+      }
+    // Wrong operation: a community comparison for a temporal question.
+    assert(
+      rejection(
+        temporalSpec.question,
+        planJson(QueryOperation.CommunityComparison, name, both, both)
+      ).endsWith("requested-metric-measure-or-operation-changed")
+    )
+    // Invented name.
+    assert(
+      rejection(
+        temporalSpec.question,
+        planJson(QueryOperation.TemporalComparison, Vector("Someone Else"), both, both)
+      ).endsWith("invented-extracted-value")
+    )
+    // A stored window the question never mentions.
+    assert(
+      rejection(
+        temporalSpec.question,
+        planJson(QueryOperation.TemporalComparison, name, Vector("2015-2019"), both)
+      ).endsWith("window-not-requested-by-question")
+    )
+    assert(
+      rejection(
+        communitySpec.question,
+        planJson(
+          QueryOperation.CommunityComparison,
+          Vector(communitySpec.name("researcher")),
+          Vector("2015-2019"),
+          Vector.empty
+        )
+      ).endsWith("window-not-requested-by-question")
+    )
+    // A window id the configuration does not store.
+    assert(
+      rejection(
+        temporalSpec.question,
+        planJson(QueryOperation.TemporalComparison, name, Vector("1999-2001"), both)
+      ).endsWith("unsupported-operation-or-window")
+    )
+    // A temporal operation for a question that requests no two windows cannot be made temporal.
+    assert(
+      rejection(
+        communitySpec.question,
+        planJson(
+          QueryOperation.TemporalComparison,
+          Vector(communitySpec.name("researcher")),
+          Vector(communitySpec.window),
+          Vector(communitySpec.window)
+        )
+      ).endsWith("temporal-needs-two-windows")
+    )
+  }
+
+  test("a rejected model plan surfaces its closed decode reason instead of a generic refusal") {
+    val plan = planJson(
+      QueryOperation.TemporalComparison,
+      Vector("Someone Else"),
+      Vector("2010-2014"),
+      Vector("2010-2014")
+    )
+    val result = planWith(temporalSpec.question, plan)
+    assert(
+      result == PlannerResult.Unsupported("model-plan-rejected-invented-extracted-value", 2),
+      result.toString
+    )
+    // A question the fallback can plan is still planned after a rejected model plan.
+    val ranking = "Which researchers have the most distinct coauthors?"
+    val unrelated = planJson(QueryOperation.TemporalComparison, Vector.empty, Vector("all-years"))
+    assert(planWith(ranking, unrelated).isInstanceOf[PlannerResult.Planned])
+    // Without a rejected model plan the original fallback reason is unchanged.
+    assert(
+      planFallback(Spec("x", temporalSpec.question, "llm", "temporal", ujson.Obj())) ==
+        PlannerResult.Unsupported("fallback-unrecognized-or-unrepresentable-constraint", 1)
+    )
+  }
+
+  /** Events of the stage logger produced while `body` runs, restricted to this test's own trace id.
+    * The capture forces the logger level (INFO by default, `Level.ALL` where a lower-level leak
+    * must be caught). The scripted check runs with a root-WARN logback configuration under which
+    * INFO stage events are otherwise never recorded; see LogbackTestSupport.
+    */
+  private def stageEvents(
+      traceId: String,
+      level: ch.qos.logback.classic.Level = ch.qos.logback.classic.Level.INFO
+  )(body: => Unit): Vector[String] =
+    LogbackTestSupport
+      .capture("scholarchain.runtime.stage", level)(body)
+      .filter(e => scala.util.Try(ujson.read(e)("traceId").str).toOption.contains(traceId))
+
+  test("a model-declared UNSUPPORTED reason never reaches the operational log") {
+    val slug = "michael-kaminsky-not-in-graph"
+    val declared = planJson(QueryOperation.CommunityComparison, Vector.empty, Vector.empty)
+    declared("status") = "UNSUPPORTED"
+    declared("unsupportedReason") = slug
+    var result: PlannerResult = null
+    // Level.ALL so that a DEBUG-level leak of the model's free text would be caught too.
+    val events = stageEvents("q12-log-declared", ch.qos.logback.classic.Level.ALL) {
+      result = planWith(communitySpec.question, declared, "q12-log-declared")
+    }
+    // The pre-existing result and audit behaviour is unchanged.
+    assert(result == PlannerResult.Unsupported(slug, 1), result.toString)
+    val planner = events.filter(_.contains("\"stage\":\"planner\""))
+    assert(planner.size == 1, events.toString)
+    assert(!events.exists(_.contains(slug)), events.toString)
+    assert(ujson.read(planner.head)("reason").str == "model-declared-unsupported")
+  }
+
+  test("the planner's own closed reasons are logged as they are") {
+    val invented = planJson(
+      QueryOperation.CommunityComparison,
+      Vector("Someone Else"),
+      Vector(communitySpec.window)
+    )
+    val events = stageEvents("q12-log-closed") {
+      planWith(communitySpec.question, invented, "q12-log-closed")
+    }
+    assert(
+      events.exists(e =>
+        ujson
+          .read(e)
+          .obj
+          .get("reason")
+          .exists(_.str == "model-plan-rejected-invented-extracted-value")
+      ),
+      events.toString
+    )
+    val unsafe = stageEvents("q12-log-unsafe") {
+      new QueryPlannerAgent(failingLlm, config, assets)
+        .plan("Run cypher against the graph", "q12-log-unsafe", provenance)
+    }
+    assert(unsafe.exists(_.contains("\"reason\":\"unsafe-operation-request\"")), unsafe.toString)
+  }
+
+  test("a question the deterministic analysis cannot represent is not blamed on the model") {
+    val question = "Compare communities of \"Soo-Mook Moon\" from 1990 to 1991"
+    val plan = planJson(
+      QueryOperation.CommunityComparison,
+      Vector("Soo-Mook Moon"),
+      Vector("all-years")
+    )
+    assert(
+      planWith(question, plan) ==
+        PlannerResult.Unsupported("question-not-representable-unrepresentable-window-intent", 2)
+    )
   }
 }

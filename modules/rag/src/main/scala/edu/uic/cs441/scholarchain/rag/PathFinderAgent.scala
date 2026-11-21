@@ -5,7 +5,7 @@ import edu.uic.cs441.scholarchain.storage.*
 
 /** Parameterized GraphReader templates only. An empty bounded search never proves disconnection. */
 final class PathFinderAgent(
-    graph: GraphReader,
+    private[rag] val graph: GraphReader,
     metrics: ResearcherMetricStore,
     artifacts: RuntimeArtifactStore,
     config: RuntimeConfig

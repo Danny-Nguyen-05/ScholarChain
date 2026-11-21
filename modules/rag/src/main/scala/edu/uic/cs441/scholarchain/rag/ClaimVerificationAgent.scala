@@ -16,7 +16,8 @@ final class ClaimVerificationAgent(config: RuntimeConfig) {
   def verify(
       plan: QueryPlan,
       bundle: EvidenceBundle,
-      proposal: SynthesisProposal
+      proposal: SynthesisProposal,
+      displayNames: Map[String, String] = Map.empty
   ): VerifiedAnswer = {
     val validBundle = DomainValidation.check(bundle).isRight
     val byId = bundle.items.map(i => i.evidenceId -> i).toMap
@@ -100,7 +101,7 @@ final class ClaimVerificationAgent(config: RuntimeConfig) {
     }
     val verifiedIds = outcomes.filter(_.verdict == ClaimVerdict.Verified).map(_.claimId).toSet
     val accepted = proposal.claims.filter(c => verifiedIds(c.claimId)).map { c =>
-      val text = render(c.runtime.get, c.evidenceIds.flatMap(byId.get), bundle)
+      val text = render(c.runtime.get, c.evidenceIds.flatMap(byId.get), bundle, displayNames)
       c.copy(
         text = text,
         verificationStatus = VerificationStatus.Verified,
@@ -112,6 +113,7 @@ final class ClaimVerificationAgent(config: RuntimeConfig) {
     val ordered = proposal.narrativeClaimIds.flatMap(id => accepted.find(_.claimId == id))
     val included = ordered ++ accepted.filterNot(c => ordered.exists(_.claimId == c.claimId))
     val knownNames = bundle.runtime.toVector.flatMap(_.resolvedCandidates).map(_.displayName) ++
+      displayNames.values ++
       bundle.items
         .filterNot(_.runtime.exists(_.descriptive))
         .flatMap(_.runtime.toVector.flatMap(_.values))
@@ -149,17 +151,33 @@ final class ClaimVerificationAgent(config: RuntimeConfig) {
   private def render(
       t: TypedAnswerClaim,
       cited: Vector[EvidenceItem],
-      bundle: EvidenceBundle
+      bundle: EvidenceBundle,
+      displayNames: Map[String, String]
   ): String = {
-    val names = bundle.runtime.toVector
+    // Rendering only: claims are verified on ids and values above. Names come from the question's
+    // resolved candidates and from stored graph labels (displayNames), never from the proposal. An
+    // id without a name is printed alone; a named id keeps its id beside the name (a subject from
+    // the question's resolved candidates stays name-only, as before).
+    val resolved = bundle.runtime.toVector
       .flatMap(_.resolvedCandidates)
       .map(c => c.researcherId -> c.displayName)
       .toMap
-    val subject = t.subjectIds.map(id => names.getOrElse(id, id)).mkString(", ")
+    val names = displayNames ++ resolved
+    val subject = t.subjectIds
+      .map(id => resolved.get(id).orElse(displayNames.get(id).map(n => s"$n ($id)")).getOrElse(id))
+      .mkString(", ")
+    def idLabel(id: String): String = names.get(id).map(n => s"$n ($id)").getOrElse(id)
     def display(v: RuntimeClaimValue): String = v.number
       .orElse(v.text)
       .orElse(v.flag.map(_.toString))
-      .orElse(v.ids.map(_.mkString(" → ")))
+      .orElse(v.ids.map { ids =>
+        // A path reads as "Name (id)" steps joined by arrows; other researcher lists are
+        // "Name (id)" joined by commas, so every rendered researcher stays traceable. Non-researcher
+        // ids (works, edges, communities) are unchanged.
+        if (v.field == "orderedResearcherIds") ids.map(idLabel).mkString(" → ")
+        else if (ids.exists(RuntimeNames.isResearcherId)) ids.map(idLabel).mkString(", ")
+        else ids.mkString(" → ")
+      })
       .get
     val labels = Map(
       "publicationCount" -> "publications",

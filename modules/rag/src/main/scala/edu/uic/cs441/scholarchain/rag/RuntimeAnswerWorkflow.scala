@@ -69,11 +69,11 @@ final class RuntimeAnswerWorkflow(
     var evidenceOnly =
       supplied.flatMap(_.runtime).map(_.evidenceOnly).getOrElse(config.evidenceOnly)
     try {
-      val retrieved = timed(pool, workDeadline, "retrieval") {
+      val retrievedNamed = timed(pool, workDeadline, "retrieval") {
         supplied match {
-          case Some(p) => retrieval.runPlanUntil(p, queryId, workDeadline)
+          case Some(p) => retrieval.runPlanUntilNamed(p, queryId, workDeadline)
           case None =>
-            retrieval.runUntil(
+            retrieval.runUntilNamed(
               question,
               queryId,
               provenance,
@@ -83,6 +83,9 @@ final class RuntimeAnswerWorkflow(
             )
         }
       }
+      // Display names are rendering input only; they travel beside the result, not in the bundle.
+      val displayNames = retrievedNamed.toOption.map(_.displayNames).getOrElse(Map.empty)
+      val retrieved = retrievedNamed.map(_.result)
       retrieved match {
         case Left(f)                                 => failures :+= f; reason = Some(f.reason)
         case Right(WorkflowResult.Unsupported(code)) => outcome = "UNSUPPORTED"; reason = Some(code)
@@ -120,7 +123,7 @@ final class RuntimeAnswerWorkflow(
                 .min(workDeadline, System.nanoTime() + config.deadlines.verificationMs * 1000000L),
               "verification"
             ) {
-              verifier.verify(p, b, proposal)
+              verifier.verify(p, b, proposal, displayNames)
             }
             verified match {
               case Left(f) => failures :+= f; reason = Some(f.reason)
