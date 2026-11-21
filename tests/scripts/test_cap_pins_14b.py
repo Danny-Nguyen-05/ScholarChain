@@ -7,9 +7,9 @@ under test.
     3.53 = 1.68 (Session 1: 2 runs at the 0.84 estimate) + 1.85 (Session 2: the D3 block, 2 x (75 min + 15 min idle tail) + 20 min cold
     start = 200 min at 0.555 USD per hour = 1.85 exactly). scripts/config/release.conf pins EMR_CUMULATIVE_CAP_USD=3.53 and
     EMR_MAX_LIVE_RUNS=4. History: P25 pinned 4 runs x 0.84 = 3.36; Phase 14B pinned 3 runs x 0.84 = 2.52.
-  * Synthesis (repair round 3, Step 0 answer 3, "easiest"): 115 answers (buckets 10 + 60 + 40 + 5) x 0.001365 USD per answer (claude-haiku-5-5,
-    (7150 x 0.10 + 1300 x 0.50) / 1e6) = 0.156975. The shared cap deliberately stays 1.33 (the receipt reserves the full cap), so it is
-    now a conservative upper bound and the bucket counts bind first (1.33 / 0.001365 = 974 answers > 115). The cap is pinned in BOTH
+  * Synthesis (repair round 3, Step 0 answer 3, "easiest"): 160 answers (buckets 10 + 60 + 80 + 10, human "option A" 2026-11-21; was 10 + 60 + 40 + 5 = 115, 0.156975) x 0.001365 USD per answer
+    (claude-haiku-5-5, (7150 x 0.10 + 1300 x 0.50) / 1e6) = 0.2184. The shared cap deliberately stays 1.33 (the receipt reserves the full cap), so it is
+    still a conservative upper bound and the bucket counts bind first (1.33 / 0.001365 = 974 answers > 160). The cap is pinned in BOTH
     experiments/manifests/llm-allocation.json and load-tests/config/load-profile.v1.json, and the two must agree.
   * Project total (Phase 15 rule). History, Phase 14B H0 receipt arithmetic (approval-request-14b-replan.md section 3.2, a 36 h
     session plan, x 1.11 sales tax, USD 0.34 already spent, limit 22.00 = floor 3):
@@ -40,7 +40,8 @@ EMR_CAP = D("3.53")  # user decision 2026-11-16 "Raise cap to 3.53" (P25 had 3.3
 SESSION_2_BLOCK = D("1.85")  # D3: 200 min x 0.555 USD per hour, exact
 SESSION_1_RUNS = 2  # the ledger holds 2 Session 1 runs at the 0.84 estimate (prompt.md, coordinator check of P25)
 HAIKU_UNIT = D("0.001365")  # (7150 x 0.10 + 1300 x 0.50) / 1,000,000
-HAIKU_ANSWERS = 10 + 60 + 40 + 5
+HAIKU_SIZES = {"14c": 10, "15b": 60, "16b": 80, "17": 10}  # hand-pinned, human option A 2026-11-21
+HAIKU_ANSWERS = sum(HAIKU_SIZES.values())
 HAIKU_CAP = D("1.33")
 
 
@@ -85,11 +86,12 @@ class EmrCumulativeCap(unittest.TestCase):
 
 class HaikuSharedCap(unittest.TestCase):
     def test_the_hand_derivation_brackets_the_cap(self):
-        self.assertEqual(HAIKU_ANSWERS, 115)
+        self.assertEqual(HAIKU_ANSWERS, 160)
+        self.assertEqual(HAIKU_ANSWERS, 10 + 60 + 80 + 10)
         self.assertEqual(HAIKU_UNIT, (D(7150) * D("0.10") + D(1300) * D("0.50")) / D(1000000))
-        self.assertEqual(HAIKU_ANSWERS * HAIKU_UNIT, D("0.156975"))
+        self.assertEqual(HAIKU_ANSWERS * HAIKU_UNIT, D("0.2184"))
         self.assertLessEqual(HAIKU_ANSWERS * HAIKU_UNIT, HAIKU_CAP)
-        self.assertGreater(HAIKU_CAP / HAIKU_UNIT, 115, "the bucket counts, not the cap, bind first")
+        self.assertGreater(HAIKU_CAP / HAIKU_UNIT, 160, "the bucket counts, not the cap, bind first")
 
     def test_both_pinned_files_say_one_dollar_thirty_three(self):
         allocation = json.loads(ALLOCATION.read_text())["shared_cap_usd"]
@@ -102,11 +104,25 @@ class HaikuSharedCap(unittest.TestCase):
         profile = D(json.loads(PROFILE.read_text())["llm"]["shared_cap_usd"])
         self.assertEqual(allocation, profile)
 
-    def test_the_pinned_cap_holds_115_answers_and_the_unit_is_pinned_at_haiku_5_5_prices(self):
+    def test_the_pinned_cap_holds_160_answers_and_the_unit_is_pinned_at_haiku_5_5_prices(self):
         cap = D(json.loads(ALLOCATION.read_text())["shared_cap_usd"])
         self.assertLessEqual(HAIKU_ANSWERS * HAIKU_UNIT, cap)
         pricing = json.loads(PROFILE.read_text())["llm"]["pricing"]
         self.assertEqual((pricing["input_usd_per_million_tokens"], pricing["output_usd_per_million_tokens"]), ("0.10", "0.50"))
+
+
+class HaikuAllocationCrossCheck(unittest.TestCase):
+    """The hand-pinned bucket sizes must equal the sizes in the allocation manifest, so this file cannot go stale silently."""
+
+    def test_the_manifest_bucket_sizes_equal_the_pinned_sizes(self):
+        buckets = json.loads(ALLOCATION.read_text())["buckets"]
+        self.assertEqual({k: v["answers"] for k, v in buckets.items()}, HAIKU_SIZES)
+
+    def test_the_manifest_total_cost_stays_under_the_cap(self):
+        doc = json.loads(ALLOCATION.read_text())
+        total = sum(v["answers"] for v in doc["buckets"].values())
+        self.assertEqual(total, HAIKU_ANSWERS)
+        self.assertLessEqual(total * HAIKU_UNIT, D(doc["shared_cap_usd"]))
 
 
 class Phase15ProjectArithmetic(unittest.TestCase):

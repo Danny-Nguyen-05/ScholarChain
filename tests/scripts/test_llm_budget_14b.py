@@ -1,12 +1,13 @@
 """load-tests/llm_budget.py and experiments/manifests/llm-allocation.json, written independently by the test-engineer from the user's
 decisions (docs/agent-runs/phase-14/prompt.md, replan answer 6 "Caps: Haiku 4.5 USD 1.50", the 2026-11-08 bucket split, the 2026-11-09 decision "Caps = planned use", cap 1.33,
-and repair round 3 Step 0 answer 3: keep cap 1.33 and the 115 answers, move only the per-answer estimate to Haiku 5.5 prices):
+repair round 3 Step 0 answer 3: keep cap 1.33, move only the per-answer estimate to Haiku 5.5 prices, and the 2026-11-21 "option A" decision:
+buckets 16b 40 -> 80 and 17 5 -> 10, 14c 10 and 15b 60 unchanged, cap unchanged, so 160 answers instead of 115):
 
-  * the single shared cap of USD 1.33 is split into answer buckets 14c = 10, 15b = 60, 16b = 40, 17 = 5 (115 answers);
+  * the single shared cap of USD 1.33 is split into answer buckets 14c = 10, 15b = 60, 16b = 80, 17 = 10 (160 answers);
   * the cost per answer comes from the Anthropic rates for claude-haiku-5-5 (USD 0.10 input / 0.50 output per 1M tokens, prompts under
     100,000 tokens) and the token plan raised 30 percent (planner 1,950 in + 260 out, synthesis 5,200 in + 1,040 out):
-    7,150 x 0.10/1e6 + 1,300 x 0.50/1e6 = 0.001365, hand-derived here; 115 answers cost 0.156975, which is at most the 1.33 cap
-    (the bucket counts, not the cap, are now the binding limit);
+    7,150 x 0.10/1e6 + 1,300 x 0.50/1e6 = 0.001365, hand-derived here; 160 answers cost 0.2184 (115 cost 0.156975 before option A), which is at most
+    the 1.33 cap (the bucket counts, not the cap, are still the binding limit);
   * EACH bucket is a hard stop: a reservation beyond a bucket is refused (exit 3) and writes nothing; the shared cap is the backstop;
   * nothing rolls over automatically; a transfer needs the user's approval file.
 
@@ -28,7 +29,7 @@ import sc_support as S
 TOOL = S.REPO / "load-tests/llm_budget.py"
 ALLOCATION = S.REPO / "experiments/manifests/llm-allocation.json"
 PROFILE = S.REPO / "load-tests/config/load-profile.v1.json"
-SIZES = {"14c": 10, "15b": 60, "16b": 40, "17": 5}
+SIZES = {"14c": 10, "15b": 60, "16b": 80, "17": 10}
 UNIT = (D(7150) * D("0.10") + D(1300) * D("0.50")) / D(1000000)  # hand-derived: 0.001365
 CAP = D("1.33")
 
@@ -61,10 +62,10 @@ class Base(unittest.TestCase):
 
 
 class Pins(unittest.TestCase):
-    def test_the_bucket_sizes_in_the_pinned_allocation_are_exactly_10_60_40_5(self):
+    def test_the_bucket_sizes_in_the_pinned_allocation_are_exactly_10_60_80_10(self):
         doc = json.loads(ALLOCATION.read_text())
         self.assertEqual({k: v["answers"] for k, v in doc["buckets"].items()}, SIZES)
-        self.assertEqual(sum(SIZES.values()), 115)
+        self.assertEqual(sum(SIZES.values()), 160)
 
     def test_the_shared_cap_is_one_dollar_thirty_three(self):
         self.assertEqual(D(json.loads(ALLOCATION.read_text())["shared_cap_usd"]), CAP)
@@ -82,9 +83,9 @@ class Pins(unittest.TestCase):
 
     def test_all_buckets_together_cost_at_most_the_cap(self):
         total = UNIT * sum(SIZES.values())
-        self.assertEqual(total, D("0.156975"))
+        self.assertEqual(total, D("0.2184"))
         self.assertLessEqual(total, CAP)
-        self.assertLess(total, CAP / 8, "the cap is a conservative upper bound: the bucket counts bind first")
+        self.assertLess(total, CAP / 5, "the cap is a conservative upper bound: the bucket counts bind first (0.2184 is about 1/6 of 1.33)")
 
     def test_every_other_bucket_cannot_hide_inside_the_file(self):
         doc = json.loads(ALLOCATION.read_text())
@@ -137,7 +138,7 @@ class BucketsAreHardStops(Base):
                 self.assertEqual(self.ledger.read_text(), before, "a refusal writes nothing")
         buckets, total = self.status()
         self.assertEqual(buckets, {k: (v, v, 0) for k, v in SIZES.items()})
-        self.assertEqual((int(total[0]), D(total[1])), (115, D("0.156975")))
+        self.assertEqual((int(total[0]), D(total[1])), (160, D("0.2184")))
 
     def test_a_reservation_larger_than_the_bucket_is_refused_at_once(self):
         self.init()
@@ -156,7 +157,7 @@ class BucketsAreHardStops(Base):
 
     def test_one_bucket_never_borrows_from_another(self):
         self.init()
-        self.assertEqual(self.run_tool("reserve", "--bucket", "17", "--answers", "5").returncode, 0)
+        self.assertEqual(self.run_tool("reserve", "--bucket", "17", "--answers", "10").returncode, 0)
         self.assertEqual(self.run_tool("reserve", "--bucket", "17", "--answers", "1").returncode, 3)
         buckets, _ = self.status()
         self.assertEqual(buckets["15b"], (60, 0, 60), "the spare answers of other buckets do not roll over")
@@ -174,9 +175,9 @@ class BucketsAreHardStops(Base):
         self.init()
         self.run_tool("reserve", "--bucket", "16b", "--answers", "10")
         self.assertEqual(self.run_tool("release", "--bucket", "16b", "--answers", "4").returncode, 0)
-        self.assertEqual(self.status()[0]["16b"], (40, 6, 34))
+        self.assertEqual(self.status()[0]["16b"], (80, 6, 74))
         self.assertEqual(self.run_tool("release", "--bucket", "16b", "--answers", "7").returncode, 3, "6 used cannot give back 7")
-        self.assertEqual(self.status()[0]["16b"], (40, 6, 34))
+        self.assertEqual(self.status()[0]["16b"], (80, 6, 74))
 
 
 class SharedCapBackstop(Base):
@@ -222,7 +223,7 @@ class Transfers(Base):
                 path = self.approval(text) if text is not None else self.dir / "absent.md"
                 done = self.run_tool("transfer", "--from", "15b", "--to", "16b", "--answers", "5", "--approval", str(path))
                 self.assertEqual(done.returncode, 3, done.stdout + done.stderr)
-        self.assertEqual(self.status()[0]["16b"], (40, 0, 40), "no refused transfer changed a bucket")
+        self.assertEqual(self.status()[0]["16b"], (80, 0, 80), "no refused transfer changed a bucket")
 
     def test_an_approved_transfer_moves_unused_answers_once(self):
         self.init()
@@ -230,8 +231,8 @@ class Transfers(Base):
         done = self.run_tool("transfer", "--from", "15b", "--to", "16b", "--answers", "5", "--approval", str(path))
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
         buckets, total = self.status()
-        self.assertEqual((buckets["15b"][0], buckets["16b"][0]), (55, 45))
-        self.assertEqual(sum(v[0] for v in buckets.values()), 115, "a transfer never changes the total")
+        self.assertEqual((buckets["15b"][0], buckets["16b"][0]), (55, 85))
+        self.assertEqual(sum(v[0] for v in buckets.values()), 160, "a transfer never changes the total")
         again = self.run_tool("transfer", "--from", "15b", "--to", "16b", "--answers", "5", "--approval", str(path))
         self.assertEqual(again.returncode, 3, "an approval is not applied twice")
 
