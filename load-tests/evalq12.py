@@ -9,8 +9,8 @@ raw-result sealing); it differs only in what it asks and records:
               answer's claims or by the explain body (at most 60 ids per question; GET requests, no model call, no ledger charge) and
               keeps the raw responses in answers.jsonl: qid, status, answer, explain {status, body}, evidence {id: {status, item}}.
 Cost: 33 answers x USD 0.001365 = USD 0.045045 (estimate, not metered) from bucket 16b. Bucket 16b is a hard stop: it must hold 33 answers
-(after the human-approved transfer APPROVED_LLM_TRANSFER=15b->16b:36 applied through load-tests/llm_budget.py transfer: 33 for the run, 1 for the
---only q04 probe that is run first, 2 spare; 15b keeps 24; this program never creates or applies an approval). Do NOT also run `llm_budget.py reserve --bucket 16b` for it: the run charges the ledger itself.
+(33 for the run, 1 for the --only q04 probe that is run first; the earlier human-approved transfer APPROVED_LLM_TRANSFER=15b->16b:36 left 15b with 24,
+and the user decision of 2026-11-21, option A, raised the pinned 16b base 40 -> 80; this program never creates or applies an approval). Do NOT also run `llm_budget.py reserve --bucket 16b` for it: the run charges the ledger itself.
 
   python3 -I load-tests/evalq12.py plan                       # no network; questions, bucket state, estimated cost
   python3 -I load-tests/evalq12.py run --only q04 --run-id <id>   # a one-question probe first (one ledger answer), then the full run

@@ -258,7 +258,7 @@ class CommittedInputsTests(unittest.TestCase):
 
     def test_questions_are_the_40_fixed_supported_questions(self):
         questions = self.lines("questions.txt")
-        self.assertEqual(len(questions), 40)  # bucket 16b holds exactly 40 answers
+        self.assertEqual(len(questions), 40)  # the 16B evaluation asks these 40 fixed questions once (bucket 16b was 40 answers when they were derived; 80 since 2026-11-21)
         self.assertEqual(len(set(questions)), 40)
         for q in questions:
             self.assertTrue(any(re.fullmatch(g, q) for g in self.GRAMMAR), q)

@@ -3,8 +3,8 @@
 
 Run from the repository root:   python3 -I -m unittest discover -s load-tests/tests -v
 No AWS, Anthropic or Voyage call and no non-loopback network. Expected values are derived by hand from the requirement:
-33 questions x USD 0.001365 per answer (load-tests/config/load-profile.v1.json) = 0.045045; bucket 16b holds 40 answers in a fresh ledger
-(experiments/manifests/llm-allocation.json), so 33 fit and 34 reserved elsewhere would not.
+33 questions x USD 0.001365 per answer (load-tests/config/load-profile.v1.json) = 0.045045; bucket 16b holds 80 answers in a fresh ledger
+(experiments/manifests/llm-allocation.json; 40 until the user decision of 2026-11-21, option A), so 33 fit and 48 reserved elsewhere would leave only 32.
 """
 import contextlib
 import http.server
@@ -176,10 +176,10 @@ class EvalQ12Case(unittest.TestCase):
 
     def test_plan_refuses_when_bucket_16b_holds_fewer_than_33_answers(self):
         self.init_ledger()
-        self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "10")[0], 0)   # 40 - 10 = 30 remaining
+        self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "50")[0], 0)   # 80 - 50 = 30 remaining
         rc, out, err = self.go(["plan", "--ledger", self.ledger])
         self.assertEqual(rc, 3)
-        self.assertIn("33 questions to ask exceed the 30 remaining answers (size 40, used 10)", err)
+        self.assertIn("33 questions to ask exceed the 30 remaining answers (size 80, used 50)", err)
 
     def test_the_default_questions_file_must_match_the_manifest_pin(self):
         self.init_ledger()
@@ -240,7 +240,7 @@ class EvalQ12Case(unittest.TestCase):
 
     def test_run_refuses_more_questions_than_the_bucket_before_sending(self):
         self.init_ledger()
-        rc, out, err = self.run_q12(questions=self.write_questions(41))
+        rc, out, err = self.run_q12(questions=self.write_questions(81))
         self.assertEqual(rc, 3)
         self.assertEqual(self.state.posts, [])
         self.assertEqual(len(self.ledger_lines()), 1)
@@ -468,20 +468,20 @@ class EvalQ12Case(unittest.TestCase):
         self.assertEqual(rc, 0, err)
         self.assertEqual([r["qid"] for r in self.answers("q12-test-2")], ["q05"])
 
-    def test_probe_then_full_run_fit_a_16b_bucket_of_36(self):
-        """The documented order: the --only q04 probe (1 answer), then the full 33 run. With 36 transferred in nothing refuses; with 33 it would."""
+    def test_probe_then_full_run_fit_the_raised_16b_bucket_with_the_transfer(self):
+        """The documented order: the --only q04 probe (1 answer), then the full 33 run. The pinned base is 80 (user decision 2026-11-21, option A) and the ledger adds the 36 transferred in: size 116."""
         self.init_ledger()
         approval = os.path.join(self.tmp, "approval.txt")
         with open(approval, "w") as handle:
             handle.write("APPROVED_LLM_TRANSFER=15b->16b:36\n")
-        self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "40")[0], 0)   # Session 1: 16b used up
+        self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "40")[0], 0)   # Session 1 used the 40 answers of the then-40-answer 16b bucket (stands in for a bucket used up before the transfer)
         rc, out = self.budget("transfer", "--from", "15b", "--to", "16b", "--answers", "36", "--approval", approval)
         self.assertEqual(rc, 0, out)
         rc, out, err = self.go(["run", "--only", "q04", "--ledger", self.ledger, "--output-root", self.out_root, "--run-id", "q12-probe", "--pause-seconds", "0"])
         self.assertEqual(rc, 0, err)
         rc, out, err = self.go(["plan", "--ledger", self.ledger])
         self.assertEqual(rc, 0, err)
-        self.assertIn("BUCKET 16b size=76 used=41 remaining=35", out)   # 40 + 36 transferred, 40 + 1 probe used: 35 left, 33 needed
+        self.assertIn("BUCKET 16b size=116 used=41 remaining=75", out)   # 80 base + 36 transferred, 40 + 1 probe used: 75 left, 33 needed
         self.assertIn("PLANNED: answers=33", out)
 
     def test_the_committed_question_order_never_puts_two_abstain_questions_together(self):

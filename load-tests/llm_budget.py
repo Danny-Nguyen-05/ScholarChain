@@ -4,7 +4,7 @@
 The USD 1.33 cap of the course session is split into answer BUCKETS (pinned in experiments/manifests/llm-allocation.json):
 14c (Phase 14C smoke query), 15b (load test), 16b (live evaluation) and 17 (demo and final smoke). Each bucket is a HARD STOP:
 once it is used up that step makes no more LLM calls. The overall cap is the backstop (at the claude-haiku-5-5 estimate the
-115 answers cost about USD 0.157, so the bucket counts bind first and USD 1.33 is a conservative upper bound). Nothing rolls over automatically; moving
+160 answers (since the user decision of 2026-11-21) cost about USD 0.218, so the bucket counts bind first and USD 1.33 is a conservative upper bound). Nothing rolls over automatically; moving
 spare answers from one bucket to another needs the user's approval file (transfer).
 
   init                                       create the append-only ledger once (refuses if it exists)

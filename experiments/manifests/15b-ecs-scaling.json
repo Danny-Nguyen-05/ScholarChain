@@ -27,7 +27,7 @@
   ],
   "llm": {
     "default_enabled": false,
-    "note": "Opt-in only with --llm --remaining-cap-usd X --questions-file F and an existing ledger. Answer budget per level 10/15/20/15 = 60 answers (USD 0.0819 at the pinned estimate of USD 0.001365 per answer: 10 / 15 / 20 / 15 answers = USD 0.01365 / 0.020475 / 0.0273 / 0.020475), charged to the 15b bucket, which is a hard stop; the hold phase sends none. Buckets 14c 10 / 15b 60 / 16b 40 / 17 5: experiments/manifests/llm-allocation.json. Cost reporting for the run: AWS, Anthropic and Voyage as separate items, then the combined total (the run record has cost_report)."
+    "note": "Opt-in only with --llm --remaining-cap-usd X --questions-file F and an existing ledger. Answer budget per level 10/15/20/15 = 60 answers (USD 0.0819 at the pinned estimate of USD 0.001365 per answer: 10 / 15 / 20 / 15 answers = USD 0.01365 / 0.020475 / 0.0273 / 0.020475), charged to the 15b bucket, which is a hard stop; the hold phase sends none. Buckets (at the time of this plan 14c 10 / 15b 60 / 16b 40 / 17 5; 16b 80 and 17 10 since the user decision of 2026-11-21): experiments/manifests/llm-allocation.json. Cost reporting for the run: AWS, Anthropic and Voyage as separate items, then the combined total (the run record has cost_report)."
   },
   "metrics_to_collect": [
     {"source": "AWS/ECS", "metric": "CPUUtilization", "dimensions": ["ClusterName", "ServiceName=query-api"], "statistics": ["Average", "Maximum"], "period_seconds": 60},
