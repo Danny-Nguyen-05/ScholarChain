@@ -16,7 +16,7 @@ synthetic format material, never a claim about a real researcher or deployed ans
 | --- | --- |
 | query-api | POST `/v1/query`; GET `/v1/jobs/{jobId}` and `/result`; GET `/v1/evidence/{evidenceId}`; GET `/v1/queries/{queryId}/evidence`; GET `/v1/explain/{queryId}`; graph proxy routes below |
 | query-api, graph-service | GET `/v1/graph/nodes/{nodeId}` and `/neighbors` |
-| graph-service | GET `/internal/v1/graph/nodes/{nodeId}` and `/neighbors`; GET `/internal/v1/graph/metrics/{nodeId}`; GET `/internal/v1/graph/paths` |
+| graph-service | GET `/internal/v1/graph/nodes/{nodeId}` and `/neighbors`; GET `/internal/v1/graph/metrics/{nodeId}`; GET `/internal/v1/graph/paths`; GET `/internal/v1/graph/communities/{communityId}/members` and `/cross-edges` |
 | semantic-service | POST `/internal/v1/semantic/retrieve` |
 | query-api | POST `/internal/v1/semantic/retrieve` forwards to the configured semantic service |
 | query-api | POST `/v1/semantic/retrieve`: public, API-key authenticated, rate limited, forwards to the internal semantic route (see "Public semantic retrieval") |
@@ -514,8 +514,30 @@ deadline, including blocking adapter calls. Stable BFS order determines pages. S
 cursors bind node, snapshot, direction, depth, edge filters, window, page limit and timeout.
 Changing any binding or tampering rejects the cursor. Use a stable secret cursor key across
 replicas; a per-process random key intentionally invalidates old cursors after restart.
-Path results use shortest bounded BFS and never exceed the requested hop cap. Truncated
-expansion yields 422 instead of a fabricated absence of paths.
+Path results use a level-by-level shortest-path BFS over `COAUTHORED_WITH` edges only (the same
+edge type as the storage `GraphReader.shortestPaths` port; that port returns every shortest path
+and its own tie order, whereas this route returns one path in sorted node/edge order), stopping at
+the first level that contains `to`. It expands only the levels it needs, so a nearby pair does not
+pay for the wider neighbourhood, but a single frontier node whose incident edges exceed the scan
+cap, or a search whose visited nodes exceed the node cap, still ends the search early. A missing
+`from` or `to` is 404. The hop ceiling for paths is `maxPathDepth` (default 6,
+`SCHOLARCHAIN_GRAPH_MAX_PATH_DEPTH`), separate from the neighbour-expansion `maxDepth` (3). A
+requested `maxDepth` above it is clamped, not rejected; the reply carries `maxDepth` (applied),
+`clamped`, `truncated` and `truncationReason`. A cap hit before `to` is a 200 with no path and
+`truncated: true` (an empty result is never a proof of disconnection); a deadline or snapshot
+failure remains a typed error. `RemoteGraphReader` returns an empty result only for a completed
+search. A search that found nothing but was cut short is a closed refusal, so the retrieval stage
+fails and the answer abstains rather than verifying a "no path within N hops" claim:
+`path-search-truncated` when a cap was hit, `path-depth-clamped` when the service ceiling is below
+the requested depth.
+
+Community reads: GET `/internal/v1/graph/communities/{communityId}/members` and `/cross-edges`
+take `window` (default `all-years`), `limit` (default 50, maximum 200) and `timeoutMs`, with the
+same internal-token auth, 400 validation and graph deadline as the other graph routes. They answer
+from the snapshot's stored communities (the local export reader and the Neptune reader implement
+them); a snapshot with none (the in-memory synthetic snapshot) answers 422 `COMMUNITY_UNSUPPORTED`,
+which `RemoteGraphReader` reports as `remote-graph-operation-unsupported`. Cross-edge replies
+carry `truncated` when the store reports more rows than returned.
 
 Evidence reads retain the actual source dataset/record/snapshot/URI, work/chunk/path pointer,
 score, compact stored content and full source provenance. Query evidence lists come from the

@@ -68,7 +68,31 @@ final class LiveGraphSnapshot(
     }
   }
 
-  override def incidentEdges(id: String, window: String): StorageResult[Vector[SnapshotEdge]] = {
+  override def incidentEdges(id: String, window: String): StorageResult[Vector[SnapshotEdge]] =
+    incidentEdges(id, window, LiveGraphSnapshot.servedEdgeTypes)
+
+  /** Community reads are the stored reader's own: the live (Neptune) reader answers from the
+    * membership keys the loader wrote, and the local export reader from its loaded memberships.
+    * Nothing is derived here.
+    */
+  override def communityMembers(
+      communityId: String,
+      window: String,
+      limit: Int
+  ): StorageResult[Vector[String]] = reader.communityMembers(communityId, window, limit)
+  override def crossCommunityEdges(
+      communityId: String,
+      window: String,
+      limit: Int
+  ): StorageResult[GraphPage] = reader.crossCommunityEdges(communityId, window, limit)
+
+  override def incidentEdges(
+      id: String,
+      window: String,
+      edgeTypes: Set[String]
+  ): StorageResult[Vector[SnapshotEdge]] = {
+    val requested = edgeTypes.intersect(LiveGraphSnapshot.servedEdgeTypes)
+    if (requested.isEmpty) return StorageResult.Found(Vector.empty)
     val rows = Vector.newBuilder[DirectedGraphEdge]
     var count = 0
     var cursor: Option[String] = None
@@ -79,7 +103,7 @@ final class LiveGraphSnapshot(
         id,
         window,
         EdgeDirection.Both,
-        LiveGraphSnapshot.servedEdgeTypes,
+        requested,
         pageSize,
         cursor
       )
@@ -134,6 +158,16 @@ object UnservedGraphEndpoints extends GraphEndpoints {
     Left(ApiError.unavailable)
   def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply] =
     Left(ApiError.unavailable)
+  override def communityMembers(
+      communityId: String,
+      params: Map[String, String],
+      context: RequestContext
+  ): Either[ApiError, ApiReply] = Left(ApiError.unavailable)
+  override def crossCommunityEdges(
+      communityId: String,
+      params: Map[String, String],
+      context: RequestContext
+  ): Either[ApiError, ApiReply] = Left(ApiError.unavailable)
   def close(): Unit = ()
 }
 
@@ -182,7 +216,8 @@ object UnconfiguredRuntimeArtifacts extends RuntimeArtifactStore {
 
 /** The retrieval agents read the graph through the storage port. query-api holds no graph
   * credentials, so this adapter answers each port call from the existing graph-service routes.
-  * Operations that service does not expose are refused rather than approximated.
+  * Community reads use the graph-service community routes; a service that holds no communities
+  * answers 422, which is refused rather than approximated.
   */
 final class RemoteGraphReader(graph: GraphEndpoints, context: RequestContext) extends GraphReader {
   private val remoteEdgeTypes =
@@ -233,6 +268,14 @@ final class RemoteGraphReader(graph: GraphEndpoints, context: RequestContext) ex
   }
   def directCoauthors(id: String, window: String, limit: Int): StorageResult[GraphPage] =
     neighbors(id, window, Set("COAUTHORED_WITH"), limit, None)
+
+  /** Shortest paths over the graph-service `paths` route. An empty result is returned only for a
+    * search that ran to the requested depth and completed: the retrieval agent turns an empty
+    * result into a verified "no path within N hops" claim. A search that found nothing but was cut
+    * short is therefore a closed refusal, never an empty result or a status claim: `path-search-
+    * truncated` when a scan or node cap was hit, `path-depth-clamped` when the service's path
+    * ceiling is below the requested depth. The retrieval stage then fails and the answer abstains.
+    */
   def shortestPaths(
       a: String,
       b: String,
@@ -245,28 +288,60 @@ final class RemoteGraphReader(graph: GraphEndpoints, context: RequestContext) ex
     graph.paths(params, context) match {
       case Left(error) => failure(error)
       case Right(reply) =>
-        StorageResult.Found(
-          reply
-            .body("paths")
-            .arr
-            .toVector
-            .take(limit)
-            .map(p =>
-              GraphPath(p("nodeIds").arr.map(_.str).toVector, p("edgeIds").arr.map(_.str).toVector)
-            )
-        )
+        val found = reply
+          .body("paths")
+          .arr
+          .toVector
+          .take(limit)
+          .map(p =>
+            GraphPath(p("nodeIds").arr.map(_.str).toVector, p("edgeIds").arr.map(_.str).toVector)
+          )
+        val applied = reply.body.obj.get("maxDepth").flatMap(_.numOpt).map(_.toInt)
+        val truncated = reply.body.obj.get("truncated").flatMap(_.boolOpt).contains(true)
+        if (found.nonEmpty) StorageResult.Found(found)
+        else if (truncated) StorageResult.Rejected("path-search-truncated")
+        else if (applied.exists(_ < maxDepth)) StorageResult.Rejected("path-depth-clamped")
+        else StorageResult.Found(found)
     }
   }
+  private def communityFailure[A](error: ApiError): StorageResult[A] =
+    if (error.status == 422) StorageResult.Rejected("remote-graph-operation-unsupported")
+    else failure(error)
+  private def communityParams(window: String, limit: Int) =
+    Map("window" -> window, "limit" -> limit.toString)
   def communityMembers(
       communityId: String,
       window: String,
       limit: Int
-  ): StorageResult[Vector[String]] = StorageResult.Rejected("remote-graph-operation-unsupported")
+  ): StorageResult[Vector[String]] = decoded {
+    graph.communityMembers(communityId, communityParams(window, limit), context) match {
+      case Left(error) => communityFailure(error)
+      case Right(reply) =>
+        StorageResult.Found(reply.body("members").arr.map(_.str).toVector)
+    }
+  }
   def crossCommunityEdges(
       communityId: String,
       window: String,
       limit: Int
-  ): StorageResult[GraphPage] = StorageResult.Rejected("remote-graph-operation-unsupported")
+  ): StorageResult[GraphPage] = decoded {
+    graph.crossCommunityEdges(communityId, communityParams(window, limit), context) match {
+      case Left(error) => communityFailure(error)
+      case Right(reply) =>
+        val items = reply.body("items").arr.toVector.map { item =>
+          GraphNeighbor(
+            item("nodeId").str,
+            item("edgeId").str,
+            item("edgeType").str,
+            item("properties").obj.map((k, v) => k -> v.str).toMap
+          )
+        }
+        // The port has no way to resume a community page, so a truncated page is reported with a
+        // marker cursor that only says "more rows exist".
+        val more = reply.body.obj.get("truncated").flatMap(_.boolOpt).contains(true)
+        StorageResult.Found(GraphPage(items, Option.when(more)("more-available")))
+    }
+  }
 }
 
 /** Vector queries are answered by the semantic-service, which embeds the question itself. The query

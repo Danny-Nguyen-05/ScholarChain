@@ -284,6 +284,10 @@ final class ApiApplication(
         api.graph.metrics(id, p.getOrElse("window", "all-years"), p, context)
       case ("GET", Vector("internal", "v1", "graph", "paths")) if graph =>
         api.graph.paths(p, context)
+      case ("GET", Vector("internal", "v1", "graph", "communities", id, "members")) if graph =>
+        api.graph.communityMembers(id, p, context)
+      case ("GET", Vector("internal", "v1", "graph", "communities", id, "cross-edges")) if graph =>
+        api.graph.crossCommunityEdges(id, p, context)
       case ("POST", Vector("internal", "v1", "semantic", "retrieve")) if query || semantic =>
         api.semantic.retrieve(body, context)
       case _ => Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))

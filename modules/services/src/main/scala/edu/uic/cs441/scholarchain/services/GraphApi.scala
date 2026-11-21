@@ -52,7 +52,40 @@ trait GraphSnapshot {
           case None => StorageResult.Rejected("edge-read-failed")
         }
     }
+
+  /** Edges incident to a node, restricted to the given stored edge types. The default filters the
+    * unrestricted read; an adapter may push the filter to its store to scan less.
+    */
+  def incidentEdges(
+      id: String,
+      window: String,
+      edgeTypes: Set[String]
+  ): StorageResult[Vector[SnapshotEdge]] = incidentEdges(id, window) match {
+    case StorageResult.Found(found) => StorageResult.Found(found.filter(e => edgeTypes(e.edgeType)))
+    case other                      => other
+  }
   def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord]
+
+  /** Stored members of one community in a window. A snapshot that holds no community membership
+    * refuses with [[GraphSnapshot.communityUnsupported]]; nothing is inferred.
+    */
+  def communityMembers(
+      communityId: String,
+      window: String,
+      limit: Int
+  ): StorageResult[Vector[String]] = StorageResult.Rejected(GraphSnapshot.communityUnsupported)
+
+  /** Stored coauthor edges leaving one community in a window (one row per edge, the far endpoint as
+    * `nodeId`). Same refusal as [[communityMembers]] when the snapshot holds no communities.
+    */
+  def crossCommunityEdges(
+      communityId: String,
+      window: String,
+      limit: Int
+  ): StorageResult[GraphPage] = StorageResult.Rejected(GraphSnapshot.communityUnsupported)
+}
+object GraphSnapshot {
+  val communityUnsupported = "community-read-unsupported"
 }
 final class InMemoryGraphSnapshot(
     val snapshotId: String,
@@ -83,7 +116,8 @@ final case class GraphApiConfig(
     maxScannedEdges: Int = 10000,
     maxVisitedNodes: Int = 2000,
     maxCursorChars: Int = 4096,
-    cursorKey: String = java.util.UUID.randomUUID().toString
+    cursorKey: String = java.util.UUID.randomUUID().toString,
+    maxPathDepth: Int = 6
 ) {
   require(
     Set("in", "out", "both")(
@@ -91,6 +125,9 @@ final case class GraphApiConfig(
     ) && defaultDepth > 0 && defaultDepth <= maxDepth && maxDepth <= 3
   )
   require(defaultLimit > 0 && defaultLimit <= maxLimit && maxLimit <= 200 && timeoutMs > 0)
+  // Shortest-path search is a level-by-level search bounded by the scan and node caps, so its hop
+  // ceiling is separate from (and at least) the neighbour-expansion depth ceiling above.
+  require(maxPathDepth >= maxDepth && maxPathDepth <= 16)
   require(
     defaultWindow.nonEmpty && maxScannedEdges > 0 && maxVisitedNodes > 0 && maxCursorChars > 0 && cursorKey.nonEmpty
   )
@@ -329,68 +366,212 @@ final class GraphApi(snapshot: GraphSnapshot, val config: GraphApiConfig = Graph
           )
       }
     }
-  def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply] = {
-    val started = System.nanoTime()
-    val timeout = operationTimeout(params, Set("from", "to", "maxDepth", "window")) match {
-      case Left(error)  => return Left(error)
-      case Right(value) => value
-    }
-    val to = params.getOrElse("to", "")
-    if (to.isEmpty)
-      Left(ApiError.invalid)
-    else {
-      val from = params.getOrElse("from", "")
-      val p = Map(
-        "depth" -> params.getOrElse("maxDepth", config.maxDepth.toString),
-        "limit" -> config.maxLimit.toString,
-        "window" -> params.getOrElse("window", config.defaultWindow),
-        "timeoutMs" -> timeout.toString
-      )
-      neighbors(from, p, context).flatMap { reply =>
-        val items = reply.body("items").arr.toVector
-        val maxDepth = p("depth").toInt
-        var frontier = Vector((Vector(from), Vector.empty[String]));
-        var found: Option[(Vector[String], Vector[String])] = None
-        var level = 0
-        var visited = Set(from)
-        while (frontier.nonEmpty && found.isEmpty && level <= maxDepth) {
-          if (System.nanoTime() - started >= timeout * 1000000L) return Left(ApiError.graphDeadline)
-          found = frontier.find(_._1.last == to)
-          if (found.isEmpty && level < maxDepth) frontier = frontier.flatMap { (ns, es) =>
-            items.filter(x => x("fromId").str == ns.last || x("toId").str == ns.last).flatMap {
-              item =>
-                val n = if (item("fromId").str == ns.last) item("toId").str else item("fromId").str
-                if (visited(n)) None
-                else { visited += n; Some((ns :+ n, es :+ item("edgeId").str)) }
-            }
-          }
-          else frontier = Vector.empty
-          level += 1
+
+  /** Shortest coauthor path by level-by-level BFS that stops at the first level containing `to`.
+    * Only `COAUTHORED_WITH` edges are walked, in either stored direction, as the storage
+    * `GraphReader.shortestPaths` contract and the runtime path verifier require. Frontier nodes and
+    * their edges are visited in sorted order, so the single returned path is deterministic.
+    *
+    * A requested `maxDepth` above `config.maxPathDepth` is clamped to it (never rejected); the
+    * reply states the applied depth and whether it was clamped. When the scan or node cap is hit
+    * before `to` is reached the reply is a 200 with no path and `truncated: true`, so an empty
+    * result is never presented as proof that no path exists. Deadline and snapshot failures stay
+    * typed errors.
+    */
+  def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply] =
+    boundary {
+      try {
+        val timeout = operationTimeout(params, Set("from", "to", "maxDepth", "window")) match {
+          case Left(error)  => boundary.break(Left(error))
+          case Right(value) => value
         }
-        val nodes = found.map(_._1).getOrElse(Vector.empty)
-        val edgeIds = found.map(_._2).getOrElse(Vector.empty)
-        if (reply.body("cursor") != ujson.Null)
-          return Left(
-            ApiError(422, "PATH_EXPANSION_TRUNCATED", "The bounded path expansion is incomplete.")
-          )
-        Right(
-          ApiReply(
-            200,
-            ujson.Obj(
-              "snapshot" -> snapshot.snapshotId,
-              "paths" -> (if (found.nonEmpty)
-                            ujson.Arr(
-                              ujson.Obj(
-                                "nodeIds" -> ujson.Arr.from(nodes),
-                                "edgeIds" -> ujson.Arr.from(edgeIds)
-                              )
-                            )
-                          else ujson.Arr())
-            )
-          )
-        )
-      }
+        val to = params.getOrElse("to", "")
+        val from = params.getOrElse("from", "")
+        val window = params.getOrElse("window", config.defaultWindow)
+        val requested = params.get("maxDepth").map(_.toInt).getOrElse(config.maxPathDepth)
+        if (to.isEmpty || window.isEmpty || requested < 1) boundary.break(Left(ApiError.invalid))
+        val applied = math.min(requested, config.maxPathDepth)
+        timed(context, timeout) {
+          PortResult
+            .read(snapshot.node(from))
+            .flatMap { _ =>
+              // A missing target is a 404 up front rather than a search that runs to the caps.
+              PortResult.read(snapshot.node(to))
+            }
+            .flatMap { _ =>
+              val expires = System.nanoTime() + timeout * 1000000L
+              val coauthor = "COAUTHORED_WITH"
+              val parent = scala.collection.mutable.HashMap.empty[String, (String, String)]
+              val visited = scala.collection.mutable.HashSet(from)
+              var frontier = Vector(from)
+              var level = 0
+              var scanned = 0
+              var found = from == to
+              var truncation = Option.empty[String]
+              var error = Option.empty[ApiError]
+              while (
+                !found && frontier.nonEmpty && level < applied && error.isEmpty && truncation.isEmpty
+              ) {
+                level += 1
+                val next = Vector.newBuilder[String]
+                frontier.sorted.foreach { current =>
+                  if (!found && error.isEmpty && truncation.isEmpty) {
+                    if (System.nanoTime() >= expires) error = Some(ApiError.timeout)
+                    else
+                      PortResult.read(
+                        snapshot.incidentEdges(current, window, Set(coauthor))
+                      ) match {
+                        case Left(e) => error = Some(e)
+                        case Right(edges) =>
+                          scanned += edges.size
+                          if (scanned > config.maxScannedEdges) truncation = Some("scan-cap")
+                          else
+                            edges.sortBy(_.edgeId).filter(_.edgeType == coauthor).foreach { edge =>
+                              val target = if (edge.fromId == current) edge.toId else edge.fromId
+                              if (!found && visited.add(target)) {
+                                parent(target) = (current, edge.edgeId)
+                                next += target
+                                if (target == to) found = true
+                              }
+                            }
+                          if (!found && visited.size > config.maxVisitedNodes)
+                            truncation = Some("node-cap")
+                      }
+                  }
+                }
+                frontier = next.result()
+              }
+              if (System.nanoTime() >= expires) error = Some(ApiError.timeout)
+              error.map(Left(_)).getOrElse {
+                val route =
+                  if (!found) Vector.empty[(String, Option[String])]
+                  else {
+                    var current = to
+                    var walked = Vector((to, Option.empty[String]))
+                    while (current != from) {
+                      val (before, edgeId) = parent(current)
+                      walked = (before, Some(edgeId)) +: walked
+                      current = before
+                    }
+                    walked
+                  }
+                // Each entry holds a node and the edge that leaves it toward `to` (none for the last).
+                val nodeIds = route.map(_._1)
+                val edgeIds = route.flatMap(_._2)
+                Right(
+                  ApiReply(
+                    200,
+                    ujson.Obj(
+                      "snapshot" -> snapshot.snapshotId,
+                      "paths" -> (if (found)
+                                    ujson.Arr(
+                                      ujson.Obj(
+                                        "nodeIds" -> ujson.Arr.from(nodeIds),
+                                        "edgeIds" -> ujson.Arr.from(edgeIds)
+                                      )
+                                    )
+                                  else ujson.Arr()),
+                      "maxDepth" -> applied,
+                      "clamped" -> (requested > applied),
+                      "truncated" -> truncation.nonEmpty,
+                      "truncationReason" -> truncation.map(ujson.Str(_)).getOrElse(ujson.Null)
+                    )
+                  )
+                )
+              }
+            }
+        }
+      } catch { case b: boundary.Break[?] => throw b; case NonFatal(_) => Left(ApiError.invalid) }
     }
+
+  private def communityParams(
+      params: Map[String, String]
+  ): Either[ApiError, (String, Int, Long)] = try {
+    val window = params.getOrElse("window", config.defaultWindow)
+    val limit = params.get("limit").map(_.toInt).getOrElse(config.defaultLimit)
+    operationTimeout(params, Set("window", "limit")).flatMap { timeout =>
+      if (window.isEmpty || limit < 1 || limit > config.maxLimit) Left(ApiError.invalid)
+      else Right((window, limit, timeout))
+    }
+  } catch { case NonFatal(_) => Left(ApiError.invalid) }
+  private def communityRead[A](result: StorageResult[A]): Either[ApiError, A] = result match {
+    case StorageResult.Rejected(GraphSnapshot.communityUnsupported) =>
+      Left(
+        ApiError(
+          422,
+          "COMMUNITY_UNSUPPORTED",
+          "This graph snapshot holds no stored community membership."
+        )
+      )
+    case other => PortResult.read(other)
   }
+
+  /** Stored members of a community, at most `limit` (default and maximum as for neighbours). */
+  override def communityMembers(
+      communityId: String,
+      params: Map[String, String],
+      context: RequestContext
+  ): Either[ApiError, ApiReply] =
+    if (communityId.isEmpty) Left(ApiError.invalid)
+    else
+      communityParams(params).flatMap { (window, limit, timeout) =>
+        timed(context, timeout) {
+          communityRead(snapshot.communityMembers(communityId, window, limit)).flatMap { members =>
+            if (members.size > limit) Left(ApiError.downstream)
+            else
+              Right(
+                ApiReply(
+                  200,
+                  ujson.Obj(
+                    "snapshot" -> snapshot.snapshotId,
+                    "communityId" -> communityId,
+                    "window" -> window,
+                    "members" -> ujson.Arr.from(members)
+                  )
+                )
+              )
+          }
+        }
+      }
+
+  /** Stored coauthor edges that leave a community, at most `limit`. `truncated` is true when the
+    * store reports more rows than were returned.
+    */
+  override def crossCommunityEdges(
+      communityId: String,
+      params: Map[String, String],
+      context: RequestContext
+  ): Either[ApiError, ApiReply] =
+    if (communityId.isEmpty) Left(ApiError.invalid)
+    else
+      communityParams(params).flatMap { (window, limit, timeout) =>
+        timed(context, timeout) {
+          communityRead(snapshot.crossCommunityEdges(communityId, window, limit)).flatMap { page =>
+            if (page.items.size > limit) Left(ApiError.downstream)
+            else
+              Right(
+                ApiReply(
+                  200,
+                  ujson.Obj(
+                    "snapshot" -> snapshot.snapshotId,
+                    "communityId" -> communityId,
+                    "window" -> window,
+                    "items" -> ujson.Arr.from(page.items.map { n =>
+                      ujson.Obj(
+                        "nodeId" -> n.nodeId,
+                        "edgeId" -> n.edgeId,
+                        "edgeType" -> n.edgeType,
+                        "properties" -> ujson.Obj.from(
+                          n.properties.toVector.sortBy(_._1).map((k, v) => k -> ujson.Str(v))
+                        )
+                      )
+                    }),
+                    "truncated" -> page.cursor.nonEmpty
+                  )
+                )
+              )
+          }
+        }
+      }
   def close(): Unit = boundaryClient.close()
 }

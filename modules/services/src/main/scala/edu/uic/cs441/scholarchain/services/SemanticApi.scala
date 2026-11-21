@@ -28,6 +28,20 @@ trait GraphEndpoints extends AutoCloseable {
     if (params.keySet.subsetOf(Set("window"))) metrics(id, window, context)
     else Left(ApiError.invalid)
   def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply]
+
+  /** Stored community members. Implementations that do not serve communities keep the typed
+    * refusal; the default is never an approximation.
+    */
+  def communityMembers(
+      communityId: String,
+      params: Map[String, String],
+      context: RequestContext
+  ): Either[ApiError, ApiReply] = Left(ApiError.unsupported)
+  def crossCommunityEdges(
+      communityId: String,
+      params: Map[String, String],
+      context: RequestContext
+  ): Either[ApiError, ApiReply] = Left(ApiError.unsupported)
 }
 trait SemanticEndpoints extends AutoCloseable {
   def ready(context: RequestContext): Boolean = true

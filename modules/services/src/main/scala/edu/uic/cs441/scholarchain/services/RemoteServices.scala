@@ -119,7 +119,9 @@ final class RemoteService(
   }
   private def graphOperation(method: String, path: String): Boolean =
     dependencyName == "graph" && method == "GET" &&
-      path.matches("/internal/v1/graph/(?:nodes/[^/]+(?:/neighbors)?|metrics/[^/]+|paths)")
+      path.matches(
+        "/internal/v1/graph/(?:nodes/[^/]+(?:/neighbors)?|metrics/[^/]+|paths|communities/[^/]+/(?:members|cross-edges))"
+      )
   private def graphParameters(
       method: String,
       path: String,
@@ -192,6 +194,28 @@ final class RemoteGraphApi(remote: RemoteService) extends GraphEndpoints {
   )
   def paths(p: Map[String, String], c: RequestContext) =
     remote.call("GET", "/internal/v1/graph/paths", p, None, c)
+  override def communityMembers(
+      id: String,
+      p: Map[String, String],
+      c: RequestContext
+  ): Either[ApiError, ApiReply] = remote.call(
+    "GET",
+    "/internal/v1/graph/communities/" + RemoteService.segment(id) + "/members",
+    p,
+    None,
+    c
+  )
+  override def crossCommunityEdges(
+      id: String,
+      p: Map[String, String],
+      c: RequestContext
+  ): Either[ApiError, ApiReply] = remote.call(
+    "GET",
+    "/internal/v1/graph/communities/" + RemoteService.segment(id) + "/cross-edges",
+    p,
+    None,
+    c
+  )
   def close(): Unit = remote.close()
 }
 final class RemoteSemanticApi(remote: RemoteService) extends SemanticEndpoints {
