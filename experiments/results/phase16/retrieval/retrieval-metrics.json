@@ -1,0 +1,1031 @@
+{
+  "gaps": [
+    {
+      "metric": "vector-only recall@K, precision@K, MRR, nDCG",
+      "reason": "no relevance labels for any vector query and no stored ranked results; the index no longer exists"
+    },
+    {
+      "metric": "fused (graph + vector) retrieval metrics and the graph-only vs vector-only vs fused comparison",
+      "reason": "no fused run was recorded; the stack was destroyed"
+    },
+    {
+      "metric": "graded nDCG from human relevance judgements",
+      "reason": "no human graded labels exist; the graded nDCG above uses the answer key's metric value as the gain and is labelled as such"
+    },
+    {
+      "metric": "recall@K for direct-collaborator, community and path questions",
+      "reason": "the answer's researcher list is cut by the context window (e.g. 1 of 25 coauthors listed) and the edge evidence carries no plain coauthor id field, so the retrieved set cannot be reconstructed from the stored raw; the scorer's pass/fail is the only measure"
+    },
+    {
+      "metric": "retrieval latency by stage",
+      "reason": "only end-to-end latency and the S3 Vectors SDK call time (n = 5) were recorded; see the performance group"
+    }
+  ],
+  "graph_mode_ranking_retrieval": {
+    "environment": "LOCAL-LOOPBACK graph mode (local S export run:ba7402d1-959a-4277-8c6e-e92878a38afa; no vectors in this stack)",
+    "interpretation_limit": "7 ranking questions (3 coauthor_breadth, 1 max_team_size with a ranked key, 3 bridge) x 2 runs, of which 6 are scorable. For q03 (max_team_size) all 100 key entries tie at the same value (15) and the key keeps the first 100 by id order, so a tied researcher outside those 100 scores 0 although it ties. q03 is listed per question and excluded from the main aggregates; a second aggregate counts it at its measured 0 (a lower bound). The tie premise is tested in tie_check from the values the answer states for the three retrieved researchers outside the key (those values were checked against the export by the Q12 scorer; this script does not read the export): one states 15 (a tie cut off by the key's 100-entry limit), one states 14 (below the key's value, so genuinely not a top-ranked researcher for this measure), and for one no value is stated (the answer lists 2 of the 3 retrieved). So the 0 is only partly an artifact of the tie truncation. The same truncation can affect a few tied items at the foot of the other keys. The two runs retrieved identical lists (observed), so they are not independent samples and no confidence interval is given (n = 7 questions would make one meaningless). The key's top-100 is the corpus-wide ranking while the runtime ranks inside its bounded artifact, so P@K against the key's top-100 is a looser test than against its top-K. Graded gain = the key's metric value, a derived grade, not a human relevance judgement. K is the runtime's own context cut (3 or 4 researcher items), so recall@K against the 100-item key is not reported (it would be at most K/100 by construction).",
+    "per_question": [
+      {
+        "exact_order_match_with_key_topk": true,
+        "k": 3,
+        "key_metric": "DISTINCT_COAUTHOR_COUNT",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 1.0,
+        "ndcg_at_k_graded_by_key_value": 1.0,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 1.0,
+        "precision_at_k_vs_key_topk": 1.0,
+        "qid": "q01",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "run": "q12-run-1",
+        "type": "coauthor_breadth",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 3,
+        "key_metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+        "key_saturated_by_ties": true,
+        "key_top3_suffixes": [
+          "816d7a2d",
+          "1c151cda",
+          "478443ba"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.0,
+        "ndcg_at_k_graded_by_key_value": 0.0,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.0,
+        "precision_at_k_vs_key_topk": 0.0,
+        "qid": "q03",
+        "reciprocal_rank_of_key_rank1": 0.0,
+        "retrieved_in_key_top100": 0,
+        "retrieved_researcher_suffixes": [
+          "92d86927",
+          "08dca3a0",
+          "4f3a3d3b"
+        ],
+        "run": "q12-run-1",
+        "tie_check": {
+          "all_outside_tie_at_key_value": false,
+          "key_entries": 100,
+          "key_value_of_all_entries": 15.0,
+          "metric_field": "maximumCoauthorsOnOnePaper",
+          "outside_with_no_value_stated": 1,
+          "outside_with_value_equal_to_key_value": 1,
+          "retrieved_outside_key": [
+            {
+              "suffix": "92d86927",
+              "value_stated_in_answer": "15"
+            },
+            {
+              "suffix": "08dca3a0",
+              "value_stated_in_answer": "14"
+            },
+            {
+              "suffix": "4f3a3d3b",
+              "value_stated_in_answer": null
+            }
+          ],
+          "source": "values stated in the answer (scorer-checked against the export); not read from the export by this script"
+        },
+        "type": "max_team_size",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 4,
+        "key_metric": "CROSS_COMMUNITY_DEGREE",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "05e0d29d",
+          "61558137",
+          "66cbace9"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.8318724637288825,
+        "ndcg_at_k_graded_by_key_value": 0.8344141108880692,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.75,
+        "precision_at_k_vs_key_topk": 0.5,
+        "qid": "q09",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "05e0d29d",
+          "61558137",
+          "08dca3a0",
+          "0c57e80b"
+        ],
+        "run": "q12-run-1",
+        "type": "bridge",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": true,
+        "k": 3,
+        "key_metric": "DISTINCT_COAUTHOR_COUNT",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 1.0,
+        "ndcg_at_k_graded_by_key_value": 1.0,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 1.0,
+        "precision_at_k_vs_key_topk": 1.0,
+        "qid": "q12",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "run": "q12-run-1",
+        "type": "coauthor_breadth",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 4,
+        "key_metric": "CROSS_COMMUNITY_DEGREE",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "05e0d29d",
+          "66cbace9",
+          "61558137"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.8318724637288825,
+        "ndcg_at_k_graded_by_key_value": 0.8484849340197121,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.75,
+        "precision_at_k_vs_key_topk": 0.5,
+        "qid": "q20",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "05e0d29d",
+          "61558137",
+          "08dca3a0",
+          "f0cc1bee"
+        ],
+        "run": "q12-run-1",
+        "type": "bridge",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 3,
+        "key_metric": "DISTINCT_COAUTHOR_COUNT",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "61558137",
+          "5597aa3d",
+          "3564a658"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.7653606369886218,
+        "ndcg_at_k_graded_by_key_value": 0.7421659853127194,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.6666666666666666,
+        "precision_at_k_vs_key_topk": 0.3333333333333333,
+        "qid": "q23",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 2,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "3097efe1"
+        ],
+        "run": "q12-run-1",
+        "type": "coauthor_breadth",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 4,
+        "key_metric": "CROSS_COMMUNITY_DEGREE",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "66cbace9",
+          "61558137",
+          "08dca3a0"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.8318724637288825,
+        "ndcg_at_k_graded_by_key_value": 0.8083960415712969,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.75,
+        "precision_at_k_vs_key_topk": 0.75,
+        "qid": "q31",
+        "reciprocal_rank_of_key_rank1": 0.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "08dca3a0",
+          "05e0d29d",
+          "32c1059c"
+        ],
+        "run": "q12-run-1",
+        "type": "bridge",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": true,
+        "k": 3,
+        "key_metric": "DISTINCT_COAUTHOR_COUNT",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 1.0,
+        "ndcg_at_k_graded_by_key_value": 1.0,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 1.0,
+        "precision_at_k_vs_key_topk": 1.0,
+        "qid": "q01",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "run": "q12-run-2",
+        "type": "coauthor_breadth",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 3,
+        "key_metric": "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+        "key_saturated_by_ties": true,
+        "key_top3_suffixes": [
+          "816d7a2d",
+          "1c151cda",
+          "478443ba"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.0,
+        "ndcg_at_k_graded_by_key_value": 0.0,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.0,
+        "precision_at_k_vs_key_topk": 0.0,
+        "qid": "q03",
+        "reciprocal_rank_of_key_rank1": 0.0,
+        "retrieved_in_key_top100": 0,
+        "retrieved_researcher_suffixes": [
+          "92d86927",
+          "08dca3a0",
+          "4f3a3d3b"
+        ],
+        "run": "q12-run-2",
+        "tie_check": {
+          "all_outside_tie_at_key_value": false,
+          "key_entries": 100,
+          "key_value_of_all_entries": 15.0,
+          "metric_field": "maximumCoauthorsOnOnePaper",
+          "outside_with_no_value_stated": 1,
+          "outside_with_value_equal_to_key_value": 1,
+          "retrieved_outside_key": [
+            {
+              "suffix": "92d86927",
+              "value_stated_in_answer": "15"
+            },
+            {
+              "suffix": "08dca3a0",
+              "value_stated_in_answer": "14"
+            },
+            {
+              "suffix": "4f3a3d3b",
+              "value_stated_in_answer": null
+            }
+          ],
+          "source": "values stated in the answer (scorer-checked against the export); not read from the export by this script"
+        },
+        "type": "max_team_size",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 4,
+        "key_metric": "CROSS_COMMUNITY_DEGREE",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "05e0d29d",
+          "61558137",
+          "66cbace9"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.8318724637288825,
+        "ndcg_at_k_graded_by_key_value": 0.8344141108880692,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.75,
+        "precision_at_k_vs_key_topk": 0.5,
+        "qid": "q09",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "05e0d29d",
+          "61558137",
+          "08dca3a0",
+          "0c57e80b"
+        ],
+        "run": "q12-run-2",
+        "type": "bridge",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": true,
+        "k": 3,
+        "key_metric": "DISTINCT_COAUTHOR_COUNT",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 1.0,
+        "ndcg_at_k_graded_by_key_value": 1.0,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 1.0,
+        "precision_at_k_vs_key_topk": 1.0,
+        "qid": "q12",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "08dca3a0"
+        ],
+        "run": "q12-run-2",
+        "type": "coauthor_breadth",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 4,
+        "key_metric": "CROSS_COMMUNITY_DEGREE",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "05e0d29d",
+          "66cbace9",
+          "61558137"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.8318724637288825,
+        "ndcg_at_k_graded_by_key_value": 0.8484849340197121,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.75,
+        "precision_at_k_vs_key_topk": 0.5,
+        "qid": "q20",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "05e0d29d",
+          "61558137",
+          "08dca3a0",
+          "f0cc1bee"
+        ],
+        "run": "q12-run-2",
+        "type": "bridge",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 3,
+        "key_metric": "DISTINCT_COAUTHOR_COUNT",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "61558137",
+          "5597aa3d",
+          "3564a658"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.7653606369886218,
+        "ndcg_at_k_graded_by_key_value": 0.7421659853127194,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.6666666666666666,
+        "precision_at_k_vs_key_topk": 0.3333333333333333,
+        "qid": "q23",
+        "reciprocal_rank_of_key_rank1": 1.0,
+        "retrieved_in_key_top100": 2,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "05e0d29d",
+          "3097efe1"
+        ],
+        "run": "q12-run-2",
+        "type": "coauthor_breadth",
+        "unmapped_evidence_items": 0
+      },
+      {
+        "exact_order_match_with_key_topk": false,
+        "k": 4,
+        "key_metric": "CROSS_COMMUNITY_DEGREE",
+        "key_saturated_by_ties": false,
+        "key_top3_suffixes": [
+          "66cbace9",
+          "61558137",
+          "08dca3a0"
+        ],
+        "ndcg_at_k_binary_vs_key_top100": 0.8318724637288825,
+        "ndcg_at_k_graded_by_key_value": 0.8083960415712969,
+        "outcome": "ok",
+        "precision_at_k_vs_key_top100": 0.75,
+        "precision_at_k_vs_key_topk": 0.75,
+        "qid": "q31",
+        "reciprocal_rank_of_key_rank1": 0.0,
+        "retrieved_in_key_top100": 3,
+        "retrieved_researcher_suffixes": [
+          "61558137",
+          "08dca3a0",
+          "05e0d29d",
+          "32c1059c"
+        ],
+        "run": "q12-run-2",
+        "type": "bridge",
+        "unmapped_evidence_items": 0
+      }
+    ],
+    "per_run_summary": {
+      "q12-run-1": {
+        "all_ranking_questions": {
+          "mean_ndcg_at_k_binary": 0.8768,
+          "mean_ndcg_at_k_graded": 0.8722,
+          "mean_precision_at_k_vs_key_top100": 0.8194,
+          "mean_precision_at_k_vs_key_topk": 0.6806,
+          "mrr_of_key_rank1": 0.8333,
+          "questions": 7,
+          "scorable_questions": 6
+        },
+        "all_ranking_questions_including_tie_saturated_as_measured": {
+          "mean_ndcg_at_k_binary": 0.7516,
+          "mean_ndcg_at_k_graded": 0.7476,
+          "mean_precision_at_k_vs_key_top100": 0.7024,
+          "mean_precision_at_k_vs_key_topk": 0.5833,
+          "mrr_of_key_rank1": 0.7143,
+          "note": "q03 counted at its measured 0: a lower bound, because part of that 0 is a tie-truncation artifact (see tie_check)",
+          "questions": 7
+        },
+        "by_type": {
+          "bridge": {
+            "exact_order_matches": 0,
+            "mean_ndcg_at_k_binary": 0.8319,
+            "mean_ndcg_at_k_graded": 0.8304,
+            "mean_precision_at_k_vs_key_top100": 0.75,
+            "mean_precision_at_k_vs_key_topk": 0.5833,
+            "mrr_of_key_rank1": 0.6667,
+            "questions": 3,
+            "scorable_questions": 3,
+            "scorable_with_nothing_retrieved": 0
+          },
+          "coauthor_breadth": {
+            "exact_order_matches": 2,
+            "mean_ndcg_at_k_binary": 0.9218,
+            "mean_ndcg_at_k_graded": 0.9141,
+            "mean_precision_at_k_vs_key_top100": 0.8889,
+            "mean_precision_at_k_vs_key_topk": 0.7778,
+            "mrr_of_key_rank1": 1.0,
+            "questions": 3,
+            "scorable_questions": 3,
+            "scorable_with_nothing_retrieved": 0
+          },
+          "max_team_size": {
+            "exact_order_matches": 0,
+            "mean_ndcg_at_k_binary": null,
+            "mean_ndcg_at_k_graded": null,
+            "mean_precision_at_k_vs_key_top100": null,
+            "mean_precision_at_k_vs_key_topk": null,
+            "mrr_of_key_rank1": null,
+            "questions": 1,
+            "scorable_questions": 0,
+            "scorable_with_nothing_retrieved": 0
+          }
+        }
+      },
+      "q12-run-2": {
+        "all_ranking_questions": {
+          "mean_ndcg_at_k_binary": 0.8768,
+          "mean_ndcg_at_k_graded": 0.8722,
+          "mean_precision_at_k_vs_key_top100": 0.8194,
+          "mean_precision_at_k_vs_key_topk": 0.6806,
+          "mrr_of_key_rank1": 0.8333,
+          "questions": 7,
+          "scorable_questions": 6
+        },
+        "all_ranking_questions_including_tie_saturated_as_measured": {
+          "mean_ndcg_at_k_binary": 0.7516,
+          "mean_ndcg_at_k_graded": 0.7476,
+          "mean_precision_at_k_vs_key_top100": 0.7024,
+          "mean_precision_at_k_vs_key_topk": 0.5833,
+          "mrr_of_key_rank1": 0.7143,
+          "note": "q03 counted at its measured 0: a lower bound, because part of that 0 is a tie-truncation artifact (see tie_check)",
+          "questions": 7
+        },
+        "by_type": {
+          "bridge": {
+            "exact_order_matches": 0,
+            "mean_ndcg_at_k_binary": 0.8319,
+            "mean_ndcg_at_k_graded": 0.8304,
+            "mean_precision_at_k_vs_key_top100": 0.75,
+            "mean_precision_at_k_vs_key_topk": 0.5833,
+            "mrr_of_key_rank1": 0.6667,
+            "questions": 3,
+            "scorable_questions": 3,
+            "scorable_with_nothing_retrieved": 0
+          },
+          "coauthor_breadth": {
+            "exact_order_matches": 2,
+            "mean_ndcg_at_k_binary": 0.9218,
+            "mean_ndcg_at_k_graded": 0.9141,
+            "mean_precision_at_k_vs_key_top100": 0.8889,
+            "mean_precision_at_k_vs_key_topk": 0.7778,
+            "mrr_of_key_rank1": 1.0,
+            "questions": 3,
+            "scorable_questions": 3,
+            "scorable_with_nothing_retrieved": 0
+          },
+          "max_team_size": {
+            "exact_order_matches": 0,
+            "mean_ndcg_at_k_binary": null,
+            "mean_ndcg_at_k_graded": null,
+            "mean_precision_at_k_vs_key_top100": null,
+            "mean_precision_at_k_vs_key_topk": null,
+            "mrr_of_key_rank1": null,
+            "questions": 1,
+            "scorable_questions": 0,
+            "scorable_with_nothing_retrieved": 0
+          }
+        }
+      }
+    }
+  },
+  "inputs_sha256": {
+    "docs/agent-runs/phase-15/evidence/session-2/vectors/ingest-report-2.json": "4ffc1389dbf117670e276675ca0774bb065b11768ffe6f99ebe0e61324e994cd",
+    "docs/agent-runs/phase-15/evidence/session-2/vectors/query-report.json": "39a68f7cc348d233dfc680e67b990408b3fb01f60bee2c80305e315e415b3fef",
+    "experiments/inputs/15b/semantic-questions.provenance.json": "ee35a423f57e7a7249ff81ff14a06656ec44cf0d7865b2434f351c8e7e8ed7ea",
+    "experiments/inputs/15b/semantic-questions.txt": "bde5f63b49e46c321dbbf958094646cf644fcef15516b6ee0e67822ccb9978af",
+    "experiments/inputs/q12/answer-key.json": "6f5ef014d310136d7016447f7eefa39912e49c467a5f3bf2ec58ee1dc937a9b3",
+    "load-tests/loadgen.py": "546b1fc0fe18790251e31f436bbe3db5f4a74fae0fb62c3fd9fd9d70163d3abf",
+    "q12 answers q12-run-1 (raw/answers.jsonl)": "723b5e59ac771231daf714568090a02fb2d255822595ca2546130e6c375cdab4",
+    "q12 answers q12-run-2 (raw/answers.jsonl)": "11f63e6d7fd57b887d950908d429c4adc192ec76fc46d22a3ad4b4df184608e2",
+    "q12 scorer output q12-run-1": "d3bc13226aaaf8921a9f083ea19d09d7a0a7f453a40d70b980c41116be2ab15a",
+    "q12 scorer output q12-run-2": "b50c375aa703efef46d2b1f08c444359b974667df1fd0f7c7cce2d66d589af30"
+  },
+  "metric_definitions": {
+    "ndcg_at_k": "DCG(retrieved)/DCG(ideal), DCG = sum gain_i / log2(i + 1), ideal = the K largest labelled gains; null when the ideal is 0",
+    "precision_at_k": "hits in the first K / K",
+    "recall_at_k": "hits in the first K / relevant",
+    "reciprocal_rank": "1 / rank of the first relevant item, 0 if none"
+  },
+  "mode_comparison": {
+    "fused": "GAP",
+    "graph_only": "measured on the Q12 ranking questions above (7 questions, labelled by the answer key)",
+    "reason": "No labelled vector-only or fused retrieval run exists. The Q12 benchmark ran the local graph stack only (the answer-key rule: the local stack has no vectors). The 15B load asked 150 unlabelled topic phrases of /v1/semantic/retrieve and stored only status, size and latency (no ranked results). The 16B evaluation (run 16b-1, 40 questions) stored 40 ungraded answers and its manifest lists the retrieval modes to compare as an open item. The AWS stack that held the vector index was destroyed on 2026-11-18, so a labelled vector run cannot be added offline.",
+    "vector_only": "GAP"
+  },
+  "q12_scorer_retrieval_pass_rates": {
+    "definition": "experiments/scripts/q12_score.py, check (i): every cited evidence id that was fetched resolves, names the required entities, has the required kind and carries correct values. A per-question pass/fail, not recall@K. Abstain-expected questions are excluded (retrieval is not applicable to them).",
+    "environment": "LOCAL-LOOPBACK graph mode",
+    "interpretation_limit": "3 questions per type: a Wilson interval on n = 3 spans most of [0, 1]; per-type rates are descriptive. The two runs differ in commit (ec675d5, then 827fcd5 after the Q12 service and planner fixes), so the change between them is a before/after of code, not run-to-run noise.",
+    "runs": {
+      "q12-run-1": {
+        "answer_expected_total": {
+          "n": 27,
+          "rate": 0.5556,
+          "retrieval_pass": 15,
+          "wilson_95": [
+            0.3731,
+            0.7241
+          ]
+        },
+        "citation_resolution": {
+          "cited_evidence_items": 86,
+          "rate": 1.0,
+          "resolved": 86
+        },
+        "deep_checks": "export",
+        "export_run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
+        "failing_answer_expected_questions": [
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q06",
+            "type": "shortest_path"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q08",
+            "type": "community"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind refused)",
+            "http_status": 422,
+            "outcome_kind": "refused",
+            "qid": "q10",
+            "type": "temporal"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q11",
+            "type": "evidence"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q17",
+            "type": "shortest_path"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q19",
+            "type": "community"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind refused)",
+            "http_status": 422,
+            "outcome_kind": "refused",
+            "qid": "q21",
+            "type": "temporal"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q22",
+            "type": "evidence"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q28",
+            "type": "shortest_path"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind refused)",
+            "http_status": 422,
+            "outcome_kind": "refused",
+            "qid": "q30",
+            "type": "community"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind refused)",
+            "http_status": 422,
+            "outcome_kind": "refused",
+            "qid": "q32",
+            "type": "temporal"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q33",
+            "type": "evidence"
+          }
+        ],
+        "per_type": [
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "bridge",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "coauthor_breadth",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 0.0,
+            "retrieval_pass": 0,
+            "type": "community",
+            "wilson_95": [
+              0.0,
+              0.5615
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "component",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "direct_collab",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 0.0,
+            "retrieval_pass": 0,
+            "type": "evidence",
+            "wilson_95": [
+              0.0,
+              0.5615
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "max_team_size",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 0.0,
+            "retrieval_pass": 0,
+            "type": "shortest_path",
+            "wilson_95": [
+              0.0,
+              0.5615
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 0.0,
+            "retrieval_pass": 0,
+            "type": "temporal",
+            "wilson_95": [
+              0.0,
+              0.5615
+            ]
+          }
+        ],
+        "scorer_key_sha256": "6f5ef014d310136d7016447f7eefa39912e49c467a5f3bf2ec58ee1dc937a9b3"
+      },
+      "q12-run-2": {
+        "answer_expected_total": {
+          "n": 27,
+          "rate": 0.8519,
+          "retrieval_pass": 23,
+          "wilson_95": [
+            0.6752,
+            0.9408
+          ]
+        },
+        "citation_resolution": {
+          "cited_evidence_items": 101,
+          "rate": 1.0,
+          "resolved": 101
+        },
+        "deep_checks": "export",
+        "export_run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
+        "failing_answer_expected_questions": [
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind abstained)",
+            "http_status": 200,
+            "outcome_kind": "abstained",
+            "qid": "q08",
+            "type": "community"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind error)",
+            "http_status": 504,
+            "outcome_kind": "error",
+            "qid": "q14",
+            "type": "max_team_size"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind refused)",
+            "http_status": 422,
+            "outcome_kind": "refused",
+            "qid": "q19",
+            "type": "community"
+          },
+          {
+            "first_retrieval_reason": "the system did not answer (outcome kind refused)",
+            "http_status": 422,
+            "outcome_kind": "refused",
+            "qid": "q30",
+            "type": "community"
+          }
+        ],
+        "per_type": [
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "bridge",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "coauthor_breadth",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 0.0,
+            "retrieval_pass": 0,
+            "type": "community",
+            "wilson_95": [
+              0.0,
+              0.5615
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "component",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "direct_collab",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "evidence",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 0.6667,
+            "retrieval_pass": 2,
+            "type": "max_team_size",
+            "wilson_95": [
+              0.2077,
+              0.9385
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "shortest_path",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          },
+          {
+            "answer_expected": 3,
+            "rate": 1.0,
+            "retrieval_pass": 3,
+            "type": "temporal",
+            "wilson_95": [
+              0.4385,
+              1.0
+            ]
+          }
+        ],
+        "scorer_key_sha256": "6f5ef014d310136d7016447f7eefa39912e49c467a5f3bf2ec58ee1dc937a9b3"
+      }
+    }
+  },
+  "s3_vectors_known_item_smoke": {
+    "all_samples_present": true,
+    "embedding_model": {
+      "dimension": 256,
+      "modelId": "voyage-4-lite",
+      "version": "voyage-4-lite"
+    },
+    "environment": "AWS-S3VECTORS+VOYAGE (live, 2026-11-18; the stack and the index were destroyed afterwards)",
+    "expected_neighbor_found": 5,
+    "hit_rate": 1.0,
+    "index_sizes_vectors": {
+      "collaboration-community-v1": 3292,
+      "collaboration-path-v1": 120,
+      "paper-abstract-v1": 3292,
+      "researcher-profile-v1": 3292,
+      "topic-institution-summary-v1": 4
+    },
+    "interpretation_limit": "Each query is the text of a vector that was stored, and 'neighborMatched' means the stored vector's key was among the top-K hits (K is not in the committed report). It shows that ingest, embedding and query agree end to end (known-item round trip). It is NOT recall on novel questions and gives no precision, MRR or nDCG: n = 5, one query per index.",
+    "known_item_queries": 5,
+    "pointers_verified": 7,
+    "queries": [
+      {
+        "index": "collaboration-community-v1",
+        "neighbor_matched": true,
+        "verified_pointers": 1
+      },
+      {
+        "index": "collaboration-path-v1",
+        "neighbor_matched": true,
+        "verified_pointers": 1
+      },
+      {
+        "index": "paper-abstract-v1",
+        "neighbor_matched": true,
+        "verified_pointers": 2
+      },
+      {
+        "index": "researcher-profile-v1",
+        "neighbor_matched": true,
+        "verified_pointers": 2
+      },
+      {
+        "index": "topic-institution-summary-v1",
+        "neighbor_matched": true,
+        "verified_pointers": 1
+      }
+    ],
+    "vectors_written": 10000,
+    "wilson_95": [
+      0.5655,
+      1.0
+    ]
+  },
+  "schema": "scholarchain.eval16-retrieval.v1",
+  "scope": "offline recomputation from raw evidence; no network, AWS, model call or spend",
+  "semantic_load_questions": {
+    "fields_recorded_per_request_by_loadgen": [
+      "bytes",
+      "echoed_request_id",
+      "experiment_id",
+      "latency_ms",
+      "level",
+      "llm",
+      "method",
+      "outcome",
+      "path_template",
+      "phase",
+      "request_id",
+      "route",
+      "run_id",
+      "schema",
+      "seq",
+      "started_utc",
+      "status",
+      "worker"
+    ],
+    "load_run": "15b-ecs-scaling-semantic-rb-20261118 (AWS ECS, 2026-11-18), written by load-tests/loadgen.py",
+    "provenance_sha256_of_questions": "bde5f63b49e46c321dbbf958094646cf644fcef15516b6ee0e67822ccb9978af",
+    "questions": 150,
+    "ranked_results_recorded_in_load_raw": false,
+    "relevance_labels": "none: the file is one topic phrase per line, derived from DBLP title n-gram document frequency; no phrase is paired with a relevant document",
+    "source_of_field_list": "load-tests/loadgen.py (the request record literal, plus route-specific extras such as question_index added by record.update(fields); no response body, hit list or score is among them)"
+  },
+  "threats_to_validity": [
+    "The answer key is derived by the same repository (an independent Python port of the Spark metrics); it was reviewed, but it is not an external gold standard.",
+    "7 ranking questions and 33 questions in total: no per-type inference is possible, only descriptive rates.",
+    "The retrieval list order is taken to be the order of explain.body.evidenceIds (the runtime's own ranking); the order was not independently logged.",
+    "The Q12 questions were authored with the system's capabilities in mind (3 per type, thin-data topics deliberately included as abstention tests), so the pass rates measure coverage of designed query types, not open-domain retrieval.",
+    "The vector smoke is a known-item test on the stored text itself and overstates retrieval quality for novel queries."
+  ]
+}

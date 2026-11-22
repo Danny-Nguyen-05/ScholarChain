@@ -1,0 +1,5 @@
+Phase 16 commits on phase-15-q12 (made by the coordinator on the human's yes, see human-gate.md):
+0b422215743a11c31482fc4f876e9c43634ccdcf phase-16 experiment-engineer (instance A): entity-resolution, graph-correctness and answer-quality evaluation, frozen Q12 and 16B raw, manifest and check, tests (review rounds 1-2, check repair 1)
+fa908da6b797eca20283197068513b53d70d2134 phase-16 experiment-engineer (instance B): retrieval, performance and elasticity, agentic-factory and reproducibility evaluation, frozen AWS load raw, tests (review rounds 1-2, check repair 1)
+b391bea7c038d3d54d1eeb181a626a8226df1d52 phase-16 documentation-engineer: evaluation report from the frozen Phase 16 results (review rounds 1-2)
+The coordinator records commit (this file and the other phase-16 records) follows these three.

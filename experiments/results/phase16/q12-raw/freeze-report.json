@@ -1,0 +1,133 @@
+{
+ "content_notes": {
+  "email_like_strings": 0,
+  "files_containing_a_local_home_directory_path": [
+   "16b-live-evaluation-16b-1/run-record.json",
+   "q12-benchmark-q12-probe-1/run-record.json",
+   "q12-benchmark-q12-probe-2/run-record.json",
+   "q12-benchmark-q12-run-1/run-record.json",
+   "q12-benchmark-q12-run-2/run-record.json"
+  ],
+  "note": "run-record.json holds ledger_path with a local home directory prefix; the copies stay byte-identical to the originals (a decision of the coordinator). The counts above are computed from the frozen bytes; a 12-digit run inside a run-id UUID is not counted.",
+  "standalone_12_digit_runs": 0
+ },
+ "first_freeze": {
+  "recovered_from_observable_evidence": true,
+  "secret_pattern_scan_at_first_freeze": "see last_invocation; the scan of the first freeze was not retained separately and every later scan is clean",
+  "source_files_sha256": [
+   "80fc2d7748f2462b9b092b8e87a201d502946fd57253a533ffa9aee51676c8e2  16b-live-evaluation-16b-1/answers.jsonl",
+   "b72895dc0e71cea05ef3f9d182f34a594852e9d5c5ddd971fe5c8de5e26ddc52  16b-live-evaluation-16b-1/events.jsonl",
+   "13736cfacf3e83beafed900d01ed904a442c2a93e2db87b4752e8aba19e0d0d4  16b-live-evaluation-16b-1/raw.sha256",
+   "7954aaf8ea8db81df5db007a96eb02f4b1fd6ba744daddf85e417616761d8a0d  16b-live-evaluation-16b-1/run-record.json",
+   "8bee803c3e5edfbd0bfddc8cd27b4676c8464751748d6ad5d3584c8dff274061  q12-benchmark-q12-probe-1/answers.jsonl",
+   "84c9d25692648a5294e36627bda661b9551f616c3192629f2700d0345014bdf5  q12-benchmark-q12-probe-1/events.jsonl",
+   "99398e619dd56163c3d1cabdac4edcdd8771b2d249fb359ab7527c2671734764  q12-benchmark-q12-probe-1/raw.sha256",
+   "e1273b296d4ac3706f4cdf112dde2a250942150a4243e59972dce18214bc02c8  q12-benchmark-q12-probe-1/run-record.json",
+   "3780040aa84da640ba1cf05ba2e64a049eb13b785c5ccb4c105b00114db1c939  q12-benchmark-q12-probe-2/answers.jsonl",
+   "24ff4540db44fba39c7ef02bee37c4fe666cd1f19011d6eeb51bd67063b02955  q12-benchmark-q12-probe-2/events.jsonl",
+   "d7f12c529724f75f32048507ec75f2b853bd2431d1e041ba620e25137786dceb  q12-benchmark-q12-probe-2/raw.sha256",
+   "920772f53c20fefa19c4885638903aeb89edfd683414800aaef0590b7339244e  q12-benchmark-q12-probe-2/run-record.json",
+   "723b5e59ac771231daf714568090a02fb2d255822595ca2546130e6c375cdab4  q12-benchmark-q12-run-1/answers.jsonl",
+   "ce8f958fc90a2cdfd9a99d50a3b9c8638c1cc91986f71e966b1fc693c94a60b7  q12-benchmark-q12-run-1/events.jsonl",
+   "c23619221ca682ec6ec396a550b5cbfeca4d1d4c9fd47b13809a80feca5abd60  q12-benchmark-q12-run-1/raw.sha256",
+   "2ee64dec5cd6ddcd91f12f17aba974fddf96138d846b7e130357da59a195cd90  q12-benchmark-q12-run-1/run-record.json",
+   "11f63e6d7fd57b887d950908d429c4adc192ec76fc46d22a3ad4b4df184608e2  q12-benchmark-q12-run-2/answers.jsonl",
+   "c0282ce92e0db5c19338e9d7a8fb92ccdcf85e63e980f1c38ddf6e0aa962c0eb  q12-benchmark-q12-run-2/events.jsonl",
+   "55aa8a1fbc567082e426257d2f73e502160d3343f5d75f0ee43175ba5821c9b1  q12-benchmark-q12-run-2/raw.sha256",
+   "5c5661c766ae0ec99ef3bcb6405cb2270885564a2c713c750e688680cc66f118  q12-benchmark-q12-run-2/run-record.json"
+  ],
+  "time_source": "earliest file mtime of the frozen copies (the original first-freeze time was not recorded; a later invocation overwrote the report)",
+  "utc": "2026-11-22T01:07:05Z"
+ },
+ "last_invocation": {
+  "files_copied_this_invocation": [],
+  "refused_for_secret_pattern": [],
+  "runs": {
+   "16b-live-evaluation-16b-1": {
+    "files": [
+     "answers.jsonl",
+     "events.jsonl",
+     "raw.sha256",
+     "run-record.json"
+    ],
+    "present": true,
+    "secret_pattern_files": {
+     "Authorization": 0,
+     "Bearer": 0,
+     "sk-ant": 0,
+     "x-api-key": 0
+    }
+   },
+   "q12-benchmark-q12-probe-1": {
+    "files": [
+     "answers.jsonl",
+     "events.jsonl",
+     "raw.sha256",
+     "run-record.json"
+    ],
+    "present": true,
+    "secret_pattern_files": {
+     "Authorization": 0,
+     "Bearer": 0,
+     "sk-ant": 0,
+     "x-api-key": 0
+    }
+   },
+   "q12-benchmark-q12-probe-2": {
+    "files": [
+     "answers.jsonl",
+     "events.jsonl",
+     "raw.sha256",
+     "run-record.json"
+    ],
+    "present": true,
+    "secret_pattern_files": {
+     "Authorization": 0,
+     "Bearer": 0,
+     "sk-ant": 0,
+     "x-api-key": 0
+    }
+   },
+   "q12-benchmark-q12-run-1": {
+    "files": [
+     "answers.jsonl",
+     "events.jsonl",
+     "raw.sha256",
+     "run-record.json"
+    ],
+    "present": true,
+    "secret_pattern_files": {
+     "Authorization": 0,
+     "Bearer": 0,
+     "sk-ant": 0,
+     "x-api-key": 0
+    }
+   },
+   "q12-benchmark-q12-run-2": {
+    "files": [
+     "answers.jsonl",
+     "events.jsonl",
+     "raw.sha256",
+     "run-record.json"
+    ],
+    "present": true,
+    "secret_pattern_files": {
+     "Authorization": 0,
+     "Bearer": 0,
+     "sk-ant": 0,
+     "x-api-key": 0
+    }
+   }
+  },
+  "sha256sums_sha256": "1b085aa214cb8535d29031a2b143d5e587f86e472a7f41859da0e90be3fb5175"
+ },
+ "patterns_scanned": [
+  "sk-ant",
+  "Bearer",
+  "x-api-key",
+  "Authorization"
+ ],
+ "scan_method": "case-insensitive byte search over every file below each run's raw/ directory",
+ "schema": "scholarchain.eval16-answers.v1.freeze",
+ "source_root_note": "target/experiment-runs (untracked); copies are byte-identical, read-only (0444) where the file system keeps the mode"
+}

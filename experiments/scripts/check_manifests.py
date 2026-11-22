@@ -29,6 +29,9 @@ Checks
        total), one warm-up phase at level 1 of at most 200 requests, at least 25 quiet minutes, the fixed questions file (sha256, count, distinct, provenance).
   16B  16b-live-evaluation.json and llm-allocation.json (v2, buckets 14c/15b/16b/17): allocated answers x the pinned claude-haiku-5-5 (Anthropic API) cost per answer must fit in the shared cap (USD 1.33 stays; the bucket counts bind first),
        and the 15B and 16B figures must equal the allocation.
+  16 evaluation (Phase 16)  experiments/manifests/16-evaluation.json (the whole Phase 16 package, written by eval16_answers.py manifest): the schema and id, the offline scope (no network, no
+       AWS, no model call, spend 0.00), the policy above (no account id, no literal bucket), well-formed relative paths and sha256 values, and, when experiments/results/phase16
+       exists in the root, that every tracked input, script and output exists with exactly the recorded sha256 (an untracked input under target/ is verified only where present), that no entry lacks a sha256 (except an untracked directory entry with a listing hash), and that every file under experiments/results/phase16 is listed or declared in excluded_outputs.
   --final  also refuses the all-zero sha256 placeholders and the PLACEHOLDER-L-* markers: the state required before the commit freeze
            (tokens plus real hashes pass).
 
@@ -530,6 +533,86 @@ def check_semantic(root, final, lines, loadgen, profile):
     return failed
 
 
+EVAL16_MANIFEST = "16-evaluation.json"
+EVAL16_SCOPE = {"offline": True, "network_calls": 0, "aws_calls": 0, "model_calls": 0, "spend_usd": "0.00"}
+
+
+def check_16_evaluation(root, lines):
+    """Phase 16 evaluation manifest (instance A: groups 1, 2, 4). Returns True when a check failed."""
+    path = os.path.join(root, "experiments", "manifests", EVAL16_MANIFEST)
+    if not os.path.isfile(path):
+        lines.append("CHECK-SKIP: %s is not present" % EVAL16_MANIFEST)
+        return False
+    failed = False
+
+    def fail(message):
+        nonlocal failed
+        failed = True
+        lines.append("CHECK-FAILED: %s: %s" % (EVAL16_MANIFEST, message))
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    try:
+        manifest = json.loads(text)
+    except ValueError as error:
+        fail("not valid JSON: %s" % error)
+        return True
+    for row in policy_problems(text):
+        fail(row)
+    if manifest.get("schema") != "scholarchain.eval16-manifest.v1" or manifest.get("id") != "16-evaluation":
+        fail("schema must be scholarchain.eval16-manifest.v1 and id 16-evaluation")
+    if manifest.get("scope") is None or any(manifest["scope"].get(k) != v for k, v in EVAL16_SCOPE.items()):
+        fail("scope must state offline true, network_calls 0, aws_calls 0, model_calls 0 and spend_usd \"0.00\"")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(manifest.get("run_date", ""))):
+        fail("run_date must be YYYY-MM-DD")
+    verify = os.path.isdir(os.path.join(root, "experiments", "results", "phase16"))
+    checked = skipped = 0
+    for section in ("inputs", "scripts", "outputs"):
+        entries = manifest.get(section)
+        if not isinstance(entries, list) or not entries:
+            fail("%s must be a non-empty list" % section)
+            continue
+        for item in entries:
+            rel = item.get("path", "") if isinstance(item, dict) else ""
+            if not rel or os.path.isabs(rel) or ".." in rel.split("/"):
+                fail("%s entry has a missing, absolute or parent-relative path: %r" % (section, rel))
+                continue
+            digest = item.get("sha256")
+            if digest is None:
+                # only an untracked directory-level input may carry a listing hash instead of a sha256; every other entry without a sha256 fails
+                if not (section == "inputs" and item.get("tracked") is False and HEX64.fullmatch(str(item.get("files_listing_sha256", "")))):
+                    fail("%s entry %s has no sha256 (and is not an untracked directory entry with files_listing_sha256)" % (section, rel))
+                continue
+            if not HEX64.fullmatch(str(digest)):
+                fail("%s entry %s has no valid sha256" % (section, rel))
+                continue
+            untracked = item.get("tracked") is False
+            full = os.path.join(root, *rel.split("/"))
+            if not verify or (untracked and not os.path.isfile(full)):
+                skipped += 1
+                continue
+            if not os.path.isfile(full):
+                fail("%s entry %s does not exist" % (section, rel))
+                continue
+            with open(full, "rb") as handle:
+                actual = hashlib.sha256(handle.read()).hexdigest()
+            checked += 1
+            if actual != digest:
+                fail("%s entry %s differs from the recorded sha256 (recorded %s, found %s)" % (section, rel, digest[:12], actual[:12]))
+    if verify:
+        listed = {i.get("path") for i in (manifest.get("outputs") or []) if isinstance(i, dict)}
+        excluded = manifest.get("excluded_outputs") or {}
+        results = os.path.join(root, "experiments", "results", "phase16")
+        for base, _, names in os.walk(results):
+            for name in sorted(names):
+                rel = os.path.relpath(os.path.join(base, name), root).replace(os.sep, "/")
+                if rel not in listed and rel not in excluded:
+                    fail("outputs: %s exists under experiments/results/phase16 but is neither listed nor declared in excluded_outputs" % rel)
+    if not failed:
+        lines.append("CHECK-OK: %s: offline scope (spend 0.00), policy clean, %d file hashes verified, %d not verifiable here (%s)" % (
+            EVAL16_MANIFEST, checked, skipped, "untracked target/ inputs or no results tree in this root"))
+    return failed
+
+
 def main(argv):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--final", action="store_true", help="also refuse placeholders (the state required before the commit freeze)")
@@ -538,6 +621,7 @@ def main(argv):
     lines = []
     failed_a, blocked = check_15a(args.root, args.final, lines)
     failed_b = check_15b_16b(args.root, args.final, lines)
+    failed_b = check_16_evaluation(args.root, lines) or failed_b
     for line in lines:
         print(line)
     if failed_a or failed_b:

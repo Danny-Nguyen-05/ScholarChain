@@ -307,3 +307,37 @@ Observed usage (local, git-ignored raw evidence; the synthesis model call only, 
 Every experiment result reports **AWS, Anthropic and Voyage as separate items, then the combined total** (this is what the instructor ruling requires; external charges count toward the USD 25 project limit). A provider with no charge is listed as USD 0 with its usage noted. `loadgen.py` writes `cost_report` into the 15B run record; the AWS item comes from the AWS bill and the pre-spend receipts, never from the generator.
 
 `python3 -I load-tests/llm_budget.py reserve --bucket <b> --answers N` must run before every LLM-calling command (commands and rules in `load-tests/README.md`). 16B is a placeholder: `manifests/16b-live-evaluation.json` fixes only its answer budget; the benchmark, modes and metrics come from the Phase 16 work order.
+
+## Phase 16 evaluation (groups 1, 2 and 4: entity resolution, graph correctness, answer quality)
+
+Offline only: every number comes from a committed script that reads raw evidence which already existed (no network, no AWS, no model call, no spend). Stdlib only, run as `python3 -I`, deterministic (sorted keys, fixed seeds), so a rerun gives identical bytes. The table below describes groups 1, 2 and 4 (instance A); groups 3, 5, 6 and 7 are written by the other experiment-engineer instance and are described in the instance B paragraph at the end of this section. The write-up is `docs/report/evaluation.md` (documentation-engineer). A metric without raw evidence is reported as a GAP with its reason, never estimated.
+
+| Group | Script | Reads | Writes |
+|---|---|---|---|
+| 1 entity resolution | `scripts/eval16_identity.py` | the Phase 5E queue, labels, predictions and exclusions under `docs/agent-runs/phase-05/` and `datasets/entity-resolution/`; the 5E evaluator outputs only as a cross-check | `results/phase16/identity/identity-metrics.{json,md}` |
+| 2 graph correctness | `scripts/eval16_graph.py --export-dir <spark export dir of run ba7402d1>` | the plain-CSV Neptune sidecar of the S export (`target/`, git-ignored; streamed), the Spark job's own counters and load manifest as a cross-check, the Spark test sources (listed, not run) | `results/phase16/graph/graph-correctness.{json,md}` |
+| 4 answer quality | `scripts/eval16_answers.py freeze`, then `run --export-dir <same export>` | the raw Q12 and 16B runs under `target/experiment-runs/` (frozen first), `inputs/q12/answer-key.json`, `scripts/q12_score.py` (unchanged) | `results/phase16/q12-raw/` (frozen copies, `SHA256SUMS`, `freeze-report.json`), `results/phase16/answers/` (scorer outputs, `answer-quality.{json,md}`) |
+| manifest | `scripts/eval16_answers.py manifest --run-date YYYY-MM-DD` | the files above | `manifests/16-evaluation.json` (inputs, scripts and outputs with sha256), verified by `scripts/check_manifests.py` |
+
+```
+python3 -I experiments/scripts/eval16_identity.py
+python3 -I experiments/scripts/eval16_graph.py --export-dir "target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark"
+python3 -I experiments/scripts/eval16_answers.py freeze      # once: copies the five raw runs read-only after a secret-pattern scan; never overwrites a different file
+python3 -I experiments/scripts/eval16_answers.py run --export-dir "target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark"
+python3 -I experiments/scripts/eval16_answers.py manifest --run-date 2026-11-21
+python3 -I experiments/scripts/check_manifests.py            # includes the 16-evaluation.json check: offline scope, no account id, sha256 of every tracked file
+python3 -I -m unittest discover -s experiments/tests         # includes tests/test_eval16_a.py
+```
+
+Method notes. Proportions carry Wilson 95% intervals (F1 carries a seeded percentile bootstrap interval). Each result file has separate sections for measured facts, the cross-check against numbers recorded elsewhere (a cross-check, never a source), threats to validity and missing data, gaps, and interpretation. The frozen raw copies are the only input of the Q12 scoring and of every answer-quality number; the originals stay under `target/experiment-runs/` (untracked). Run-1 and run-2 of Q12 ran different code (two commits), so they are a before/after pair and not repeats: variability across repeats is unmeasured. The Anthropic Console figure (USD 0.08 for key CS441-key, 2026-11-20 and 2026-11-21 UTC only, as of 2026-11-21 23:33 UTC) is a user-supplied screenshot value recorded as the cost of record for that key; the earlier-phase Anthropic spend (Session 1 16B and 14C, another key; project ledger USD 0.075075) is a separately scoped figure with its own source. The token-derived figure covers synthesis calls only, at the rates read from `load-tests/config/load-profile.v1.json` (its sha256 is recorded in the result).
+
+`manifests/16-evaluation.json` covers the whole Phase 16 package: the scripts, test files and every result file of all seven groups with sha256 (only `results/phase16/reproducibility/regeneration-check.log` is excluded and declared in `excluded_outputs`, because instance B refreshes it after each verify run). Its `inputs` list enumerates only the inputs of groups 1, 2 and 4; the raw inputs of groups 3, 5, 6 and 7 are read by instance B's scripts and are not enumerated in the manifest (each result file names what it read). `check_manifests.py` fails an entry without a sha256 and a result file that is neither listed nor declared excluded.
+
+The frozen run records (`results/phase16/q12-raw/*/run-record.json`) contain `ledger_path` with a local home-directory prefix. The copies are kept byte-identical to the originals (coordinator decision); `q12-raw/freeze-report.json` records this and the computed counts (no e-mail-like string, no standalone 12-digit run). `freeze-report.json` keeps the first-freeze record (`first_freeze`) written once; a later `freeze` only rewrites `last_invocation`. The first-freeze time was recovered from the earliest file mtime of the frozen copies because the original record had been overwritten, and says so.
+
+**Phase 16 groups 3, 5, 6, 7 (instance B).** Offline, stdlib, `python3 -I`; every number is recomputed from raw evidence and every table says whether it is measured or a GAP.
+- `eval16_perf.py` writes `results/phase16/performance/` (throughput, nearest-rank p50/p95/p99, errors by level for the AWS ECS run `rb-20261118` and the local Docker P35 run, ECS poll brackets, stop-task recovery, EMR step times, local P6 chain, LLM answer latency and token cost, vector ingest). It needs the git-ignored `target/experiment-runs/15b-*` raw files; exit 3 if absent.
+- `eval16_factory.py` writes `results/phase16/factory/` (verdicts, first-pass acceptance, findings by severity, repair rounds, BLOCKED-ON, guard blocks, with file:line for every item). The coordinator-notes tables read the first 199 lines of the git-ignored notes log.
+- `eval16_retrieval.py` writes `results/phase16/retrieval/`. P@K, MRR and nDCG for the Q12 ranking questions against the answer key; scorer pass rates with Wilson intervals; vector-only and fused retrieval are GAPs (no labels, stack destroyed).
+- `eval16_repro.py` writes `results/phase16/reproducibility/`; `--verify` regenerates every `eval16_*` table into a temporary directory and prints PASS, FAIL or SKIP per file against the committed copy. A fresh-clone build is pending (Phase 17).
+- Tests: `python3 -I -m unittest discover -s experiments/tests -p test_eval16_b.py`.

@@ -1,0 +1,65 @@
+{
+  "api_key_env": "SCHOLARCHAIN_LOAD_API_KEY",
+  "commit": "827fcd5a425c6da65143c3460f36e00673772fc3",
+  "cost_report": {
+    "anthropic": {
+      "answers": 1,
+      "input_tokens_estimate": 7150,
+      "model": "claude-haiku-5-5",
+      "output_tokens_estimate": 1300,
+      "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+      "usd": "0.001365"
+    },
+    "aws": {
+      "usage": "taken from the AWS bill and the pre-spend receipts; not metered here",
+      "usd": null
+    },
+    "combined_scope": "anthropic + voyage only (AWS not included: take it from the bill)",
+    "combined_usd": "0.001365",
+    "voyage": {
+      "model": "voyage-4-lite",
+      "tokens": null,
+      "usage": "tokens not metered here; the first 200000000 account tokens are free so the charge is USD 0 while the account stays under that",
+      "usd": "0.000000"
+    }
+  },
+  "ended_utc": "2026-11-21T17:07:23.675Z",
+  "experiment_id": "q12-benchmark",
+  "llm": {
+    "allocation_sha256": "4666a6bae5a6f3b6c91a9580151d75b0fd694d37bd8e8c0f54844b9e5d0a077c",
+    "answers_charged": 1,
+    "bucket": "16b",
+    "bucket_size": 116,
+    "bucket_used_at_end": 75,
+    "bucket_used_at_start": 74,
+    "estimated_cost_usd": "0.001365",
+    "ledger_path": "/Users/danny/.scholarchain/llm-ledger/haiku-ledger.jsonl",
+    "ledger_total_at_end_usd": "0.122850",
+    "ledger_total_at_start_usd": "0.121485",
+    "note": "estimated from pinned tokens and rates, not metered; the Anthropic console, the Voyage console and the AWS bill are the costs of record",
+    "stopped_reason": null
+  },
+  "manifest_sha256": "e077dfd655c607dd83f613143c6d4554ce0189b3958a390071a09c09ae7d1296",
+  "outcome": "completed",
+  "outcome_reason": "",
+  "outcomes": {
+    "ok": 1
+  },
+  "profile_sha256": "0dc1cad98ed3b184d55e153d799195b241aac825b99c87a6ab0c9150a8a27858",
+  "python": "3.14.5",
+  "questions": {
+    "asked": 1,
+    "file_sha256": "49d9920b58a97685f03ddc4c3b322e719a95ccba5179e399b621a4853e654993",
+    "planned": 1
+  },
+  "run_id": "q12-probe-2",
+  "schema": "scholarchain.evalq12-run-record.v1",
+  "started_utc": "2026-11-21T17:07:19.965Z",
+  "target": {
+    "base_url_sha256": "d30a576c0318716717366ab932e3d7dfbc4009a5bc10176403b60892912f070e",
+    "host": "127.0.0.1",
+    "loopback": true,
+    "scheme": "http"
+  },
+  "tree_dirty": false
+}

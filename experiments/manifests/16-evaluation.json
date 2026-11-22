@@ -1,0 +1,600 @@
+{
+ "commands": [
+  "python3 -I experiments/scripts/eval16_identity.py",
+  "python3 -I experiments/scripts/eval16_graph.py --export-dir 'target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark'",
+  "python3 -I experiments/scripts/eval16_answers.py freeze   # once; refuses to overwrite a different frozen file",
+  "python3 -I experiments/scripts/eval16_answers.py run --export-dir 'target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark'",
+  "python3 -I experiments/scripts/eval16_answers.py manifest --run-date 2026-11-21",
+  "python3 -I experiments/scripts/eval16_perf.py; eval16_factory.py; eval16_retrieval.py; eval16_repro.py   # instance B, see experiments/README.md",
+  "python3 -I experiments/scripts/eval16_repro.py --verify",
+  "python3 -I experiments/scripts/check_manifests.py",
+  "python3 -I -m unittest discover -s experiments/tests"
+ ],
+ "determinism": "python3 -I, stdlib only, sorted keys, fixed seeds (eval16-identity-v1, eval16-graph-v1); a rerun gives identical bytes",
+ "excluded_outputs": {
+  "experiments/results/phase16/reproducibility/regeneration-check.log": "refreshed by instance B after each `eval16_repro.py --verify` run, so it is not pinned here"
+ },
+ "group_names": {
+  "1": "entity resolution",
+  "2": "graph correctness",
+  "3": "retrieval",
+  "4": "answer quality",
+  "5": "performance and elasticity",
+  "6": "agentic factory",
+  "7": "reproducibility"
+ },
+ "groups": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "id": "16-evaluation",
+ "inputs": [
+  {
+   "group": 1,
+   "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+   "sha256": "5fbf6f5bdc1d34f7b79e910a07b964b60bdaaf1dfc825de7744b5f684e39e4a6",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+   "sha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development-without-assisted/evaluation.json",
+   "sha256": "0d42c22443389f1b890db43aeff4fedbf1193bfe07584ed8a7a19a4d45eb548d",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development/evaluation.json",
+   "sha256": "02564be525973ee6c58a1ec5053d31784e1329cc9724c14f3ac979edf247f48b",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out-without-assisted/evaluation.json",
+   "sha256": "9c5fde0b4184ca8d0026590ff8e4babe0582c7edf53cbaecffaca09c230458bb",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out/evaluation.json",
+   "sha256": "d4ead7a09aa37d948906d2ddf3426abf1dc1b91c53a3aade8b0a028f3345de3b",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+   "sha256": "5f95cd8211cbfb5d3430f8eb19f80d7840381f30652648a6275f7ef112505cdf",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/evaluation-manifest.json",
+   "sha256": "eb746edb5a6e3152f77659ab6bc294d3cc1949fe17ca8629a9d39346e0916f81",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/evaluation-report.md",
+   "sha256": "e9471b40dc7f00436cc68c4ed18a5f009064f739563408dea2628daf2a13b0e5",
+   "tracked": true
+  },
+  {
+   "group": 1,
+   "path": "docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+   "sha256": "7b672067ceb0ba067cfe8be917dad753222db73989d6ff050a5cfa74684346c8",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "source of the recorded full check quoted by the graph result",
+   "path": "docs/agent-runs/phase-15/test-report.md",
+   "sha256": "ad7aef99f0db930f0badd309e44a87eb67fe83b6f165f5995959321aa09f4455",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "Spark suite listed, not run",
+   "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+   "sha256": "5bb4cdd5f94b1d323d281dcb11469c8a37c6c4f522c60c42b1087145c60c1eb6",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "Spark suite listed, not run",
+   "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala",
+   "sha256": "b612532f2e64a5fcf231710aca8c4e9ce35dddd14626fe0ec3f5c9fc507096a2",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "Spark suite listed, not run",
+   "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala",
+   "sha256": "f43490d6d00d48433121fd1648565af4320406fe701160e14b63fa6db5e0f10a",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "Spark suite listed, not run",
+   "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala",
+   "sha256": "05d2ba4b41079cfac99333a619460cdd7e03ba2fb82e5b88f1a886982102d3aa",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "Spark suite listed, not run",
+   "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExportSpec.scala",
+   "sha256": "a463f910035aff520e954c57ba600abe17f38779f439412791f27a28681b42c3",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "Spark suite listed, not run",
+   "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala",
+   "sha256": "e07f19f9479a2104d35b0978d27a4d3ce38a801b2975b85a28c716950cc94796",
+   "tracked": true
+  },
+  {
+   "group": 2,
+   "note": "untracked Spark export (git-ignored); sha256 taken from the listing in graph-correctness.json, verified only where the file exists",
+   "path": "target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark/counters.json",
+   "sha256": "02b12f3f170fbc0d0dcf7d41763a72c99f248898db8710859db5d491b4326a72",
+   "tracked": false
+  },
+  {
+   "group": 2,
+   "note": "untracked Spark export (git-ignored); sha256 taken from the listing in graph-correctness.json, verified only where the file exists",
+   "path": "target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark/load-manifests/neptune-opencypher-csv.json",
+   "sha256": "2ec4e674c91f4e5f3a4736c3a9f0f5edc53998e73e810e1f076cff2c3f323472",
+   "tracked": false
+  },
+  {
+   "files_listing_sha256": "e277df6227d59df50e747e69579c827329d6967a1d8ac3d071137cc8c91c910e",
+   "group": 2,
+   "note": "the listing of every CSV part with size and sha256 is in experiments/results/phase16/graph/graph-correctness.md",
+   "path": "target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark/neptune-opencypher-csv/data (60 listed files)",
+   "tracked": false
+  },
+  {
+   "group": 2,
+   "note": "untracked Spark export (git-ignored); sha256 taken from the listing in graph-correctness.json, verified only where the file exists",
+   "path": "target/phase15/p6/size-S/run:ba7402d1-959a-4277-8c6e-e92878a38afa/spark/run-manifest.json",
+   "sha256": "eef8b1a5e27701388de92c6e27c9277bd1e18fc7b966a8d600772b1ab13f7e10",
+   "tracked": false
+  },
+  {
+   "group": 4,
+   "path": "experiments/inputs/q12/answer-key.json",
+   "sha256": "6f5ef014d310136d7016447f7eefa39912e49c467a5f3bf2ec58ee1dc937a9b3",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "path": "experiments/inputs/q12/questions.txt",
+   "sha256": "afc09952096c49ebacd61a051542295570ec9bcd39ffb72cb7a3d4fc014e4734",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/answers.jsonl",
+   "sha256": "80fc2d7748f2462b9b092b8e87a201d502946fd57253a533ffa9aee51676c8e2",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/events.jsonl",
+   "sha256": "b72895dc0e71cea05ef3f9d182f34a594852e9d5c5ddd971fe5c8de5e26ddc52",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/raw.sha256",
+   "sha256": "13736cfacf3e83beafed900d01ed904a442c2a93e2db87b4752e8aba19e0d0d4",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/run-record.json",
+   "sha256": "7954aaf8ea8db81df5db007a96eb02f4b1fd6ba744daddf85e417616761d8a0d",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/answers.jsonl",
+   "sha256": "8bee803c3e5edfbd0bfddc8cd27b4676c8464751748d6ad5d3584c8dff274061",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/events.jsonl",
+   "sha256": "84c9d25692648a5294e36627bda661b9551f616c3192629f2700d0345014bdf5",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/raw.sha256",
+   "sha256": "99398e619dd56163c3d1cabdac4edcdd8771b2d249fb359ab7527c2671734764",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/run-record.json",
+   "sha256": "e1273b296d4ac3706f4cdf112dde2a250942150a4243e59972dce18214bc02c8",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/answers.jsonl",
+   "sha256": "3780040aa84da640ba1cf05ba2e64a049eb13b785c5ccb4c105b00114db1c939",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/events.jsonl",
+   "sha256": "24ff4540db44fba39c7ef02bee37c4fe666cd1f19011d6eeb51bd67063b02955",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/raw.sha256",
+   "sha256": "d7f12c529724f75f32048507ec75f2b853bd2431d1e041ba620e25137786dceb",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/run-record.json",
+   "sha256": "920772f53c20fefa19c4885638903aeb89edfd683414800aaef0590b7339244e",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/answers.jsonl",
+   "sha256": "723b5e59ac771231daf714568090a02fb2d255822595ca2546130e6c375cdab4",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/events.jsonl",
+   "sha256": "ce8f958fc90a2cdfd9a99d50a3b9c8638c1cc91986f71e966b1fc693c94a60b7",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/raw.sha256",
+   "sha256": "c23619221ca682ec6ec396a550b5cbfeca4d1d4c9fd47b13809a80feca5abd60",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/run-record.json",
+   "sha256": "2ee64dec5cd6ddcd91f12f17aba974fddf96138d846b7e130357da59a195cd90",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/answers.jsonl",
+   "sha256": "11f63e6d7fd57b887d950908d429c4adc192ec76fc46d22a3ad4b4df184608e2",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/events.jsonl",
+   "sha256": "c0282ce92e0db5c19338e9d7a8fb92ccdcf85e63e980f1c38ddf6e0aa962c0eb",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/raw.sha256",
+   "sha256": "55aa8a1fbc567082e426257d2f73e502160d3343f5d75f0ee43175ba5821c9b1",
+   "tracked": true
+  },
+  {
+   "group": 4,
+   "note": "frozen copy; the original is under target/experiment-runs/ (untracked)",
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/run-record.json",
+   "sha256": "5c5661c766ae0ec99ef3bcb6405cb2270885564a2c713c750e688680cc66f118",
+   "tracked": true
+  }
+ ],
+ "inputs_note": "the inputs list covers groups 1, 2 and 4; the raw inputs of groups 3, 5, 6 and 7 are read by instance B's scripts (see their result files for the inputs they read)",
+ "outputs": [
+  {
+   "path": "experiments/results/phase16/answers/answer-quality.json",
+   "sha256": "d7a61dea0384ae385346be80ed9f9bee82074261644bf05a01eede834dffee34"
+  },
+  {
+   "path": "experiments/results/phase16/answers/answer-quality.md",
+   "sha256": "42365adedec3d443b186e1bcb945c4c9f747041ab82072e8df40708ce39e0e02"
+  },
+  {
+   "path": "experiments/results/phase16/answers/q12-run-1-scores.json",
+   "sha256": "d3bc13226aaaf8921a9f083ea19d09d7a0a7f453a40d70b980c41116be2ab15a"
+  },
+  {
+   "path": "experiments/results/phase16/answers/q12-run-1-scores.md",
+   "sha256": "c0ba7650b6738293185eb3bf2483d35718348982951ed7d0eb6adaf30d073eea"
+  },
+  {
+   "path": "experiments/results/phase16/answers/q12-run-2-scores.json",
+   "sha256": "b50c375aa703efef46d2b1f08c444359b974667df1fd0f7c7cce2d66d589af30"
+  },
+  {
+   "path": "experiments/results/phase16/answers/q12-run-2-scores.md",
+   "sha256": "779978a499bc6a16ef0df787449108a646ecaeb392706b64ffcdd58265cbe218"
+  },
+  {
+   "path": "experiments/results/phase16/factory/factory-items.json",
+   "sha256": "3d78e0f69a6f21df5b85e7ed89190959aa94ed86932a74d7771aa4128b76bbd7"
+  },
+  {
+   "path": "experiments/results/phase16/factory/factory-metrics.json",
+   "sha256": "4d8fe876fe2ee4c88e9bae121425a52798c017c430c8249e3a06b9920e74937f"
+  },
+  {
+   "path": "experiments/results/phase16/factory/factory-metrics.md",
+   "sha256": "9df409698bcbd2b29286174b82d6fd8626607b7f550dda1a458250705e3faf8a"
+  },
+  {
+   "path": "experiments/results/phase16/factory/factory-notes-items.json",
+   "sha256": "50808700b43b94b427c486b21cb1af483609b645f36fabddfffa062dd80ae1ce"
+  },
+  {
+   "path": "experiments/results/phase16/factory/factory-notes.md",
+   "sha256": "b677c91ce279de5b0cf2d3345b247a365fc14ed6f6b52c794dfb620a493abbc2"
+  },
+  {
+   "path": "experiments/results/phase16/graph/graph-correctness.json",
+   "sha256": "f9cb08c9990a716989103709b112e96a279b73c88a6ca36a3c9d460567eab4df"
+  },
+  {
+   "path": "experiments/results/phase16/graph/graph-correctness.md",
+   "sha256": "ec0b53ebd8690ebc295cdb39ed28bc4e92d797281a0c3c3d54346e632206d7fe"
+  },
+  {
+   "path": "experiments/results/phase16/identity/identity-metrics.json",
+   "sha256": "8d332ce7dda6714e043b4cd3c083538e8cf4cb7e718640dc89888adbfd8703a7"
+  },
+  {
+   "path": "experiments/results/phase16/identity/identity-metrics.md",
+   "sha256": "e5200af1a7e2d511a63e2a3052c3ec9f734a0a7c03b07a4f943b1d66ece45bc0"
+  },
+  {
+   "path": "experiments/results/phase16/performance/performance-metrics.json",
+   "sha256": "de4d2f22cdb12f954ddd618c00ffa6457f533e9bcba965ec3c81022ffc119608"
+  },
+  {
+   "path": "experiments/results/phase16/performance/performance-metrics.md",
+   "sha256": "5666dbe7e07515ab37edd530247918d097c5a0435acd3a271fd4c9029632aa10"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118-freeze-note.json",
+   "sha256": "1af6deb04ea3207bd493629d33007ee2793e96ac818d092121e65834796bf63b"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118/SHA256SUMS",
+   "sha256": "37ae7e98c9683a7b61ab3fedf5823a7d28f32965087779e526a9ddae99b9763c"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118/events.jsonl",
+   "sha256": "8dddf6a35739018cabf71bc81360e3f4d13717d6e41e969c40c3116b12f0f3e5"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118/raw.sha256",
+   "sha256": "e951e7dd05057da7bc083eb7a612fd3d7b1a53bc13618b3ff8d67ebcade00511"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118/requests.jsonl",
+   "sha256": "1d1cce8bc01be098ac0c8f830b5a62412ade945912a2820ecf1e331b24f37a6a"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118/run-record.json",
+   "sha256": "a645b2fd5a52c5edc7adf3a93ac38389d42d442178eb2d024bfdc5b772d3a5fd"
+  },
+  {
+   "path": "experiments/results/phase16/performance/raw-rb-20261118/summary.csv",
+   "sha256": "bb0c51a28d16497aa3fdfe4393cbdf3864fcee8f512275e6372bd73bcdf99424"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/answers.jsonl",
+   "sha256": "80fc2d7748f2462b9b092b8e87a201d502946fd57253a533ffa9aee51676c8e2"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/events.jsonl",
+   "sha256": "b72895dc0e71cea05ef3f9d182f34a594852e9d5c5ddd971fe5c8de5e26ddc52"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/raw.sha256",
+   "sha256": "13736cfacf3e83beafed900d01ed904a442c2a93e2db87b4752e8aba19e0d0d4"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1/run-record.json",
+   "sha256": "7954aaf8ea8db81df5db007a96eb02f4b1fd6ba744daddf85e417616761d8a0d"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/SHA256SUMS",
+   "sha256": "1b085aa214cb8535d29031a2b143d5e587f86e472a7f41859da0e90be3fb5175"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/freeze-report.json",
+   "sha256": "94637fa89e477a697ee98f5dd2aacaa4665073615ae4305a67a82d6844b80929"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/answers.jsonl",
+   "sha256": "8bee803c3e5edfbd0bfddc8cd27b4676c8464751748d6ad5d3584c8dff274061"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/events.jsonl",
+   "sha256": "84c9d25692648a5294e36627bda661b9551f616c3192629f2700d0345014bdf5"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/raw.sha256",
+   "sha256": "99398e619dd56163c3d1cabdac4edcdd8771b2d249fb359ab7527c2671734764"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1/run-record.json",
+   "sha256": "e1273b296d4ac3706f4cdf112dde2a250942150a4243e59972dce18214bc02c8"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/answers.jsonl",
+   "sha256": "3780040aa84da640ba1cf05ba2e64a049eb13b785c5ccb4c105b00114db1c939"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/events.jsonl",
+   "sha256": "24ff4540db44fba39c7ef02bee37c4fe666cd1f19011d6eeb51bd67063b02955"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/raw.sha256",
+   "sha256": "d7f12c529724f75f32048507ec75f2b853bd2431d1e041ba620e25137786dceb"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2/run-record.json",
+   "sha256": "920772f53c20fefa19c4885638903aeb89edfd683414800aaef0590b7339244e"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/answers.jsonl",
+   "sha256": "723b5e59ac771231daf714568090a02fb2d255822595ca2546130e6c375cdab4"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/events.jsonl",
+   "sha256": "ce8f958fc90a2cdfd9a99d50a3b9c8638c1cc91986f71e966b1fc693c94a60b7"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/raw.sha256",
+   "sha256": "c23619221ca682ec6ec396a550b5cbfeca4d1d4c9fd47b13809a80feca5abd60"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1/run-record.json",
+   "sha256": "2ee64dec5cd6ddcd91f12f17aba974fddf96138d846b7e130357da59a195cd90"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/answers.jsonl",
+   "sha256": "11f63e6d7fd57b887d950908d429c4adc192ec76fc46d22a3ad4b4df184608e2"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/events.jsonl",
+   "sha256": "c0282ce92e0db5c19338e9d7a8fb92ccdcf85e63e980f1c38ddf6e0aa962c0eb"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/raw.sha256",
+   "sha256": "55aa8a1fbc567082e426257d2f73e502160d3343f5d75f0ee43175ba5821c9b1"
+  },
+  {
+   "path": "experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2/run-record.json",
+   "sha256": "5c5661c766ae0ec99ef3bcb6405cb2270885564a2c713c750e688680cc66f118"
+  },
+  {
+   "path": "experiments/results/phase16/reproducibility/check-runs-local.json",
+   "sha256": "8e4a20487875ef4e87b91b60470002cd2213ce087be5064007dba10a93caeec4"
+  },
+  {
+   "path": "experiments/results/phase16/reproducibility/check-runs-local.md",
+   "sha256": "c1dd9e0a3ad78e9571da0e34608de035567721ebea1d6e8924f3cf5daf7bd6ca"
+  },
+  {
+   "path": "experiments/results/phase16/reproducibility/reproducibility-evidence.json",
+   "sha256": "cfeb6da773c9afae44c0e829af423e771576992f85ea59a2819a16aa215641da"
+  },
+  {
+   "path": "experiments/results/phase16/reproducibility/reproducibility-evidence.md",
+   "sha256": "bcfe573abd386bec84b93b5283b975c79f83bd6018cd65dd1e5563051a375dd1"
+  },
+  {
+   "path": "experiments/results/phase16/retrieval/retrieval-metrics.json",
+   "sha256": "d070329520ec3a4d9d8f815210752f0ef507ad8e9d968d46d3450a094caac0ff"
+  },
+  {
+   "path": "experiments/results/phase16/retrieval/retrieval-metrics.md",
+   "sha256": "fec7ee0cdc8c056eefdd9966503cc3e9d948fe6d7af2e5a6db986a396a5c4cb2"
+  }
+ ],
+ "owner": "experiment-engineer (instance A writes the manifest; instance B writes the files of groups 3, 5, 6, 7)",
+ "phase": 16,
+ "run_date": "2026-11-21",
+ "schema": "scholarchain.eval16-manifest.v1",
+ "scope": {
+  "aws_calls": 0,
+  "model_calls": 0,
+  "network_calls": 0,
+  "note": "every metric is computed by a committed script from raw evidence that already existed; nothing was run on AWS or against a model",
+  "offline": true,
+  "spend_usd": "0.00"
+ },
+ "scripts": [
+  {
+   "path": "experiments/scripts/eval16_identity.py",
+   "sha256": "3896e4bbcbd601f1d0b1ebf1c9ef66ad9746c33d69d1546c35801a1cdfd99002"
+  },
+  {
+   "path": "experiments/scripts/eval16_graph.py",
+   "sha256": "a25e2c3e42bbe4bb7498ddf6b025b4bf9ba2eb26e51010d16b932909bdb1c203"
+  },
+  {
+   "path": "experiments/scripts/eval16_answers.py",
+   "sha256": "daeb74fd2e4714d09cdf8960ec6f68e936364e1dc0f7b48da1393699b8f2a2ad"
+  },
+  {
+   "path": "experiments/scripts/q12_score.py",
+   "sha256": "501b55f2b84a3cb197886714fed657ed8c292b8a26c75955a6f121542e7dfb27"
+  },
+  {
+   "path": "experiments/scripts/q12_graph.py",
+   "sha256": "949188823000f399ac33bfb4c9fa4ed9ed52c3e31308055200786696eede4631"
+  },
+  {
+   "path": "experiments/scripts/check_manifests.py",
+   "sha256": "8121c6b2fba3368b8182a9ac96f68ff1b494cda0b6d737d443df9bfa98351e56"
+  },
+  {
+   "path": "experiments/tests/test_eval16_a.py",
+   "sha256": "fa33cc57df16f97a1d77f2884d9b86da1864ebc9730697d27d5b6e37e6930d72"
+  },
+  {
+   "path": "experiments/scripts/eval16_perf.py",
+   "sha256": "2cf3bb6562076483993ac23deb1f9f9bb95e8fcd328b5d341ad08f4ec194cdf8"
+  },
+  {
+   "path": "experiments/scripts/eval16_factory.py",
+   "sha256": "b63ce519b1ab542902426200ac9dea5f5249a927f7259018311cf43d486c51d4"
+  },
+  {
+   "path": "experiments/scripts/eval16_retrieval.py",
+   "sha256": "9fd9de467b63b88e14483a576250f1af067ea9e83a26e733c1457901322c694d"
+  },
+  {
+   "path": "experiments/scripts/eval16_repro.py",
+   "sha256": "c2a3bc41d3ef2e68e3e8bed2c0cae0594da76fe70b363037be0135eafe378b04"
+  },
+  {
+   "path": "experiments/tests/test_eval16_b.py",
+   "sha256": "ffa913e9dbd4cf49401e246fc7b281b9f5c3b7d09b8a146fc011bbb1e240f833"
+  }
+ ]
+}

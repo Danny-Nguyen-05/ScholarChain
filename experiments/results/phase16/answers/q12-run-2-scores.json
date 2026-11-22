@@ -1,0 +1,1572 @@
+{
+ "deep_checks": "export",
+ "export_run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
+ "key_sha256": "6f5ef014d310136d7016447f7eefa39912e49c467a5f3bf2ec58ee1dc937a9b3",
+ "per_type": {
+  "bridge": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "coauthor_breadth": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "community": {
+   "abstained_or_refused": 3,
+   "all_pass": 0,
+   "claims_pass": 0,
+   "questions": 3,
+   "retrieval_pass": 0,
+   "text_pass": 0
+  },
+  "component": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "direct_collab": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "evidence": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "institution": {
+   "abstained_or_refused": 3,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "max_team_size": {
+   "abstained_or_refused": 0,
+   "all_pass": 2,
+   "claims_pass": 2,
+   "questions": 3,
+   "retrieval_pass": 2,
+   "text_pass": 2
+  },
+  "shortest_path": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "temporal": {
+   "abstained_or_refused": 0,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  },
+  "topic": {
+   "abstained_or_refused": 3,
+   "all_pass": 3,
+   "claims_pass": 3,
+   "questions": 3,
+   "retrieval_pass": 3,
+   "text_pass": 3
+  }
+ },
+ "questions": [
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q01",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers have the most distinct coauthors?",
+   "ranking": {
+    "corpus_top1_agrees": true,
+    "rank1_id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+    "rank1_value": 247.0
+   },
+   "retrieval": {
+    "cited": 3,
+    "deep": "export",
+    "deep_checked_items": 3,
+    "kinds": [
+     "ranking"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 3,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2417,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "coauthor_breadth"
+  },
+  {
+   "check_level": "abstain",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": true,
+    "reasons": [],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "abstain",
+   "http_status": 422,
+   "id": "q02",
+   "outcome_kind": "refused",
+   "pass": true,
+   "question": "Which researchers have the most distinct coauthors topic \"Cognitive Computing and Networks\"?",
+   "retrieval": {
+    "applicable": false,
+    "pass": true,
+    "reasons": [
+     "not applicable: the key expects an abstention"
+    ]
+   },
+   "text": {
+    "abstention_kind": "refused-422-UNSUPPORTED_QUERY",
+    "pass": true,
+    "reasons": []
+   },
+   "type": "topic"
+  },
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q03",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers have the largest team size?",
+   "ranking": {
+    "corpus_top1_agrees": false,
+    "rank1_id": "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927",
+    "rank1_value": 15.0
+   },
+   "retrieval": {
+    "cited": 3,
+    "deep": "export",
+    "deep_checked_items": 3,
+    "kinds": [
+     "ranking"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 3,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2429,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "max_team_size"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 1,
+    "attempted": 1,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 1,
+    "verified_claims_checked": 1,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q04",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Who are the direct coauthors of \"Michael Kaminsky\"?",
+   "retrieval": {
+    "cited": 26,
+    "deep": "export",
+    "deep_checked_items": 26,
+    "kinds": [
+     "direct-coauthors",
+     "edge"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 26,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2658,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "direct_collab"
+  },
+  {
+   "check_level": "abstain",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": true,
+    "reasons": [],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "abstain",
+   "http_status": 422,
+   "id": "q05",
+   "outcome_kind": "refused",
+   "pass": true,
+   "question": "Which researchers have the most distinct coauthors institution \"University of Louisiana at Lafayette\"?",
+   "retrieval": {
+    "applicable": false,
+    "pass": true,
+    "reasons": [
+     "not applicable: the key expects an abstention"
+    ]
+   },
+   "text": {
+    "abstention_kind": "refused-422-UNSUPPORTED_QUERY",
+    "pass": true,
+    "reasons": []
+   },
+   "type": "institution"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q06",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the shortest coauthor path between \"Niraj Tolia\" and \"Zhikui Wang\"?",
+   "retrieval": {
+    "cited": 2,
+    "deep": "export",
+    "deep_checked_items": 2,
+    "kinds": [
+     "edge",
+     "path"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 2,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1017,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "shortest_path"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q07",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the component of \"Changyu Lin\"?",
+   "retrieval": {
+    "cited": 2,
+    "deep": "export",
+    "deep_checked_items": 2,
+    "kinds": [
+     "distance-estimate",
+     "metrics"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 2,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1158,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "component"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": 0,
+    "outcome": "ABSTAINED",
+    "pass": false,
+    "reasons": [
+     "no claim attempted"
+    ],
+    "rejected": 0,
+    "verification_status": "ABSTAINED",
+    "verified": 0,
+    "verified_claims_checked": 0,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q08",
+   "outcome_kind": "abstained",
+   "pass": false,
+   "question": "Compare communities of \"Ales Kubicek\"",
+   "retrieval": {
+    "cited": 0,
+    "deep": "export",
+    "deep_checked_items": 0,
+    "kinds": [],
+    "pass": false,
+    "reason_count": 5,
+    "reasons": [
+     "the system did not answer (outcome kind abstained)",
+     "no evidence cited",
+     "required entity 717a2d6dd6ce is not named by any cited evidence",
+     "no cited evidence of kind ['community'] (found [])",
+     "no community evidence for the researcher"
+    ],
+    "resolved": 0,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 41,
+    "pass": false,
+    "reasons": [
+     "the system did not answer (outcome kind abstained)",
+     "none of the number alternatives [[18]] appears",
+     "the name 'Ales Kubicek' does not appear"
+    ]
+   },
+   "type": "community"
+  },
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q09",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers are the strongest bridges?",
+   "ranking": {
+    "corpus_top1_agrees": true,
+    "rank1_id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+    "rank1_value": 166.0
+   },
+   "retrieval": {
+    "cited": 4,
+    "deep": "export",
+    "deep_checked_items": 4,
+    "kinds": [
+     "bridge"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 4,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1961,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "bridge"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 1,
+    "attempted": 1,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 1,
+    "verified_claims_checked": 1,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q10",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Did \"Praveen Yalagandula\" change from through-2009 to 2010-2014?",
+   "retrieval": {
+    "cited": 1,
+    "deep": "export",
+    "deep_checked_items": 1,
+    "kinds": [
+     "temporal"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 1,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 917,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "temporal"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q11",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the shortest path between \"Varsha Dani\" and \"Jared Saia\"?",
+   "retrieval": {
+    "cited": 2,
+    "deep": "export",
+    "deep_checked_items": 2,
+    "kinds": [
+     "edge",
+     "path"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 2,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1093,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "evidence"
+  },
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q12",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers have the most distinct coauthors since 2015?",
+   "ranking": {
+    "corpus_top1_agrees": true,
+    "rank1_id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+    "rank1_value": 186.0
+   },
+   "retrieval": {
+    "cited": 3,
+    "deep": "export",
+    "deep_checked_items": 3,
+    "kinds": [
+     "ranking"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 3,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2413,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "coauthor_breadth"
+  },
+  {
+   "check_level": "abstain",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": true,
+    "reasons": [],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "abstain",
+   "http_status": 422,
+   "id": "q13",
+   "outcome_kind": "refused",
+   "pass": true,
+   "question": "Which researchers have the most distinct coauthors topic \"Computability, Logic, AI Algorithms\" since 2015?",
+   "retrieval": {
+    "applicable": false,
+    "pass": true,
+    "reasons": [
+     "not applicable: the key expects an abstention"
+    ]
+   },
+   "text": {
+    "abstention_kind": "refused-422-UNSUPPORTED_QUERY",
+    "pass": true,
+    "reasons": []
+   },
+   "type": "topic"
+  },
+  {
+   "check_level": "bounded",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": false,
+    "reasons": [
+     "/v1/explain gave no claim counters"
+    ],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null,
+    "verified_claims_checked": 0,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 504,
+   "id": "q14",
+   "outcome_kind": "error",
+   "pass": false,
+   "question": "Which researchers have the maximum team size since 2015?",
+   "retrieval": {
+    "cited": 0,
+    "deep": "export",
+    "deep_checked_items": 0,
+    "kinds": [],
+    "pass": false,
+    "reason_count": 3,
+    "reasons": [
+     "the system did not answer (outcome kind error)",
+     "no evidence cited",
+     "no cited evidence of kind ['ranking'] (found [])"
+    ],
+    "resolved": 0,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 0,
+    "pass": false,
+    "reasons": [
+     "the system did not answer (outcome kind error)",
+     "the answer has no summary text"
+    ]
+   },
+   "type": "max_team_size"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 12,
+    "attempted": 12,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 12,
+    "verified_claims_checked": 12,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q15",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Who are the direct coauthors of \"Alexandru Manea\"?",
+   "retrieval": {
+    "cited": 12,
+    "deep": "export",
+    "deep_checked_items": 12,
+    "kinds": [
+     "direct-coauthors",
+     "edge"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 12,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 6472,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "direct_collab"
+  },
+  {
+   "check_level": "abstain",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": true,
+    "reasons": [],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "abstain",
+   "http_status": 422,
+   "id": "q16",
+   "outcome_kind": "refused",
+   "pass": true,
+   "question": "Rank bridge researchers institution \"University of Louisiana at Lafayette\" since 2015",
+   "retrieval": {
+    "applicable": false,
+    "pass": true,
+    "reasons": [
+     "not applicable: the key expects an abstention"
+    ]
+   },
+   "text": {
+    "abstention_kind": "refused-422-UNSUPPORTED_QUERY",
+    "pass": true,
+    "reasons": []
+   },
+   "type": "institution"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 3,
+    "attempted": 3,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 3,
+    "verified_claims_checked": 3,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q17",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the shortest coauthor path between \"Geoff Outhred\" and \"Umesh Krishnaswamy\" since 2015?",
+   "retrieval": {
+    "cited": 3,
+    "deep": "export",
+    "deep_checked_items": 3,
+    "kinds": [
+     "edge",
+     "path"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 3,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2063,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "shortest_path"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 1,
+    "attempted": 1,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 1,
+    "verified_claims_checked": 1,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q18",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the component of \"Frank Sherwood\" in window through-2009?",
+   "retrieval": {
+    "cited": 1,
+    "deep": "export",
+    "deep_checked_items": 1,
+    "kinds": [
+     "metrics"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 1,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 666,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "component"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": false,
+    "reasons": [
+     "/v1/explain gave no claim counters"
+    ],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null,
+    "verified_claims_checked": 0,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "answer",
+   "http_status": 422,
+   "id": "q19",
+   "outcome_kind": "refused",
+   "pass": false,
+   "question": "Compare communities of \"Shengdong Dai\" since 2015",
+   "retrieval": {
+    "cited": 0,
+    "deep": "export",
+    "deep_checked_items": 0,
+    "kinds": [],
+    "pass": false,
+    "reason_count": 5,
+    "reasons": [
+     "the system did not answer (outcome kind refused)",
+     "no evidence cited",
+     "required entity 484392d86927 is not named by any cited evidence",
+     "no cited evidence of kind ['community'] (found [])",
+     "no community evidence for the researcher"
+    ],
+    "resolved": 0,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 0,
+    "pass": false,
+    "reasons": [
+     "the system did not answer (outcome kind refused)",
+     "the answer has no summary text"
+    ]
+   },
+   "type": "community"
+  },
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q20",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers are the strongest bridges since 2015?",
+   "ranking": {
+    "corpus_top1_agrees": true,
+    "rank1_id": "researcher:dblp:44de282d8af6fe8ec614d2a2648741d4d78ec1e2cb642a04d422938605e0d29d",
+    "rank1_value": 153.0
+   },
+   "retrieval": {
+    "cited": 4,
+    "deep": "export",
+    "deep_checked_items": 4,
+    "kinds": [
+     "bridge"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 4,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1982,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "bridge"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 1,
+    "attempted": 1,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 1,
+    "verified_claims_checked": 1,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q21",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Did \"Nisha Talagala\" change from 2010-2014 to 2015-2019?",
+   "retrieval": {
+    "cited": 1,
+    "deep": "export",
+    "deep_checked_items": 1,
+    "kinds": [
+     "temporal"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 1,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 912,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "temporal"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q22",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the shortest path between \"Markus Horst Becker\" and \"Leander Jehl\" since 2015?",
+   "retrieval": {
+    "cited": 2,
+    "deep": "export",
+    "deep_checked_items": 2,
+    "kinds": [
+     "edge",
+     "path"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 2,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1045,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "evidence"
+  },
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q23",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers have the most distinct coauthors in window 2010-2014?",
+   "ranking": {
+    "corpus_top1_agrees": true,
+    "rank1_id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+    "rank1_value": 48.0
+   },
+   "retrieval": {
+    "cited": 3,
+    "deep": "export",
+    "deep_checked_items": 3,
+    "kinds": [
+     "ranking"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 3,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2442,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "coauthor_breadth"
+  },
+  {
+   "check_level": "abstain",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": true,
+    "reasons": [],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "abstain",
+   "http_status": 422,
+   "id": "q24",
+   "outcome_kind": "refused",
+   "pass": true,
+   "question": "Rank researchers by distinct coauthors topic \"Language and cultural evolution\" in window 2020-2026",
+   "retrieval": {
+    "applicable": false,
+    "pass": true,
+    "reasons": [
+     "not applicable: the key expects an abstention"
+    ]
+   },
+   "text": {
+    "abstention_kind": "refused-422-UNSUPPORTED_QUERY",
+    "pass": true,
+    "reasons": []
+   },
+   "type": "topic"
+  },
+  {
+   "check_level": "bounded",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q25",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Rank researchers by maximum team size in window 2020-2026",
+   "ranking": {
+    "rank1_id": "researcher:dblp:a7aa35d99813e8932e9cdfa7dbfaffb8da1cc756ff8b07767c5c484392d86927",
+    "rank1_value": 15.0
+   },
+   "retrieval": {
+    "cited": 3,
+    "deep": "export",
+    "deep_checked_items": 3,
+    "kinds": [
+     "ranking"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 3,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2433,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "max_team_size"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 14,
+    "attempted": 14,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 14,
+    "verified_claims_checked": 14,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q26",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Who are the direct coauthors of \"Bin Niu\" since 2015?",
+   "retrieval": {
+    "cited": 14,
+    "deep": "export",
+    "deep_checked_items": 14,
+    "kinds": [
+     "direct-coauthors",
+     "edge"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 14,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 7349,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "direct_collab"
+  },
+  {
+   "check_level": "abstain",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": true,
+    "reasons": [],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "abstain",
+   "http_status": 422,
+   "id": "q27",
+   "outcome_kind": "refused",
+   "pass": true,
+   "question": "Which researchers have the largest team size institution \"University of Louisiana at Lafayette\"?",
+   "retrieval": {
+    "applicable": false,
+    "pass": true,
+    "reasons": [
+     "not applicable: the key expects an abstention"
+    ]
+   },
+   "text": {
+    "abstention_kind": "refused-422-UNSUPPORTED_QUERY",
+    "pass": true,
+    "reasons": []
+   },
+   "type": "institution"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 4,
+    "attempted": 4,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 4,
+    "verified_claims_checked": 4,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q28",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the shortest coauthor path between \"Ming-Chang Yang\" and \"Chenxiao Liu\"?",
+   "retrieval": {
+    "cited": 4,
+    "deep": "export",
+    "deep_checked_items": 4,
+    "kinds": [
+     "edge",
+     "path"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 4,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 2766,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "shortest_path"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 1,
+    "attempted": 1,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 1,
+    "verified_claims_checked": 1,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q29",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the component of \"Teruo Higashino\" since 2015?",
+   "retrieval": {
+    "cited": 1,
+    "deep": "export",
+    "deep_checked_items": 1,
+    "kinds": [
+     "metrics"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 1,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 662,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "component"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 0,
+    "attempted": null,
+    "outcome": null,
+    "pass": false,
+    "reasons": [
+     "/v1/explain gave no claim counters"
+    ],
+    "rejected": null,
+    "verification_status": null,
+    "verified": null,
+    "verified_claims_checked": 0,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": "UNSUPPORTED_QUERY",
+   "expected_outcome": "answer",
+   "http_status": 422,
+   "id": "q30",
+   "outcome_kind": "refused",
+   "pass": false,
+   "question": "Compare communities of \"Soo-Mook Moon\" in window 2020-2026",
+   "retrieval": {
+    "cited": 0,
+    "deep": "export",
+    "deep_checked_items": 0,
+    "kinds": [],
+    "pass": false,
+    "reason_count": 5,
+    "reasons": [
+     "the system did not answer (outcome kind refused)",
+     "no evidence cited",
+     "required entity cf4b7258a105 is not named by any cited evidence",
+     "no cited evidence of kind ['community'] (found [])",
+     "no community evidence for the researcher"
+    ],
+    "resolved": 0,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 0,
+    "pass": false,
+    "reasons": [
+     "the system did not answer (outcome kind refused)",
+     "the answer has no summary text"
+    ]
+   },
+   "type": "community"
+  },
+  {
+   "check_level": "values-and-order",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q31",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Which researchers are the strongest bridges in window 2020-2026?",
+   "ranking": {
+    "corpus_top1_agrees": false,
+    "rank1_id": "researcher:dblp:7fd49b918e43b7eba162ec9b5863b9ed01cfda04ef01d2601f02557e61558137",
+    "rank1_value": 92.0
+   },
+   "retrieval": {
+    "cited": 4,
+    "deep": "export",
+    "deep_checked_items": 4,
+    "kinds": [
+     "bridge"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 4,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1967,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "bridge"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 1,
+    "attempted": 1,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 1,
+    "verified_claims_checked": 1,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q32",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "Did \"Dinesh Bharadia\" change from 2015-2019 to 2020-2026?",
+   "retrieval": {
+    "cited": 1,
+    "deep": "export",
+    "deep_checked_items": 1,
+    "kinds": [
+     "temporal"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 1,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 928,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "temporal"
+  },
+  {
+   "check_level": "exact",
+   "claims": {
+    "answer_claims": 2,
+    "attempted": 2,
+    "outcome": "ANSWERED",
+    "pass": true,
+    "reasons": [],
+    "rejected": 0,
+    "verification_status": "VERIFIED",
+    "verified": 2,
+    "verified_claims_checked": 2,
+    "verified_claims_mismatching": 0
+   },
+   "error_code": null,
+   "expected_outcome": "answer",
+   "http_status": 200,
+   "id": "q33",
+   "outcome_kind": "answered",
+   "pass": true,
+   "question": "What is the shortest path between \"Aaron Schild\" and \"Ken-ichi Kawarabayashi\" in window 2020-2026?",
+   "retrieval": {
+    "cited": 2,
+    "deep": "export",
+    "deep_checked_items": 2,
+    "kinds": [
+     "edge",
+     "path"
+    ],
+    "pass": true,
+    "reason_count": 0,
+    "reasons": [],
+    "resolved": 2,
+    "unverified": 0,
+    "unverified_oversize": 0,
+    "unverified_skipped_by_cap": 0
+   },
+   "text": {
+    "chars": 1060,
+    "pass": true,
+    "reasons": []
+   },
+   "type": "evidence"
+  }
+ ],
+ "run_id": "q12-run-2",
+ "schema": "scholarchain.q12-scores.v1",
+ "totals": {
+  "abstain_expected": {
+   "abstained_or_refused": 6,
+   "all_pass": 6,
+   "claims_pass": 6,
+   "questions": 6,
+   "retrieval_pass": 6,
+   "text_pass": 6
+  },
+  "all": {
+   "abstained_or_refused": 9,
+   "all_pass": 29,
+   "claims_pass": 29,
+   "questions": 33,
+   "retrieval_pass": 29,
+   "text_pass": 29
+  },
+  "answer_expected": {
+   "abstained_or_refused": 3,
+   "all_pass": 23,
+   "claims_pass": 23,
+   "questions": 27,
+   "retrieval_pass": 23,
+   "text_pass": 23
+  }
+ },
+ "unverified": {
+  "items": 0,
+  "questions": 0
+ }
+}

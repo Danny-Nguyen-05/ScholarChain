@@ -1,0 +1,262 @@
+{
+ "check_runs_in_coordinator_notes": {
+  "limitations": [
+   "The notes are a coordinator's running log, not a check.sh log: durations and counts are as the coordinator wrote them.",
+   "Several passing runs were on uncommitted working trees that were committed afterwards (the line says which commits followed); the notes do not store the tree hash.",
+   "The log is append-only and git-ignored: the first 199 lines are read (its state when Phase 16 started); later notes are not part of this evaluation."
+  ],
+  "other_candidate_mentions_not_counted": [
+   {
+    "excerpt": "2026-11-20T03:19:49Z README r3 low notes L1-L4 applied (documentation-engineer); links ok; no grader/12-digit/e-mail matches. Pending: full check once before th",
+    "line": 104
+   },
+   {
+    "excerpt": "2026-11-20T19:33:36Z Storage loader review r2 (7e5efc0): APPROVE; CSV validation rerun not needed provided tests/ IndependentStorageGraphLoaderSpec passes in th",
+    "line": 139
+   },
+   {
+    "excerpt": "2026-11-20T19:36:16Z storage-engineer low notes committed 5a3ff7c (strict graph-edge columns, README difference list, unused helper removed); its report was not",
+    "line": 140
+   },
+   {
+    "excerpt": "2026-11-20T19:44:46Z Committed 886b0f7 (services); merged services, rag, storage, experiment into phase-15-q12 (842fb69, 840802a, 8ae001d, ec675d5), no conflict",
+    "line": 150
+   },
+   {
+    "excerpt": "2026-11-20T22:09:20Z Services review round 2: APPROVE (code-reviewer opus/high). Open non-blocking: GraphApi.paths scaladoc wording; Neptune community queries a",
+    "line": 167
+   },
+   {
+    "excerpt": "2026-11-20T22:12:00Z RAG review round 2: APPROVE (code-reviewer opus/high). Nits n-a (log-capture tests may be flaky under parallel suites) and n-b (slow-lookup",
+    "line": 168
+   },
+   {
+    "excerpt": "2026-11-21T03:21:27Z re-review round 2: APPROVE (no blockers/majors; minors optional). Full check #3 started (bkr5fiu47), log scratchpad/check-q12fix-3.log.",
+    "line": 177
+   },
+   {
+    "excerpt": "2026-11-21T06:21:46Z re-review option-A r2: APPROVE. Minors routed: 8,663->8,664 (doc-eng, README.md:62, provider-fallback.md:43); stray attribution experiments",
+    "line": 187
+   },
+   {
+    "excerpt": "2026-11-21T06:22:05Z minor text fixes verified (8,664 in README.md:62 + provider-fallback.md:43; attribution removed at experiments/README.md:299). Full check #",
+    "line": 188
+   }
+  ],
+  "outcomes": {
+   "FAIL": 2,
+   "INTERRUPTED": 1,
+   "PASS": 4,
+   "PASS-SBT-ONLY": 1
+  },
+  "rule": "lines matching 'full (sbt) check', 'check #N' or 'RESULT PASS gates', classified by the first matching pattern in NOTE_RULES; a candidate line that matches no pattern (a start, a plan, a review) is listed under other_candidate_mentions_not_counted; a human's own quoted words (consent conditions) are skipped.",
+  "runs": [
+   {
+    "excerpt": "2026-11-20T16:32:06Z Full check (run 20261120T155423Z): terraform gate FAIL from two local, git-ignored leftovers: (1) terraform fmt -check lists the private infra/terraform/environments/course.local.tfvars (not read; hu",
+    "gates": null,
+    "head": null,
+    "line": 111,
+    "meaning": "terraform gate failed (local leftovers, not a code defect per the note)",
+    "outcome": "FAIL",
+    "recorded_utc": "2026-11-20T16:32:06Z",
+    "run_id": null,
+    "sbt_seconds": null,
+    "script_tests_seconds": null
+   },
+   {
+    "excerpt": "2026-11-20T17:19:20Z Full check run 20261120T155423Z-88869 (JDK 17): constitution, hooks, shell, python, script-tests (4110 s), sbt PASS (816 s; sbt tests 165 + 707 + 30 succeeded, 0 failed, 1 canceled; test marker updat",
+    "gates": 7,
+    "head": null,
+    "line": 115,
+    "meaning": "all 7 gates passed on the working tree (after a terraform rerun)",
+    "outcome": "PASS",
+    "recorded_utc": "2026-11-20T17:19:20Z",
+    "run_id": "20261120T155423Z-88869",
+    "sbt_seconds": null,
+    "script_tests_seconds": null
+   },
+   {
+    "excerpt": "2026-11-20T18:23:03Z Full sbt -batch check (JDK 17) on P36: [success] 808 s, test marker updated 12:22 CST; only the expected checkProbeInjectFailure self-test error. P36 ready to commit pending the human's yes.",
+    "gates": null,
+    "head": null,
+    "line": 122,
+    "meaning": "sbt only, not the seven gates",
+    "outcome": "PASS-SBT-ONLY",
+    "recorded_utc": "2026-11-20T18:23:03Z",
+    "run_id": null,
+    "sbt_seconds": null,
+    "script_tests_seconds": null
+   },
+   {
+    "excerpt": "2026-11-20T21:05:18Z full check on phase-15-q12 HEAD ec675d5 (JDK 17): RESULT PASS gates=7 (script-tests 3905s, sbt 834s); pushed origin/phase-15-q12 = ec675d5 per user \"Yes, commit and merge\" (push only if green). Next:",
+    "gates": 7,
+    "head": "ec675d5",
+    "line": 152,
+    "meaning": "all gates passed (check.sh RESULT line)",
+    "outcome": "PASS",
+    "recorded_utc": "2026-11-20T21:05:18Z",
+    "run_id": null,
+    "sbt_seconds": 834,
+    "script_tests_seconds": 3905
+   },
+   {
+    "excerpt": "2026-11-20T23:13:04Z Full check on applied Q12 fixes stopped at user request (\"interrupt the run full check now, I'll ask you to run it again later\") during gate-script-tests (constitution, hooks, shell, python, terrafor",
+    "gates": null,
+    "head": null,
+    "line": 170,
+    "meaning": "stopped at the human's request before completing",
+    "outcome": "INTERRUPTED",
+    "recorded_utc": "2026-11-20T23:13:04Z",
+    "run_id": null,
+    "sbt_seconds": null,
+    "script_tests_seconds": null
+   },
+   {
+    "excerpt": "2026-11-21T03:00:48Z full check bs3vr763u: constitution/hooks/shell/python/terraform/script-tests PASS; sbt FAIL (rag 296/298, Q12QuestionSetPlannerSpec 2 failed). Marker not updated (15:04:56 local). No commit. Rerunnin",
+    "gates": null,
+    "head": null,
+    "line": 172,
+    "meaning": "sbt gate failed",
+    "outcome": "FAIL",
+    "recorded_utc": "2026-11-21T03:00:48Z",
+    "run_id": null,
+    "sbt_seconds": null,
+    "script_tests_seconds": null
+   },
+   {
+    "excerpt": "2026-11-21T04:45:11Z full check #3 (bkr5fiu47): RESULT PASS gates=7 (sbt 823s; sbt modules 208/64/39/53/180+1canceled/298/194/707/30+1canceled, 0 failed). Marker updated 2026-11-20T22:44:54 local. checkProbe [error] line",
+    "gates": 7,
+    "head": null,
+    "line": 178,
+    "meaning": "all gates passed (check.sh RESULT line)",
+    "outcome": "PASS",
+    "recorded_utc": "2026-11-21T04:45:11Z",
+    "run_id": null,
+    "sbt_seconds": 823,
+    "script_tests_seconds": null
+   },
+   {
+    "excerpt": "2026-11-21T07:42:41Z full check #4 RESULT: PASS gates=7 marker 01:42:25 local; committed 3 option-A commits under advance consent; pushed origin/phase-15-q12=827fcd5",
+    "gates": 7,
+    "head": null,
+    "line": 189,
+    "meaning": "all gates passed (check.sh RESULT line)",
+    "outcome": "PASS",
+    "recorded_utc": "2026-11-21T07:42:41Z",
+    "run_id": null,
+    "sbt_seconds": null,
+    "script_tests_seconds": null
+   }
+  ],
+  "source": "target/phase15/session2/evidence/coordinator-notes.log",
+  "source_lines_read": 199,
+  "source_sha256": "b6cdf9c89712a0d32624cdd779350451cd4ef6017e0f0ee17b37949ae9563c23"
+ },
+ "p6_local_replays": {
+  "count": 6,
+  "distinct_values_across_runs": {
+   "er_config_hash": 1,
+   "er_policy_hash": 1,
+   "export_bytes": 6,
+   "export_files": 2,
+   "hadoop_counters": 1,
+   "input_tree_sha256": 1,
+   "sidecar_total_bytes": 1,
+   "spark_counters": 1
+  },
+  "environment": "LOCAL-MAC",
+  "export_bytes_min_max": [
+   605685015,
+   605718589
+  ],
+  "limitation": "Six passing runs on one machine, at three commits (the pipeline code was unchanged between them according to the run records' pins), one input slice; this shows run-to-run determinism of the logical outputs, not a clean-clone replay.",
+  "passing_size_S_runs": [
+   {
+    "er_config_hash": "1dadfa7cc812314d6334d1f7a79eb6de5c315f04b388aafc80cb4d65b9838555",
+    "er_policy_hash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "export_bytes": 605685015,
+    "export_files": 433,
+    "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+    "hadoop_counters_sha256": "72fdc602a490f72129fa0a97d82f86e2c8140a1417ca583a733a62dd5bdafdea",
+    "input_tree_sha256": "78bd68c6636646b1ea6b5a90c5987f97407dfa2dcbda540b2bb7d0752c95e52e",
+    "run_id": "p6-S-20261116T160455Z",
+    "sidecar_total_bytes": 467188886,
+    "source": "target/phase15/p6/work/p6-S-20261116T160455Z/evidence/summary.json",
+    "source_sha256": "b4b5d5cbc9bbfa13449fab5cdd9e8b73117c1a158853db9a3eb2ac1fbe19657d",
+    "spark_counters_sha256": "1d022261436d78e227e356d9d5b60103795ec8f034d022acf57c4a082bf35fac"
+   },
+   {
+    "er_config_hash": "1dadfa7cc812314d6334d1f7a79eb6de5c315f04b388aafc80cb4d65b9838555",
+    "er_policy_hash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "export_bytes": 605692415,
+    "export_files": 433,
+    "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+    "hadoop_counters_sha256": "72fdc602a490f72129fa0a97d82f86e2c8140a1417ca583a733a62dd5bdafdea",
+    "input_tree_sha256": "78bd68c6636646b1ea6b5a90c5987f97407dfa2dcbda540b2bb7d0752c95e52e",
+    "run_id": "p6-S-20261116T164523Z",
+    "sidecar_total_bytes": 467188886,
+    "source": "target/phase15/p6/work/p6-S-20261116T164523Z/evidence/summary.json",
+    "source_sha256": "8c12583f3e82b766c41724506d6f90924e02e570b64da6a46d02699c11b7b1b1",
+    "spark_counters_sha256": "1d022261436d78e227e356d9d5b60103795ec8f034d022acf57c4a082bf35fac"
+   },
+   {
+    "er_config_hash": "1dadfa7cc812314d6334d1f7a79eb6de5c315f04b388aafc80cb4d65b9838555",
+    "er_policy_hash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "export_bytes": 605696183,
+    "export_files": 435,
+    "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+    "hadoop_counters_sha256": "72fdc602a490f72129fa0a97d82f86e2c8140a1417ca583a733a62dd5bdafdea",
+    "input_tree_sha256": "78bd68c6636646b1ea6b5a90c5987f97407dfa2dcbda540b2bb7d0752c95e52e",
+    "run_id": "p6-S-20261116T170028Z",
+    "sidecar_total_bytes": 467188886,
+    "source": "target/phase15/p6/work/p6-S-20261116T170028Z/evidence/summary.json",
+    "source_sha256": "d1924bc038622032a3e8d995bcc5f78766c06f28a2de7013f04102b00e68bbc9",
+    "spark_counters_sha256": "1d022261436d78e227e356d9d5b60103795ec8f034d022acf57c4a082bf35fac"
+   },
+   {
+    "er_config_hash": "1dadfa7cc812314d6334d1f7a79eb6de5c315f04b388aafc80cb4d65b9838555",
+    "er_policy_hash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "export_bytes": 605718589,
+    "export_files": 433,
+    "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+    "hadoop_counters_sha256": "72fdc602a490f72129fa0a97d82f86e2c8140a1417ca583a733a62dd5bdafdea",
+    "input_tree_sha256": "78bd68c6636646b1ea6b5a90c5987f97407dfa2dcbda540b2bb7d0752c95e52e",
+    "run_id": "p6-S-20261116T171431Z",
+    "sidecar_total_bytes": 467188886,
+    "source": "target/phase15/p6/work/p6-S-20261116T171431Z/evidence/summary.json",
+    "source_sha256": "abe9e65304d649875843fe50f4794e0a54a83bc0cdc62cc4f577f82ae475343f",
+    "spark_counters_sha256": "1d022261436d78e227e356d9d5b60103795ec8f034d022acf57c4a082bf35fac"
+   },
+   {
+    "er_config_hash": "1dadfa7cc812314d6334d1f7a79eb6de5c315f04b388aafc80cb4d65b9838555",
+    "er_policy_hash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "export_bytes": 605713492,
+    "export_files": 433,
+    "git_head": "9e881a2e595328c5d3a4a9fc45827cb6b4a6367f",
+    "hadoop_counters_sha256": "72fdc602a490f72129fa0a97d82f86e2c8140a1417ca583a733a62dd5bdafdea",
+    "input_tree_sha256": "78bd68c6636646b1ea6b5a90c5987f97407dfa2dcbda540b2bb7d0752c95e52e",
+    "run_id": "p6-S-20261117T053800Z",
+    "sidecar_total_bytes": 467188886,
+    "source": "target/phase15/p6/work/p6-S-20261117T053800Z/evidence/summary.json",
+    "source_sha256": "b341cacfab99dc89727b8f5dcba37793cdc19dd78ac14c3a90dbf5933ceb015d",
+    "spark_counters_sha256": "1d022261436d78e227e356d9d5b60103795ec8f034d022acf57c4a082bf35fac"
+   },
+   {
+    "er_config_hash": "1dadfa7cc812314d6334d1f7a79eb6de5c315f04b388aafc80cb4d65b9838555",
+    "er_policy_hash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "export_bytes": 605704375,
+    "export_files": 435,
+    "git_head": "bd0b8180b919ed61f6234fa515f4c07d1137a641",
+    "hadoop_counters_sha256": "72fdc602a490f72129fa0a97d82f86e2c8140a1417ca583a733a62dd5bdafdea",
+    "input_tree_sha256": "78bd68c6636646b1ea6b5a90c5987f97407dfa2dcbda540b2bb7d0752c95e52e",
+    "run_id": "p6-S-20261117T182210Z",
+    "sidecar_total_bytes": 467188886,
+    "source": "target/phase15/p6/work/p6-S-20261117T182210Z/evidence/summary.json",
+    "source_sha256": "ffbf7472d98b66a9893ffa388433ae2876ba1a8acae7645071d2e02da4675dc2",
+    "spark_counters_sha256": "1d022261436d78e227e356d9d5b60103795ec8f034d022acf57c4a082bf35fac"
+   }
+  ],
+  "reading": "1 distinct value = identical in every passing run. The logical outputs (Hadoop and Spark counters, the CSV sidecar size, the entity-resolution policy and config hashes) are identical; the physical Parquet export differs slightly in file count and size between runs (the summary does not record why: GAP)."
+ },
+ "schema": "scholarchain.eval16-reproducibility.v1"
+}

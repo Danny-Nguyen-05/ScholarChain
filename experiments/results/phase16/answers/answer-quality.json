@@ -1,0 +1,1825 @@
+{
+ "cost": {
+  "console_cost_of_record": {
+   "as_of_utc": "2026-11-21T23:33Z",
+   "by_utc_day": {
+    "2026-11-20": 0.04,
+    "2026-11-21": 0.04
+   },
+   "day_contents": {
+    "2026-11-20": [
+     "q12-benchmark-q12-probe-1",
+     "q12-benchmark-q12-run-1"
+    ],
+    "2026-11-21": [
+     "q12-benchmark-q12-probe-2",
+     "q12-benchmark-q12-run-2",
+     "one demo answer (not in the frozen raw)"
+    ]
+   },
+   "key": "CS441-key",
+   "scope": "this key only, 2026-11-20 and 2026-11-21 UTC; the user's month-to-date screenshot filtered to this key shows bars on those two days only (so no use of this key on 2026-11-14), as relayed by the coordinator",
+   "total_usd": 0.08
+  },
+  "console_over_derived_ratio": {
+   "2026-11-20": [
+    1.92,
+    2.47
+   ],
+   "2026-11-21": [
+    1.64,
+    2.11
+   ],
+   "note": "the Console shows two decimals, so a displayed 0.04 means a true value in [0.035, 0.045); ratio is that range over the token-derived figure"
+  },
+  "earlier_phases_anthropic_spend": {
+   "16b_run_record_estimate_usd": "0.054600",
+   "16b_run_record_note": "estimated from pinned tokens and rates, not metered; the 16B raw holds no token usage, so no token-derived figure exists for it (gap)",
+   "line": 4,
+   "quoted": "Anthropic  USD       0.08   usage: project LLM ledger USD 0.075075 from earlier phases (receipt figure 0.08, human decision); no Anthropic use in Session 2 (placeholder key only, ledger unchanged)",
+   "scope": "Session 1 16B and 14C, a different Anthropic key from CS441-key; not part of the Console figure above",
+   "source": "docs/agent-runs/phase-15/evidence/session-2/c11/cost-report.log",
+   "source_sha256": "6555edba6336ff9e43ef74f3454bec5d5e1ca738d55a9adb03736dafbb5c984d"
+  },
+  "note": "token-derived = synthesis input/output tokens from /v1/explain modelVersions at the pinned rates; the planner (LLM) calls are not recorded in /v1/explain, and the demo answer of 2026-11-21 is not in the frozen raw, so the token-derived figure is a lower bound and the Console is the cost of record for its key and days",
+  "rates_usd_per_million_tokens": {
+   "input": 0.1,
+   "output": 0.5,
+   "source": "load-tests/config/load-profile.v1.json (llm.pricing)",
+   "source_sha256": "0dc1cad98ed3b184d55e153d799195b241aac825b99c87a6ab0c9150a8a27858"
+  },
+  "token_derived_by_utc_day": {
+   "2026-11-20": 0.018235,
+   "2026-11-21_excluding_demo_answer": 0.0213
+  },
+  "token_derived_synthesis_only": {
+   "q12-benchmark-q12-probe-1": {
+    "input_tokens": 27359,
+    "output_tokens": 264,
+    "usd": 0.0028679
+   },
+   "q12-benchmark-q12-probe-2": {
+    "input_tokens": 5044,
+    "output_tokens": 270,
+    "usd": 0.0006394
+   },
+   "q12-benchmark-q12-run-1": {
+    "input_tokens": 129959,
+    "output_tokens": 4742,
+    "usd": 0.015366900000000001
+   },
+   "q12-benchmark-q12-run-2": {
+    "input_tokens": 171414,
+    "output_tokens": 7039,
+    "usd": 0.020660900000000003
+   }
+  },
+  "token_derived_total": 0.039535
+ },
+ "frozen_inputs": [
+  "80fc2d7748f2462b9b092b8e87a201d502946fd57253a533ffa9aee51676c8e2  16b-live-evaluation-16b-1/answers.jsonl",
+  "b72895dc0e71cea05ef3f9d182f34a594852e9d5c5ddd971fe5c8de5e26ddc52  16b-live-evaluation-16b-1/events.jsonl",
+  "13736cfacf3e83beafed900d01ed904a442c2a93e2db87b4752e8aba19e0d0d4  16b-live-evaluation-16b-1/raw.sha256",
+  "7954aaf8ea8db81df5db007a96eb02f4b1fd6ba744daddf85e417616761d8a0d  16b-live-evaluation-16b-1/run-record.json",
+  "8bee803c3e5edfbd0bfddc8cd27b4676c8464751748d6ad5d3584c8dff274061  q12-benchmark-q12-probe-1/answers.jsonl",
+  "84c9d25692648a5294e36627bda661b9551f616c3192629f2700d0345014bdf5  q12-benchmark-q12-probe-1/events.jsonl",
+  "99398e619dd56163c3d1cabdac4edcdd8771b2d249fb359ab7527c2671734764  q12-benchmark-q12-probe-1/raw.sha256",
+  "e1273b296d4ac3706f4cdf112dde2a250942150a4243e59972dce18214bc02c8  q12-benchmark-q12-probe-1/run-record.json",
+  "3780040aa84da640ba1cf05ba2e64a049eb13b785c5ccb4c105b00114db1c939  q12-benchmark-q12-probe-2/answers.jsonl",
+  "24ff4540db44fba39c7ef02bee37c4fe666cd1f19011d6eeb51bd67063b02955  q12-benchmark-q12-probe-2/events.jsonl",
+  "d7f12c529724f75f32048507ec75f2b853bd2431d1e041ba620e25137786dceb  q12-benchmark-q12-probe-2/raw.sha256",
+  "920772f53c20fefa19c4885638903aeb89edfd683414800aaef0590b7339244e  q12-benchmark-q12-probe-2/run-record.json",
+  "723b5e59ac771231daf714568090a02fb2d255822595ca2546130e6c375cdab4  q12-benchmark-q12-run-1/answers.jsonl",
+  "ce8f958fc90a2cdfd9a99d50a3b9c8638c1cc91986f71e966b1fc693c94a60b7  q12-benchmark-q12-run-1/events.jsonl",
+  "c23619221ca682ec6ec396a550b5cbfeca4d1d4c9fd47b13809a80feca5abd60  q12-benchmark-q12-run-1/raw.sha256",
+  "2ee64dec5cd6ddcd91f12f17aba974fddf96138d846b7e130357da59a195cd90  q12-benchmark-q12-run-1/run-record.json",
+  "11f63e6d7fd57b887d950908d429c4adc192ec76fc46d22a3ad4b4df184608e2  q12-benchmark-q12-run-2/answers.jsonl",
+  "c0282ce92e0db5c19338e9d7a8fb92ccdcf85e63e980f1c38ddf6e0aa962c0eb  q12-benchmark-q12-run-2/events.jsonl",
+  "55aa8a1fbc567082e426257d2f73e502160d3343f5d75f0ee43175ba5821c9b1  q12-benchmark-q12-run-2/raw.sha256",
+  "5c5661c766ae0ec99ef3bcb6405cb2270885564a2c713c750e688680cc66f118  q12-benchmark-q12-run-2/run-record.json"
+ ],
+ "gaps": [
+  {
+   "metric": "usefulness rubric",
+   "reason": "no human-rated rubric scores exist for any answer; none is invented"
+  },
+  {
+   "metric": "contradiction rate in free text",
+   "reason": "only the scorer's value contradictions of verified claims are available (reported); no check of prose contradictions exists"
+  },
+  {
+   "metric": "variability across repeats",
+   "reason": "one run per code version; the two Q12 runs ran different code"
+  },
+  {
+   "metric": "correctness of the 16B Session 1 answers",
+   "reason": "no answer key for the 40 questions, no explain/evidence records in that raw, and the Session 1 runtime artifact (run f6e63b4b) differs from the export the Q12 key was computed from"
+  },
+  {
+   "metric": "planner-call tokens and cost",
+   "reason": "planner calls are not recorded in /v1/explain or the raw; only the Console total covers them"
+  }
+ ],
+ "interpretation": [
+  "Between run-1 and run-2 the all-three pass count on the 27 answer-expected questions moved from 4 to 23 (code changed between the runs; one run each).",
+  "Independent claim re-check: run-1 100.0% (36/36; Wilson 95% 90.4-100.0%), run-2 100.0% (65/65; Wilson 95% 94.4-100.0%). Runtime self-reported verification (not independent): run-1 100.0% (36/36; Wilson 95% 90.4-100.0%), run-2 100.0% (65/65; Wilson 95% 94.4-100.0%); rejected claims 0 and 0.",
+  "Run-1: 11 answered answer-expected questions failed the text check; 11 of them carry a missing-name reason (rank-1 researcher or coauthor list absent from the prose) and 11 carry only missing-name reasons with retrieval and claims passing. The scorer found 0 verified claims contradicting the key or export in run-1 and 0 in run-2.",
+  "Run-2: 4 answer-expected questions did not pass all three checks; they are listed question by question under the run-2 failures (q08 abstained, q14 error, q19 refused, q30 refused).",
+  "16B Session 1 (code of commit b6dc94df, environment AWS-ECS-LLM): no question of type direct coauthors, path was answered (all abstained with 'Insufficient verified evidence' or errored); the Q12 runs ran later code.",
+  "Cost, Q12 key scope: the token-derived synthesis-only figure is 0.0395 USD against a Console figure of 0.08 USD for key CS441-key (two-decimal display). The package cannot attribute the difference; planner calls are not recorded and one demo answer is outside the frozen raw."
+ ],
+ "key": {
+  "export_run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa",
+  "path": "experiments/inputs/q12/answer-key.json",
+  "sha256": "6f5ef014d310136d7016447f7eefa39912e49c467a5f3bf2ec58ee1dc937a9b3"
+ },
+ "q12": {
+  "q12-benchmark-q12-run-1": {
+   "abstention": {
+    "abstain_expected": 6,
+    "abstain_expected_but_answered": 0,
+    "abstain_expected_but_error": 0,
+    "answer_expected": 27,
+    "answer_expected_answered": 15,
+    "answer_expected_errors": 0,
+    "answer_expected_wrongly_abstained": 8,
+    "answer_expected_wrongly_abstained_or_refused": {
+     "k": 12,
+     "n": 27,
+     "value": 0.4444444444444444,
+     "wilson95": [
+      0.275859,
+      0.62687
+     ]
+    },
+    "answer_expected_wrongly_refused_422": 4,
+    "correct_abstentions": {
+     "k": 6,
+     "n": 6,
+     "value": 1.0,
+     "wilson95": [
+      0.609666,
+      1.0
+     ]
+    }
+   },
+   "accuracy": {
+    "all_pass_of_answer_expected": {
+     "k": 4,
+     "n": 27,
+     "value": 0.14814814814814814,
+     "wilson95": [
+      0.059159,
+      0.324787
+     ]
+    },
+    "all_pass_of_answered": {
+     "k": 4,
+     "n": 15,
+     "value": 0.26666666666666666,
+     "wilson95": [
+      0.108975,
+      0.519504
+     ]
+    },
+    "answer_expected_questions": 27,
+    "answered_of_answer_expected": {
+     "k": 15,
+     "n": 27,
+     "value": 0.5555555555555556,
+     "wilson95": [
+      0.37313,
+      0.724141
+     ]
+    },
+    "answered_questions": 15,
+    "claims_pass_of_answered (no rejected claim; every verified claim's values match the key and export)": {
+     "k": 15,
+     "n": 15,
+     "value": 1.0,
+     "wilson95": [
+      0.796117,
+      1.0
+     ]
+    },
+    "contradiction_rate_of_verified_claims": {
+     "k": 0,
+     "n": 36,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.096419
+     ]
+    },
+    "independent_claim_recheck_consistent (verified claims whose values the scorer re-checked against the export and found consistent)": {
+     "k": 36,
+     "n": 36,
+     "value": 1.0,
+     "wilson95": [
+      0.903581,
+      1.0
+     ]
+    },
+    "retrieval_pass_of_answered (cited evidence resolves; entities, kinds, ids and numbers match the export)": {
+     "k": 15,
+     "n": 15,
+     "value": 1.0,
+     "wilson95": [
+      0.796117,
+      1.0
+     ]
+    },
+    "text_pass_of_answered (prose contains the key numbers, names, hop counts)": {
+     "k": 4,
+     "n": 15,
+     "value": 0.26666666666666666,
+     "wilson95": [
+      0.108975,
+      0.519504
+     ]
+    },
+    "verified_claims_checked_against_export": 36,
+    "verified_claims_contradicting_key_or_export": 0
+   },
+   "by_type": {
+    "bridge": {
+     "abstained_or_refused": 0,
+     "all_pass": 0,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 6,
+      "claims_rejected": 0,
+      "claims_verified": 6,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 6,
+       "n": 6,
+       "value": 1.0,
+       "wilson95": [
+        0.609666,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 0
+    },
+    "coauthor_breadth": {
+     "abstained_or_refused": 0,
+     "all_pass": 0,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 6,
+      "claims_rejected": 0,
+      "claims_verified": 6,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 6,
+       "n": 6,
+       "value": 1.0,
+       "wilson95": [
+        0.609666,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 0
+    },
+    "community": {
+     "abstained_or_refused": 3,
+     "all_pass": 0,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 2,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 0,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 0,
+     "text_pass": 0
+    },
+    "component": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 4,
+      "claims_rejected": 0,
+      "claims_verified": 4,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 4,
+       "n": 4,
+       "value": 1.0,
+       "wilson95": [
+        0.510109,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "direct_collab": {
+     "abstained_or_refused": 0,
+     "all_pass": 1,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 14,
+      "claims_rejected": 0,
+      "claims_verified": 14,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 14,
+       "n": 14,
+       "value": 1.0,
+       "wilson95": [
+        0.784689,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 1
+    },
+    "evidence": {
+     "abstained_or_refused": 3,
+     "all_pass": 0,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 0,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 0,
+     "text_pass": 0
+    },
+    "institution": {
+     "abstained_or_refused": 3,
+     "all_pass": 3,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 0,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "abstain"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "max_team_size": {
+     "abstained_or_refused": 0,
+     "all_pass": 0,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 6,
+      "claims_rejected": 0,
+      "claims_verified": 6,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 6,
+       "n": 6,
+       "value": 1.0,
+       "wilson95": [
+        0.609666,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 0
+    },
+    "shortest_path": {
+     "abstained_or_refused": 3,
+     "all_pass": 0,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 0,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 0,
+     "text_pass": 0
+    },
+    "temporal": {
+     "abstained_or_refused": 3,
+     "all_pass": 0,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 0,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 0,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 0,
+     "text_pass": 0
+    },
+    "topic": {
+     "abstained_or_refused": 3,
+     "all_pass": 3,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 0,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "abstain"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    }
+   },
+   "claims_all_questions": {
+    "claims_attempted": 36,
+    "claims_rejected": 0,
+    "claims_verified": 36,
+    "explain_list_length_differs_from_counter": 0,
+    "questions_with_all_claims_verified": {
+     "k": 15,
+     "n": 15,
+     "value": 1.0,
+     "wilson95": [
+      0.796117,
+      1.0
+     ]
+    },
+    "questions_with_at_least_one_claim": 15,
+    "questions_with_explain": 23,
+    "runtime_self_reported_verification_rate": {
+     "k": 36,
+     "n": 36,
+     "value": 1.0,
+     "wilson95": [
+      0.903581,
+      1.0
+     ]
+    }
+   },
+   "claims_answer_expected": {
+    "claims_attempted": 36,
+    "claims_rejected": 0,
+    "claims_verified": 36,
+    "explain_list_length_differs_from_counter": 0,
+    "questions_with_all_claims_verified": {
+     "k": 15,
+     "n": 15,
+     "value": 1.0,
+     "wilson95": [
+      0.796117,
+      1.0
+     ]
+    },
+    "questions_with_at_least_one_claim": 15,
+    "questions_with_explain": 23,
+    "runtime_self_reported_verification_rate": {
+     "k": 36,
+     "n": 36,
+     "value": 1.0,
+     "wilson95": [
+      0.903581,
+      1.0
+     ]
+    }
+   },
+   "failures": [
+    {
+     "first_reason": "the rank-1 cited researcher 'Ion Stoica' does not appear",
+     "http_status": 200,
+     "id": "q01",
+     "outcome_kind": "answered",
+     "type": "coauthor_breadth"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Shengdong Dai' does not appear",
+     "http_status": 200,
+     "id": "q03",
+     "outcome_kind": "answered",
+     "type": "max_team_size"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q06",
+     "outcome_kind": "abstained",
+     "type": "shortest_path"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q08",
+     "outcome_kind": "abstained",
+     "type": "community"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Arvind Krishnamurthy' does not appear",
+     "http_status": 200,
+     "id": "q09",
+     "outcome_kind": "answered",
+     "type": "bridge"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind refused)",
+     "http_status": 422,
+     "id": "q10",
+     "outcome_kind": "refused",
+     "type": "temporal"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q11",
+     "outcome_kind": "abstained",
+     "type": "evidence"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Ion Stoica' does not appear",
+     "http_status": 200,
+     "id": "q12",
+     "outcome_kind": "answered",
+     "type": "coauthor_breadth"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Shengdong Dai' does not appear",
+     "http_status": 200,
+     "id": "q14",
+     "outcome_kind": "answered",
+     "type": "max_team_size"
+    },
+    {
+     "first_reason": "only 0 of 11 coauthor names appear",
+     "http_status": 200,
+     "id": "q15",
+     "outcome_kind": "answered",
+     "type": "direct_collab"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q17",
+     "outcome_kind": "abstained",
+     "type": "shortest_path"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q19",
+     "outcome_kind": "abstained",
+     "type": "community"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Arvind Krishnamurthy' does not appear",
+     "http_status": 200,
+     "id": "q20",
+     "outcome_kind": "answered",
+     "type": "bridge"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind refused)",
+     "http_status": 422,
+     "id": "q21",
+     "outcome_kind": "refused",
+     "type": "temporal"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q22",
+     "outcome_kind": "abstained",
+     "type": "evidence"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Ion Stoica' does not appear",
+     "http_status": 200,
+     "id": "q23",
+     "outcome_kind": "answered",
+     "type": "coauthor_breadth"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Shengdong Dai' does not appear",
+     "http_status": 200,
+     "id": "q25",
+     "outcome_kind": "answered",
+     "type": "max_team_size"
+    },
+    {
+     "first_reason": "only 0 of 13 coauthor names appear",
+     "http_status": 200,
+     "id": "q26",
+     "outcome_kind": "answered",
+     "type": "direct_collab"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q28",
+     "outcome_kind": "abstained",
+     "type": "shortest_path"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind refused)",
+     "http_status": 422,
+     "id": "q30",
+     "outcome_kind": "refused",
+     "type": "community"
+    },
+    {
+     "first_reason": "the rank-1 cited researcher 'Ion Stoica' does not appear",
+     "http_status": 200,
+     "id": "q31",
+     "outcome_kind": "answered",
+     "type": "bridge"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind refused)",
+     "http_status": 422,
+     "id": "q32",
+     "outcome_kind": "refused",
+     "type": "temporal"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q33",
+     "outcome_kind": "abstained",
+     "type": "evidence"
+    }
+   ],
+   "record": {
+    "commit": "ec675d562d9e923f36885d8dc9bd27c04d59b719",
+    "ended_utc": "2026-11-20T21:36:40.865Z",
+    "environment": "LOCAL-LOOPBACK-LLM",
+    "estimate_in_run_record": {
+     "answers": 33,
+     "input_tokens_estimate": 235950,
+     "model": "claude-haiku-5-5",
+     "output_tokens_estimate": 42900,
+     "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+     "usd": "0.045045"
+    },
+    "outcome": "completed",
+    "outcomes": {
+     "client_error": 4,
+     "expected_refusal": 6,
+     "ok": 23
+    },
+    "questions_asked": 33,
+    "started_utc": "2026-11-20T21:34:35.759Z",
+    "target_base_url_sha256": "d30a576c0318716717366ab932e3d7dfbc4009a5bc10176403b60892912f070e",
+    "target_host": "127.0.0.1",
+    "target_loopback": true,
+    "target_scheme": "http",
+    "tree_dirty": false
+   },
+   "scorer_cross_check": {
+    "agrees": true,
+    "coordinator_recorded": {
+     "abstain_correct": 6,
+     "abstain_expected": 6,
+     "all": 4,
+     "answer_expected": 27,
+     "claims": 15,
+     "retrieval": 15,
+     "text": 4
+    },
+    "recomputed": {
+     "abstain_correct": 6,
+     "abstain_expected": 6,
+     "all": 4,
+     "answer_expected": 27,
+     "claims": 15,
+     "retrieval": 15,
+     "text": 4
+    }
+   },
+   "scorer_outputs": [
+    "q12-run-1-scores.json",
+    "q12-run-1-scores.md"
+   ],
+   "scorer_stdout": "SCORED answer_expected=27 retrieval=15 claims=15 text=4 all=4 | abstain_expected=6 correct=6 | unverified_evidence=0 | deep_checks=export",
+   "text_failures_name_omission": {
+    "answered_with_text_fail": 11,
+    "every_text_reason_is_missing_name_and_retrieval_and_claims_pass": 11,
+    "with_a_missing_name_reason": 11
+   },
+   "tokens": {
+    "input_tokens": 129959,
+    "output_tokens": 4742,
+    "rows_with_model_usage": 15,
+    "rows_without": 18,
+    "synthesis_calls": 15
+   }
+  },
+  "q12-benchmark-q12-run-2": {
+   "abstention": {
+    "abstain_expected": 6,
+    "abstain_expected_but_answered": 0,
+    "abstain_expected_but_error": 0,
+    "answer_expected": 27,
+    "answer_expected_answered": 23,
+    "answer_expected_errors": 1,
+    "answer_expected_wrongly_abstained": 1,
+    "answer_expected_wrongly_abstained_or_refused": {
+     "k": 3,
+     "n": 27,
+     "value": 0.1111111111111111,
+     "wilson95": [
+      0.03852,
+      0.280578
+     ]
+    },
+    "answer_expected_wrongly_refused_422": 2,
+    "correct_abstentions": {
+     "k": 6,
+     "n": 6,
+     "value": 1.0,
+     "wilson95": [
+      0.609666,
+      1.0
+     ]
+    }
+   },
+   "accuracy": {
+    "all_pass_of_answer_expected": {
+     "k": 23,
+     "n": 27,
+     "value": 0.8518518518518519,
+     "wilson95": [
+      0.675213,
+      0.940841
+     ]
+    },
+    "all_pass_of_answered": {
+     "k": 23,
+     "n": 23,
+     "value": 1.0,
+     "wilson95": [
+      0.856883,
+      1.0
+     ]
+    },
+    "answer_expected_questions": 27,
+    "answered_of_answer_expected": {
+     "k": 23,
+     "n": 27,
+     "value": 0.8518518518518519,
+     "wilson95": [
+      0.675213,
+      0.940841
+     ]
+    },
+    "answered_questions": 23,
+    "claims_pass_of_answered (no rejected claim; every verified claim's values match the key and export)": {
+     "k": 23,
+     "n": 23,
+     "value": 1.0,
+     "wilson95": [
+      0.856883,
+      1.0
+     ]
+    },
+    "contradiction_rate_of_verified_claims": {
+     "k": 0,
+     "n": 65,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.055802
+     ]
+    },
+    "independent_claim_recheck_consistent (verified claims whose values the scorer re-checked against the export and found consistent)": {
+     "k": 65,
+     "n": 65,
+     "value": 1.0,
+     "wilson95": [
+      0.944198,
+      1.0
+     ]
+    },
+    "retrieval_pass_of_answered (cited evidence resolves; entities, kinds, ids and numbers match the export)": {
+     "k": 23,
+     "n": 23,
+     "value": 1.0,
+     "wilson95": [
+      0.856883,
+      1.0
+     ]
+    },
+    "text_pass_of_answered (prose contains the key numbers, names, hop counts)": {
+     "k": 23,
+     "n": 23,
+     "value": 1.0,
+     "wilson95": [
+      0.856883,
+      1.0
+     ]
+    },
+    "verified_claims_checked_against_export": 65,
+    "verified_claims_contradicting_key_or_export": 0
+   },
+   "by_type": {
+    "bridge": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 6,
+      "claims_rejected": 0,
+      "claims_verified": 6,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 6,
+       "n": 6,
+       "value": 1.0,
+       "wilson95": [
+        0.609666,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "coauthor_breadth": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 6,
+      "claims_rejected": 0,
+      "claims_verified": 6,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 6,
+       "n": 6,
+       "value": 1.0,
+       "wilson95": [
+        0.609666,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "community": {
+     "abstained_or_refused": 3,
+     "all_pass": 0,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 1,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 0,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 0,
+     "text_pass": 0
+    },
+    "component": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 4,
+      "claims_rejected": 0,
+      "claims_verified": 4,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 4,
+       "n": 4,
+       "value": 1.0,
+       "wilson95": [
+        0.510109,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "direct_collab": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 27,
+      "claims_rejected": 0,
+      "claims_verified": 27,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 27,
+       "n": 27,
+       "value": 1.0,
+       "wilson95": [
+        0.875445,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "evidence": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 6,
+      "claims_rejected": 0,
+      "claims_verified": 6,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 6,
+       "n": 6,
+       "value": 1.0,
+       "wilson95": [
+        0.609666,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "institution": {
+     "abstained_or_refused": 3,
+     "all_pass": 3,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 0,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "abstain"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "max_team_size": {
+     "abstained_or_refused": 0,
+     "all_pass": 2,
+     "answered": 2,
+     "claims": {
+      "claims_attempted": 4,
+      "claims_rejected": 0,
+      "claims_verified": 4,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 2,
+       "n": 2,
+       "value": 1.0,
+       "wilson95": [
+        0.34238,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 2,
+      "questions_with_explain": 2,
+      "runtime_self_reported_verification_rate": {
+       "k": 4,
+       "n": 4,
+       "value": 1.0,
+       "wilson95": [
+        0.510109,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 2,
+     "errors": 1,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 2,
+     "text_pass": 2
+    },
+    "shortest_path": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 9,
+      "claims_rejected": 0,
+      "claims_verified": 9,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 9,
+       "n": 9,
+       "value": 1.0,
+       "wilson95": [
+        0.700855,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "temporal": {
+     "abstained_or_refused": 0,
+     "all_pass": 3,
+     "answered": 3,
+     "claims": {
+      "claims_attempted": 3,
+      "claims_rejected": 0,
+      "claims_verified": 3,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      },
+      "questions_with_at_least_one_claim": 3,
+      "questions_with_explain": 3,
+      "runtime_self_reported_verification_rate": {
+       "k": 3,
+       "n": 3,
+       "value": 1.0,
+       "wilson95": [
+        0.438503,
+        1.0
+       ]
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "answer"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    },
+    "topic": {
+     "abstained_or_refused": 3,
+     "all_pass": 3,
+     "answered": 0,
+     "claims": {
+      "claims_attempted": 0,
+      "claims_rejected": 0,
+      "claims_verified": 0,
+      "explain_list_length_differs_from_counter": 0,
+      "questions_with_all_claims_verified": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      },
+      "questions_with_at_least_one_claim": 0,
+      "questions_with_explain": 0,
+      "runtime_self_reported_verification_rate": {
+       "k": 0,
+       "n": 0,
+       "value": null,
+       "wilson95": null
+      }
+     },
+     "claims_pass": 3,
+     "errors": 0,
+     "expected_outcome": [
+      "abstain"
+     ],
+     "questions": 3,
+     "retrieval_pass": 3,
+     "text_pass": 3
+    }
+   },
+   "claims_all_questions": {
+    "claims_attempted": 65,
+    "claims_rejected": 0,
+    "claims_verified": 65,
+    "explain_list_length_differs_from_counter": 0,
+    "questions_with_all_claims_verified": {
+     "k": 23,
+     "n": 23,
+     "value": 1.0,
+     "wilson95": [
+      0.856883,
+      1.0
+     ]
+    },
+    "questions_with_at_least_one_claim": 23,
+    "questions_with_explain": 24,
+    "runtime_self_reported_verification_rate": {
+     "k": 65,
+     "n": 65,
+     "value": 1.0,
+     "wilson95": [
+      0.944198,
+      1.0
+     ]
+    }
+   },
+   "claims_answer_expected": {
+    "claims_attempted": 65,
+    "claims_rejected": 0,
+    "claims_verified": 65,
+    "explain_list_length_differs_from_counter": 0,
+    "questions_with_all_claims_verified": {
+     "k": 23,
+     "n": 23,
+     "value": 1.0,
+     "wilson95": [
+      0.856883,
+      1.0
+     ]
+    },
+    "questions_with_at_least_one_claim": 23,
+    "questions_with_explain": 24,
+    "runtime_self_reported_verification_rate": {
+     "k": 65,
+     "n": 65,
+     "value": 1.0,
+     "wilson95": [
+      0.944198,
+      1.0
+     ]
+    }
+   },
+   "failures": [
+    {
+     "first_reason": "the system did not answer (outcome kind abstained)",
+     "http_status": 200,
+     "id": "q08",
+     "outcome_kind": "abstained",
+     "type": "community"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind error)",
+     "http_status": 504,
+     "id": "q14",
+     "outcome_kind": "error",
+     "type": "max_team_size"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind refused)",
+     "http_status": 422,
+     "id": "q19",
+     "outcome_kind": "refused",
+     "type": "community"
+    },
+    {
+     "first_reason": "the system did not answer (outcome kind refused)",
+     "http_status": 422,
+     "id": "q30",
+     "outcome_kind": "refused",
+     "type": "community"
+    }
+   ],
+   "record": {
+    "commit": "827fcd5a425c6da65143c3460f36e00673772fc3",
+    "ended_utc": "2026-11-21T17:11:05.721Z",
+    "environment": "LOCAL-LOOPBACK-LLM",
+    "estimate_in_run_record": {
+     "answers": 33,
+     "input_tokens_estimate": 235950,
+     "model": "claude-haiku-5-5",
+     "output_tokens_estimate": 42900,
+     "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+     "usd": "0.045045"
+    },
+    "outcome": "completed",
+    "outcomes": {
+     "client_error": 2,
+     "expected_refusal": 6,
+     "ok": 24,
+     "server_error": 1
+    },
+    "questions_asked": 33,
+    "started_utc": "2026-11-21T17:08:30.609Z",
+    "target_base_url_sha256": "d30a576c0318716717366ab932e3d7dfbc4009a5bc10176403b60892912f070e",
+    "target_host": "127.0.0.1",
+    "target_loopback": true,
+    "target_scheme": "http",
+    "tree_dirty": false
+   },
+   "scorer_cross_check": {
+    "agrees": true,
+    "coordinator_recorded": {
+     "abstain_correct": 6,
+     "abstain_expected": 6,
+     "all": 23,
+     "answer_expected": 27,
+     "claims": 23,
+     "retrieval": 23,
+     "text": 23,
+     "unverified": 0
+    },
+    "recomputed": {
+     "abstain_correct": 6,
+     "abstain_expected": 6,
+     "all": 23,
+     "answer_expected": 27,
+     "claims": 23,
+     "retrieval": 23,
+     "text": 23,
+     "unverified": 0
+    }
+   },
+   "scorer_outputs": [
+    "q12-run-2-scores.json",
+    "q12-run-2-scores.md"
+   ],
+   "scorer_stdout": "SCORED answer_expected=27 retrieval=23 claims=23 text=23 all=23 | abstain_expected=6 correct=6 | unverified_evidence=0 | deep_checks=export",
+   "text_failures_name_omission": {
+    "answered_with_text_fail": 0,
+    "every_text_reason_is_missing_name_and_retrieval_and_claims_pass": 0,
+    "with_a_missing_name_reason": 0
+   },
+   "tokens": {
+    "input_tokens": 171414,
+    "output_tokens": 7039,
+    "rows_with_model_usage": 23,
+    "rows_without": 10,
+    "synthesis_calls": 23
+   }
+  }
+ },
+ "q12_probes": {
+  "q12-benchmark-q12-probe-1": {
+   "questions": [
+    {
+     "claims": [
+      1,
+      1,
+      0
+     ],
+     "qid": "q04",
+     "status": 200
+    }
+   ],
+   "record": {
+    "commit": "ec675d562d9e923f36885d8dc9bd27c04d59b719",
+    "ended_utc": "2026-11-20T21:33:13.623Z",
+    "environment": "LOCAL-LOOPBACK-LLM",
+    "estimate_in_run_record": {
+     "answers": 1,
+     "input_tokens_estimate": 7150,
+     "model": "claude-haiku-5-5",
+     "output_tokens_estimate": 1300,
+     "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+     "usd": "0.001365"
+    },
+    "outcome": "completed",
+    "outcomes": {
+     "ok": 1
+    },
+    "questions_asked": 1,
+    "started_utc": "2026-11-20T21:33:09.576Z",
+    "target_base_url_sha256": "d30a576c0318716717366ab932e3d7dfbc4009a5bc10176403b60892912f070e",
+    "target_host": "127.0.0.1",
+    "target_loopback": true,
+    "target_scheme": "http",
+    "tree_dirty": false
+   },
+   "tokens": {
+    "input_tokens": 27359,
+    "output_tokens": 264,
+    "rows_with_model_usage": 1,
+    "rows_without": 0,
+    "synthesis_calls": 1
+   }
+  },
+  "q12-benchmark-q12-probe-2": {
+   "questions": [
+    {
+     "claims": [
+      2,
+      2,
+      0
+     ],
+     "qid": "q06",
+     "status": 200
+    }
+   ],
+   "record": {
+    "commit": "827fcd5a425c6da65143c3460f36e00673772fc3",
+    "ended_utc": "2026-11-21T17:07:23.675Z",
+    "environment": "LOCAL-LOOPBACK-LLM",
+    "estimate_in_run_record": {
+     "answers": 1,
+     "input_tokens_estimate": 7150,
+     "model": "claude-haiku-5-5",
+     "output_tokens_estimate": 1300,
+     "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+     "usd": "0.001365"
+    },
+    "outcome": "completed",
+    "outcomes": {
+     "ok": 1
+    },
+    "questions_asked": 1,
+    "started_utc": "2026-11-21T17:07:19.965Z",
+    "target_base_url_sha256": "d30a576c0318716717366ab932e3d7dfbc4009a5bc10176403b60892912f070e",
+    "target_host": "127.0.0.1",
+    "target_loopback": true,
+    "target_scheme": "http",
+    "tree_dirty": false
+   },
+   "tokens": {
+    "input_tokens": 5044,
+    "output_tokens": 270,
+    "rows_with_model_usage": 1,
+    "rows_without": 0,
+    "synthesis_calls": 1
+   }
+  }
+ },
+ "question_sets": {
+  "run-1 questions file sha256": "afc09952096c49ebacd61a051542295570ec9bcd39ffb72cb7a3d4fc014e4734",
+  "run-2 questions file sha256": "afc09952096c49ebacd61a051542295570ec9bcd39ffb72cb7a3d4fc014e4734",
+  "same_question_file": true
+ },
+ "schema": "scholarchain.eval16-answers.v1",
+ "session1_16b": {
+  "by_type": {
+   "component": {
+    "answered": {
+     "k": 7,
+     "n": 8,
+     "value": 0.875,
+     "wilson95": [
+      0.529112,
+      0.977583
+     ]
+    },
+    "claims_in_answers": 12,
+    "errors": 0,
+    "http_statuses": {
+     "200": 8
+    },
+    "insufficient_evidence_abstentions": 1,
+    "questions": 8
+   },
+   "direct coauthors": {
+    "answered": {
+     "k": 0,
+     "n": 14,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.215311
+     ]
+    },
+    "claims_in_answers": 0,
+    "errors": 0,
+    "http_statuses": {
+     "200": 14
+    },
+    "insufficient_evidence_abstentions": 14,
+    "questions": 14
+   },
+   "path": {
+    "answered": {
+     "k": 0,
+     "n": 10,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.277533
+     ]
+    },
+    "claims_in_answers": 0,
+    "errors": 0,
+    "http_statuses": {
+     "200": 10
+    },
+    "insufficient_evidence_abstentions": 10,
+    "questions": 10
+   },
+   "ranking": {
+    "answered": {
+     "k": 7,
+     "n": 8,
+     "value": 0.875,
+     "wilson95": [
+      0.529112,
+      0.977583
+     ]
+    },
+    "claims_in_answers": 14,
+    "errors": 1,
+    "http_statuses": {
+     "200": 7,
+     "422": 1
+    },
+    "insufficient_evidence_abstentions": 0,
+    "questions": 8
+   }
+  },
+  "questions": 40,
+  "recorded_totals_cross_check": {
+   "component": {
+    "agrees": true,
+    "recorded_answered": 7,
+    "recorded_of": 8
+   },
+   "direct coauthors": {
+    "agrees": true,
+    "recorded_answered": 0,
+    "recorded_of": 14
+   },
+   "path": {
+    "agrees": true,
+    "recorded_answered": 0,
+    "recorded_of": 10
+   },
+   "ranking": {
+    "agrees": true,
+    "recorded_answered": 7,
+    "recorded_of": 8
+   }
+  }
+ },
+ "session1_16b_record": {
+  "commit": "b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64",
+  "ended_utc": "2026-11-14T21:21:35.716Z",
+  "environment": "AWS-ECS-LLM",
+  "estimate_in_run_record": {
+   "answers": 40,
+   "input_tokens_estimate": 286000,
+   "model": "claude-haiku-5-5",
+   "output_tokens_estimate": 52000,
+   "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+   "usd": "0.054600"
+  },
+  "outcome": "completed",
+  "outcomes": {
+   "client_error": 1,
+   "ok": 39
+  },
+  "questions_asked": 40,
+  "started_utc": "2026-11-14T21:18:35.459Z",
+  "target_base_url_sha256": "bc4ae3872e2725ea8c49c7e4a9adcdb5fb52b6fec7f99b1a8244acd0ab41a134",
+  "target_host": "withheld",
+  "target_loopback": false,
+  "target_scheme": "https",
+  "tree_dirty": false
+ },
+ "threats_to_validity": [
+  "The Q12 answer key was computed offline from the same export by a port of the Spark definitions (q12_answer_key.py), and the scorer and key were written by the same project; no independent human label set exists for answers. The question set is fixed (the 33 questions), so a repeat tests the same wording.",
+  "The runtime answers only over a bounded artifact (the ranking questions rank researchers inside it), so rankings are checked for values and order, not against the corpus-wide top.",
+  "Run-1 and run-2 ran different code (the run records name two different commits). They are a before/after comparison, not repeats: there is one run per code version, so no variability or interval across repeats can be given, and run-2's pass counts are not evidence that run-2 code is stable.",
+  "The claim support rate counts claims within questions; claims of one question are not independent, so its Wilson interval understates the uncertainty (it treats each claim as an independent trial).",
+  "Q12 has 27 answer-expected questions (3 per type); a per-type rate has a very wide interval.",
+  "The 16B Session 1 raw holds only the answer bodies (no /v1/explain record, no evidence fetch) and no answer key exists for its 40 questions, so it supports only 'answered vs abstained' rates, not correctness.",
+  "The Console cost is a user-supplied screenshot read at two decimals; it cannot be re-derived or verified by this script.",
+  "Free-text contradictions are not assessed: the text check looks for the key facts being present, and the claim check compares verified claims' values to the key and the export; a wrong sentence outside those would not be flagged."
+ ],
+ "variability": {
+  "repeats": "none of the same code: run-1 and run-2 ran different code (commits above), so they are a before/after pair, not repeats; variability across repeats is unmeasured",
+  "scorer_determinism": "the scorer and this script are deterministic given the frozen files"
+ }
+}

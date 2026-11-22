@@ -1,0 +1,2360 @@
+{
+ "counts": {
+  "coauthor_edges_by_window": {
+   "2010-2014": 11795,
+   "2015-2019": 19326,
+   "2020-2026": 45020,
+   "all-years": 81181,
+   "since-2015": 62785,
+   "through-2009": 8608
+  },
+  "graph_edges_by_type": {
+   "AUTHORED": 44083,
+   "HAS_TOPIC": 3,
+   "PUBLISHED_IN": 10579,
+   "RESOLVES_TO": 45587
+  },
+  "nodes_by_label": {
+   "AUTHOR_MENTION": 45591,
+   "INSTITUTION": 1,
+   "RESEARCHER": 21819,
+   "TOPIC": 3,
+   "VENUE": 112,
+   "WORK": 10578
+  },
+  "run_id_in_row_context": {
+   "coauthor_edges": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "graph_edges": {
+    "k": 100252,
+    "n": 100252,
+    "value": 1.0,
+    "wilson95": [
+     0.999962,
+     1.0
+    ]
+   }
+  },
+  "works_with_multiple_venues": 1,
+  "works_with_venue": 10578
+ },
+ "cross_check": {
+  "load_manifest": {
+   "note": "the Parquet support table was not read; two consistency checks: (a) its load-manifest row count equals the sum of jointPublicationCount over the CSV coauthor rows (one support row per joint publication), and (b) the (edge, support work) pairs stored on the CSV rows equal the sum of min(joint, 5) because the CSV keeps at most 5 representative works per edge. Check (b) is a consistency check of the cap, not a comparison with the Parquet table.",
+   "row_counts": [
+    {
+     "agrees": true,
+     "csv_rows": 228715,
+     "dataset": "coauthor-edges",
+     "load_manifest_rows": 228715
+    },
+    {
+     "agrees": true,
+     "csv_rows": 100252,
+     "dataset": "graph-edges",
+     "load_manifest_rows": 100252
+    },
+    {
+     "agrees": true,
+     "csv_rows": 78104,
+     "dataset": "nodes",
+     "load_manifest_rows": 78104
+    }
+   ],
+   "stored_pairs_equal_sum_of_min_joint_and_cap": true,
+   "sum_of_joint_publication_counts": 269753,
+   "sum_of_min_joint_and_cap": 267597,
+   "support_table_rows_equal_sum_of_joint_counts": true,
+   "support_table_rows_in_load_manifest": 269753,
+   "support_work_ids_stored_on_coauthor_rows": 267597
+  },
+  "spark_counters": {
+   "acceptedResearcherLinksMissingEndpoint": 0,
+   "acceptedWorkLinksMissingEndpoint": 0,
+   "allYearsEdges": 81181,
+   "canonicalResearchers": 21819,
+   "canonicalWorks": 10578,
+   "graphEdgesMissingEvidenceWorkDropped": 0,
+   "missingCommunityMembership": 0,
+   "missingGraphEndpoints": 0,
+   "pairCountMismatches": 0,
+   "selfPairsDropped": 0,
+   "unresolvedMentions": 4
+  }
+ },
+ "duplicates": {
+  "coauthor_edge_ids": {
+   "k": 0,
+   "n": 228715,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    1.7e-05
+   ]
+  },
+  "coauthor_pair_window": {
+   "k": 0,
+   "n": 228715,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    1.7e-05
+   ]
+  },
+  "coauthor_self_loops": {
+   "k": 0,
+   "n": 228715,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    1.7e-05
+   ]
+  },
+  "graph_edge_ids": {
+   "k": 0,
+   "n": 100252,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    3.8e-05
+   ]
+  },
+  "graph_edge_type_start_end": {
+   "k": 0,
+   "n": 100252,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    3.8e-05
+   ]
+  },
+  "node_ids": {
+   "k": 0,
+   "n": 78104,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    4.9e-05
+   ]
+  },
+  "note": "a duplicate is a row beyond the first with the same key: count = rows - distinct keys"
+ },
+ "export": {
+  "directory_note": "path given on the command line; the export lives under target/ and is not tracked by git",
+  "files": [
+   [
+    "counters.json",
+    39020,
+    "02b12f3f170fbc0d0dcf7d41763a72c99f248898db8710859db5d491b4326a72"
+   ],
+   [
+    "load-manifests/neptune-opencypher-csv.json",
+    4149,
+    "2ec4e674c91f4e5f3a4736c3a9f0f5edc53998e73e810e1f076cff2c3f323472"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00000-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8306420,
+    "f47e13e77871f355f34409839fbe2965729de097102783b9739dbed4e009129e"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00001-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8180081,
+    "9f25670e77b2e856e9b774f56bb739a83a2d9720f40a777fac57ce220db40ac9"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00002-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8342610,
+    "c3c1d04629ac2351c62601a6fc636d87b6ae8758c0db7d145987ecaad40615d3"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00003-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8170500,
+    "4a1183d051d516f6cbe449392e9c5cfdd5479f3d65fa79a6597b03187d678f1f"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00004-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8238717,
+    "b0d51ee0688e3eaee65fd7fade1511de3e89b4b90998175e2d6d1d10245645f6"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00005-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8067965,
+    "0ffe250b2d43dd620e65982d761046040e6c25b2cefb3f72236a65fd33b75d19"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00006-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8473251,
+    "d60f8048b4a5efe7a6be0433ce776645ce45a60198120a335ad7d165a9d25c63"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00007-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8186998,
+    "17a94ae2608125eab772213752b6aac66a1d22ac46fc0c2b35676d5a9d682951"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00008-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8268196,
+    "df62b0175ff9796a9e82ba4b76fe6ebe50f09b222f1c3b92d6f3fa81cabf23df"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00009-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8235213,
+    "153a572ab0ad1ba96de16f87622d8e6cb65cb5fe3ef866a9b23bea54e1a79e85"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00010-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8258538,
+    "97520d6c62d6dade665b2f137d5478f5e01511bbb158300ed98ca0c758cc7a28"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00011-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8355564,
+    "83c4ef4139cd271f5f83770ac64b7fce1a8dfc1e369678ba596d150890461b14"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00012-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8312155,
+    "2231d62afa5976a17559caf2ee57dbde032d72feff331945fcf17ebe1e593a4e"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00013-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8290048,
+    "2e55ec8af17381432d9adabbbdefd3ec2b4a4602ccf343b997e96a0d36db271f"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00014-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8130887,
+    "233803274e2d463841d5904a389e30d947ea08ba0690fc1c1119e7b80e75f025"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00015-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8436971,
+    "37ce7e9f07e343806948904c10f890f83c21818b4e5a19922d4dda395e5878b2"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00016-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8312994,
+    "217e818e92fdb25d23e807cfba424fb59b76c2aa7a0fa2d9e1651b77d8c35300"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00017-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8140206,
+    "2a80102b2d9e287da18182745587cddfe595ad906dce6b46bfecfda05b4183ac"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00018-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8371713,
+    "dc4e5c868544a209f7726b109134c920ef35a233a8bacea3793de7d66d5ffb36"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00019-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8545744,
+    "fefd343ae91101a15e5dfcfa7b82caa1cc5727f72b2bf03cb1659ca89c864fc3"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00020-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8188071,
+    "02aedfc20d49608ff99a3088781e420e9a3c423c90af5c8cd57833b66023c510"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00021-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8282219,
+    "ff8a9bcaa8b3d6ca837f4fb3e17568190e28d0f8b2f47784dec75406fecbc578"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00022-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8205401,
+    "6b8dd491f6259aacecf04eaf08ebb9429735485299fc4901be4eb1f4e492a983"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00023-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8137338,
+    "ed8b16b77ff2df0a40dec940ff9f5e7128ee81b48652fcf1cd3b15f8d545b361"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00024-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8488586,
+    "92295a1a92313cb51b89a29f5a28ed48533ebddc473c5a61f0730eb480dc50d5"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00025-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8383421,
+    "fd6ad1483088a3e389893119400cdf03e5caf06ac78bd568d9c89f197e82c154"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00026-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8094027,
+    "d66567406959baab6e64b2d31ec21af92b94f64f2b6f21dd14ec709c7bc03e2c"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00027-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8199615,
+    "2aa415a1b8941da2b4c4b188fa416c901b68ffa98da61a8a290073a76b8966be"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00028-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8283322,
+    "25685d3f388668e52bc4d986176548e0c4fafa701e8fa5709bb649cf4038dd94"
+   ],
+   [
+    "neptune-opencypher-csv/data/coauthor-edges/part-00029-39bbcca0-2a1c-4423-afbc-d4fe4308cb19-c000.csv",
+    8233073,
+    "d6c5160d2802646942777d8fea4bd9d7979abcc9cbc06aca4262b6efc39efc3e"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00000-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8284907,
+    "ee93cfa32e59bcba847cde0fbea5f3d373314247eaf5b12e6d4b8121e43ce0b2"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00001-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8113871,
+    "cb9c41d28c1cb369c1ff3c6187d23e141748cadb96c8df72ad8d346a5b83f8fc"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00002-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8395665,
+    "b92a0c0e4bcc705623b18fae6942e88ef110860e4560edae1631ac407ebbb667"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00003-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8294221,
+    "daa24e9a2332582c318b72523d2682b8f9e8d12260068c0362e7c37345a32068"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00004-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8379499,
+    "fac05538eb8192a9f28754e819e9e3e1756ecfd207caf31c84207181d2d0d990"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00005-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8365064,
+    "b836ea42cc7d0fbda62f1f366914e4db514d85513c74d176bec79d352db1ba1a"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00006-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8200179,
+    "bb5afb9eaad58c4fd732fb93991eb61db110e598eef3ea50fa30156d7332da92"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00007-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8297113,
+    "47f5ce43318ba545a121b66fec68dc3cfb454450d3418ab1e7e5997c003d5ad2"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00008-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8275605,
+    "7654c0536f7931e31364b1bbba87ebf9d1ced5852262ac3ffbd4e8408d16559a"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00009-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8396694,
+    "4575196e9e86a741f8df62cd331bddb7b4b0a0a4ce13ccb7017fda75d5c626c3"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00010-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8152159,
+    "1827e01218c79d778c75e757a65b10963b01b96cc6d5153120494b09a9648c12"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00011-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8335957,
+    "d7badf08baf1a78e5918d808ed2bbfbd2a3376bc10258e6ab9a82484a97d9b6a"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00012-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8105141,
+    "1afd1100ec8ade17d284dd4992670291a1340c3a7f7b6378bbce5d703bc51934"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00013-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8460397,
+    "82b94991d70873b9952d8e385bcf329173fbed2faa0c4dc8a952cd670d41b858"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00014-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8195786,
+    "d4023208bad5d51b9db89480d1d530df0a234fecd899d0ca03e968f7b30ec184"
+   ],
+   [
+    "neptune-opencypher-csv/data/graph-edges/part-00015-a98722d8-afca-4831-962e-c6f57ded7fc6-c000.csv",
+    8362695,
+    "b067f24a798e562d6014f70bca27db052cf267dab26f362291ff261538c124c5"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00000-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7793097,
+    "b570e141bfb566dd0c40cb281d5791f1c0310028efd953ded5b90b498d14aab3"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00001-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7844751,
+    "53091919e808148c084b2789e3d9e14d1dfdc7506262a09dab8189fd5039a9db"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00002-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7707910,
+    "b0a7f5b34fa2958a04ea875621a086902a88a8b7a13bee926202d2723479b426"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00003-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7958347,
+    "db6e5cc489323ef76b217f8c39fd8dc11aa1cae42a0661d5156113bed3ca66c7"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00004-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7920787,
+    "2b8d71e7fdedb84755cd90bb23225ebfc529cb029fbf8dc2838f1f16929ec194"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00005-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7944227,
+    "e90538f7b1e3ee51a6f93332786c178d4293db8294ba9ea8ba22a9f6808130b2"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00006-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7952103,
+    "1f17364d6c03b3b09ce3628e26b617d0a1926b81cc84b41ea17c5c7555136751"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00007-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7812975,
+    "8373f50c75b4ebcc012a5e28d9f3aee39f7250cf236e0324aa2f381055836030"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00008-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7915124,
+    "50aa69b5903b0f8a0323c7532c4679784bd6b28d888f34c8099f460157a52485"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00009-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7840699,
+    "2f264bfaf02d5c0d34455d8efc596fd767ab283e01af1f7a8dd215cd5fd4701b"
+   ],
+   [
+    "neptune-opencypher-csv/data/nodes/part-00010-6f69598c-a7f4-41cd-b7e6-81dd62c5b150-c000.csv",
+    7764069,
+    "b965c82ee0e11840ce1107b8aba72bcc26c46ba4ca1f15bcb799f0a0d2080df4"
+   ],
+   [
+    "run-manifest.json",
+    1151,
+    "eef8b1a5e27701388de92c6e27c9277bd1e18fc7b966a8d600772b1ab13f7e10"
+   ]
+  ],
+  "files_listing_sha256": "e277df6227d59df50e747e69579c827329d6967a1d8ac3d071137cc8c91c910e",
+  "run_id": "run:ba7402d1-959a-4277-8c6e-e92878a38afa"
+ },
+ "gaps": [
+  {
+   "metric": "support rows read from Parquet (edges/type=coauthored_with_support)",
+   "reason": "no stdlib Parquet reader in an offline stdlib-only package; the support works stored on the CSV coauthor rows are used, and the Parquet row count is compared via the load manifest"
+  },
+  {
+   "metric": "integrity/violations and integrity/rejects Parquet contents",
+   "reason": "Parquet not readable here; the Spark job's own counters (missingGraphEndpoints and related) are quoted as a cross-check"
+  },
+  {
+   "metric": "agreement of graph content with upstream source records",
+   "reason": "needs the source data and an independent gold set, outside this offline package"
+  },
+  {
+   "metric": "window membership of support works by publication year",
+   "reason": "work years are not in the CSV sidecar"
+  }
+ ],
+ "interpretation": [
+  "Referential integrity: 100252 graph-edge rows and 228715 coauthor rows were checked; unresolved endpoints are 0 and 0 respectively.",
+  "Duplicates: duplicate node ids 0, duplicate edge ids 0, duplicate coauthor (pair, window) rows 0.",
+  "Coauthor support: 100.0000% (228715/228715; Wilson 95% 99.9983-100.0000%) of coauthor rows are fully supported (all windows); the all-years joint count matches the recount from authorship for 100.0000% (81181/81181; Wilson 95% 99.9953-100.0000%).",
+  "Orphans: 3.9049% (852/21819; Wilson 95% 3.6558-4.1701%) of RESEARCHER nodes have no AUTHORED edge and 4.7207% (1030/21819; Wilson 95% 4.4471-5.0101%) have no coauthor edge in any window; 0.8036% (85/10578; Wilson 95% 0.6504-0.9925%) of WORK nodes have no AUTHORED edge. This package does not explain these orphans (they are not integrity failures of an edge: no edge dangles); they are reported as measured.",
+  "Provenance audit: 100.0000% (50/50; Wilson 95% 92.8652-100.0000%) of the 50 sampled edges resolve through every step.",
+  "These checks establish internal consistency of the exported graph; they do not establish that the underlying identity decisions or source facts are correct (see the entity-resolution evaluation for the identity sample)."
+ ],
+ "known_small_graph_tests": {
+  "directory": "modules/spark/src/test/scala",
+  "note": "listed from source with a regular expression for AnyFunSuite test(\"...\") calls; helper-generated or nested tests would be missed; the tests are NOT run here",
+  "suite_count": 6,
+  "suites": [
+   {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+    "sha256": "5bb4cdd5f94b1d323d281dcb11469c8a37c6c4f522c60c42b1087145c60c1eb6",
+    "suite": "Phase12ReadinessSpec",
+    "tests": [
+     "distributed proof rejects local tasks and executor-ID-only masquerading",
+     "bounded Java results retain the cap and reject excess rows or overflowing bounds",
+     "actual snapshots expose loaded class origins and hashes without invented versions",
+     "exclusive output rejects overwrite, relative destinations and symlink parents",
+     "completion requires exact manifest and metadata bytes",
+     "semantic bindings and nested windows must match without normalization",
+     "table inventory rejects missing, duplicate and redirected datasets",
+     "comparison recomputes counts and hashes instead of trusting metadata",
+     "comparison rejects schemas, duplicates and physical run-ID drift",
+     "nested provenance run IDs are never discarded",
+     "portable synthetic G1 preserves nine works, duplicate authors and literal edge weights",
+     "CLI refuses unknown modes without writing evidence"
+    ]
+   },
+   {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala",
+    "sha256": "b612532f2e64a5fcf231710aca8c4e9ce35dddd14626fe0ec3f5c9fc507096a2",
+    "suite": "Phase6CJobsSpec",
+    "tests": [
+     "module G1 has nine all-years edges, exact A-B weight and no duplicate source weight",
+     "yearless and post-2026 DBLP works contribute only to all-years",
+     "one rank-one DBLP observation supplies a merged work's team and pairs",
+     "conflicting DBLP ORCIDs are reported without splitting the exact-name researcher",
+     "orphan graph endpoints appear as hard integrity rows and obey the failure flag",
+     "cannot-link and authority-conflict work groups stay separate",
+     "cross-DBLP links are counted and ambiguous non-DBLP mentions stay unresolved",
+     "ER unresolved and conflict decisions use explicit wire schemas and named counters",
+     "explicit JSON schema rejects a malformed line and a mismatched version",
+     "Hadoop and ER frozen wire examples survive explicit Spark schemas",
+     "ER export must bind the selected Hadoop completion and manifest bytes",
+     "Hadoop completion marker, inventory and file hash are required",
+     "ER completion marker must match the manifest and its schema",
+     "completed output reuses matching logical identity and rejects mismatch or broken marker"
+    ]
+   },
+   {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala",
+    "sha256": "f43490d6d00d48433121fd1648565af4320406fe701160e14b63fa6db5e0f10a",
+    "suite": "Phase6DEJobsSpec",
+    "tests": [
+     "jobs 3, 4 and 8 compute numeric metrics, components and exact coreness",
+     "selected BFS returns canonical shortest path and different-component no-path",
+     "solo average is zero, max-team ties retain full count after work-ID cap",
+     "a weighted-degree mismatch fails with the metric invariant",
+     "component and k-core iteration limits reject an unfinished fixed point",
+     "synchronous triangle LPA converges to its minimum initial label",
+     "two-person synchronous LPA records non-convergence in core community records",
+     "a reachable pair beyond maxHops reports exceeded-maxHops without hop evidence",
+     "seeded sampling chooses a bounded pair from the largest component",
+     "equal-length BFS routes choose the smallest immediate predecessor",
+     "multiwindow seeded BFS crosses checkpoint interval and retains six-hop evidence"
+    ]
+   },
+   {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala",
+    "sha256": "05d2ba4b41079cfac99333a619460cdd7e03ba2fb82e5b88f1a886982102d3aa",
+    "suite": "Phase6FGJobsSpec",
+    "tests": [
+     "bounded-window temporal rows preserve entering and leaving researchers and exact deltas",
+     "complete seeded-source estimate gives a three-node chain exact mean and empirical P90",
+     "hard failures retain core violation rows and counters before throwing without completion",
+     "JSON event summarizer aggregates stage tasks partitions durations shuffle and failures"
+    ]
+   },
+   {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExportSpec.scala",
+    "sha256": "a463f910035aff520e954c57ba600abe17f38779f439412791f27a28681b42c3",
+    "suite": "Phase7NeptuneExportSpec",
+    "tests": [
+     "empty datasets retain a CSV header in every loader file",
+     "part count follows encoded size, keeps one header per part and every ID exactly once",
+     "default targets put the small fixture into one part per dataset",
+     "a part above the maximum aborts publication and an inconsistent target is rejected",
+     "missing endpoints or support works fail before publication"
+    ]
+   },
+   {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala",
+    "sha256": "e07f19f9479a2104d35b0978d27a4d3ce38a801b2975b85a28c716950cc94796",
+    "suite": "SparkSmokeSpec",
+    "tests": [
+     "five explicit rows survive join, aggregation, window, Parquet and checkpoint"
+    ]
+   }
+  ],
+  "test_count": 47
+ },
+ "last_full_check": {
+  "file": "docs/agent-runs/phase-15/test-report.md",
+  "file_sha256": "ad7aef99f0db930f0badd309e44a87eb67fe83b6f165f5995959321aa09f4455",
+  "line": 156,
+  "note": "this is the coordinator's recorded result in the Phase 15 test report, quoted, not a run made by this script; the sbt gate of that check runs the Spark suites above",
+  "text": "| spark.task.maxFailures 1 -> 2, full check, clean snapshot (after review APPROVE) | `scripts/check.sh` (all 7 gates, no skip) on a detached worktree of 9e881a2 plus the branch phase-15-maxfail tracked diff, JDK 17, AWS env unset | exit 0, `RESULT: PASS gates=7`. constitution, hooks, shell, python PASS; terraform PASS 156 s (tests 12, 19, 113, 40, 6, 333 passed, 0 failed); script-tests PASS 3977 s (scripts/tests 1200 OK, phase12d-spike 78 OK, tests/scripts 485 OK with skipped=3, tests/infra 468 OK); sbt PASS 869 s (Tests: succeeded 165, 707, 30; failed 0; one canceled). Snapshot: tracked.diff sha256 26a8849e\u2026c698 (10 files, +319/-5), no untracked files. The commit adds only this record row on top of the snapshot. Run 20261117T150435Z-28163; check.log sha256 a07f7d2c\u20269d71 | phase15-maxfail worktree: target/phase15/p15/snap-maxfail/ |",
+  "tree": "commit 9e881a2 plus the branch phase-15-maxfail tracked diff (a detached worktree), per the quoted line"
+ },
+ "orphans": {
+  "AUTHOR_MENTION (no RESOLVES_TO edge)": {
+   "k": 4,
+   "n": 45591,
+   "value": 8.773661468272246e-05,
+   "wilson95": [
+    3.4e-05,
+    0.000226
+   ]
+  },
+  "INSTITUTION (no incident edge)": {
+   "k": 1,
+   "n": 1,
+   "value": 1.0,
+   "wilson95": [
+    0.206549,
+    1.0
+   ]
+  },
+  "RESEARCHER (no AUTHORED edge)": {
+   "k": 852,
+   "n": 21819,
+   "value": 0.039048535679912004,
+   "wilson95": [
+    0.036558,
+    0.041701
+   ]
+  },
+  "RESEARCHER (no RESOLVES_TO mention)": {
+   "k": 0,
+   "n": 21819,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    0.000176
+   ]
+  },
+  "RESEARCHER (no coauthor edge in any window)": {
+   "k": 1030,
+   "n": 21819,
+   "value": 0.04720656308721756,
+   "wilson95": [
+    0.044471,
+    0.050101
+   ]
+  },
+  "TOPIC (no incident edge)": {
+   "k": 0,
+   "n": 3,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    0.561497
+   ]
+  },
+  "VENUE (no incident edge)": {
+   "k": 0,
+   "n": 112,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    0.033161
+   ]
+  },
+  "WORK (no AUTHORED edge)": {
+   "k": 85,
+   "n": 10578,
+   "value": 0.008035545471733787,
+   "wilson95": [
+    0.006504,
+    0.009925
+   ]
+  },
+  "WORK (no PUBLISHED_IN edge)": {
+   "k": 0,
+   "n": 10578,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    0.000363
+   ]
+  }
+ },
+ "provenance_audit": {
+  "by_step": {
+   "each_endpoint_authored_each_support_work": {
+    "k": 50,
+    "n": 50,
+    "value": 1.0,
+    "wilson95": [
+     0.928652,
+     1.0
+    ]
+   },
+   "each_endpoint_has_resolving_mention": {
+    "k": 50,
+    "n": 50,
+    "value": 1.0,
+    "wilson95": [
+     0.928652,
+     1.0
+    ]
+   },
+   "endpoints_are_researcher_nodes": {
+    "k": 50,
+    "n": 50,
+    "value": 1.0,
+    "wilson95": [
+     0.928652,
+     1.0
+    ]
+   },
+   "has_support_works": {
+    "k": 50,
+    "n": 50,
+    "value": 1.0,
+    "wilson95": [
+     0.928652,
+     1.0
+    ]
+   },
+   "pair_present_in_all_years_with_joint_ge_window": {
+    "k": 50,
+    "n": 50,
+    "value": 1.0,
+    "wilson95": [
+     0.928652,
+     1.0
+    ]
+   },
+   "support_works_are_work_nodes": {
+    "k": 50,
+    "n": 50,
+    "value": 1.0,
+    "wilson95": [
+     0.928652,
+     1.0
+    ]
+   }
+  },
+  "fully_resolves": {
+   "k": 50,
+   "n": 50,
+   "value": 1.0,
+   "wilson95": [
+    0.928652,
+    1.0
+   ]
+  },
+  "population": 228715,
+  "sample_size": 50,
+  "seed": "eval16-graph-v1",
+  "traces": [
+   {
+    "edge_id": "spark-coauthor-edge:00f9508e1a6ed43178a83ca472a9dbb49d58aa759cb784756ba84c2dbd2dcf1b",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/GonzalezXDCFS14"
+    ],
+    "window": "2010-2014"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:04054866de75934ed7bb871903d424dda138375065f6006d94d600f1fe9628bc",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3464298.3493406"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:062e382f88e37d8c7bf083236077f77b7ff7e09444ef352c56b139a90f0f398c",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3767295.3803568"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:1486d6d6217e41bc5683808de1fae264d940c8f3cac331a5132eaa4e60c40581",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/1376878.1376881"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:199f1df3b30c7ab7830946df19bae3a8db7b3b86cbcbdf1d4856452237bb657f",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs.2019.00162"
+    ],
+    "window": "2015-2019"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:1a100dc8cc87dab25a6baa91fe7479a47a42f46fcdf2b7c52821a0ac526a1ea6",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs.2005.78"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:25722f76d650e9cc7609c772268c181d11cee5952141cecb514b3793d59d5a99",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/2575-8411.2026.00066"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:2647ee9563e816c4ab9a9d20e7e89ee7376e5041a9250d45352b8b9e8f595efc",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs57875.2023.00128"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:265518726b4b0dcbe119ee6cb0e708dc681e28720e225cc24e57503d381321e6",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs54860.2022.00129"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:265bf2ff409c22821cdb6f0f40036aaeaef76d2e027c794b544cb917522f9dcf",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs57875.2023.00119"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:29b48871ac84dcf73521174a851ffc97dba42d0250eacf900070f41ada24a89b",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.4230/lipics.disc.2021.14"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:2a29bae7fe0ad4a817a9253b1b4d8151890ed175c9a93fad62a8a064a39aec02",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3447786.3456234"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:2b5ccfec31d5fc1f7b9fd9795238b09762d1bc31e62bda39e3f2aea64d2069eb",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3552326.3587458"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:3e4db20b382c88bdafbea7e61e964b9a4fa9937edb126545726df49850cd6b40",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/2525526.2525844"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:40efd95e9f72f6c3c31bfd26c92e83c25b4b9503f5bf545f0fbe85b27c55f7a5",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3503646.3524294"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:56053c9a2203d4194237596703b09f8317dd398654bbcd2b0e43304b75475dd3",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/BurnettCCEGJMPR20"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:580847c7db9f61e9a590901f7780955046ecf0d3881b523b1ce08738721ba336",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs.2018.00122"
+    ],
+    "window": "2015-2019"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:58f4c28f11d7c7a02f8bbe8419b2da4133363b09086c356dcb3a106b73e80e8e",
+    "fully_resolves": true,
+    "joint": 2,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/1217935.1217953",
+     "work:doi:10.1145/1272996.1273032"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:5ae3e7c846bc8880a87fe12c1d8ff19708c83453a27f3410ca45e5f234bc5a8a",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/Agarwal0YN25"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:65adc1de321a324a2ddfb076973be56fa2cb12f82f037cfa16b11a2a552eb6ae",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3429885.3429966"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:666faeb1456225dda19b8cdd97f435a14f794e475292b18a70a286411a5233e5",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs.2019.00179"
+    ],
+    "window": "2015-2019"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:6b3aa7fec8c225a30d0df2008e77bd187fccb670871341ee84f03b6588f96070",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3689031.3717463"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:7a45e6b031d156cd4147d5dbd27b411f4102c3da0744ac34e65fd0b207b7aa10",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/Choudhury0PSJLD24"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:854e7c54eeaacd277c5ecf375b15f499a567d6c5b4ddeb3672222c7ea08044ff",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/ZhengJSWYHWYZSG20"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:88762ae6b639774b3e21d390fd2441a30c6601b813cb0c54e313da55b27c20c0",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/WuFHLLXZC25"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:8973bed7f7feaccf6b535de817a67ce475b93655b8794f9e8d24139aee83f83d",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/JyothiCMNTYMGKK16"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:8ad7efc6ce6970ec8c144bc422f64eb8bcef2fcab833ccd3861ebd640780b90a",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3378679.3394536"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:8bcbdd50bf5019bc44f04488654799f0eea02034afe5d8e211be7144ec169201",
+    "fully_resolves": true,
+    "joint": 2,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/Chatzieleftheriou18",
+     "work:dblp:conf/nsdi/LegtchenkoCCRWZ16"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:8f586b8d802f8de9cb566f4e42b6cc5a8f0ddb89c42d0657fce39c98a3158544",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/ZhuangZXQB0S24"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:912da768f0421f26a6be2435c091eab66918472d03605ae0c20e740e7c430e18",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/YuanSZWMW24"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:9273b674d7feaacff4997b8ea6d0069986951884dc4bf19fd8cb4e9153981350",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/2575-8411.2026.00135"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:946eeade90efcb97eb7d0d15c544ebf0186938caf27c55884c470d310ee48312",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/SkiadopoulosXZC24"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:975634ba7ea067a90d8ad44afba87b6c274da5048f143be220a9ee708d618b07",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3600006.3613144"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:a9fd3a47f67d091366ae6f20148d877df0e7bbc98327c6ce91305075f8427d3a",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/YinYDLZZMXZC26"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:ab856a55ef321c02ade34b0ce0f1ee820b59488a013d6eb66a149d2a2b7ff44f",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/LiangWZGZGZL0X23"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:ab8e28cdc3f3788ec0db084e3e19da233a5c08d74ee8cfb6aba35542b405496b",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/LiGSCJ22"
+    ],
+    "window": "since-2015"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:b128fde1befce92ac0f15e2dc9c96bd28786f61188304cd1d9adf1b046f9cdc8",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3382734.3405744"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:b595ddbecffbb385611a81d38c04c6104eecc7425130a8f3e0a8d7c6397b14ad",
+    "fully_resolves": true,
+    "joint": 2,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/VuppalapatiBK022",
+     "work:dblp:conf/osdi/VuppalapatiF0CK23"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:b695e51452827f18a9044022924ba66f5d6ac805297befa6c0c24cb3806a422e",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3689031.3696068"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:c09374831aa80fa1b29595fe008e98aa2360dbca90d624bd4ea3c22ee5ec543c",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/GiortamisRTB25"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:c3e1a3889da7f8224608c6b57c61a87e622d2e53bff0b434908370a949bd1f72",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3731569.3764819"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:c467755b2b474809315174b5ff818d652489f83c34bcf3d767fc7d68d3d88b60",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/UngerJ0LBNRPMML22"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:d16145f5f335e850ca71b5876d181cce63c74ec4769b6d6a029f09435a59c7d7",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/nsdi/SeyhaniGWA26"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:d8ded7f3ae386ab0f0e97ed969cdfceb672aa6f9c2ca5dc74ee592fca6e22a71",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3600006.3613158"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:da875d0ef5ad5a8da7dead819bc72fb3a82690b643bed41a23b36317a563167c",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/WangCJTLWHXPGLW25"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:dbf9edd83e9edbc30d7354583bf03a5854631ae6540a4525c903316e0a936855",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/3627703.3650063"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:e1f98e4897612ed87b05978f019697e138e7a091eb31f42eeca02235e6adbc79",
+    "fully_resolves": true,
+    "joint": 2,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1145/1519065.1519079",
+     "work:doi:10.1145/2168836.2168854"
+    ],
+    "window": "all-years"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:e9281388e72ede2f919141ed1804352982e357964033a290c06677c30813520b",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/0075CXPGC0LHCH025"
+    ],
+    "window": "2020-2026"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:ea592bcf608d0d9196850bc2a3f5ccbde0896c4a16b81792bfe35cd658e9a968",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:dblp:conf/osdi/PeterLZPWKAR14"
+    ],
+    "window": "2010-2014"
+   },
+   {
+    "edge_id": "spark-coauthor-edge:fa9211d90ebf6e53ef92ef69fb8130cd176bb1ae8fcc0fcee7166347d72dcab6",
+    "fully_resolves": true,
+    "joint": 1,
+    "steps": {
+     "each_endpoint_authored_each_support_work": true,
+     "each_endpoint_has_resolving_mention": true,
+     "endpoints_are_researcher_nodes": true,
+     "has_support_works": true,
+     "pair_present_in_all_years_with_joint_ge_window": true,
+     "support_works_are_work_nodes": true
+    },
+    "support_works": [
+     "work:doi:10.1109/icdcs.2013.41"
+    ],
+    "window": "all-years"
+   }
+  ],
+  "windows_in_sample": {
+   "2010-2014": 2,
+   "2015-2019": 3,
+   "2020-2026": 13,
+   "all-years": 21,
+   "since-2015": 11
+  }
+ },
+ "referential_integrity": {
+  "coauthor_edges_with_non_researcher_endpoint": {
+   "k": 0,
+   "n": 228715,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    1.7e-05
+   ]
+  },
+  "coauthor_edges_with_unresolved_endpoint": {
+   "k": 0,
+   "n": 228715,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    1.7e-05
+   ]
+  },
+  "graph_edges_by_type": {
+   "AUTHORED": {
+    "edges": 44083,
+    "expected_labels": [
+     "RESEARCHER",
+     "WORK"
+    ],
+    "with_unresolved_endpoint": {
+     "k": 0,
+     "n": 44083,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      8.7e-05
+     ]
+    },
+    "with_wrong_endpoint_label": {
+     "k": 0,
+     "n": 44083,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      8.7e-05
+     ]
+    }
+   },
+   "HAS_TOPIC": {
+    "edges": 3,
+    "expected_labels": [
+     "WORK",
+     "TOPIC"
+    ],
+    "with_unresolved_endpoint": {
+     "k": 0,
+     "n": 3,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.561497
+     ]
+    },
+    "with_wrong_endpoint_label": {
+     "k": 0,
+     "n": 3,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.561497
+     ]
+    }
+   },
+   "PUBLISHED_IN": {
+    "edges": 10579,
+    "expected_labels": [
+     "WORK",
+     "VENUE"
+    ],
+    "with_unresolved_endpoint": {
+     "k": 0,
+     "n": 10579,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.000363
+     ]
+    },
+    "with_wrong_endpoint_label": {
+     "k": 0,
+     "n": 10579,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.000363
+     ]
+    }
+   },
+   "RESOLVES_TO": {
+    "edges": 45587,
+    "expected_labels": [
+     "AUTHOR_MENTION",
+     "RESEARCHER"
+    ],
+    "with_unresolved_endpoint": {
+     "k": 0,
+     "n": 45587,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      8.4e-05
+     ]
+    },
+    "with_wrong_endpoint_label": {
+     "k": 0,
+     "n": 45587,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      8.4e-05
+     ]
+    }
+   }
+  },
+  "graph_edges_total_with_unresolved_endpoint": {
+   "k": 0,
+   "n": 100252,
+   "value": 0.0,
+   "wilson95": [
+    0.0,
+    3.8e-05
+   ]
+  }
+ },
+ "schema": "scholarchain.eval16-graph.v1",
+ "support": {
+  "all_windows": {
+   "all_support_works_authored_by_both": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "all_support_works_resolve": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "edges": 228715,
+   "fully_supported": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "joint_at_least_one": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "support_count_equals_min_joint_cap": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "window_joint_le_all_years": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "window_pair_in_all_years": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   },
+   "with_support_work": {
+    "k": 228715,
+    "n": 228715,
+    "value": 1.0,
+    "wilson95": [
+     0.999983,
+     1.0
+    ]
+   }
+  },
+  "all_years": {
+   "all_support_works_authored_by_both": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "all_support_works_resolve": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "edges": 81181,
+   "fully_supported": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "joint_at_least_one": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "support_count_equals_min_joint_cap": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "window_joint_le_all_years": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "window_pair_in_all_years": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   },
+   "with_support_work": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   }
+  },
+  "all_years_joint_count_recount": {
+   "definition": "stored jointPublicationCount equals the number of distinct works authored (AUTHORED edges) by both endpoints",
+   "first_mismatches": [],
+   "matching": {
+    "k": 81181,
+    "n": 81181,
+    "value": 1.0,
+    "wilson95": [
+     0.999953,
+     1.0
+    ]
+   }
+  },
+  "by_window": {
+   "2010-2014": {
+    "all_support_works_authored_by_both": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "all_support_works_resolve": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "edges": 11795,
+    "fully_supported": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "joint_at_least_one": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "support_count_equals_min_joint_cap": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "window_joint_le_all_years": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "window_pair_in_all_years": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    },
+    "with_support_work": {
+     "k": 11795,
+     "n": 11795,
+     "value": 1.0,
+     "wilson95": [
+      0.999674,
+      1.0
+     ]
+    }
+   },
+   "2015-2019": {
+    "all_support_works_authored_by_both": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "all_support_works_resolve": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "edges": 19326,
+    "fully_supported": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "joint_at_least_one": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "support_count_equals_min_joint_cap": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "window_joint_le_all_years": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "window_pair_in_all_years": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    },
+    "with_support_work": {
+     "k": 19326,
+     "n": 19326,
+     "value": 1.0,
+     "wilson95": [
+      0.999801,
+      1.0
+     ]
+    }
+   },
+   "2020-2026": {
+    "all_support_works_authored_by_both": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "all_support_works_resolve": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "edges": 45020,
+    "fully_supported": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "joint_at_least_one": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "support_count_equals_min_joint_cap": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "window_joint_le_all_years": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "window_pair_in_all_years": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    },
+    "with_support_work": {
+     "k": 45020,
+     "n": 45020,
+     "value": 1.0,
+     "wilson95": [
+      0.999915,
+      1.0
+     ]
+    }
+   },
+   "all-years": {
+    "all_support_works_authored_by_both": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "all_support_works_resolve": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "edges": 81181,
+    "fully_supported": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "joint_at_least_one": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "support_count_equals_min_joint_cap": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "window_joint_le_all_years": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "window_pair_in_all_years": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    },
+    "with_support_work": {
+     "k": 81181,
+     "n": 81181,
+     "value": 1.0,
+     "wilson95": [
+      0.999953,
+      1.0
+     ]
+    }
+   },
+   "since-2015": {
+    "all_support_works_authored_by_both": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "all_support_works_resolve": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "edges": 62785,
+    "fully_supported": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "joint_at_least_one": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "support_count_equals_min_joint_cap": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "window_joint_le_all_years": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "window_pair_in_all_years": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    },
+    "with_support_work": {
+     "k": 62785,
+     "n": 62785,
+     "value": 1.0,
+     "wilson95": [
+      0.999939,
+      1.0
+     ]
+    }
+   },
+   "through-2009": {
+    "all_support_works_authored_by_both": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "all_support_works_resolve": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "edges": 8608,
+    "fully_supported": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "joint_at_least_one": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "support_count_equals_min_joint_cap": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "window_joint_le_all_years": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "window_pair_in_all_years": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    },
+    "with_support_work": {
+     "k": 8608,
+     "n": 8608,
+     "value": 1.0,
+     "wilson95": [
+      0.999554,
+      1.0
+     ]
+    }
+   }
+  }
+ },
+ "threats_to_validity": [
+  "One export (size S, run:ba7402d1-959a-4277-8c6e-e92878a38afa) is checked; the result describes that bounded run, not the full corpus or later runs.",
+  "The checks read the CSV sidecar generated from the same Spark tables by the same job; a defect common to both would not show. The Parquet tables are not read (no stdlib Parquet reader), so the support table and the integrity/violations table are unverified here.",
+  "The audit checks internal consistency (every edge traces to authored works and resolved nodes). It does not check the facts against the original sources (DBLP, OpenAlex, Crossref, ORCID), so a wrong merge made upstream by entity resolution would pass these checks.",
+  "The provenance audit samples 50 coauthor rows with a fixed seed; 50 of 50 resolved, so the Wilson 95% interval of the resolution rate is 92.9%-100.0%, not certainty.",
+  "Window-specific correctness (that a work belongs to the year window of an edge) is not checked: the CSV sidecar carries no work years.",
+  "Known small-graph tests are listed from source, not run by this package; their pass state comes from the recorded full check cited above, which ran on a different tree than the current HEAD."
+ ]
+}

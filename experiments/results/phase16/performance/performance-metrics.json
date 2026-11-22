@@ -1,0 +1,2236 @@
+{
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": "eval16-performance-v1",
+    "used_for": "Q12 answer latency (independent questions) only"
+  },
+  "cost_report": {
+    "anthropic_line": 4,
+    "anthropic_usd_recorded": 0.08,
+    "combined_usd_recorded": 17.96,
+    "environment": "AWS account, whole project (Cost Explorer, credits excluded)",
+    "gap": "The bill is a whole-day, whole-account figure. The ECS/ALB share of the 2026-11-18 load, the cost of one request and the cost per 1,000 requests are GAPS: no per-service, per-hour or per-resource cost export was saved before the stack was destroyed, so the load's own cost cannot be separated from Neptune, EMR and the rest of the day.",
+    "line": 3,
+    "period": [
+      "2026-11-01",
+      "2026-11-20"
+    ],
+    "project_total_usd": 17.88,
+    "service_parts_sum_usd": 2.13,
+    "session_2_day_by_service_usd": {
+      "DynamoDB": 0.19,
+      "EC2-Instances": 0.28,
+      "EC2-Other": 0.44,
+      "ECS": 0.12,
+      "EFS": 0.14,
+      "ELB": 0.05,
+      "EMR": 0.06,
+      "KMS": 0.01,
+      "Neptune": 0.49,
+      "S3": 0.26,
+      "Secrets": 0.03,
+      "VPC": 0.06
+    },
+    "session_2_day_usd": 2.13,
+    "source": "docs/agent-runs/phase-15/evidence/session-2/c11/cost-report.log"
+  },
+  "elasticity_aws_ecs": {
+    "column_meaning": "desired running pending (ECS service counts; the decision log reads the 20:52:55Z line as desired 2 running 1 pending 1)",
+    "configured_cooldown_note": "Scale-in cooldown 300 s and scale-out cooldown 60 s are the configured values in the Terraform policy, recorded in docs/agent-runs/phase-15/owner-report.md (the P41 section, 'Cooldowns: scale-in 300, scale-out 60'); they are configuration, not a measurement.",
+    "dashboard_reading": {
+      "cpu_max_percent": "75.79",
+      "healthy_hosts_1_to_2": "20:54-20:55Z",
+      "healthy_hosts_2_to_1": "21:09-21:10Z",
+      "p99_spike": "5 s",
+      "requests_peak_per_minute": "4.21K",
+      "source": "docs/agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md:65 (human reading of the dashboard clip; not a raw export)"
+    },
+    "environment": "AWS-ECS",
+    "poll_interval_seconds_median": 61.0,
+    "poll_lines_blank": 52,
+    "poll_lines_total": 95,
+    "poll_lines_with_data": 43,
+    "scale_in": {
+      "blank_polls_between": 14,
+      "first_later_poll_with_data": {
+        "line": 38,
+        "state": [
+          1,
+          1,
+          0
+        ],
+        "utc": "2026-11-18T21:15:35Z"
+      },
+      "interpretation_limit": "The desired count fell somewhere inside this bracket (the polls in between are blank); the exact scale-in instant is a GAP. The decision log records a dashboard reading of about 21:09-21:10Z (human-read from a clip, not a raw export).",
+      "last_poll_desired_2": {
+        "line": 23,
+        "utc": "2026-11-18T21:00:02Z"
+      },
+      "scale_in_happened_between_seconds_after_load_stop": [
+        427.517,
+        1360.517
+      ]
+    },
+    "scale_out": {
+      "blank_polls_before_first_data": 14,
+      "desired_2_no_later_than_seconds_after_phase_start": {
+        "hold-50": 37.829,
+        "level-25": 368.933,
+        "level-50": 218.561
+      },
+      "first_poll_desired_2": {
+        "line": 16,
+        "state": [
+          2,
+          1,
+          1
+        ],
+        "utc": "2026-11-18T20:52:55Z"
+      },
+      "first_poll_running_2": {
+        "line": 17,
+        "utc": "2026-11-18T20:53:56Z"
+      },
+      "interpretation_limit": "The polls before the last_poll_with_data_before line are blank, so the instant the desired count changed is unknown; the figures above are upper bounds measured from the poll grid (about 61 s). No CloudWatch alarm history or ECS service-event export was saved: the exact scale-out trigger delay is a GAP.",
+      "last_poll_with_data_before": {
+        "line": 15,
+        "state": [
+          1,
+          1,
+          0
+        ],
+        "utc": "2026-11-18T20:51:54Z"
+      },
+      "task_start_upper_bound_seconds": 61.0
+    },
+    "source": "docs/agent-runs/phase-15/evidence/session-2/b10-load/b10-ecs-poll.log (committed evidence copy; polls were taken by a human-run loop, not a CloudWatch export)"
+  },
+  "emr_cost": {
+    "environment": "AWS-EMR",
+    "hadoop_prep_counters_on_emr": {
+      "ACCEPTED": 515309,
+      "CONFLICT": 0,
+      "DUPLICATE": 0,
+      "EMITTED_PAIR": 243321,
+      "INPUT": 290343,
+      "MISSING_KEY": 0,
+      "OVERSIZE_BLOCK": 517,
+      "OVERSIZE_TEAM": 63,
+      "REJECTED": 1243,
+      "SCHEMA_FAILURE": 21
+    },
+    "ledger_actual_lines": [
+      {
+        "hourly_usd": 0.555,
+        "line": 9,
+        "measured_usd_recomputed": 0.37,
+        "measured_usd_recorded": 0.37,
+        "reserved_estimate_usd": 0.84,
+        "run": "15a-emr-size-100-20261118T163203Z-87466",
+        "seconds": 2377.157,
+        "tail_seconds": 0,
+        "window_end_utc": "2026-11-18T17:06:31.418000Z",
+        "window_start_utc": "2026-11-18T16:26:54.261000Z"
+      }
+    ],
+    "note": "The first record (window end 16:56:18Z) is superseded by the second (cluster end 17:06:31Z); the billed window includes idle time after the failed Spark step.",
+    "source": "docs/agent-runs/phase-15/evidence/session-2/emr/emr-actual-1end.log"
+  },
+  "emr_steps": {
+    "environment": "AWS-EMR",
+    "interpretation_limit": "Only submission instants are logged (the step runtime is not read from the EMR console), so a step time is the gap to the next submission or to the failure line: an upper bound that includes the poll interval and one pre-spend receipt check. The Spark job failed with 'Unknown Error.' (s1-spark-failure.json), so EMR has no Spark runtime to report.",
+    "source": "docs/agent-runs/phase-15/evidence/session-2/emr/emr-run-1.log",
+    "steps": [
+      {
+        "next_event_utc": "2026-11-18T16:32:40Z",
+        "seconds_submit_to_next_event": 32.0,
+        "state": "COMPLETED",
+        "state_line": 112,
+        "step": "stage-in",
+        "submitted_line": 107,
+        "submitted_utc": "2026-11-18T16:32:08Z"
+      },
+      {
+        "next_event_utc": "2026-11-18T16:40:50Z",
+        "seconds_submit_to_next_event": 490.0,
+        "state": "COMPLETED",
+        "state_line": 135,
+        "step": "hadoop-prep",
+        "submitted_line": 115,
+        "submitted_utc": "2026-11-18T16:32:40Z"
+      },
+      {
+        "next_event_utc": "2026-11-18T16:46:58Z",
+        "seconds_submit_to_next_event": 368.0,
+        "state": "COMPLETED",
+        "state_line": 154,
+        "step": "entity-resolution",
+        "submitted_line": 138,
+        "submitted_utc": "2026-11-18T16:40:50Z"
+      },
+      {
+        "next_event_utc": "2026-11-18T16:48:00Z",
+        "seconds_submit_to_next_event": 62.0,
+        "state": "COMPLETED",
+        "state_line": 163,
+        "step": "spark-class-origin",
+        "submitted_line": 157,
+        "submitted_utc": "2026-11-18T16:46:58Z"
+      },
+      {
+        "next_event_utc": "2026-11-18T16:48:32Z",
+        "seconds_submit_to_next_event": 32.0,
+        "state": "FAILED",
+        "state_line": 171,
+        "step": "spark-job",
+        "submitted_line": 166,
+        "submitted_utc": "2026-11-18T16:48:00Z"
+      }
+    ]
+  },
+  "emr_vs_local_same_input": {
+    "hadoop_counters_equal_emr_vs_local": true,
+    "hadoop_prep_input_records": 290343,
+    "hadoop_prep_records_per_second_emr_lower_bound": 592.537,
+    "hadoop_prep_records_per_second_local": 7904.792,
+    "interpretation_limit": "Descriptive only: one EMR run (2 nodes, the second node r5.xlarge primary) against one laptop run; EMR time includes YARN start-up and S3/EFS staging, the laptop uses local files. No scaling claim (speed-up with node count) can be made: only one cluster size was ever completed.",
+    "local_commit": "bd0b8180b919ed61f6234fa515f4c07d1137a641",
+    "local_reference_run": "p6-S-20261117T182210Z",
+    "rows": [
+      {
+        "emr_over_local": 266.667,
+        "emr_seconds_upper_bound": 32.0,
+        "emr_state": "COMPLETED",
+        "local_wall_seconds": 0.12,
+        "step": "stage-in"
+      },
+      {
+        "emr_over_local": 13.341,
+        "emr_seconds_upper_bound": 490.0,
+        "emr_state": "COMPLETED",
+        "local_wall_seconds": 36.73,
+        "step": "hadoop-prep"
+      },
+      {
+        "emr_over_local": 3.806,
+        "emr_seconds_upper_bound": 368.0,
+        "emr_state": "COMPLETED",
+        "local_wall_seconds": 96.7,
+        "step": "entity-resolution"
+      },
+      {
+        "emr_over_local": 21.528,
+        "emr_seconds_upper_bound": 62.0,
+        "emr_state": "COMPLETED",
+        "local_wall_seconds": 2.88,
+        "step": "spark-class-origin"
+      },
+      {
+        "emr_over_local": null,
+        "emr_seconds_upper_bound": 32.0,
+        "emr_state": "FAILED",
+        "local_wall_seconds": 362.87,
+        "step": "spark-job"
+      }
+    ]
+  },
+  "failure_recovery_aws_ecs": {
+    "cross_check_decision_log_round_1_seconds": 113,
+    "cross_check_round_1": "MATCH",
+    "environment": "AWS-ECS",
+    "interpretation_limit": "Recovery is measured with a probe every ~5 s on the public ALB host (healthz and readyz), so it carries about +/-5 s resolution. Two stop-task calls took effect; the call logged between them was a repeat on an already-stopped task (decision log) and shows no outage. Two events are not a distribution: no percentile is given.",
+    "probe_count": 114,
+    "probe_interval_seconds_max": 30,
+    "probe_interval_seconds_median": 6,
+    "source": "docs/agent-runs/phase-15/evidence/session-2/b35-failure/p11-failure.log",
+    "stop_task_events": [
+      {
+        "first_non_200_probe": {
+          "healthz": 503,
+          "line": 22,
+          "readyz": 503,
+          "utc_time": "21:38:37Z"
+        },
+        "first_probe_with_both_200_after": {
+          "line": 31,
+          "utc_time": "21:39:48Z"
+        },
+        "healthz_codes_during_outage": [
+          200,
+          502,
+          503
+        ],
+        "last_non_200_probe_utc_time": "21:39:41Z",
+        "non_200_probes": 9,
+        "observed_outage_seconds_first_bad_to_first_good": 71,
+        "readyz_codes_during_outage": [
+          502,
+          503
+        ],
+        "stop_record": "DEACTIVATING\tSTOPPED\tSession 2 failure example (P11)",
+        "stop_task_logged_line": 13,
+        "stop_task_utc_time": "21:37:55Z",
+        "stop_to_first_bad_seconds": 42,
+        "stop_to_recovery_seconds": 113
+      },
+      {
+        "observed": "no non-200 probe within 180 s of the stop",
+        "stop_record": "DEACTIVATING\tSTOPPED\tSession 2 failure example (P11)",
+        "stop_task_logged_line": 46,
+        "stop_task_utc_time": "21:41:16Z"
+      },
+      {
+        "first_non_200_probe": {
+          "healthz": 503,
+          "line": 93,
+          "readyz": 503,
+          "utc_time": "21:45:40Z"
+        },
+        "first_probe_with_both_200_after": {
+          "line": 101,
+          "utc_time": "21:46:27Z"
+        },
+        "healthz_codes_during_outage": [
+          200,
+          502,
+          503
+        ],
+        "last_non_200_probe_utc_time": "21:46:20Z",
+        "non_200_probes": 8,
+        "observed_outage_seconds_first_bad_to_first_good": 47,
+        "readyz_codes_during_outage": [
+          502,
+          503
+        ],
+        "stop_record": "DEACTIVATING\tSTOPPED\tSession 2 failure example (P11), recorded",
+        "stop_task_logged_line": 88,
+        "stop_task_utc_time": "21:45:19Z",
+        "stop_to_first_bad_seconds": 21,
+        "stop_to_recovery_seconds": 68
+      }
+    ]
+  },
+  "gaps": [
+    {
+      "metric": "scale-out trigger delay and scale-in delay as single numbers",
+      "reason": "ECS polls were blank (credential failure) before 20:51:54Z and between 21:00:02Z and 21:15:35Z, and no CloudWatch alarm history or service-event export was saved; only brackets are reported."
+    },
+    {
+      "metric": "throughput and latency at 2 tasks versus 1 task",
+      "reason": "the 2026-11-18 run was aborted by the load generator's 5xx guard at 20:52:49Z, about 32 s into hold-50, before the second task was running; no complete level was measured on 2 tasks."
+    },
+    {
+      "metric": "p50/p95/p99 over repeated AWS load runs",
+      "reason": "one AWS load run exists (the stack was destroyed); no repeat, so no run-to-run interval."
+    },
+    {
+      "metric": "recomputation of the P35 local-rehearsal rows from the repository",
+      "reason": "its raw requests.jsonl (83 MB) is NOT frozen in the repository (hash-only: the sha256 is in the committed raw.sha256) and stays on the laptop, so those rows regenerate only on that machine; the committed harness summary under docs/agent-runs/phase-15/evidence/p35 is the repository record. The AWS rb-20261118 raw (11 MB) is in the repository under experiments/results/phase16/performance/raw-rb-20261118 (hash-verified), but the script still needs the git-ignored P35 and P6 inputs, so a clean clone cannot rerun it."
+    },
+    {
+      "metric": "cooldown-observe phase (1,800 s) result",
+      "reason": "skipped after the abort (events.jsonl phase-skipped)."
+    },
+    {
+      "metric": "cost of the ECS/ALB load, cost per request",
+      "reason": "see cost_report.gap."
+    },
+    {
+      "metric": "EMR scaling (speed-up versus node count) and Spark runtime on EMR",
+      "reason": "only one EMR size-100 run reached the Spark step and it failed ('Unknown Error.'); the five size-25 runs of 2026-11-14 (Session 1) ended with exit codes 3, 5, 5, 5, 4 in their experiment-result.json files and produced no Hadoop counters (the owner report records hadoop-prep failing after 10 s on a missing config reference, docs/agent-runs/phase-15/owner-report.md line 2124); no EMR cluster size was completed end to end."
+    },
+    {
+      "metric": "Neptune and DynamoDB request latency under load",
+      "reason": "no per-store latency export exists in the repository (only the aborted semantic-route run was executed; the graph routes were dropped: no node_ids supplied)."
+    }
+  ],
+  "inputs_sha256": {
+    "docs/agent-runs/phase-15/evidence/p35/loadgen/raw/raw.sha256": "d13f2a51ccd1edb6bf67245945d7b1800c4a06175ff2f72a3213a502db0a71e4",
+    "docs/agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md": "4f819c61801742de628caabe8a768cbe24e156fe19a7525a4f61cd37ca03cf69",
+    "docs/agent-runs/phase-15/evidence/session-2/b10-load/b10-ecs-poll.log": "23c4e02aba78f7983f175e4fc084f29d2da35205fef40ee6cf5023efb4e48460",
+    "docs/agent-runs/phase-15/evidence/session-2/b35-failure/p11-failure.log": "e091750d7afc71df98029840266ee5dae086c6a7835231e2a4563622a0182cf0",
+    "docs/agent-runs/phase-15/evidence/session-2/emr/emr-actual-1end.log": "74e7b2e0bb89842359675a08d1858d47933cfa202675dcbff2cb5be715b453b0",
+    "docs/agent-runs/phase-15/evidence/session-2/emr/emr-run-1.log": "4f0015a16fde0b8c14d6176b52b6c1dbedc1da07784442ad9214303f475eeb83",
+    "docs/agent-runs/phase-15/evidence/session-2/emr/hadoop-prep-counters.txt": "6698639ba02f95209d0c5d62b7d9cb8fe14dde1dcb74220bc6a7ad9a06875760",
+    "llm-run 16b-live-evaluation-16b-1/answers.jsonl": "80fc2d7748f2462b9b092b8e87a201d502946fd57253a533ffa9aee51676c8e2",
+    "llm-run 16b-live-evaluation-16b-1/run-record.json": "7954aaf8ea8db81df5db007a96eb02f4b1fd6ba744daddf85e417616761d8a0d",
+    "llm-run q12-benchmark-q12-probe-1/answers.jsonl": "8bee803c3e5edfbd0bfddc8cd27b4676c8464751748d6ad5d3584c8dff274061",
+    "llm-run q12-benchmark-q12-probe-1/run-record.json": "e1273b296d4ac3706f4cdf112dde2a250942150a4243e59972dce18214bc02c8",
+    "llm-run q12-benchmark-q12-probe-2/answers.jsonl": "3780040aa84da640ba1cf05ba2e64a049eb13b785c5ccb4c105b00114db1c939",
+    "llm-run q12-benchmark-q12-probe-2/run-record.json": "920772f53c20fefa19c4885638903aeb89edfd683414800aaef0590b7339244e",
+    "llm-run q12-benchmark-q12-run-1/answers.jsonl": "723b5e59ac771231daf714568090a02fb2d255822595ca2546130e6c375cdab4",
+    "llm-run q12-benchmark-q12-run-1/run-record.json": "2ee64dec5cd6ddcd91f12f17aba974fddf96138d846b7e130357da59a195cd90",
+    "llm-run q12-benchmark-q12-run-2/answers.jsonl": "11f63e6d7fd57b887d950908d429c4adc192ec76fc46d22a3ad4b4df184608e2",
+    "llm-run q12-benchmark-q12-run-2/run-record.json": "5c5661c766ae0ec99ef3bcb6405cb2270885564a2c713c750e688680cc66f118",
+    "load-tests/config/load-profile.v1.json": "0dc1cad98ed3b184d55e153d799195b241aac825b99c87a6ab0c9150a8a27858",
+    "p35-local-1 harness summary.csv": "1bffce2fe6a8b215741b56302f19541ecee0d8b70e6243321b6d5cd6285932af",
+    "p35-local-1 raw/events.jsonl": "df63c297489dc18d93affa39127c1b3c2875749cf6b7981bf1e41f7d62a92a56",
+    "p35-local-1 raw/requests.jsonl": "a66a467221c47aa6184be19112899f4dbe25ae9eac52681b1f33226a474c5bd7",
+    "p35-local-1 raw/run-record.json": "5e89febd33672179b7968d2cec9d6dc07dc1ca7fed75a208cd8b1dc14f64c62b",
+    "rb-20261118 harness summary.csv": "bb0c51a28d16497aa3fdfe4393cbdf3864fcee8f512275e6372bd73bcdf99424",
+    "rb-20261118 raw/events.jsonl": "8dddf6a35739018cabf71bc81360e3f4d13717d6e41e969c40c3116b12f0f3e5",
+    "rb-20261118 raw/raw.sha256": "e951e7dd05057da7bc083eb7a612fd3d7b1a53bc13618b3ff8d67ebcade00511",
+    "rb-20261118 raw/requests.jsonl": "1d1cce8bc01be098ac0c8f830b5a62412ade945912a2820ecf1e331b24f37a6a",
+    "rb-20261118 raw/run-record.json": "a645b2fd5a52c5edc7adf3a93ac38389d42d442178eb2d024bfdc5b772d3a5fd",
+    "target/phase15/p6/l-bypass/run-L.out": "b32229986ff7f48f72e26aa9542b8a5fafc6e7deebbf6715f46c7d1872387682",
+    "target/phase15/p6/l-bypass/run-S.out": "81c67125f3322151c737961a04184f05e37438e3dad83b0bd7da549ff504a5fa",
+    "target/phase15/p6/work/p6-L-20261116T161356Z/evidence/summary.json": "bd640dfe47dcf823d233f5ee0cd10dbb4e4dc7e233347873f1cf81ea2858ad5e",
+    "target/phase15/p6/work/p6-L-20261116T161657Z/evidence/summary.json": "89470632c1ca36668e8c62a19079bee037ecb032ea106660f5e9a120042b5f15",
+    "target/phase15/p6/work/p6-L-20261116T162641Z/evidence/summary.json": "fce9b346cfd3138535177888278b54f54c5b066039b7537470203f8dbd0cedb0",
+    "target/phase15/p6/work/p6-S-20261116T155022Z/evidence/summary.json": "80a8641171a25d7f7dfb41875b558d5b619b3ca926562d774f5281d565fe89a1",
+    "target/phase15/p6/work/p6-S-20261116T155228Z/evidence/summary.json": "df5b61f8ac478c764f0f03227239d0b7324e7249619d990871d59e9c708d21f3",
+    "target/phase15/p6/work/p6-S-20261116T155351Z/evidence/summary.json": "a873265f97145ac10aab06dc7ee325f214a65fcdd4e072b3a69637bf8c2b2d2f",
+    "target/phase15/p6/work/p6-S-20261116T155610Z/evidence/summary.json": "19c52f75185c60c4c786bc20ad91cbecafc3ea0644d91fa9fbe849925569fcf2",
+    "target/phase15/p6/work/p6-S-20261116T155849Z/evidence/summary.json": "d674b941e84646eff2774b06e5d50e1fb3558647788dcdb3b513221a290196a0",
+    "target/phase15/p6/work/p6-S-20261116T160144Z/evidence/summary.json": "12ce800b7bf302413fd4c1f7aef52ae2ebee42f23179be9aa6a6ef5ec3996d0e",
+    "target/phase15/p6/work/p6-S-20261116T160455Z/evidence/summary.json": "b4b5d5cbc9bbfa13449fab5cdd9e8b73117c1a158853db9a3eb2ac1fbe19657d",
+    "target/phase15/p6/work/p6-S-20261116T164523Z/evidence/summary.json": "8c12583f3e82b766c41724506d6f90924e02e570b64da6a46d02699c11b7b1b1",
+    "target/phase15/p6/work/p6-S-20261116T170028Z/evidence/summary.json": "d1924bc038622032a3e8d995bcc5f78766c06f28a2de7013f04102b00e68bbc9",
+    "target/phase15/p6/work/p6-S-20261116T171431Z/evidence/summary.json": "abe9e65304d649875843fe50f4794e0a54a83bc0cdc62cc4f577f82ae475343f",
+    "target/phase15/p6/work/p6-S-20261117T053104Z/evidence/summary.json": "4f8ae0dc42536b7f389147ace99cfbdaafc06a723c692693dfdca4ac4accaba4",
+    "target/phase15/p6/work/p6-S-20261117T053800Z/evidence/summary.json": "b341cacfab99dc89727b8f5dcba37793cdc19dd78ac14c3a90dbf5933ceb015d",
+    "target/phase15/p6/work/p6-S-20261117T182210Z/evidence/summary.json": "ffbf7472d98b66a9893ffa388433ae2876ba1a8acae7645071d2e02da4675dc2"
+  },
+  "llm_answer_latency": {
+    "note": "Q12 answers include a live Anthropic call and the graph retrieval; the loopback client is the same machine as the service. The probe runs are one answer each. The p50 bootstrap interval resamples these questions only: it describes this question mix (answered, abstained and refused questions together), not a population of questions.",
+    "paired_q12": {
+      "median_diff_bootstrap_95ci": [
+        288.158,
+        1332.118
+      ],
+      "median_diff_ms_second_minus_first": 544.973,
+      "note": "The two runs ask the same 33 questions at different commits (ec675d5 and 827fcd5), after planner and service changes: they are different code, not repeats. Run-to-run variability is therefore not measured, and the difference is not a causal estimate.",
+      "pair": [
+        "q12-run-1",
+        "q12-run-2"
+      ],
+      "questions": 33,
+      "share_second_slower": 0.909
+    },
+    "rates_usd_per_million_tokens": {
+      "input": 0.1,
+      "output": 0.5,
+      "source": "load-tests/config/load-profile.v1.json"
+    },
+    "runs": [
+      {
+        "answers_charged": 1,
+        "commit": "ec675d562d9e923f36885d8dc9bd27c04d59b719",
+        "ended_utc": "2026-11-20T21:33:13.623Z",
+        "environment": "LOCAL-LOOPBACK-LLM",
+        "latency_ms_all": {
+          "max": 3908.74,
+          "min": 3908.74,
+          "n": 1,
+          "p50": 3908.74,
+          "p50_bootstrap_95ci": null,
+          "p95": 3908.74,
+          "p99": 3908.74
+        },
+        "latency_ms_ok_only": {
+          "n": 1,
+          "p50": 3908.74,
+          "p95": 3908.74,
+          "p99": 3908.74
+        },
+        "outcome": "completed",
+        "outcomes": {
+          "ok": 1
+        },
+        "questions": 1,
+        "run_id": "q12-probe-1",
+        "run_record_estimated_usd": "0.001365",
+        "server_failure_rate": 0.0,
+        "server_failures_5xx_or_transport": 0,
+        "server_reported_synthesis_latency_ms": {
+          "n": 1,
+          "p50": 2044,
+          "p95": 2044
+        },
+        "source": "raw/answers.jsonl and raw/run-record.json of target/experiment-runs/q12-benchmark-q12-probe-1 (frozen copy: experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-1)",
+        "started_utc": "2026-11-20T21:33:09.576Z",
+        "status_codes": {
+          "200": 1
+        },
+        "synthesis_token_usage": {
+          "answers_with_recorded_usage": 1,
+          "estimated_usd_at_pinned_rates": 0.002868,
+          "input_tokens": 27359,
+          "output_tokens": 264
+        },
+        "target_loopback": true
+      },
+      {
+        "answers_charged": 1,
+        "commit": "827fcd5a425c6da65143c3460f36e00673772fc3",
+        "ended_utc": "2026-11-21T17:07:23.675Z",
+        "environment": "LOCAL-LOOPBACK-LLM",
+        "latency_ms_all": {
+          "max": 3700.17,
+          "min": 3700.17,
+          "n": 1,
+          "p50": 3700.17,
+          "p50_bootstrap_95ci": null,
+          "p95": 3700.17,
+          "p99": 3700.17
+        },
+        "latency_ms_ok_only": {
+          "n": 1,
+          "p50": 3700.17,
+          "p95": 3700.17,
+          "p99": 3700.17
+        },
+        "outcome": "completed",
+        "outcomes": {
+          "ok": 1
+        },
+        "questions": 1,
+        "run_id": "q12-probe-2",
+        "run_record_estimated_usd": "0.001365",
+        "server_failure_rate": 0.0,
+        "server_failures_5xx_or_transport": 0,
+        "server_reported_synthesis_latency_ms": {
+          "n": 1,
+          "p50": 1797,
+          "p95": 1797
+        },
+        "source": "raw/answers.jsonl and raw/run-record.json of target/experiment-runs/q12-benchmark-q12-probe-2 (frozen copy: experiments/results/phase16/q12-raw/q12-benchmark-q12-probe-2)",
+        "started_utc": "2026-11-21T17:07:19.965Z",
+        "status_codes": {
+          "200": 1
+        },
+        "synthesis_token_usage": {
+          "answers_with_recorded_usage": 1,
+          "estimated_usd_at_pinned_rates": 0.000639,
+          "input_tokens": 5044,
+          "output_tokens": 270
+        },
+        "target_loopback": true
+      },
+      {
+        "answers_charged": 33,
+        "commit": "ec675d562d9e923f36885d8dc9bd27c04d59b719",
+        "ended_utc": "2026-11-20T21:36:40.865Z",
+        "environment": "LOCAL-LOOPBACK-LLM",
+        "latency_ms_all": {
+          "max": 4742.518,
+          "min": 1605.857,
+          "n": 33,
+          "p50": 3002.443,
+          "p50_bootstrap_95ci": [
+            1716.664,
+            3140.368
+          ],
+          "p95": 4731.616,
+          "p99": 4742.518
+        },
+        "latency_ms_ok_only": {
+          "n": 23,
+          "p50": 3066.722,
+          "p95": 4731.616,
+          "p99": 4742.518
+        },
+        "outcome": "completed",
+        "outcomes": {
+          "client_error": 4,
+          "expected_refusal": 6,
+          "ok": 23
+        },
+        "questions": 33,
+        "run_id": "q12-run-1",
+        "run_record_estimated_usd": "0.045045",
+        "server_failure_rate": 0.0,
+        "server_failures_5xx_or_transport": 0,
+        "server_reported_synthesis_latency_ms": {
+          "n": 23,
+          "p50": 1401,
+          "p95": 1580
+        },
+        "source": "raw/answers.jsonl and raw/run-record.json of target/experiment-runs/q12-benchmark-q12-run-1 (frozen copy: experiments/results/phase16/q12-raw/q12-benchmark-q12-run-1)",
+        "started_utc": "2026-11-20T21:34:35.759Z",
+        "status_codes": {
+          "200": 23,
+          "422": 10
+        },
+        "synthesis_token_usage": {
+          "answers_with_recorded_usage": 15,
+          "estimated_usd_at_pinned_rates": 0.015367,
+          "input_tokens": 129959,
+          "output_tokens": 4742
+        },
+        "target_loopback": true
+      },
+      {
+        "answers_charged": 33,
+        "commit": "827fcd5a425c6da65143c3460f36e00673772fc3",
+        "ended_utc": "2026-11-21T17:11:05.721Z",
+        "environment": "LOCAL-LOOPBACK-LLM",
+        "latency_ms_all": {
+          "max": 7916.488,
+          "min": 1576.087,
+          "n": 33,
+          "p50": 3396.397,
+          "p50_bootstrap_95ci": [
+            3193.561,
+            3615.787
+          ],
+          "p95": 7076.662,
+          "p99": 7916.488
+        },
+        "latency_ms_ok_only": {
+          "n": 24,
+          "p50": 3459.885,
+          "p95": 7076.662,
+          "p99": 7916.488
+        },
+        "outcome": "completed",
+        "outcomes": {
+          "client_error": 2,
+          "expected_refusal": 6,
+          "ok": 24,
+          "server_error": 1
+        },
+        "questions": 33,
+        "run_id": "q12-run-2",
+        "run_record_estimated_usd": "0.045045",
+        "server_failure_rate": 0.030303,
+        "server_failures_5xx_or_transport": 1,
+        "server_reported_synthesis_latency_ms": {
+          "n": 24,
+          "p50": 1618,
+          "p95": 2561
+        },
+        "source": "raw/answers.jsonl and raw/run-record.json of target/experiment-runs/q12-benchmark-q12-run-2 (frozen copy: experiments/results/phase16/q12-raw/q12-benchmark-q12-run-2)",
+        "started_utc": "2026-11-21T17:08:30.609Z",
+        "status_codes": {
+          "200": 24,
+          "422": 8,
+          "504": 1
+        },
+        "synthesis_token_usage": {
+          "answers_with_recorded_usage": 23,
+          "estimated_usd_at_pinned_rates": 0.020661,
+          "input_tokens": 171414,
+          "output_tokens": 7039
+        },
+        "target_loopback": true
+      },
+      {
+        "answers_charged": 40,
+        "commit": "b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64",
+        "ended_utc": "2026-11-14T21:21:35.716Z",
+        "environment": "AWS-ECS-LLM",
+        "latency_ms_all": {
+          "max": 8582.307,
+          "min": 1820.659,
+          "n": 40,
+          "p50": 2582.504,
+          "p50_bootstrap_95ci": [
+            2323.254,
+            3600.209
+          ],
+          "p95": 6741.923,
+          "p99": 8582.307
+        },
+        "latency_ms_ok_only": {
+          "n": 39,
+          "p50": 2582.504,
+          "p95": 7910.491,
+          "p99": 8582.307
+        },
+        "outcome": "completed",
+        "outcomes": {
+          "client_error": 1,
+          "ok": 39
+        },
+        "questions": 40,
+        "run_id": "16b-1",
+        "run_record_estimated_usd": "0.054600",
+        "server_failure_rate": 0.0,
+        "server_failures_5xx_or_transport": 0,
+        "server_reported_synthesis_latency_ms": null,
+        "source": "raw/answers.jsonl and raw/run-record.json of target/experiment-runs/16b-live-evaluation-16b-1 (frozen copy: experiments/results/phase16/q12-raw/16b-live-evaluation-16b-1)",
+        "started_utc": "2026-11-14T21:18:35.459Z",
+        "status_codes": {
+          "200": 39,
+          "422": 1
+        },
+        "synthesis_token_usage": null,
+        "target_loopback": false
+      }
+    ]
+  },
+  "load_aws_ecs": {
+    "commit": "bd0b8180b919ed61f6234fa515f4c07d1137a641",
+    "ended_utc": "2026-11-18T20:52:54.484Z",
+    "environment": "AWS-ECS",
+    "error_burst": {
+      "error_latency_ms": {
+        "max": 10004.666,
+        "median": 5081.844,
+        "min": 68.677
+      },
+      "errors": 67,
+      "errors_per_second": {
+        "2026-11-18T20:52:44": 49,
+        "2026-11-18T20:52:49": 18
+      },
+      "first_error_started_utc": "2026-11-18T20:52:44.209Z",
+      "last_error_started_utc": "2026-11-18T20:52:49.770Z",
+      "outcomes": {
+        "server_error": 65,
+        "timeout": 2
+      },
+      "phase": "hold-50",
+      "status_codes": {
+        "0": 2,
+        "503": 49,
+        "504": 16
+      }
+    },
+    "llm_enabled": false,
+    "outcome": "aborted",
+    "outcome_reason": "repeated-5xx-or-transport-failures",
+    "per_minute": [
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 1,
+        "minute_utc": "2026-11-18T20:43:00Z",
+        "p95_ms": 425.389,
+        "phase": "warmup",
+        "requests": 87
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 1,
+        "minute_utc": "2026-11-18T20:44:00Z",
+        "p95_ms": 188.594,
+        "phase": "baseline-1",
+        "requests": 390
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 1,
+        "minute_utc": "2026-11-18T20:44:00Z",
+        "p95_ms": 355.194,
+        "phase": "warmup",
+        "requests": 63
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 1,
+        "minute_utc": "2026-11-18T20:45:00Z",
+        "p95_ms": 197.208,
+        "phase": "baseline-1",
+        "requests": 210
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 5,
+        "minute_utc": "2026-11-18T20:45:00Z",
+        "p95_ms": 256.349,
+        "phase": "level-5",
+        "requests": 1265
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 25,
+        "minute_utc": "2026-11-18T20:46:00Z",
+        "p95_ms": 525.995,
+        "phase": "level-25",
+        "requests": 920
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 5,
+        "minute_utc": "2026-11-18T20:46:00Z",
+        "p95_ms": 220.646,
+        "phase": "level-5",
+        "requests": 1735
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 25,
+        "minute_utc": "2026-11-18T20:47:00Z",
+        "p95_ms": 731.883,
+        "phase": "level-25",
+        "requests": 3019
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 25,
+        "minute_utc": "2026-11-18T20:48:00Z",
+        "p95_ms": 639.795,
+        "phase": "level-25",
+        "requests": 3563
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 25,
+        "minute_utc": "2026-11-18T20:49:00Z",
+        "p95_ms": 467.564,
+        "phase": "level-25",
+        "requests": 1111
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-18T20:49:00Z",
+        "p95_ms": 814.977,
+        "phase": "level-50",
+        "requests": 3072
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-18T20:50:00Z",
+        "p95_ms": 814.435,
+        "phase": "level-50",
+        "requests": 4215
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-18T20:51:00Z",
+        "p95_ms": 833.77,
+        "phase": "level-50",
+        "requests": 4177
+      },
+      {
+        "errors_5xx_or_transport": 67,
+        "level": 50,
+        "minute_utc": "2026-11-18T20:52:00Z",
+        "p95_ms": 815.533,
+        "phase": "hold-50",
+        "requests": 2024
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-18T20:52:00Z",
+        "p95_ms": 861.648,
+        "phase": "level-50",
+        "requests": 1111
+      }
+    ],
+    "phases": [
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-18T20:44:17.212Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 150,
+          "p50": 257.893,
+          "p95": 402.832,
+          "p99": 688.039
+        },
+        "latency_ms_all_responses": {
+          "max": 2703.04,
+          "n": 150,
+          "p50": 257.893,
+          "p95": 402.832,
+          "p99": 688.039
+        },
+        "level": 1,
+        "outcomes": {
+          "ok": 150
+        },
+        "peak_success_rps_1s": 5,
+        "phase": "warmup",
+        "rate_limited_429": 0,
+        "requests": 150,
+        "seconds": 44.314,
+        "served": 150,
+        "started_utc": "2026-11-18T20:43:32.898Z",
+        "status_codes": {
+          "200": 150
+        },
+        "success_rps": 3.385,
+        "successful": 150,
+        "throughput_rps": 3.385
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-18T20:45:23.066Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 600,
+          "p50": 98.865,
+          "p95": 193.556,
+          "p99": 244.924
+        },
+        "latency_ms_all_responses": {
+          "max": 515.005,
+          "n": 600,
+          "p50": 98.865,
+          "p95": 193.556,
+          "p99": 244.924
+        },
+        "level": 1,
+        "outcomes": {
+          "ok": 600
+        },
+        "peak_success_rps_1s": 13,
+        "phase": "baseline-1",
+        "rate_limited_429": 0,
+        "requests": 600,
+        "seconds": 65.854,
+        "served": 600,
+        "started_utc": "2026-11-18T20:44:17.212Z",
+        "status_codes": {
+          "200": 600
+        },
+        "success_rps": 9.111,
+        "successful": 600,
+        "throughput_rps": 9.111
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-18T20:46:46.064Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 3000,
+          "p50": 123.483,
+          "p95": 234.663,
+          "p99": 300.675
+        },
+        "latency_ms_all_responses": {
+          "max": 715.476,
+          "n": 3000,
+          "p50": 123.483,
+          "p95": 234.663,
+          "p99": 300.675
+        },
+        "level": 5,
+        "outcomes": {
+          "ok": 3000
+        },
+        "peak_success_rps_1s": 54,
+        "phase": "level-5",
+        "rate_limited_429": 0,
+        "requests": 3000,
+        "seconds": 82.998,
+        "served": 3000,
+        "started_utc": "2026-11-18T20:45:23.066Z",
+        "status_codes": {
+          "200": 3000
+        },
+        "success_rps": 36.145,
+        "successful": 3000,
+        "throughput_rps": 36.145
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-18T20:49:16.436Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 8613,
+          "p50": 409.728,
+          "p95": 674.098,
+          "p99": 800.243
+        },
+        "latency_ms_all_responses": {
+          "max": 1041.948,
+          "n": 8613,
+          "p50": 409.728,
+          "p95": 674.098,
+          "p99": 800.243
+        },
+        "level": 25,
+        "outcomes": {
+          "ok": 8613
+        },
+        "peak_success_rps_1s": 78,
+        "phase": "level-25",
+        "rate_limited_429": 0,
+        "requests": 8613,
+        "seconds": 150.369,
+        "served": 8613,
+        "started_utc": "2026-11-18T20:46:46.067Z",
+        "status_codes": {
+          "200": 8613
+        },
+        "success_rps": 57.279,
+        "successful": 8613,
+        "throughput_rps": 57.279
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-18T20:52:17.167Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 12575,
+          "p50": 733.056,
+          "p95": 826.71,
+          "p99": 899.765
+        },
+        "latency_ms_all_responses": {
+          "max": 1300.037,
+          "n": 12575,
+          "p50": 733.056,
+          "p95": 826.71,
+          "p99": 899.765
+        },
+        "level": 50,
+        "outcomes": {
+          "ok": 12575
+        },
+        "peak_success_rps_1s": 80,
+        "phase": "level-50",
+        "rate_limited_429": 0,
+        "requests": 12575,
+        "seconds": 180.728,
+        "served": 12575,
+        "started_utc": "2026-11-18T20:49:16.439Z",
+        "status_codes": {
+          "200": 12575
+        },
+        "success_rps": 69.58,
+        "successful": 12575,
+        "throughput_rps": 69.58
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-18T20:52:54.483Z",
+        "error_rate_5xx_or_transport": 0.033103,
+        "failures_5xx_or_transport": 67,
+        "latency_ms_2xx": {
+          "n": 1957,
+          "p50": 725.415,
+          "p95": 800.419,
+          "p99": 845.282
+        },
+        "latency_ms_all_responses": {
+          "max": 5548.409,
+          "n": 2022,
+          "p50": 726.025,
+          "p95": 815.533,
+          "p99": 5189.981
+        },
+        "level": 50,
+        "outcomes": {
+          "ok": 1957,
+          "server_error": 65,
+          "timeout": 2
+        },
+        "peak_success_rps_1s": 92,
+        "phase": "hold-50",
+        "rate_limited_429": 0,
+        "requests": 2024,
+        "seconds": 37.312,
+        "served": 2024,
+        "started_utc": "2026-11-18T20:52:17.171Z",
+        "status_codes": {
+          "0": 2,
+          "200": 1957,
+          "503": 49,
+          "504": 16
+        },
+        "success_rps": 52.45,
+        "successful": 1957,
+        "throughput_rps": 54.245
+      }
+    ],
+    "raw_sha256_verified": {
+      "events.jsonl": "8dddf6a35739018cabf71bc81360e3f4d13717d6e41e969c40c3116b12f0f3e5",
+      "requests.jsonl": "1d1cce8bc01be098ac0c8f830b5a62412ade945912a2820ecf1e331b24f37a6a",
+      "run-record.json": "a645b2fd5a52c5edc7adf3a93ac38389d42d442178eb2d024bfdc5b772d3a5fd"
+    },
+    "routes": [
+      "healthz",
+      "readyz",
+      "metrics",
+      "semantic"
+    ],
+    "run_id": "rb-20261118",
+    "started_utc": "2026-11-18T20:43:32.897Z",
+    "target_host": "withheld",
+    "target_loopback": false,
+    "total_outcomes": {
+      "ok": 26895,
+      "server_error": 65,
+      "timeout": 2
+    },
+    "total_requests": 26962,
+    "tree_dirty": false
+  },
+  "load_local_loopback_docker": {
+    "commit": "f801d28fb18a600fa1ba70439fb7799f5df6dea2",
+    "ended_utc": "2026-11-16T22:09:39.506Z",
+    "environment": "LOCAL-LOOPBACK-DOCKER",
+    "llm_enabled": false,
+    "outcome": "completed",
+    "outcome_reason": "",
+    "per_minute": [
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 1,
+        "minute_utc": "2026-11-16T22:05:00Z",
+        "p95_ms": 88.321,
+        "phase": "baseline-1",
+        "requests": 600
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 25,
+        "minute_utc": "2026-11-16T22:05:00Z",
+        "p95_ms": 101.54,
+        "phase": "level-25",
+        "requests": 12590
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 5,
+        "minute_utc": "2026-11-16T22:05:00Z",
+        "p95_ms": 95.631,
+        "phase": "level-5",
+        "requests": 3000
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 1,
+        "minute_utc": "2026-11-16T22:05:00Z",
+        "p95_ms": 96.964,
+        "phase": "warmup",
+        "requests": 150
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-16T22:06:00Z",
+        "p95_ms": 97.512,
+        "phase": "hold-50",
+        "requests": 16428
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 25,
+        "minute_utc": "2026-11-16T22:06:00Z",
+        "p95_ms": 99.721,
+        "phase": "level-25",
+        "requests": 2410
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-16T22:06:00Z",
+        "p95_ms": 101.017,
+        "phase": "level-50",
+        "requests": 30000
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-16T22:07:00Z",
+        "p95_ms": 94.772,
+        "phase": "hold-50",
+        "requests": 60627
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-16T22:08:00Z",
+        "p95_ms": 93.779,
+        "phase": "hold-50",
+        "requests": 63238
+      },
+      {
+        "errors_5xx_or_transport": 0,
+        "level": 50,
+        "minute_utc": "2026-11-16T22:09:00Z",
+        "p95_ms": 93.501,
+        "phase": "hold-50",
+        "requests": 9707
+      }
+    ],
+    "phases": [
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-16T22:05:10.996Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 150,
+          "p50": 3.74,
+          "p95": 96.964,
+          "p99": 99.57
+        },
+        "latency_ms_all_responses": {
+          "max": 101.051,
+          "n": 150,
+          "p50": 3.74,
+          "p95": 96.964,
+          "p99": 99.57
+        },
+        "level": 1,
+        "outcomes": {
+          "ok": 150
+        },
+        "peak_success_rps_1s": 52,
+        "phase": "warmup",
+        "rate_limited_429": 0,
+        "requests": 150,
+        "seconds": 4.502,
+        "served": 150,
+        "started_utc": "2026-11-16T22:05:06.494Z",
+        "status_codes": {
+          "200": 150
+        },
+        "success_rps": 33.319,
+        "successful": 150,
+        "throughput_rps": 33.319
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-16T22:05:17.808Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 600,
+          "p50": 1.382,
+          "p95": 88.321,
+          "p99": 94.018
+        },
+        "latency_ms_all_responses": {
+          "max": 98.86,
+          "n": 600,
+          "p50": 1.382,
+          "p95": 88.321,
+          "p99": 94.018
+        },
+        "level": 1,
+        "outcomes": {
+          "ok": 600
+        },
+        "peak_success_rps_1s": 131,
+        "phase": "baseline-1",
+        "rate_limited_429": 0,
+        "requests": 600,
+        "seconds": 6.812,
+        "served": 600,
+        "started_utc": "2026-11-16T22:05:10.996Z",
+        "status_codes": {
+          "200": 600
+        },
+        "success_rps": 88.08,
+        "successful": 600,
+        "throughput_rps": 88.08
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-16T22:05:31.293Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 3000,
+          "p50": 1.966,
+          "p95": 95.631,
+          "p99": 98.676
+        },
+        "latency_ms_all_responses": {
+          "max": 103.142,
+          "n": 3000,
+          "p50": 1.966,
+          "p95": 95.631,
+          "p99": 98.676
+        },
+        "level": 5,
+        "outcomes": {
+          "ok": 3000
+        },
+        "peak_success_rps_1s": 293,
+        "phase": "level-5",
+        "rate_limited_429": 0,
+        "requests": 3000,
+        "seconds": 13.485,
+        "served": 3000,
+        "started_utc": "2026-11-16T22:05:17.808Z",
+        "status_codes": {
+          "200": 3000
+        },
+        "success_rps": 222.469,
+        "successful": 3000,
+        "throughput_rps": 222.469
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-16T22:06:04.584Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 15000,
+          "p50": 89.628,
+          "p95": 101.306,
+          "p99": 191.601
+        },
+        "latency_ms_all_responses": {
+          "max": 287.55,
+          "n": 15000,
+          "p50": 89.628,
+          "p95": 101.306,
+          "p99": 191.601
+        },
+        "level": 25,
+        "outcomes": {
+          "ok": 15000
+        },
+        "peak_success_rps_1s": 668,
+        "phase": "level-25",
+        "rate_limited_429": 0,
+        "requests": 15000,
+        "seconds": 33.291,
+        "served": 15000,
+        "started_utc": "2026-11-16T22:05:31.293Z",
+        "status_codes": {
+          "200": 15000
+        },
+        "success_rps": 450.572,
+        "successful": 15000,
+        "throughput_rps": 450.572
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-16T22:06:41.795Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 30000,
+          "p50": 86.651,
+          "p95": 101.017,
+          "p99": 192.406
+        },
+        "latency_ms_all_responses": {
+          "max": 392.749,
+          "n": 30000,
+          "p50": 86.651,
+          "p95": 101.017,
+          "p99": 192.406
+        },
+        "level": 50,
+        "outcomes": {
+          "ok": 30000
+        },
+        "peak_success_rps_1s": 1262,
+        "phase": "level-50",
+        "rate_limited_429": 0,
+        "requests": 30000,
+        "seconds": 37.21,
+        "served": 30000,
+        "started_utc": "2026-11-16T22:06:04.585Z",
+        "status_codes": {
+          "200": 30000
+        },
+        "success_rps": 806.235,
+        "successful": 30000,
+        "throughput_rps": 806.235
+      },
+      {
+        "cross_check_vs_harness_summary": "MATCH",
+        "ended_utc": "2026-11-16T22:09:09.500Z",
+        "error_rate_5xx_or_transport": 0.0,
+        "failures_5xx_or_transport": 0,
+        "latency_ms_2xx": {
+          "n": 150000,
+          "p50": 8.427,
+          "p95": 94.646,
+          "p99": 99.213
+        },
+        "latency_ms_all_responses": {
+          "max": 290.775,
+          "n": 150000,
+          "p50": 8.427,
+          "p95": 94.646,
+          "p99": 99.213
+        },
+        "level": 50,
+        "outcomes": {
+          "ok": 150000
+        },
+        "peak_success_rps_1s": 1737,
+        "phase": "hold-50",
+        "rate_limited_429": 0,
+        "requests": 150000,
+        "seconds": 147.705,
+        "served": 150000,
+        "started_utc": "2026-11-16T22:06:41.795Z",
+        "status_codes": {
+          "200": 150000
+        },
+        "success_rps": 1015.538,
+        "successful": 150000,
+        "throughput_rps": 1015.538
+      }
+    ],
+    "raw_sha256_verified": {
+      "events.jsonl": "df63c297489dc18d93affa39127c1b3c2875749cf6b7981bf1e41f7d62a92a56",
+      "requests.jsonl": "a66a467221c47aa6184be19112899f4dbe25ae9eac52681b1f33226a474c5bd7",
+      "run-record.json": "5e89febd33672179b7968d2cec9d6dc07dc1ca7fed75a208cd8b1dc14f64c62b"
+    },
+    "routes": [
+      "healthz",
+      "readyz",
+      "metrics",
+      "semantic"
+    ],
+    "run_id": "p35-local-1",
+    "started_utc": "2026-11-16T22:05:06.494Z",
+    "target_host": "127.0.0.1",
+    "target_loopback": true,
+    "total_outcomes": {
+      "ok": 198750
+    },
+    "total_requests": 198750,
+    "tree_dirty": true
+  },
+  "local_chain": {
+    "environment": "LOCAL-MAC",
+    "note": "Local single-machine runs. Several early runs failed or were diagnostic (all_steps_passed false); they are listed, not hidden. Compare an EMR step with a local step only for the same input (size S = 15a size-100 slice) and at the same commit (bd0b818).",
+    "runs": [
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T16:16:15Z",
+        "chain_start_utc": "2026-11-16T16:13:56Z",
+        "er_xmx": "24g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 2330313,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 1115108,
+          "INPUT": 1339112,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 1990,
+          "OVERSIZE_TEAM": 210,
+          "REJECTED": 5075,
+          "SCHEMA_FAILURE": 105
+        },
+        "hadoop_input_records": 1339112,
+        "input_tree": "target/experiment-inputs/15a/size-l",
+        "run_id": "p6-L-20261116T161356Z",
+        "size": "L",
+        "source": "target/phase15/p6/work/p6-L-20261116T161356Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.18
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 137.25
+          },
+          {
+            "exit_code": 2,
+            "step": "entity-resolution",
+            "wall_seconds": 0.43
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T16:26:19Z",
+        "chain_start_utc": "2026-11-16T16:16:57Z",
+        "er_xmx": "22g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 2330313,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 1115108,
+          "INPUT": 1339112,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 1990,
+          "OVERSIZE_TEAM": 210,
+          "REJECTED": 5075,
+          "SCHEMA_FAILURE": 105
+        },
+        "hadoop_input_records": 1339112,
+        "input_tree": "target/experiment-inputs/15a/size-l",
+        "run_id": "p6-L-20261116T161657Z",
+        "size": "L",
+        "source": "target/phase15/p6/work/p6-L-20261116T161657Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 131.84
+          },
+          {
+            "exit_code": 2,
+            "step": "entity-resolution",
+            "wall_seconds": 429.22
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T16:45:07Z",
+        "chain_start_utc": "2026-11-16T16:26:41Z",
+        "er_xmx": "22g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 2330313,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 1115108,
+          "INPUT": 1339112,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 1990,
+          "OVERSIZE_TEAM": 210,
+          "REJECTED": 5075,
+          "SCHEMA_FAILURE": 105
+        },
+        "hadoop_input_records": 1339112,
+        "input_tree": "target/experiment-inputs/15a/size-l",
+        "run_id": "p6-L-20261116T162641Z",
+        "size": "L",
+        "source": "target/phase15/p6/work/p6-L-20261116T162641Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 141.3
+          },
+          {
+            "exit_code": 1,
+            "step": "entity-resolution",
+            "wall_seconds": 963.53
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T15:50:24Z",
+        "chain_start_utc": "2026-11-16T15:50:22Z",
+        "er_xmx": null,
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {},
+        "hadoop_input_records": null,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T155022Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T155022Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.26
+          },
+          {
+            "exit_code": 1,
+            "step": "hadoop-prep",
+            "wall_seconds": 0.92
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T15:52:34Z",
+        "chain_start_utc": "2026-11-16T15:52:28Z",
+        "er_xmx": null,
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {},
+        "hadoop_input_records": null,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T155228Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T155228Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.16
+          },
+          {
+            "exit_code": 1,
+            "step": "hadoop-prep",
+            "wall_seconds": 4.65
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T15:55:18Z",
+        "chain_start_utc": "2026-11-16T15:53:51Z",
+        "er_xmx": null,
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T155351Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T155351Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 36.79
+          },
+          {
+            "exit_code": 1,
+            "step": "entity-resolution",
+            "wall_seconds": 48.57
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T15:58:18Z",
+        "chain_start_utc": "2026-11-16T15:56:10Z",
+        "er_xmx": "8g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T155610Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T155610Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 34.78
+          },
+          {
+            "exit_code": 1,
+            "step": "entity-resolution",
+            "wall_seconds": 92.11
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T16:01:07Z",
+        "chain_start_utc": "2026-11-16T15:58:49Z",
+        "er_xmx": "12g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T155849Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T155849Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.12
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 36.89
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 97.39
+          },
+          {
+            "exit_code": 1,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.75
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-16T16:03:58Z",
+        "chain_start_utc": "2026-11-16T16:01:44Z",
+        "er_xmx": "12g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T160144Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T160144Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 36.92
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 93.74
+          },
+          {
+            "exit_code": 1,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.83
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": true,
+        "chain_end_utc": "2026-11-16T16:13:28Z",
+        "chain_start_utc": "2026-11-16T16:04:55Z",
+        "er_xmx": "12g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T160455Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T160455Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 37.01
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 98.37
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.98
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-job",
+            "wall_seconds": 371.01
+          },
+          {
+            "exit_code": 0,
+            "step": "copy-out",
+            "wall_seconds": 2.88
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": true,
+        "chain_end_utc": "2026-11-16T16:53:48Z",
+        "chain_start_utc": "2026-11-16T16:45:23Z",
+        "er_xmx": "12g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T164523Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T164523Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.18
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 35.76
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 89.68
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.49
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-job",
+            "wall_seconds": 373.17
+          },
+          {
+            "exit_code": 0,
+            "step": "copy-out",
+            "wall_seconds": 2.92
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": true,
+        "chain_end_utc": "2026-11-16T17:08:47Z",
+        "chain_start_utc": "2026-11-16T17:00:28Z",
+        "er_xmx": "12g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T170028Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T170028Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.11
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 34.65
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 90.84
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.85
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-job",
+            "wall_seconds": 367.19
+          },
+          {
+            "exit_code": 0,
+            "step": "copy-out",
+            "wall_seconds": 2.76
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": true,
+        "chain_end_utc": "2026-11-16T17:26:23Z",
+        "chain_start_utc": "2026-11-16T17:14:31Z",
+        "er_xmx": "12g",
+        "git_head": "7a02de252c36d284267f162911383dce02160fe5",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261116T171431Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261116T171431Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.19
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 47.36
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 165.38
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 3.44
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-job",
+            "wall_seconds": 489.75
+          },
+          {
+            "exit_code": 0,
+            "step": "copy-out",
+            "wall_seconds": 4.66
+          }
+        ],
+        "work_tree_clean": false
+      },
+      {
+        "all_steps_passed": false,
+        "chain_end_utc": "2026-11-17T05:37:12Z",
+        "chain_start_utc": "2026-11-17T05:31:04Z",
+        "er_xmx": "12g",
+        "git_head": "9e881a2e595328c5d3a4a9fc45827cb6b4a6367f",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261117T053104Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261117T053104Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.13
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 37.02
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 87.93
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 10.11
+          },
+          {
+            "exit_code": 1,
+            "step": "spark-job",
+            "wall_seconds": 232.34
+          }
+        ],
+        "work_tree_clean": true
+      },
+      {
+        "all_steps_passed": true,
+        "chain_end_utc": "2026-11-17T05:45:48Z",
+        "chain_start_utc": "2026-11-17T05:38:00Z",
+        "er_xmx": "12g",
+        "git_head": "9e881a2e595328c5d3a4a9fc45827cb6b4a6367f",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261117T053800Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261117T053800Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.12
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 34.09
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 88.49
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.91
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-job",
+            "wall_seconds": 338.78
+          },
+          {
+            "exit_code": 0,
+            "step": "copy-out",
+            "wall_seconds": 2.67
+          }
+        ],
+        "work_tree_clean": true
+      },
+      {
+        "all_steps_passed": true,
+        "chain_end_utc": "2026-11-17T18:30:33Z",
+        "chain_start_utc": "2026-11-17T18:22:10Z",
+        "er_xmx": "12g",
+        "git_head": "bd0b8180b919ed61f6234fa515f4c07d1137a641",
+        "hadoop_counters": {
+          "ACCEPTED": 515309,
+          "CONFLICT": 0,
+          "DUPLICATE": 0,
+          "EMITTED_PAIR": 243321,
+          "INPUT": 290343,
+          "MISSING_KEY": 0,
+          "OVERSIZE_BLOCK": 517,
+          "OVERSIZE_TEAM": 63,
+          "REJECTED": 1243,
+          "SCHEMA_FAILURE": 21
+        },
+        "hadoop_input_records": 290343,
+        "input_tree": "target/experiment-inputs/15a/size-100",
+        "run_id": "p6-S-20261117T182210Z",
+        "size": "S",
+        "source": "target/phase15/p6/work/p6-S-20261117T182210Z/evidence/summary.json",
+        "steps": [
+          {
+            "exit_code": 0,
+            "step": "stage-in",
+            "wall_seconds": 0.12
+          },
+          {
+            "exit_code": 0,
+            "step": "hadoop-prep",
+            "wall_seconds": 36.73
+          },
+          {
+            "exit_code": 0,
+            "step": "entity-resolution",
+            "wall_seconds": 96.7
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-class-origin",
+            "wall_seconds": 2.88
+          },
+          {
+            "exit_code": 0,
+            "step": "spark-job",
+            "wall_seconds": 362.87
+          },
+          {
+            "exit_code": 0,
+            "step": "copy-out",
+            "wall_seconds": 2.8
+          }
+        ],
+        "work_tree_clean": true
+      }
+    ],
+    "spark_only_bypass_runs": [
+      {
+        "exit_code": 0,
+        "label": "S",
+        "peak_rss_bytes": 7585890304,
+        "peak_sum_disk_bytes": 7891467094,
+        "scope": "Spark job only with entity resolution bypassed (er_identity_bypass.py)",
+        "source": "target/phase15/p6/l-bypass/run-S.out",
+        "wall_seconds": 459.84
+      },
+      {
+        "exit_code": 0,
+        "label": "L",
+        "peak_rss_bytes": 9075539968,
+        "peak_sum_disk_bytes": 25316182591,
+        "scope": "Spark job only with entity resolution bypassed (er_identity_bypass.py)",
+        "source": "target/phase15/p6/l-bypass/run-L.out",
+        "wall_seconds": 1110.14
+      }
+    ]
+  },
+  "percentile_method": "nearest-rank",
+  "schema": "scholarchain.eval16-performance.v1",
+  "scope": "offline recomputation from raw evidence; no network, AWS, model call or spend",
+  "threats_to_validity": [
+    "The P35 raw (83 MB) is not in the repository: a reader without the laptop can check those rows only against the committed harness summary and the raw sha256, not recompute them.",
+    "Single runs: each load level was run once; percentiles are point estimates and the per-minute spread is the only variability evidence.",
+    "Load generator and service share the laptop in the LOCAL-LOOPBACK rows, and in the Q12 rows the client, the service and the graph export are one machine; those numbers are not AWS numbers.",
+    "The AWS run used the semantic route only (no LLM, graph routes dropped), so its throughput does not describe /v1/query.",
+    "The aborted AWS run covers about 32 s of hold-50, so the steady-state hold behaviour on AWS is unmeasured.",
+    "EMR step times are upper bounds from submission instants, not from the EMR console.",
+    "Token costs are the synthesis call only at the pinned rates (estimates); the Anthropic console is the cost of record."
+  ],
+  "vectors": {
+    "environment": "AWS-S3VECTORS+VOYAGE (client on the author's laptop; ingest and query calls cross the internet)",
+    "ingest": {
+      "assumed_upper_bound_usd_not_a_bill": "0.2300000",
+      "attempts": [
+        {
+          "completed": "Nov 18, 2026, 12:13:34 PM",
+          "error": "live-ingestion-rejected-items",
+          "failed": true,
+          "source": "docs/agent-runs/phase-15/evidence/session-2/vectors/ingest.log",
+          "total_seconds": 2740
+        },
+        {
+          "completed": "Nov 18, 2026, 1:09:03 PM",
+          "error": null,
+          "failed": false,
+          "source": "docs/agent-runs/phase-15/evidence/session-2/vectors/ingest-2.log",
+          "total_seconds": 2782
+        }
+      ],
+      "conflicts": 0,
+      "elapsed_seconds": 2778.273,
+      "embedding_batch_size": 100,
+      "embedding_calls": 10000,
+      "ingest_concurrency": 8,
+      "per_index": {
+        "collaboration-community-v1": 3292,
+        "collaboration-path-v1": 120,
+        "paper-abstract-v1": 3292,
+        "researcher-profile-v1": 3292,
+        "topic-institution-summary-v1": 4
+      },
+      "rejected": 0,
+      "selected": 10000,
+      "source": "docs/agent-runs/phase-15/evidence/session-2/vectors/ingest-report-2.json",
+      "underlying_embedding_batch_calls": 7915,
+      "vectors_per_second_recomputed": 3.599,
+      "vectors_per_second_recorded": 3.599,
+      "vectors_written": 10000
+    },
+    "query_smoke": {
+      "latency_ms_per_sample": [
+        351.009,
+        166.084,
+        364.769,
+        307.769,
+        91.162
+      ],
+      "latency_scope": "query SDK call only; nearest-rank p50/p95",
+      "max_ms": 364.769,
+      "min_ms": 91.162,
+      "note": "n = 5 (one query per index): a smoke, not a latency distribution; a p99 would equal the maximum and is not reported.",
+      "p50_ms": 307.769,
+      "p95_ms": 364.769,
+      "samples": 5,
+      "source": "docs/agent-runs/phase-15/evidence/session-2/vectors/query-report.json"
+    }
+  }
+}
