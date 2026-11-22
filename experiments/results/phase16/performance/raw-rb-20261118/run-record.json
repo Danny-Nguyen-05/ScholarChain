@@ -1,0 +1,198 @@
+{
+  "api_key_env": "SCHOLARCHAIN_LOAD_API_KEY",
+  "commit": "bd0b8180b919ed61f6234fa515f4c07d1137a641",
+  "cost_report": {
+    "anthropic": {
+      "answers": 0,
+      "input_tokens_estimate": 0,
+      "model": "claude-haiku-5-5",
+      "output_tokens_estimate": 0,
+      "usage": "no answers sent: USD 0",
+      "usd": "0.000000"
+    },
+    "aws": {
+      "usage": "taken from the AWS bill and the pre-spend receipts; not metered here",
+      "usd": null
+    },
+    "combined_scope": "anthropic + voyage only (AWS not included: take it from the bill)",
+    "combined_usd": "0.000000",
+    "voyage": {
+      "model": "voyage-4-lite",
+      "tokens": null,
+      "usage": "tokens not metered here; the first 200000000 account tokens are free so the charge is USD 0 while the account stays under that",
+      "usd": "0.000000"
+    }
+  },
+  "ended_utc": "2026-11-18T20:52:54.484Z",
+  "experiment_id": "15b-ecs-scaling-semantic",
+  "llm": {
+    "allocation_sha256": null,
+    "answers_sent": 0,
+    "bucket": null,
+    "bucket_size": null,
+    "bucket_used_at_end": null,
+    "bucket_used_at_start": null,
+    "cost_per_answer_usd": "0.001365",
+    "enabled": false,
+    "estimated_cost_usd": "0.000000",
+    "ledger_path": null,
+    "ledger_total_at_end_usd": null,
+    "ledger_total_at_start_usd": null,
+    "note": "estimated from pinned tokens and rates, not metered; the Anthropic console, the Voyage console and the AWS bill are the costs of record",
+    "remaining_cap_input_usd": null,
+    "shared_cap_usd": "1.330000",
+    "stopped_reason": null
+  },
+  "manifest_sha256": "a5e407d447162099f03e74f74c8051f14270ea4120b05003d9f22735c8f34c67",
+  "observe_seconds_override": null,
+  "outcome": "aborted",
+  "outcome_reason": "repeated-5xx-or-transport-failures",
+  "phases": [
+    {
+      "ended_utc": "2026-11-18T20:44:17.212Z",
+      "level": 1,
+      "llm_answers_planned": 0,
+      "llm_answers_sent": 0,
+      "max_inflight_observed": 1,
+      "outcomes": {
+        "ok": 150
+      },
+      "phase": "warmup",
+      "questions_planned": 150,
+      "questions_sent": 150,
+      "rate_limited_429": 0,
+      "requests": 150,
+      "started_utc": "2026-11-18T20:43:32.898Z",
+      "type": "warmup"
+    },
+    {
+      "ended_utc": "2026-11-18T20:45:23.066Z",
+      "level": 1,
+      "llm_answers_planned": 0,
+      "llm_answers_sent": 0,
+      "max_inflight_observed": 1,
+      "outcomes": {
+        "ok": 600
+      },
+      "phase": "baseline-1",
+      "rate_limited_429": 0,
+      "requests": 600,
+      "started_utc": "2026-11-18T20:44:17.212Z",
+      "type": "load"
+    },
+    {
+      "ended_utc": "2026-11-18T20:46:46.064Z",
+      "level": 5,
+      "llm_answers_planned": 0,
+      "llm_answers_sent": 0,
+      "max_inflight_observed": 5,
+      "outcomes": {
+        "ok": 3000
+      },
+      "phase": "level-5",
+      "rate_limited_429": 0,
+      "requests": 3000,
+      "started_utc": "2026-11-18T20:45:23.066Z",
+      "type": "load"
+    },
+    {
+      "ended_utc": "2026-11-18T20:49:16.436Z",
+      "level": 25,
+      "llm_answers_planned": 0,
+      "llm_answers_sent": 0,
+      "max_inflight_observed": 25,
+      "outcomes": {
+        "ok": 8613
+      },
+      "phase": "level-25",
+      "rate_limited_429": 0,
+      "requests": 8613,
+      "started_utc": "2026-11-18T20:46:46.067Z",
+      "type": "load"
+    },
+    {
+      "ended_utc": "2026-11-18T20:52:17.167Z",
+      "level": 50,
+      "llm_answers_planned": 0,
+      "llm_answers_sent": 0,
+      "max_inflight_observed": 50,
+      "outcomes": {
+        "ok": 12575
+      },
+      "phase": "level-50",
+      "rate_limited_429": 0,
+      "requests": 12575,
+      "started_utc": "2026-11-18T20:49:16.439Z",
+      "type": "load"
+    },
+    {
+      "ended_utc": "2026-11-18T20:52:54.483Z",
+      "level": 50,
+      "llm_answers_planned": 0,
+      "llm_answers_sent": 0,
+      "max_inflight_observed": 50,
+      "outcomes": {
+        "ok": 1957,
+        "server_error": 65,
+        "timeout": 2
+      },
+      "phase": "hold-50",
+      "rate_limited_429": 0,
+      "requests": 2024,
+      "started_utc": "2026-11-18T20:52:17.171Z",
+      "type": "load"
+    }
+  ],
+  "profile": {
+    "path": "load-tests/config/load-profile.v1.json",
+    "sha256": "e3c55afcb34a8674e0383f3e62064ede3db68a47a61280271641dcb44d0f1018"
+  },
+  "python": "3.14.5",
+  "routes": [
+    "healthz",
+    "readyz",
+    "metrics",
+    "semantic"
+  ],
+  "routes_dropped": [
+    {
+      "reason": "no node_ids supplied",
+      "route": "graph_node"
+    },
+    {
+      "reason": "no node_ids supplied",
+      "route": "graph_neighbors"
+    },
+    {
+      "reason": "no evidence_ids supplied",
+      "route": "evidence"
+    }
+  ],
+  "run_id": "rb-20261118",
+  "schema": "scholarchain.load-run-record.v1",
+  "semantic": {
+    "questions_count": 150,
+    "questions_sha256": "bde5f63b49e46c321dbbf958094646cf644fcef15516b6ee0e67822ccb9978af",
+    "ramp_cap_total": 198600,
+    "route": "semantic",
+    "top_k": 10,
+    "warmup_max": 200
+  },
+  "started_utc": "2026-11-18T20:43:32.897Z",
+  "target": {
+    "base_url_sha256": "bc4ae3872e2725ea8c49c7e4a9adcdb5fb52b6fec7f99b1a8244acd0ab41a134",
+    "host": "withheld",
+    "loopback": false,
+    "scheme": "https"
+  },
+  "totals": {
+    "outcomes": {
+      "ok": 26895,
+      "server_error": 65,
+      "timeout": 2
+    },
+    "rate_limited_429": 0,
+    "requests": 26962
+  },
+  "tree_dirty": false
+}

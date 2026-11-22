@@ -1,0 +1,28 @@
+{
+ "schema": "scholarchain.eval16-freeze-note.v1",
+ "what": "scan record for the frozen AWS load raw in experiments/results/phase16/performance/raw-rb-20261118/ (run rb-20261118, 15b semantic route, 2026-11-18)",
+ "written_by": "experiment-engineer instance B; a static record, not produced by a script and not regenerated (excluded from the regeneration comparison like regeneration-check.log)",
+ "source_path": "target/experiment-runs/15b-ecs-scaling-semantic-rb-20261118 (raw/events.jsonl, raw/raw.sha256, raw/requests.jsonl, raw/run-record.json and derived/summary.csv; the git-ignored original, files read-only)",
+ "copy_time": {"file_mtime_of_the_copy_local": "2026-11-21T19:34:13-06:00 (America/Chicago, CST)", "same_instant_utc": "2026-11-22T01:34:13Z", "method": "cp from the source path, then chmod a-w and shasum into SHA256SUMS; the copy is byte-identical to the source (cmp of requests.jsonl)"},
+ "scan": {
+  "performed_before_copy": "2026-11-21 (the first five patterns, counts per file, on the source files and also on derived/summary.json and derived/timeline.csv, which were not copied)",
+  "repeated_on_the_frozen_copy_utc": "2026-11-22T01:47:38Z (all eleven patterns)",
+  "method": "grep -c -i -E per file, summed over the 5 frozen files (a count of matching lines); matches were counted, never printed",
+  "files_scanned": ["events.jsonl", "raw.sha256", "requests.jsonl", "run-record.json", "summary.csv"],
+  "patterns_and_matching_lines": {
+   "12-digit number (account id)": 0,
+   "e-mail address": 0,
+   "sk-ant": 0,
+   "Bearer": 0,
+   "Authorization": 0,
+   "x-api-key": 0,
+   "arn:aws": 0,
+   "amazonaws.com": 0,
+   "elb.": 0,
+   "/Users/": 0,
+   "AKIA": 0
+  },
+  "result": "no pattern matched: the host is recorded as 'withheld' and only the sha256 of the base URL appears in run-record.json"
+ },
+ "sha256_of_frozen_set": "see SHA256SUMS in raw-rb-20261118/ (unchanged by this note)"
+}
