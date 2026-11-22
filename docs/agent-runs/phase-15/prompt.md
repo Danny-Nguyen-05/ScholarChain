@@ -352,3 +352,21 @@ User decision, verbatim:
 > 2. no planned step expects a successful Anthropic call.
 > Put this in the runbook, and give me the revised item 8 wording: the Voyage key rules stay; the Anthropic secret is a placeholder, so no spend limit or revocation is needed for Session 2.
 > After that commit, I write docs/agent-runs/phase-15/session-2-approval.md naming the amendment commit, then you run A12.
+
+## Q12 fixes commit and LLM bucket raise, option A (2026-11-20 / 2026-11-21)
+
+Context: Q12 run-1 (2026-11-20, local loopback stack) scored 4 of 27 answer-expected questions fully correct. The service-engineer and rag-engineer fixes passed review and the full check (RESULT: PASS gates=7) and were committed as 443e489 and 8682202. A full rerun needs 34 answers (33 questions + 1 probe), but the ledger had 26 left (15b 24, 16b 2, 17 0). The coordinator offered option A (raise the pinned buckets 16b 40 -> 80 and 17 5 -> 10; total 160 answers x USD 0.001365 = USD 0.2184 under the USD 1.33 cap) or option B (transfer 15b -> 16b and rerun only the 23 failed questions).
+
+User decisions, verbatim:
+
+> Yes, commit and push
+
+(2026-11-21T04:53Z, for the two Q12 fix commits.)
+
+> alright I'll pick A. Also when you do, can you do teh full check only after the reviewer accept?
+
+(2026-11-21T05:47Z.)
+
+> alright when the check all pass, I want you to commit and push them without my permission
+
+(2026-11-21T05:48Z. Coordinator scope: this advance consent covers only the option-A change, and applies only after the reviewer's APPROVE and a full check showing RESULT: PASS gates=7.)

@@ -41,12 +41,15 @@ private[rag] object ClaimScaffold {
   private def values(
       plan: QueryPlan,
       item: EvidenceItem,
-      typ: RuntimeClaimType
+      typ: RuntimeClaimType,
+      compact: Boolean
   ): Vector[RuntimeClaimValue] = {
     val r = item.runtime.get
     val conversion = plan.runtime.exists(_.authorCountConversion)
+    val omitWorks = compact && kind(item) == "edge"
     val candidates = (r.values.map(_.field) ++ qualifications).distinct
       .filter(f => f != "kind" && (conversion || !conversionFields(f)))
+      .filterNot(f => omitWorks && (f == "workIds" || f.startsWith("year:")))
       .flatMap(f => expected(item, f))
     def probe(vs: Vector[RuntimeClaimValue]) =
       TypedAnswerClaim(typ, r.subjectIds, vs, r.windowIds, templateId(typ))
@@ -82,19 +85,39 @@ private[rag] object ClaimScaffold {
   def toJson(claims: Vector[ScaffoldClaim]): ujson.Value = ujson.Arr.from(claims.map(json))
   def bytes(claims: Vector[ScaffoldClaim]): Int = toJson(claims).render().getBytes(UTF_8).length
 
-  /** Claims in bundle order, dropping whole claims that would exceed `maxBytes` in total. */
+  private def total(claims: Vector[ScaffoldClaim]): Int =
+    2 + claims.map(c => json(c).render().getBytes(UTF_8).length + 1).sum
+
+  /** Claims in bundle order. When the complete claims exceed `maxBytes`, edge claims drop their
+    * per-work detail (workIds and year fields, which stay in the stored evidence) before any claim
+    * is dropped; whole claims are then dropped, never truncated, if they still do not fit.
+    */
   def build(plan: QueryPlan, bundle: EvidenceBundle, maxBytes: Int): Vector[ScaffoldClaim] = {
     val usable =
       DomainValidation.check(bundle).isRight &&
         !bundle.runtime.exists(_.retrievalMode == RetrievalMode.Vector)
     if (!usable) return Vector.empty
+    val full = assemble(plan, bundle, compact = false)
+    val chosen = if (total(full) <= maxBytes) full else assemble(plan, bundle, compact = true)
+    var used = 2 // enclosing brackets
+    chosen.flatMap { claim =>
+      val size = json(claim).render().getBytes(UTF_8).length + 1
+      Option.when(used + size <= maxBytes) { used += size; claim }
+    }
+  }
+
+  private def assemble(
+      plan: QueryPlan,
+      bundle: EvidenceBundle,
+      compact: Boolean
+  ): Vector[ScaffoldClaim] = {
     val byId = bundle.items.map(i => i.evidenceId -> i).toMap
     val windows = requestedWindows(plan)
     val all = bundle.items
       .filter(i => i.runtime.exists(r => !r.descriptive && r.windowIds.forall(windows)))
       .flatMap { item =>
         claimType(item).flatMap { typ =>
-          val vs = values(plan, item, typ)
+          val vs = values(plan, item, typ, compact)
           val r = item.runtime.get
           val foundPath = kind(item) == "path" &&
             r.values.exists(v => v.field == "pathStatus" && v.text.contains("Found"))
@@ -107,11 +130,8 @@ private[rag] object ClaimScaffold {
           )
         }
       }
-    var used = 2 // enclosing brackets
-    all.zipWithIndex.flatMap { case ((k, typed, evidenceId), index) =>
-      val claim = ScaffoldClaim(s"claim:$k:${index + 1}", typed, Vector(evidenceId))
-      val size = json(claim).render().getBytes(UTF_8).length + 1
-      Option.when(used + size <= maxBytes) { used += size; claim }
+    all.zipWithIndex.map { case ((k, typed, evidenceId), index) =>
+      ScaffoldClaim(s"claim:$k:${index + 1}", typed, Vector(evidenceId))
     }
   }
 }

@@ -338,19 +338,120 @@ paths:
   /internal/v1/graph/paths:
     get:
       security: [{InternalBearer: []}]
-      summary: Bounded shortest path in the immutable snapshot
+      summary: Bounded shortest coauthor path in the immutable snapshot
+      description: >-
+        Level-by-level search over COAUTHORED_WITH edges only, stopping at the first level that
+        contains `to`; at most one path is returned, chosen deterministically (sorted node and edge
+        order). A `maxDepth` above the service path ceiling (default 6) is clamped, not rejected.
+        An empty `paths` is a complete answer only when `truncated` is false; when the scan or node
+        cap is reached first the reply is still 200 with `truncated` true, and it is never a proof
+        that no path exists. A missing `from` or `to` node is 404.
       parameters:
         - {$ref: '#/components/parameters/GraphTimeoutMs'}
         - {name: from, in: query, required: true, schema: {type: string}}
         - {name: to, in: query, required: true, schema: {type: string}}
-        - {name: maxDepth, in: query, schema: {type: integer, minimum: 1, maximum: 3, default: 3}}
+        - {name: maxDepth, in: query, schema: {type: integer, minimum: 1, default: 6}, description: Requested hop cap; values above the service path ceiling (default 6, 16 at most) are clamped to it}
         - {name: window, in: query, schema: {type: string, default: all-years}}
       responses:
-        '200': {description: Snapshot and bounded nodeId/edgeId path, or empty paths after complete bounded exploration}
+        '200':
+          description: Snapshot, the shortest path if one was found, and how the search ended
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [snapshot, paths, maxDepth, clamped, truncated, truncationReason]
+                properties:
+                  snapshot: {type: string}
+                  paths:
+                    type: array
+                    maxItems: 1
+                    items:
+                      type: object
+                      required: [nodeIds, edgeIds]
+                      properties:
+                        nodeIds: {type: array, items: {type: string}}
+                        edgeIds: {type: array, items: {type: string}}
+                  maxDepth: {type: integer, description: The hop cap actually applied}
+                  clamped: {type: boolean, description: True when the requested maxDepth exceeded the path ceiling}
+                  truncated: {type: boolean, description: True when a scan or node cap ended the search before the target was reached}
+                  truncationReason: {type: string, nullable: true, enum: [scan-cap, node-cap, null]}
+        '400': {$ref: '#/components/responses/Error'}
+        '401': {$ref: '#/components/responses/Error'}
+        '404': {$ref: '#/components/responses/Error'}
+        '502': {$ref: '#/components/responses/Error'}
+        '504': {$ref: '#/components/responses/Error'}
+  /internal/v1/graph/communities/{communityId}/members:
+    get:
+      security: [{InternalBearer: []}]
+      summary: Stored members of one community in a window
+      description: >-
+        Answers from the snapshot's stored community membership. A snapshot that holds no
+        communities answers 422 COMMUNITY_UNSUPPORTED.
+      parameters:
+        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+        - {$ref: '#/components/parameters/CommunityId'}
+        - {name: window, in: query, schema: {type: string, default: all-years}}
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+      responses:
+        '200':
+          description: Stored member researcher IDs, at most limit
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [snapshot, communityId, window, members]
+                properties:
+                  snapshot: {type: string}
+                  communityId: {type: string}
+                  window: {type: string}
+                  members: {type: array, items: {type: string}}
         '400': {$ref: '#/components/responses/Error'}
         '401': {$ref: '#/components/responses/Error'}
         '404': {$ref: '#/components/responses/Error'}
         '422': {$ref: '#/components/responses/Error'}
+        '502': {$ref: '#/components/responses/Error'}
+        '504': {$ref: '#/components/responses/Error'}
+  /internal/v1/graph/communities/{communityId}/cross-edges:
+    get:
+      security: [{InternalBearer: []}]
+      summary: Stored coauthor edges that leave one community in a window
+      description: >-
+        One row per stored edge; `nodeId` is the endpoint outside the community. `truncated` is
+        true when the store reports more rows than were returned. A snapshot that holds no
+        communities answers 422 COMMUNITY_UNSUPPORTED.
+      parameters:
+        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+        - {$ref: '#/components/parameters/CommunityId'}
+        - {name: window, in: query, schema: {type: string, default: all-years}}
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+      responses:
+        '200':
+          description: Stored cross-community edges, at most limit
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [snapshot, communityId, window, items, truncated]
+                properties:
+                  snapshot: {type: string}
+                  communityId: {type: string}
+                  window: {type: string}
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [nodeId, edgeId, edgeType, properties]
+                      properties:
+                        nodeId: {type: string}
+                        edgeId: {type: string}
+                        edgeType: {type: string}
+                        properties: {type: object, additionalProperties: {type: string}}
+                  truncated: {type: boolean}
+        '400': {$ref: '#/components/responses/Error'}
+        '401': {$ref: '#/components/responses/Error'}
+        '404': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
+        '502': {$ref: '#/components/responses/Error'}
         '504': {$ref: '#/components/responses/Error'}
   /internal/v1/semantic/retrieve:
     post:
@@ -394,6 +495,7 @@ components:
         clamp preserves cursor bindings under unchanged configuration. Invalid caller budgets
         yield 400; configurations leaving no positive work and response budgets are rejected.
     NodeId: {name: nodeId, in: path, required: true, schema: {type: string}}
+    CommunityId: {name: communityId, in: path, required: true, schema: {type: string}}
     QueryId: {name: queryId, in: path, required: true, schema: {type: string}}
     JobId: {name: jobId, in: path, required: true, schema: {type: string, pattern: '^job-[0-9a-f]{64}$'}}
     RequestId: {name: X-Request-Id, in: header, schema: {type: string, pattern: '^[a-zA-Z0-9._:-]{1,128}$'}, description: Invalid or absent IDs are replaced by generated safe IDs}

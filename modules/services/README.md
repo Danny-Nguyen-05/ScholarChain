@@ -16,7 +16,7 @@ synthetic format material, never a claim about a real researcher or deployed ans
 | --- | --- |
 | query-api | POST `/v1/query`; GET `/v1/jobs/{jobId}` and `/result`; GET `/v1/evidence/{evidenceId}`; GET `/v1/queries/{queryId}/evidence`; GET `/v1/explain/{queryId}`; graph proxy routes below |
 | query-api, graph-service | GET `/v1/graph/nodes/{nodeId}` and `/neighbors` |
-| graph-service | GET `/internal/v1/graph/nodes/{nodeId}` and `/neighbors`; GET `/internal/v1/graph/metrics/{nodeId}`; GET `/internal/v1/graph/paths` |
+| graph-service | GET `/internal/v1/graph/nodes/{nodeId}` and `/neighbors`; GET `/internal/v1/graph/metrics/{nodeId}`; GET `/internal/v1/graph/paths`; GET `/internal/v1/graph/communities/{communityId}/members` and `/cross-edges` |
 | semantic-service | POST `/internal/v1/semantic/retrieve` |
 | query-api | POST `/internal/v1/semantic/retrieve` forwards to the configured semantic service |
 | query-api | POST `/v1/semantic/retrieve`: public, API-key authenticated, rate limited, forwards to the internal semantic route (see "Public semantic retrieval") |
@@ -90,6 +90,97 @@ The distribution contains `services.jar`, `lib/`, and required `prompts/runtime`
 `prompts/schemas` assets. Build with `sbt packageServices` on JDK 17; Docker's `MAIN_CLASS`
 build argument selects one of the four allowed mains. Container listeners require
 `SCHOLARCHAIN_HTTP_HOST=0.0.0.0` explicitly. Images are built locally without a registry push.
+
+## Local query stack over a Phase 6 export (no AWS)
+
+`LocalQueryStackMain` runs the real query workflow on a laptop with **no AWS call and no AWS SDK
+client**: one JVM starts the same three roles as `aws` mode (semantic-service, graph-service,
+query-api) through the same `ServiceBootstrap.launch`, all bound to **loopback only**, with
+`LocalPortFactory` as the port factory. It loads one completed Phase 6 Spark export once
+(`LocalExportStores`, storage module: hash-verified, about 200 s for the size-S export) and serves
+it from memory.
+
+| Port group | Local source |
+|---|---|
+| graph-service (`GraphPorts`) | `stores.graphReader` and `stores.metrics`. The local reader sits only behind the graph role (`LiveGraphSnapshot` / `GraphApi`); the query workflow reaches the graph through `RemoteGraphReader` over HTTP to the graph role, exactly as on AWS. `QueryPorts` has no graph reader. |
+| query-api (`QueryPorts`) | fresh in-memory sessions, evidence bundles and audit store; `stores.entityLinks`, `stores.metrics`, `stores.objects`, `stores.runtimeArtifacts`; the Anthropic client built by `RagProviderClients.anthropic` exactly as `AwsSdkPortFactory` does |
+| semantic-service (`SemanticPorts`) | **not served**: an empty vector index and an embedder that always refuses (`local-semantic-not-served`). There are no vectors and no Voyage key. |
+| worker | not served (`local-stack-has-no-embedding-worker`); query jobs use the in-process `QueryService` pool as always |
+
+Retrieval mode: the stack defaults to `SCHOLARCHAIN_RUNTIME_RETRIEVAL_MODE=graph`, so no semantic
+query is planned and answers are not flagged partial because a semantic stage failed. `fused`
+is accepted (the semantic stage then fails per query and the answer is partial). The variable is
+a general override of the packaged `retrievalMode` (graph or fused; vector is refused) and is unset
+in `aws` mode. Consequence: an operation that needs semantic evidence ("Explain the research
+collaboration of X", `SemanticExplanation`) cannot be answered locally and abstains.
+
+Configuration (environment, plus arguments):
+
+- `SCHOLARCHAIN_API_KEY_SHA256` (required): SHA-256 of the API key clients send as `Authorization: Bearer`.
+- `SCHOLARCHAIN_ANTHROPIC_API_KEY` (optional): the real key, handed only to the provider seam. Without it the stack
+  still starts and is ready, and `POST /v1/query` answers 503 `MODEL_NOT_CONFIGURED` (not retryable) without any call.
+- `SCHOLARCHAIN_HTTP_HOST` (default and the only accepted value `127.0.0.1`; `::1`, `localhost` and anything else exit 2, because the peer URIs and the readiness probe are IPv4 loopback) and
+  `SCHOLARCHAIN_HTTP_PORT` or `--port N` (default 8080; the graph and semantic roles use ephemeral loopback ports and a
+  random per-run internal token that never leaves memory).
+- `--export-dir DIR` or `SCHOLARCHAIN_LOCAL_EXPORT_DIR`: the Spark export root. There is no default.
+- `--include-list FILE` or `SCHOLARCHAIN_LOCAL_INCLUDE_LIST`: serve the runtime artifact as the bounded include-ids subset
+  (as deployed on AWS) instead of the whole export. The graph, metric and entity-link stores are always the whole export.
+- `--scratch-dir DIR` (cache loader staging, about 2 GB for size-S), `--no-verify` (skip the table-hash recomputation).
+- Other `SCHOLARCHAIN_*` knobs of the service config pass through (secrets and `SCHOLARCHAIN_APPLICATION_REGION` are dropped;
+  the region is the placeholder `us-local-1`). The AWS-shaped values the shared config reader insists on are fixed placeholders
+  named `local-unused-*`.
+
+Deadline profiles (non-secret; the effective values are printed in the ready line):
+
+| Profile | Environment | Effective |
+|---|---|---|
+| **packaged** (default, faithful to AWS) | none | planner 5000 ms, synthesis 5000 ms, runtime synchronous 30000 ms, service synchronous 15000 ms, workflow 60000 ms |
+| **raised** (a real model may exceed 5 s per stage) | `SCHOLARCHAIN_RUNTIME_PLANNER_DEADLINE_MS=15000 SCHOLARCHAIN_RUNTIME_SYNTHESIS_DEADLINE_MS=30000 SCHOLARCHAIN_RUNTIME_SYNCHRONOUS_DEADLINE_MS=60000 SCHOLARCHAIN_SYNCHRONOUS_DEADLINE_MS=70000 SCHOLARCHAIN_WORKFLOW_TIMEOUT_MS=70000` | planner 15000, synthesis 30000, runtime synchronous 60000, service synchronous 70000, workflow 70000 |
+
+The runtime synchronous deadline must be at least the critical path of the stage deadlines (60000 ms for planner 15000 and
+synthesis 30000, `RuntimeConfigValidation`); the service synchronous and workflow deadlines must cover it. A set that does not
+fit is refused at preflight (`runtime-config-invalid`), before the export is read.
+
+Preflight checks (host, key hash, port, key shape, and the full parse of the retrieval mode, every deadline and every service knob) run before the export is read. Exit codes: 2 configuration refusal,
+3 refused export or include list. Output is one `local-query-stack ready ...` line (port, retrieval mode, model id, the effective deadlines, `llm=anthropic|unconfigured`,
+run ID, artifact scope and pointer SHA-256, `hashesVerified`, load milliseconds) and short phase lines; no environment value is printed.
+The dataset snapshot recorded in every answer's provenance is `local-export:<run id>`.
+
+Launch from the repository root (the prompts are found by walking up from the working directory, or set
+`SCHOLARCHAIN_PROMPTS_DIR`). JDK 17, heap of 3 GB or more:
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+java -version          # must report 17
+cd <repository root>
+CP="$(sbt -batch -error 'export services/Runtime/fullClasspath' | tail -n 1)"
+case "$CP" in *classes*) echo "classpath ok" ;; *) echo "classpath export failed: stop here" ;; esac
+printf 'API key to use (kept in this shell only): '; IFS= read -r -s LOCAL_API_KEY; echo
+export SCHOLARCHAIN_API_KEY_SHA256="$(printf '%s' "$LOCAL_API_KEY" | shasum -a 256 | cut -d' ' -f1)"
+printf 'Anthropic key: '; IFS= read -r -s K; echo
+# the key is in the environment of the java process only, so sbt and the Q12 harness never inherit it
+SCHOLARCHAIN_ANTHROPIC_API_KEY="$K" java -Xmx3g -cp "$CP" edu.uic.cs441.scholarchain.services.LocalQueryStackMain \
+  --export-dir "<export root>/spark" --include-list experiments/inputs/q12/include-ids.txt --port 8080
+unset K
+```
+
+The `read` form above works in both bash and zsh (`read -p` does not: in zsh it reads from a coprocess and leaves the
+variable empty). Check without printing: `echo ${#LOCAL_API_KEY} ${#K}` must show two non-zero lengths before you start
+`java`. The launcher refuses the SHA-256 of an empty key and a blank `SCHOLARCHAIN_ANTHROPIC_API_KEY`, so a failed read
+stops the launch instead of starting a stack that silently has no model.
+
+For the no-key stack (graph and health checks only; `POST /v1/query` answers 503 `MODEL_NOT_CONFIGURED`), run the same
+`java` command without the `SCHOLARCHAIN_ANTHROPIC_API_KEY="$K"` prefix. Prefix the `java` command with the raised-profile
+variables of the table above to run that profile.
+
+`java` runs in the **foreground** of this terminal and prints the ready line after about 3 minutes. Run the Q12 harness in a
+**second terminal**: there set `SCHOLARCHAIN_LOAD_BASE_URL=http://127.0.0.1:8080` and read the same API key with the same
+no-echo form into `SCHOLARCHAIN_LOAD_API_KEY` (`printf 'API key: '; IFS= read -r -s SCHOLARCHAIN_LOAD_API_KEY; echo;
+export SCHOLARCHAIN_LOAD_API_KEY`). Stop the stack with Ctrl-C in the first terminal.
+
+`LocalStackSpec` covers the wiring, the verified-claim round trip, the evidence and explain routes, the no-key refusal, the
+loopback and key-hash refusals, key non-disclosure and the result-size bound, all with a scripted model.
 
 ## Live AWS mode (`SCHOLARCHAIN_SERVICE_MODE=aws`)
 
@@ -423,8 +514,30 @@ deadline, including blocking adapter calls. Stable BFS order determines pages. S
 cursors bind node, snapshot, direction, depth, edge filters, window, page limit and timeout.
 Changing any binding or tampering rejects the cursor. Use a stable secret cursor key across
 replicas; a per-process random key intentionally invalidates old cursors after restart.
-Path results use shortest bounded BFS and never exceed the requested hop cap. Truncated
-expansion yields 422 instead of a fabricated absence of paths.
+Path results use a level-by-level shortest-path BFS over `COAUTHORED_WITH` edges only (the same
+edge type as the storage `GraphReader.shortestPaths` port; that port returns every shortest path
+and its own tie order, whereas this route returns one path in sorted node/edge order), stopping at
+the first level that contains `to`. It expands only the levels it needs, so a nearby pair does not
+pay for the wider neighbourhood, but a single frontier node whose incident edges exceed the scan
+cap, or a search whose visited nodes exceed the node cap, still ends the search early. A missing
+`from` or `to` is 404. The hop ceiling for paths is `maxPathDepth` (default 6,
+`SCHOLARCHAIN_GRAPH_MAX_PATH_DEPTH`), separate from the neighbour-expansion `maxDepth` (3). A
+requested `maxDepth` above it is clamped, not rejected; the reply carries `maxDepth` (applied),
+`clamped`, `truncated` and `truncationReason`. A cap hit before `to` is a 200 with no path and
+`truncated: true` (an empty result is never a proof of disconnection); a deadline or snapshot
+failure remains a typed error. `RemoteGraphReader` returns an empty result only for a completed
+search. A search that found nothing but was cut short is a closed refusal, so the retrieval stage
+fails and the answer abstains rather than verifying a "no path within N hops" claim:
+`path-search-truncated` when a cap was hit, `path-depth-clamped` when the service ceiling is below
+the requested depth.
+
+Community reads: GET `/internal/v1/graph/communities/{communityId}/members` and `/cross-edges`
+take `window` (default `all-years`), `limit` (default 50, maximum 200) and `timeoutMs`, with the
+same internal-token auth, 400 validation and graph deadline as the other graph routes. They answer
+from the snapshot's stored communities (the local export reader and the Neptune reader implement
+them); a snapshot with none (the in-memory synthetic snapshot) answers 422 `COMMUNITY_UNSUPPORTED`,
+which `RemoteGraphReader` reports as `remote-graph-operation-unsupported`. Cross-edge replies
+carry `truncated` when the store reports more rows than returned.
 
 Evidence reads retain the actual source dataset/record/snapshot/URI, work/chunk/path pointer,
 score, compact stored content and full source provenance. Query evidence lists come from the

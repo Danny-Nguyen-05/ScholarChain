@@ -154,35 +154,10 @@ final class NeptuneExportValidator(config: ExportValidationConfig = ExportValida
         "provenanceJson:String" -> serialized(row("provenance")),
         "contextJson:String" -> serialized(row("context"))
       )
-      def expectedGraph(row: ujson.Obj) = ujson.Obj(
-        ":ID" -> row("edgeId"),
-        ":START_ID" -> row("fromId"),
-        ":END_ID" -> row("toId"),
-        ":TYPE" -> row("edgeType"),
-        "schemaVersion:String" -> row("schemaVersion"),
-        "policyVersion:String" -> row("policyVersion"),
-        "sourceEvidenceJson:String" -> serialized(row("sourceEvidence")),
-        "propertiesJson:String" -> serialized(row("properties")),
-        "provenanceJson:String" -> serialized(row("provenance")),
-        "contextJson:String" -> serialized(row("context"))
-      )
-      def expectedCoauthor(row: ujson.Obj) = ujson.Obj(
-        ":ID" -> row("edgeId"),
-        ":START_ID" -> row("researcherA"),
-        ":END_ID" -> row("researcherB"),
-        ":TYPE" -> "COAUTHORED_WITH",
-        "policyVersion:String" -> row("policyVersion"),
-        "jointPublicationCount:Long" -> row("jointPublicationCount"),
-        "firstCollaborationYear:Int" -> row("firstCollaborationYear"),
-        "lastCollaborationYear:Int" -> row("lastCollaborationYear"),
-        "windowStartYear:Int" -> row("windowStartYear"),
-        "windowEndYear:Int" -> row("windowEndYear"),
-        "windowId:String" -> row("context")("windowId"),
-        "representativeWorkIdsJson:String" -> serialized(row("representativeWorkIds")),
-        "evidenceTable:String" -> supportPath,
-        "evidenceEdgeId:String" -> row("edgeId"),
-        "contextJson:String" -> serialized(row("context"))
-      )
+      // One shared definition of the edge projection (also used by the local loader).
+      def expectedGraph(row: ujson.Obj) = GraphProjection.toObj(GraphProjection.graphEdge(row))
+      def expectedCoauthor(row: ujson.Obj) =
+        GraphProjection.toObj(GraphProjection.coauthorFromRow(row))
       var nodes = 0L; var edges = 0L; var supports = 0L
       def source(m: LoadManifest)(f: ujson.Obj => Unit): Unit = {
         val digest =

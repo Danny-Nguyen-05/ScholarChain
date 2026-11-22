@@ -120,23 +120,52 @@ final case class RuntimePromptAssets(
     synthesisPrompt: String,
     synthesisSchema: ujson.Value
 )
+
+/** The synthesis prompt/schema versions this build can run. A prompt or schema whose content
+  * changes is given a new label here and a new file name; it is never edited in place under an old
+  * label. Retired labels name content that is no longer in the tree (recover it from git history)
+  * and are refused for new answers. Session 1 recorded answers under `synthesis-v1` while that
+  * prompt was edited in place; no single checked-in file can replay them, so none is kept.
+  */
+object SynthesisAssetVersions {
+  val promptVersion = "synthesis-v2"
+  val schemaVersion = "scholarchain.runtime.synthesis.v2"
+  val promptFile = s"runtime/$promptVersion.md"
+  val schemaFile = "schemas/answer-synthesis-v2.json"
+  val retiredPromptVersions: Set[String] = Set("synthesis-v1")
+  val retiredSchemaVersions: Set[String] = Set("scholarchain.runtime.synthesis.v1")
+}
+
 object RuntimePromptAssets {
-  def fromDirectory(root: Path, config: RuntimeConfig): Either[String, RuntimePromptAssets] = try {
+  val RetiredSynthesisVersion = "runtime-synthesis-version-retired"
+  val VersionMismatch = "runtime-asset-version-mismatch"
+  def fromDirectory(root: Path, config: RuntimeConfig): Either[String, RuntimePromptAssets] = {
+    if (
+      SynthesisAssetVersions.retiredPromptVersions.contains(config.synthesisPromptVersion) ||
+      SynthesisAssetVersions.retiredSchemaVersions.contains(config.synthesisSchemaVersion)
+    ) Left(RetiredSynthesisVersion)
+    else if (
+      config.synthesisPromptVersion != SynthesisAssetVersions.promptVersion ||
+      config.synthesisSchemaVersion != SynthesisAssetVersions.schemaVersion
+    ) Left(VersionMismatch)
+    else load(root, config)
+  }
+  private def load(root: Path, config: RuntimeConfig): Either[String, RuntimePromptAssets] = try {
     def read(relative: String): String = {
       val file = root.resolve(relative)
       require(Files.size(file) <= config.effectiveByteLimits.promptBytes)
       Files.readString(file, UTF_8)
     }
     val planner = read("runtime/planner-v1.md")
-    val synthesis = read("runtime/synthesis-v1.md")
+    val synthesis = read(SynthesisAssetVersions.promptFile)
     val plannerSchema = ujson.read(read("schemas/query-plan-v1.json"))
-    val synthesisSchema = ujson.read(read("schemas/answer-synthesis-v1.json"))
+    val synthesisSchema = ujson.read(read(SynthesisAssetVersions.schemaFile))
     if (
       !planner.startsWith(s"promptVersion: ${config.plannerPromptVersion}\n") ||
       !synthesis.startsWith(s"promptVersion: ${config.synthesisPromptVersion}\n") ||
       plannerSchema("$id").str != config.plannerSchemaVersion ||
       synthesisSchema("$id").str != config.synthesisSchemaVersion
-    ) Left("runtime-asset-version-mismatch")
+    ) Left(VersionMismatch)
     else Right(RuntimePromptAssets(planner, plannerSchema, synthesis, synthesisSchema))
   } catch { case NonFatal(_) => Left("runtime-assets-unavailable") }
 }

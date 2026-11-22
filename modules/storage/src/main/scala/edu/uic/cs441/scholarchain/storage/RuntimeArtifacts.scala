@@ -234,24 +234,72 @@ object Phase6RuntimeArtifacts {
   }
 }
 
+/** Slim, provenance-free view of one stored association edge. The runtime artifact reads only these
+  * three fields from authored, has_topic, published_in and affiliated_with rows.
+  */
+private[storage] final case class AssociationRef(edgeId: String, fromId: String, toId: String)
+
+/** The typed rows behind the runtime artifact. A snapshot is decoded into this shape, and the local
+  * export loader, which never serializes a snapshot, builds it directly. Both feed the one query
+  * implementation below.
+  */
+private[storage] final case class RuntimeArtifactRows(
+    windows: Set[String],
+    presentTables: Set[String],
+    researcherIds: Set[String],
+    metrics: Vector[ResearcherMetricsDetail],
+    bridges: Vector[ResearcherBridgeMetrics],
+    memberships: Vector[CommunityMembership],
+    summaries: Vector[CommunitySummary],
+    changes: Vector[TemporalChange],
+    edges: Vector[SparkCoauthorEdge],
+    supports: Vector[CoauthorEdgeSupport],
+    authored: Vector[AssociationRef],
+    hasTopic: Vector[AssociationRef],
+    publishedIn: Vector[AssociationRef],
+    affiliatedWith: Vector[AssociationRef]
+)
+
+private[storage] object RuntimeArtifactRows {
+  def fromSnapshot(snapshot: RuntimeArtifactSnapshot): RuntimeArtifactRows = {
+    val tables = snapshot.tables.map(t => t.manifest.logicalDataset -> t.rows).toMap
+    def rows[A: ReadWriter](name: String): Vector[A] =
+      tables.getOrElse(name, Vector.empty).map(v => read[A](v))
+    def refs(name: String): Vector[AssociationRef] =
+      rows[GraphEdge](name).map(e => AssociationRef(e.edgeId, e.fromId, e.toId))
+    RuntimeArtifactRows(
+      snapshot.tables.head.manifest.windows.toSet,
+      tables.keySet,
+      rows[GraphNode]("nodes/type=researcher").map(_.nodeId).toSet,
+      rows[ResearcherMetricsDetail]("metrics/type=researcher_collaboration"),
+      rows[ResearcherBridgeMetrics]("metrics/type=bridges"),
+      rows[CommunityMembership]("metrics/type=communities"),
+      rows[CommunitySummary]("metrics/type=community_summaries"),
+      rows[TemporalChange]("metrics/type=temporal_changes"),
+      rows[SparkCoauthorEdge]("edges/type=coauthored_with"),
+      rows[CoauthorEdgeSupport]("edges/type=coauthored_with_support"),
+      refs("edges/type=authored"),
+      refs("edges/type=has_topic"),
+      refs("edges/type=published_in"),
+      refs("edges/type=affiliated_with")
+    )
+  }
+}
+
 private[storage] final class RuntimeArtifactData(
-    val snapshot: RuntimeArtifactSnapshot,
+    val data: RuntimeArtifactRows,
     val pointer: RuntimeArtifactPointer,
     config: RuntimeArtifactConfig
 ) extends RuntimeArtifactStore {
-  private val tables = snapshot.tables.map(t => t.manifest.logicalDataset -> t.rows).toMap
-  private def rows[A: ReadWriter](name: String): Vector[A] =
-    tables.getOrElse(name, Vector.empty).map(v => read[A](v))
-  private val metrics = rows[ResearcherMetricsDetail]("metrics/type=researcher_collaboration")
-  private val bridges = rows[ResearcherBridgeMetrics]("metrics/type=bridges")
-  private val memberships = rows[CommunityMembership]("metrics/type=communities")
-  private val summaries = rows[CommunitySummary]("metrics/type=community_summaries")
-  private val changes = rows[TemporalChange]("metrics/type=temporal_changes")
-  private val edges = rows[SparkCoauthorEdge]("edges/type=coauthored_with")
-  private val supports = rows[CoauthorEdgeSupport]("edges/type=coauthored_with_support")
-  private val researchers = rows[GraphNode]("nodes/type=researcher")
-  private val storedWindows = snapshot.tables.head.manifest.windows.toSet
-  private val researcherIds = researchers.map(_.nodeId).toSet
+  private val metrics = data.metrics
+  private val bridges = data.bridges
+  private val memberships = data.memberships
+  private val summaries = data.summaries
+  private val changes = data.changes
+  private val edges = data.edges
+  private val supports = data.supports
+  private val storedWindows = data.windows
+  private val researcherIds = data.researcherIds
   private val metricsByResearcherWindow =
     metrics.map(m => (m.researcherId, m.context.windowId.get) -> m).toMap
   private val metricsByWindow = metrics.groupBy(_.context.windowId.get)
@@ -275,13 +323,15 @@ private[storage] final class RuntimeArtifactData(
     .groupMap(_._1)(_._2)
   // Index source relations without materializing the potentially quadratic researcher/work/topic
   // join. Each query traverses only the researcher's authored works and those subjects' relations.
-  private val authoredByResearcher = rows[GraphEdge]("edges/type=authored").groupBy(_.fromId)
+  private val authoredByResearcher = data.authored.groupBy(_.fromId)
   private val associationTableNames =
     Vector("edges/type=has_topic", "edges/type=published_in", "edges/type=affiliated_with")
-  private val associationsByTableSubject = associationTableNames.map { name =>
-    name -> rows[GraphEdge](name).groupBy(_.fromId)
-  }.toMap
-  private def sourceAssociations(id: String, dataset: String): Vector[GraphEdge] = {
+  private val associationsByTableSubject = Map(
+    "edges/type=has_topic" -> data.hasTopic.groupBy(_.fromId),
+    "edges/type=published_in" -> data.publishedIn.groupBy(_.fromId),
+    "edges/type=affiliated_with" -> data.affiliatedWith.groupBy(_.fromId)
+  )
+  private def sourceAssociations(id: String, dataset: String): Vector[AssociationRef] = {
     val bySubject = associationsByTableSubject(dataset)
     if (dataset == "edges/type=affiliated_with") bySubject.getOrElse(id, Vector.empty)
     else
@@ -300,7 +350,7 @@ private[storage] final class RuntimeArtifactData(
       case "venue" => "edges/type=published_in"
       case _       => "edges/type=affiliated_with"
     }
-    if (!tables.contains(dataset)) None
+    if (!data.presentTables(dataset)) None
     else {
       val found = sourceAssociations(id, dataset).map(_.toId).distinct.sorted
       // No association row is missing evidence, not proof of a known empty association set.
@@ -473,6 +523,11 @@ private[storage] final class RuntimeArtifactData(
 private[storage] object RuntimeArtifactData {
   private def reject(code: String): Nothing = throw SourceRejected(code)
   def validate(s: RuntimeArtifactSnapshot, config: RuntimeArtifactConfig): Unit = {
+    validated(s, config); ()
+  }
+
+  /** Same checks as `validate`; also returns the decoded typed rows. */
+  def validated(s: RuntimeArtifactSnapshot, config: RuntimeArtifactConfig): RuntimeArtifactRows = {
     if (
       s.schemaVersion != Phase6RuntimeArtifacts.version || s.tables
         .map(_.manifest.logicalDataset)
@@ -557,15 +612,18 @@ private[storage] object RuntimeArtifactData {
       )
       if (keys.distinct.size != keys.size) reject("runtime-artifact-duplicate-source-key")
     }
-    def data[A: ReadWriter](name: String): Vector[A] = s.tables
-      .find(_.manifest.logicalDataset == name)
-      .map(_.rows.map(v => read[A](v)))
-      .getOrElse(Vector.empty)
-    val nodes = data[GraphNode]("nodes/type=researcher").map(_.nodeId).toSet
-    val metrics = data[ResearcherMetricsDetail]("metrics/type=researcher_collaboration")
-    val memberships = data[CommunityMembership]("metrics/type=communities")
-    val edges = data[SparkCoauthorEdge]("edges/type=coauthored_with")
-    val supports = data[CoauthorEdgeSupport]("edges/type=coauthored_with_support")
+    val rows = RuntimeArtifactRows.fromSnapshot(s)
+    crossCheck(rows)
+    rows
+  }
+
+  /** Relations between tables, shared by the snapshot path and the local export loader. */
+  def crossCheck(rows: RuntimeArtifactRows): Unit = {
+    val nodes = rows.researcherIds
+    val metrics = rows.metrics
+    val memberships = rows.memberships
+    val edges = rows.edges
+    val supports = rows.supports
     val metricsByKey = metrics.map(m => (m.researcherId, m.context.windowId) -> m).toMap
     val membershipsByKey = memberships.map(m => (m.researcherId, m.context.windowId) -> m).toMap
     val edgeKeys = edges.map(e => (e.edgeId, e.context.windowId)).toSet
@@ -575,7 +633,7 @@ private[storage] object RuntimeArtifactData {
         .exists(m => !nodes(m.researcherId)) ||
       edges.exists(e => !nodes(e.researcherA) || !nodes(e.researcherB))
     ) reject("runtime-artifact-missing-researcher")
-    data[ResearcherBridgeMetrics]("metrics/type=bridges").foreach { b =>
+    rows.bridges.foreach { b =>
       val metric = metricsByKey.get((b.researcherId, b.context.windowId))
       val membership = membershipsByKey.get((b.researcherId, b.context.windowId))
       if (
@@ -626,10 +684,10 @@ final class ObjectStoreRuntimeArtifactStore(
           Rejected("runtime-artifact-content-mismatch")
         else {
           val snapshot = read[RuntimeArtifactSnapshot](new String(stored.bytes.toArray, UTF_8))
-          RuntimeArtifactData.validate(snapshot, config)
+          val rows = RuntimeArtifactData.validated(snapshot, config)
           if (snapshot.context.runId != pointer.sourceRunId)
             Rejected("runtime-artifact-run-mismatch")
-          else Found(new RuntimeArtifactData(snapshot, pointer, config))
+          else Found(new RuntimeArtifactData(rows, pointer, config))
         }
       }
   } catch {

@@ -178,17 +178,17 @@ class CommittedManifests(unittest.TestCase):
         allocation = read_json(os.path.join(EXPERIMENTS, "manifests", "llm-allocation.json"))
         self.assertEqual(allocation["schema"], "scholarchain.llm-allocation.v2")
         buckets = {name: entry["answers"] for name, entry in allocation["buckets"].items()}
-        self.assertEqual(buckets, {"14c": 10, "15b": 60, "16b": 40, "17": 5})  # user decision 2026-11-08
-        self.assertEqual(sum(buckets.values()), 115)
-        # 115 x 0.001365 = 0.156975 <= 1.33 (claude-haiku-5-5: 7,150 in x 0.10 + 1,300 out x 0.50 per 1M tokens)
-        self.assertEqual(round(115 * 0.001365, 6), 0.156975)
+        self.assertEqual(buckets, {"14c": 10, "15b": 60, "16b": 80, "17": 10})  # user decisions 2026-11-08 and 2026-11-21 (option A: 16b 40 -> 80, 17 5 -> 10)
+        self.assertEqual(sum(buckets.values()), 160)
+        # 160 x 0.001365 = 0.2184 <= 1.33 (claude-haiku-5-5: 7,150 in x 0.10 + 1,300 out x 0.50 per 1M tokens)
+        self.assertEqual(round(160 * 0.001365, 6), 0.2184)
         self.assertEqual(allocation["shared_cap_usd"], "1.33")  # user decision 2026-11-09, lowered from 1.50
-        self.assertLessEqual(115 * 0.001365, float(allocation["shared_cap_usd"]))
+        self.assertLessEqual(160 * 0.001365, float(allocation["shared_cap_usd"]))
         # 1.33 is a conservative upper bound now: the cap would hold 974 answers (974 x 0.001365 = 1.32951) and not 975 (1.330875)
         self.assertLessEqual(974 * 0.001365, float(allocation["shared_cap_usd"]))
         self.assertGreater(975 * 0.001365, float(allocation["shared_cap_usd"]))
         # the per-bucket estimates in USD
-        self.assertEqual([round(n * 0.001365, 6) for n in (10, 60, 40, 5)], [0.01365, 0.0819, 0.0546, 0.006825])
+        self.assertEqual([round(n * 0.001365, 6) for n in (10, 60, 80, 10)], [0.01365, 0.0819, 0.1092, 0.01365])
         profile = read_json(os.path.join(REPO, "load-tests", "config", "load-profile.v1.json"))
         self.assertEqual(profile["llm"]["shared_cap_usd"], allocation["shared_cap_usd"])
         manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15b-ecs-scaling.json"))
@@ -209,7 +209,7 @@ class CommittedManifests(unittest.TestCase):
         self.assertIn("USD 0.0819", m15b["llm"]["note"])
         self.assertIn("claude-haiku-5-5", allocation["note"])
         self.assertIn("us.anthropic.claude-haiku-4-5-20251001-v1:0", allocation["note"])  # the Bedrock fallback is named
-        self.assertIn("USD 0.0546", m16b["llm"]["draws_from"])
+        self.assertIn("USD 0.1092", m16b["llm"]["draws_from"])
         emb = m16b["llm"]["embeddings"]
         self.assertEqual((emb["provider"], emb["model"], emb["output_dimension"], emb["cap_usd"]), ("voyage", "voyage-4-lite", 256, "0.30"))
         self.assertIn("USD 0.02 per 1M tokens", emb["price"])
@@ -219,7 +219,7 @@ class CommittedManifests(unittest.TestCase):
         lines = []
         check.check_15b_16b(REPO, False, lines)
         text = "\n".join(lines)
-        self.assertIn("per-bucket estimates (USD) 14c 0.013650, 15b 0.081900, 16b 0.054600, 17 0.006825, total 0.156975", text)
+        self.assertIn("per-bucket estimates (USD) 14c 0.013650, 15b 0.081900, 16b 0.109200, 17 0.013650, total 0.218400", text)
         self.assertIn("embeddings voyage-4-lite 256 dims USD 0.02 per 1M tokens, first 200M tokens free, cap USD 0.30", text)
 
     def test_15b_manifest_covers_all_levels_and_a_scale_in_window(self):
@@ -476,7 +476,7 @@ class RenderAndCheck(Fixture):
     def test_allocation_over_the_shared_cap_fails(self):
         path = self.manifest_path("llm-allocation.json")
         allocation = read_json(path)
-        allocation["buckets"]["16b"]["answers"] = 1000  # 10 + 60 + 1000 + 5 = 1075 x 0.001365 = 1.467375 > 1.33
+        allocation["buckets"]["16b"]["answers"] = 1000  # 10 + 60 + 1000 + 10 = 1080 x 0.001365 = 1.4742 > 1.33
         write_text(path, json.dumps(allocation))
         failed, _, lines = self.run_check()
         self.assertTrue(failed)

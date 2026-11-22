@@ -1,6 +1,6 @@
 package edu.uic.cs441.scholarchain.services
 
-import edu.uic.cs441.scholarchain.core.EmbeddingModel
+import edu.uic.cs441.scholarchain.core.{EmbeddingModel, RetrievalMode}
 import edu.uic.cs441.scholarchain.rag.{
   AnthropicDefaults,
   EmbeddingProvider,
@@ -31,7 +31,8 @@ final case class RuntimeArtifactSettings(key: String, sha256: String, sourceRunI
 final case class RuntimeOverrides(
     plannerMs: Option[Long],
     synthesisMs: Option[Long],
-    synchronousMs: Option[Long]
+    synchronousMs: Option[Long],
+    retrievalMode: Option[RetrievalMode] = None
 )
 
 /** One closed, immutable description of what a role needs from AWS. Every value comes from the
@@ -367,7 +368,14 @@ object AwsServiceConfig {
           RuntimeOverrides(
             r.optionalLong("SCHOLARCHAIN_RUNTIME_PLANNER_DEADLINE_MS", 1, 600000L),
             r.optionalLong("SCHOLARCHAIN_RUNTIME_SYNTHESIS_DEADLINE_MS", 1, 600000L),
-            r.optionalLong("SCHOLARCHAIN_RUNTIME_SYNCHRONOUS_DEADLINE_MS", 1, 600000L)
+            r.optionalLong("SCHOLARCHAIN_RUNTIME_SYNCHRONOUS_DEADLINE_MS", 1, 600000L),
+            // Optional. Unset keeps the packaged mode. A stack without stored vectors selects graph.
+            r.optionalText("SCHOLARCHAIN_RUNTIME_RETRIEVAL_MODE")
+              .map(v =>
+                Vector(RetrievalMode.Graph, RetrievalMode.Fused)
+                  .find(_.wire == v)
+                  .getOrElse(r.refuse("SCHOLARCHAIN_RUNTIME_RETRIEVAL_MODE"))
+              )
           )
         )
     })

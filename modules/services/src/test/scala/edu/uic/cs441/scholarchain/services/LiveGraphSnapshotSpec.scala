@@ -70,7 +70,11 @@ class LiveGraphSnapshotSpec extends AnyFunSuite {
       scanLimit: Int = 10000
   ) = new LiveGraphSnapshot(
     "snapshot-under-test",
-    new InMemoryGraphReader(nodes = Vector(node), edges = edges, maxLimit = maxLimit),
+    new InMemoryGraphReader(
+      nodes = Vector(node, node.copy(nodeId = "n3")),
+      edges = edges,
+      maxLimit = maxLimit
+    ),
     new InMemoryResearcherMetricStore,
     pageSize,
     scanLimit
@@ -153,7 +157,11 @@ class LiveGraphSnapshotSpec extends AnyFunSuite {
 
   test("paging passes the cursor through until the store reports no more rows") {
     val cursors = new java.util.concurrent.ConcurrentLinkedQueue[Option[String]]()
-    val inner = new InMemoryGraphReader(nodes = Vector(node), edges = rows, maxLimit = 2)
+    val inner = new InMemoryGraphReader(
+      nodes = Vector(node, node.copy(nodeId = "n3")),
+      edges = rows,
+      maxLimit = 2
+    )
     val counting = new edu.uic.cs441.scholarchain.storage.DirectedGraphReader {
       export inner.{
         node,

@@ -282,6 +282,7 @@ private[rag] object RuntimeEvidenceItems {
 object EvidenceContext {
   private def view(item: EvidenceItem): ujson.Value = {
     val r = item.runtime.get
+    val isEdge = r.values.exists(v => v.field == "kind" && v.text.contains("edge"))
     val result = ujson.Obj(
       "evidenceId" -> item.evidenceId,
       "type" -> item.evidenceType.wire,
@@ -296,14 +297,19 @@ object EvidenceContext {
       "windows" -> ujson.Arr.from(r.windowIds),
       "runId" -> r.runId,
       "values" -> ujson.Obj.from(
-        r.values.map(v =>
-          v.field -> v.number
-            .map(ujson.Str(_))
-            .orElse(v.text.map(ujson.Str(_)))
-            .orElse(v.ids.map(xs => ujson.Arr.from(xs)))
-            .orElse(v.flag.map(ujson.Bool(_)))
-            .get
-        )
+        // Per-work detail of an edge (work ids and one year per work) is omitted from the model
+        // view: the edge row keeps its joint publication count, the stored evidence keeps every
+        // work, and a claim over those fields is still verified against the stored item.
+        r.values
+          .filterNot(v => isEdge && (v.field == "workIds" || v.field.startsWith("year:")))
+          .map(v =>
+            v.field -> v.number
+              .map(ujson.Str(_))
+              .orElse(v.text.map(ujson.Str(_)))
+              .orElse(v.ids.map(xs => ujson.Arr.from(xs)))
+              .orElse(v.flag.map(ujson.Bool(_)))
+              .get
+          )
       ),
       "approximate" -> r.approximate,
       "descriptive" -> r.descriptive,
@@ -333,12 +339,13 @@ object EvidenceContext {
       if (!runtime.descriptive) data.remove("descriptive")
       ujson.Obj.from(data)
     }
+    // Model view only: source IDs and evidence references are provenance, not claim material. The
+    // persisted bundle and the audit keep every resolved candidate in full; only the identifier,
+    // name, run and confidence reach the model, which keeps two-researcher path questions in budget.
     val identities = candidates.map { candidate =>
       val value = ujson.Obj(
         "researcherId" -> candidate.researcherId,
         "displayName" -> candidate.displayName,
-        "sourceIds" -> ujson.Arr.from(candidate.sourceIds),
-        "evidenceRefs" -> ujson.Arr.from(candidate.evidenceRefs),
         "runs" -> ujson.Arr.from(candidate.runIds.map(r => ujson.Num(runs.indexOf(r)))),
         "confidence" -> candidate.confidence.map(ujson.Num(_)).getOrElse(ujson.Null)
       )
@@ -365,4 +372,46 @@ object EvidenceContext {
   def tokenUpperBound(items: Vector[EvidenceItem]): Int = tokenUpperBound(items, Vector.empty)
   def tokenUpperBound(items: Vector[EvidenceItem], candidates: Vector[ResearcherCandidate]): Int =
     render(items, candidates).getBytes(UTF_8).length
+}
+
+/** Stored display names for researcher ids that answer text will show. The source is the stored
+  * graph node label only, so a model can never introduce or change an identity.
+  */
+private[rag] object RuntimeNames {
+  private val researcherPrefix = "researcher:"
+  def isResearcherId(id: String): Boolean = id.startsWith(researcherPrefix)
+
+  /** Subjects first, then ids-typed values, in evidence order and without duplicates. Edge items
+    * are included (a repeated-collaboration ranking renders their endpoints); the caller's cap
+    * keeps the lookup bounded, and the main item's ids come first so they win under the cap.
+    */
+  def renderedResearcherIds(bundle: EvidenceBundle): Vector[String] =
+    bundle.items
+      .flatMap(_.runtime)
+      .filterNot(_.descriptive)
+      .flatMap(r => r.subjectIds ++ r.values.flatMap(_.ids.toVector.flatten))
+      .filter(isResearcherId)
+      .distinct
+
+  /** Control and format characters (bidi marks, zero-width characters) are removed, whitespace is
+    * collapsed. A label that mimics rendering syntax (an id prefix or the path arrow) is refused so
+    * a stored name cannot forge ids or extra path steps in answer text.
+    */
+  def clean(label: String): Option[String] = {
+    val text = label
+      .replaceAll("[\\p{Cf}]", "")
+      .replaceAll("[\\p{Cc}\\s]+", " ")
+      .trim
+    Option.when(
+      text.nonEmpty && text.length <= 200 && !text
+        .toLowerCase(java.util.Locale.ROOT)
+        .contains(researcherPrefix) && !text.contains("→")
+    )(text)
+  }
+
+  /** A failed lookup (missing, rejected, thrown) is simply no name. */
+  def read(graph: GraphReader, id: String): Option[String] =
+    try
+      StorageResult.value(graph.node(id)).filter(n => n.nodeId == id).flatMap(n => clean(n.label))
+    catch { case scala.util.control.NonFatal(_) => None }
 }

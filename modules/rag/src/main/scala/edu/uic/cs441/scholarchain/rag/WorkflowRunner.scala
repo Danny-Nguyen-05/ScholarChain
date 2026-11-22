@@ -28,6 +28,12 @@ enum WorkflowResult {
   case Failed(failure: StageFailure)
 }
 
+/** A workflow result with the runtime-only display names of its bundle's researcher ids. The names
+  * travel beside the result (the evidence record is a core contract and stays unchanged) and are
+  * empty for every result other than a Ready one that had names to look up.
+  */
+final case class NamedWorkflowResult(result: WorkflowResult, displayNames: Map[String, String])
+
 /** Subphase9B terminates at persisted evidence for both evidenceOnly settings. Synthesis,
   * verification and audit are intentionally later stages. The caller receives no final answer.
   * Every blocking port call runs in an interruptible task bounded by its stage and overall
@@ -45,6 +51,7 @@ final class WorkflowRunner(
     config: RuntimeConfig
 ) {
   require(RuntimeConfigValidation.check(config).isEmpty)
+
   private case class Completed[A](value: A, finishedNanos: Long)
   private def completed[A](body: => A): Completed[A] = {
     val value = body; Completed(value, System.nanoTime())
@@ -82,20 +89,32 @@ final class WorkflowRunner(
       deadline: Long,
       planSink: QueryPlan => Unit = _ => (),
       usageSink: RuntimeModelUsage => Unit = _ => ()
-  ): WorkflowResult = {
+  ): WorkflowResult =
+    runUntilNamed(question, queryId, provenance, deadline, planSink, usageSink).result
+  def runUntilNamed(
+      question: String,
+      queryId: String,
+      provenance: Provenance,
+      deadline: Long,
+      planSink: QueryPlan => Unit = _ => (),
+      usageSink: RuntimeModelUsage => Unit = _ => ()
+  ): NamedWorkflowResult = {
     val pool = executor()
-    try
-      timed(pool, deadline, "planner", config.deadlines.plannerMs)(
-        planner.plan(question, queryId, provenance, usageSink)
-      ) match {
-        case Left(failure) => WorkflowResult.Failed(failure)
-        case Right(PlannerResult.Planned(plan, _, _)) =>
-          planSink(plan); execute(plan, queryId, pool, deadline)
-        case Right(PlannerResult.Unsupported(reason, _)) => WorkflowResult.Unsupported(reason)
-        case Right(PlannerResult.Failed(reason)) =>
-          WorkflowResult.Failed(StageFailure("planner", reason))
-      }
-    finally close(pool, deadline)
+    var names = Map.empty[String, String]
+    val result =
+      try
+        timed(pool, deadline, "planner", config.deadlines.plannerMs)(
+          planner.plan(question, queryId, provenance, usageSink)
+        ) match {
+          case Left(failure) => WorkflowResult.Failed(failure)
+          case Right(PlannerResult.Planned(plan, _, _)) =>
+            planSink(plan); execute(plan, queryId, pool, deadline, n => names = n)
+          case Right(PlannerResult.Unsupported(reason, _)) => WorkflowResult.Unsupported(reason)
+          case Right(PlannerResult.Failed(reason)) =>
+            WorkflowResult.Failed(StageFailure("planner", reason))
+        }
+      finally close(pool, deadline)
+    NamedWorkflowResult(result, names)
   }
   def runPlan(plan: QueryPlan, queryId: String): WorkflowResult =
     runPlanUntil(
@@ -103,16 +122,28 @@ final class WorkflowRunner(
       queryId,
       System.nanoTime() + config.operations.synchronousDeadlineMs * 1000000L
     )
-  def runPlanUntil(plan: QueryPlan, queryId: String, deadline: Long): WorkflowResult = {
+  def runPlanUntil(plan: QueryPlan, queryId: String, deadline: Long): WorkflowResult =
+    runPlanUntilNamed(plan, queryId, deadline).result
+  def runPlanNamed(plan: QueryPlan, queryId: String): NamedWorkflowResult =
+    runPlanUntilNamed(
+      plan,
+      queryId,
+      System.nanoTime() + config.operations.synchronousDeadlineMs * 1000000L
+    )
+  def runPlanUntilNamed(plan: QueryPlan, queryId: String, deadline: Long): NamedWorkflowResult = {
     val pool = executor()
-    try execute(plan, queryId, pool, deadline)
-    finally close(pool, deadline)
+    var names = Map.empty[String, String]
+    val result =
+      try execute(plan, queryId, pool, deadline, n => names = n)
+      finally close(pool, deadline)
+    NamedWorkflowResult(result, names)
   }
   private def execute(
       plan: QueryPlan,
       queryId: String,
       pool: ExecutorService,
-      deadline: Long
+      deadline: Long,
+      nameSink: Map[String, String] => Unit
   ): WorkflowResult = {
     if (DomainValidation.check(plan).isLeft || plan.runtime.isEmpty)
       return WorkflowResult.Unsupported("invalid-runtime-plan")
@@ -215,6 +246,7 @@ final class WorkflowRunner(
     ) match {
       case Left(f) => WorkflowResult.Failed(f)
       case Right(EvidenceBuildResult.Persisted(bundle)) =>
+        nameSink(lookupNames(plan, bundle, pool, deadline))
         WorkflowResult.Ready(
           plan,
           bundle,
@@ -226,6 +258,37 @@ final class WorkflowRunner(
       case Right(EvidenceBuildResult.Failed(reason)) =>
         WorkflowResult.Failed(StageFailure("evidence", reason))
     }
+  }
+
+  /** Names come only from stored graph nodes (never from model output). Only researcher ids that
+    * the deterministic evidence renders are looked up (none for a plan that renders none), at most
+    * twice the plan's graph limit, in parallel. The lookups have their own budget of the evidence
+    * stage deadline, started after the evidence is persisted and still capped by the overall
+    * workflow deadline. A missing, failed or late lookup leaves that id without a name; it never
+    * fails the workflow.
+    */
+  private def lookupNames(
+      plan: QueryPlan,
+      bundle: EvidenceBundle,
+      pool: ExecutorService,
+      deadline: Long
+  ): Map[String, String] = {
+    val resolved = bundle.runtime.toVector
+      .flatMap(_.resolvedCandidates)
+      .map(c => c.researcherId -> c.displayName)
+      .toMap
+    val wanted = RuntimeNames.renderedResearcherIds(bundle).filterNot(resolved.contains)
+    val limited = wanted.take(2 * math.min(plan.graphLimit, config.retrieval.graphLimit))
+    if (limited.isEmpty) return Map.empty
+    val expires = math.min(deadline, System.nanoTime() + config.deadlines.evidenceMs * 1000000L)
+    val tasks = limited.map { id =>
+      id -> pool.submit(new Callable[Completed[Option[String]]] {
+        def call(): Completed[Option[String]] = completed(RuntimeNames.read(path.graph, id))
+      })
+    }
+    tasks.flatMap { (id, task) =>
+      await(task, expires, "names").toOption.flatten.map(id -> _)
+    }.toMap
   }
   private def timed[A](pool: ExecutorService, overall: Long, stage: String, millis: Long)(
       body: => A

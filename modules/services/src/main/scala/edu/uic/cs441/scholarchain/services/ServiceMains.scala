@@ -21,7 +21,8 @@ object BootstrapConfig {
       maxVisitedNodes = int("MAX_VISITED_NODES", 2000),
       maxCursorChars = int("MAX_CURSOR_CHARS", 4096),
       cursorKey =
-        env.getOrElse("SCHOLARCHAIN_GRAPH_CURSOR_KEY", java.util.UUID.randomUUID().toString)
+        env.getOrElse("SCHOLARCHAIN_GRAPH_CURSOR_KEY", java.util.UUID.randomUUID().toString),
+      maxPathDepth = int("MAX_PATH_DEPTH", 6)
     )
   }
   def worker(env: Map[String, String]): WorkerConfig = WorkerConfig(

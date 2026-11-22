@@ -3,8 +3,8 @@
 
 Run from the repository root:   python3 -I -m unittest discover -s load-tests/tests -v
 No AWS, Anthropic or Voyage call and no non-loopback network. Expected values are derived by hand from the requirement:
-bucket 16b holds 40 answers (experiments/manifests/llm-allocation.json); one answer costs USD 0.001365 (see test_loadgen.py),
-so 40 answers cost 40 x 0.001365 = 0.054600 and 3 answers cost 0.004095.
+bucket 16b holds 80 answers (experiments/manifests/llm-allocation.json; 40 until the user decision of 2026-11-21, option A); one answer costs USD 0.001365 (see test_loadgen.py),
+so the 40 committed questions cost 40 x 0.001365 = 0.054600 and 3 answers cost 0.004095.
 """
 import contextlib
 import http.server
@@ -167,9 +167,9 @@ class Eval16bCase(unittest.TestCase):
                 mock.patch.object(socket, "create_connection", no_network), mock.patch.object(socket, "getaddrinfo", no_network):
             rc, out, err = self.plan(questions=REAL_QUESTIONS)
         self.assertEqual(rc, 0, err)
-        # the committed question file holds exactly the 16b bucket: 40 questions, 40 x 0.001365 = 0.0546
+        # the committed question file holds 40 questions (half of the 80-answer bucket 16b), 40 x 0.001365 = 0.0546
         self.assertIn("QUESTIONS: 40 from the questions file", out)
-        self.assertIn("BUCKET 16b size=40 used=0 remaining=40", out)
+        self.assertIn("BUCKET 16b size=80 used=0 remaining=80", out)
         self.assertIn("PLANNED: answers=40 estimated_usd=0.054600", out)
         self.assertIn("NETWORK: none", out)
         self.assertIn("RESULT: PLAN-OK (nothing sent)", out)
@@ -179,14 +179,14 @@ class Eval16bCase(unittest.TestCase):
 
     def test_plan_refuses_more_questions_than_the_bucket(self):
         self.init_ledger()
-        rc, out, err = self.plan(questions=self.write_questions(41))
+        rc, out, err = self.plan(questions=self.write_questions(81))
         self.assertEqual(rc, 3)
-        self.assertIn("41 questions to ask exceed the 40 remaining answers", err)
+        self.assertIn("81 questions to ask exceed the 80 remaining answers", err)
         self.assertEqual(len(self.ledger_lines()), 1)
 
     def test_run_refuses_more_than_the_bucket_before_sending_or_charging(self):
         self.init_ledger()
-        rc, out, err = self.run_eval(questions=self.write_questions(41))
+        rc, out, err = self.run_eval(questions=self.write_questions(81))
         self.assertEqual(rc, 3)
         self.assertEqual(self.state.posts, [])
         self.assertEqual(len(self.ledger_lines()), 1)  # only the init line
@@ -195,12 +195,12 @@ class Eval16bCase(unittest.TestCase):
     def test_remaining_answers_account_for_earlier_use(self):
         self.init_ledger()
         self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "5")[0], 0)
-        rc, out, err = self.plan(questions=self.write_questions(36))
+        rc, out, err = self.plan(questions=self.write_questions(76))
         self.assertEqual(rc, 3)
-        self.assertIn("36 questions to ask exceed the 35 remaining answers (size 40, used 5)", err)
-        rc, out, err = self.plan("--max-answers", "35", questions=self.write_questions(36))
+        self.assertIn("76 questions to ask exceed the 75 remaining answers (size 80, used 5)", err)
+        rc, out, err = self.plan("--max-answers", "75", questions=self.write_questions(76))
         self.assertEqual(rc, 0, err)
-        self.assertIn("PLANNED: answers=35", out)
+        self.assertIn("PLANNED: answers=75", out)
 
     def test_max_answers_only_lowers(self):
         self.init_ledger()
@@ -266,7 +266,7 @@ class Eval16bCase(unittest.TestCase):
         self.assertEqual([x["event"] for x in lines], ["init", "answer", "answer", "answer"])
         self.assertTrue(all(x["bucket"] == "16b" and x["answers"] == 1 and x["unit_usd"] == "0.001365" for x in lines[1:]))
         rc, status = self.budget("status")
-        self.assertIn("BUCKET 16b size=40 used=3 remaining=37", status)
+        self.assertIn("BUCKET 16b size=80 used=3 remaining=77", status)
         rows = self.answers()
         self.assertEqual([r["index"] for r in rows], [1, 2, 3])
         self.assertEqual(rows[0]["query_id"], "q-1")
@@ -311,8 +311,8 @@ class Eval16bCase(unittest.TestCase):
         self.init_ledger()
 
         def drain(n):
-            if n == 1:  # another program reserves the rest of the bucket while question 1 is in flight (size 40, used 1 -> 39 more)
-                self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "39")[0], 0)
+            if n == 1:  # another program reserves the rest of the bucket while question 1 is in flight (size 80, used 1 -> 79 more)
+                self.assertEqual(self.budget("reserve", "--bucket", "16b", "--answers", "79")[0], 0)
 
         self.state.after_post = drain
         rc, out, err = self.run_eval()
@@ -359,6 +359,17 @@ class Eval16bCase(unittest.TestCase):
         rc, out, err = self.run_eval("--output-root", os.path.join(REPO, "experiments", "runs-should-not-exist"))
         self.assertEqual(rc, 3)
         self.assertEqual(self.state.posts, [])
+
+
+    def test_the_16b_run_record_keeps_its_own_schema_and_the_failure_rule_is_unchanged(self):
+        # evalq12.py sets its own schema name and neutral expected refusals; eval16b itself is unchanged: 3 consecutive failures stop it
+        self.init_ledger()
+        self.state.mode = "503-leak"
+        rc, out, err = self.run_eval(questions=self.write_questions(6))
+        self.assertEqual(rc, 4)
+        self.assertEqual(len(self.answers()), 3)
+        self.assertEqual(self.record()["schema"], "scholarchain.eval16b-run-record.v1")
+        self.assertTrue(all("expected_refusal" not in row for row in self.answers()))
 
 
 if __name__ == "__main__":

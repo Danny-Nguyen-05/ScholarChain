@@ -2,7 +2,7 @@
 """Tests for load-tests/llm_budget.py, the per-bucket Haiku answer ledger (stdlib, local files only).
 
 Run from the repository root:   python3 -I -m unittest discover -s load-tests/tests -v
-Expected values are hand-derived: unit cost 0.001365 USD = (7,150 x 0.10 + 1,300 x 0.50) / 1M (claude-haiku-5-5, tokens raised 30%); buckets 14c 10, 15b 60, 16b 40, 17 5; cap 1.33.
+Expected values are hand-derived: unit cost 0.001365 USD = (7,150 x 0.10 + 1,300 x 0.50) / 1M (claude-haiku-5-5, tokens raised 30%); buckets 14c 10, 15b 60, 16b 80, 17 10 (16b and 17 raised by the user decision of 2026-11-21, option A; were 40 and 5); cap 1.33.
 """
 import contextlib
 import io
@@ -75,8 +75,8 @@ class DefaultAllocation(BudgetCase):
         self.assertEqual(rc, 0, err)
         self.assertIn("BUCKET 14c size=10 used=0 remaining=10", out)
         self.assertIn("BUCKET 15b size=60 used=0 remaining=60", out)
-        self.assertIn("BUCKET 16b size=40 used=0 remaining=40", out)
-        self.assertIn("BUCKET 17 size=5 used=0 remaining=5", out)
+        self.assertIn("BUCKET 16b size=80 used=0 remaining=80", out)
+        self.assertIn("BUCKET 17 size=10 used=0 remaining=10", out)
         for bucket, count in (("14c", 4), ("15b", 7), ("17", 1)):
             self.assertEqual(self.cli("reserve", "--bucket", bucket, "--answers", str(count))[0], 0)
         self.assertEqual(self.cli("adjust", "--usd", "0.05", "--source", "aws-bill")[0], 0)
@@ -84,19 +84,19 @@ class DefaultAllocation(BudgetCase):
         # 12 answers x 0.001365 = 0.016380; plus 0.05 adjust = 0.066380; remaining 1.33 - 0.06638 = 1.263620
         self.assertIn("BUCKET 14c size=10 used=4 remaining=6 est_usd_used=0.005460", out)
         self.assertIn("BUCKET 15b size=60 used=7 remaining=53 est_usd_used=0.009555", out)
-        self.assertIn("BUCKET 16b size=40 used=0 remaining=40 est_usd_used=0.000000", out)
-        self.assertIn("BUCKET 17 size=5 used=1 remaining=4 est_usd_used=0.001365", out)
+        self.assertIn("BUCKET 16b size=80 used=0 remaining=80 est_usd_used=0.000000", out)
+        self.assertIn("BUCKET 17 size=10 used=1 remaining=9 est_usd_used=0.001365", out)
         self.assertIn("TOTAL answers_used=12 usd_used=0.066380 (incl. adjust 0.050000) shared_cap_usd=1.330000 remaining_usd=1.263620 unit_usd=0.001365", out)
 
     def test_a_bucket_is_a_hard_stop_exactly_full_passes_one_more_is_refused(self):
         self.init()
-        rc, out, err = self.cli("reserve", "--bucket", "17", "--answers", "5")  # exactly the size 5
+        rc, out, err = self.cli("reserve", "--bucket", "17", "--answers", "10")  # exactly the size 10
         self.assertEqual(rc, 0, err)
-        self.assertIn("RESULT: RESERVED bucket=17 answers=5 est_usd=0.006825", out)
+        self.assertIn("RESULT: RESERVED bucket=17 answers=10 est_usd=0.013650", out)
         before = read_text(self.ledger)
         rc, out, err = self.cli("reserve", "--bucket", "17", "--answers", "1")
         self.assertEqual(rc, 3)
-        self.assertIn("bucket 17: used 5 + requested 1 > size 5 (remaining 0)", err)
+        self.assertIn("bucket 17: used 10 + requested 1 > size 10 (remaining 0)", err)
         self.assertEqual(read_text(self.ledger), before)  # a refusal writes nothing
         # other buckets are unaffected, and one reservation larger than the bucket is refused whole
         self.assertEqual(self.cli("reserve", "--bucket", "14c", "--answers", "11")[0], 3)
@@ -116,7 +116,7 @@ class DefaultAllocation(BudgetCase):
         self.init()
         self.cli("reserve", "--bucket", "16b", "--answers", "6")
         self.assertEqual(self.cli("release", "--bucket", "16b", "--answers", "2")[0], 0)
-        self.assertIn("BUCKET 16b size=40 used=4 remaining=36", self.cli("status")[1])
+        self.assertIn("BUCKET 16b size=80 used=4 remaining=76", self.cli("status")[1])
         rc, _, err = self.cli("release", "--bucket", "16b", "--answers", "5")
         self.assertEqual(rc, 3)
         self.assertIn("only 4 are recorded as used", err)
@@ -152,30 +152,30 @@ class DefaultAllocation(BudgetCase):
         write_json(alloc, document)
         self.init(extra=["--allocation", alloc])
         self.assertNotIn("ALLOCATION-CHANGED", self.cli("status", extra=["--allocation", alloc])[1])
-        document["buckets"]["16b"]["answers"] = 39  # 10 + 60 + 39 + 5 = 114 x 0.001365 = 0.15561 <= 1.33, so the edited file still loads
+        document["buckets"]["16b"]["answers"] = 79  # 10 + 60 + 79 + 10 = 159 x 0.001365 = 0.217035 <= 1.33, so the edited file still loads
         write_json(alloc, document)
         self.assertIn("ALLOCATION-CHANGED", self.cli("status", extra=["--allocation", alloc])[1])
 
     def test_real_allocation_fits_the_cap_and_the_buckets_bind_before_the_cap(self):
         self.init()
-        for bucket, count in (("14c", 10), ("15b", 60), ("16b", 40), ("17", 5)):
+        for bucket, count in (("14c", 10), ("15b", 60), ("16b", 80), ("17", 10)):
             self.assertEqual(self.cli("reserve", "--bucket", bucket, "--answers", str(count))[0], 0)
-        # 115 x 0.001365 = 0.156975 <= 1.33: every bucket is full and the ledger total is far inside the shared cap
-        self.assertIn("TOTAL answers_used=115 usd_used=0.156975 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.173025 unit_usd=0.001365", self.cli("status")[1])
+        # 160 x 0.001365 = 0.2184 <= 1.33: every bucket is full and the ledger total is far inside the shared cap
+        self.assertIn("TOTAL answers_used=160 usd_used=0.218400 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.111600 unit_usd=0.001365", self.cli("status")[1])
         # with every bucket full, one more answer is refused by the bucket, not by the cap (1.33 is a conservative upper bound now)
         rc, _, err = self.cli("reserve", "--bucket", "17", "--answers", "1")
         self.assertEqual(rc, 3)
-        self.assertIn("bucket 17: used 5 + requested 1 > size 5 (remaining 0)", err)
+        self.assertIn("bucket 17: used 10 + requested 1 > size 10 (remaining 0)", err)
         self.assertNotIn("shared cap", err)
         # the cap would hold 974 answers (974 x 0.001365 = 1.32951) and not 975 (1.330875 > 1.33): an allocation of 975 is refused whole
         alloc = os.path.join(self.tmp, "alloc975.json")
         document = read_json(lb.DEFAULT_ALLOCATION)
-        document["buckets"]["16b"]["answers"] = 900  # 10 + 60 + 900 + 5 = 975
+        document["buckets"]["16b"]["answers"] = 895  # 10 + 60 + 895 + 10 = 975
         write_json(alloc, document)
         rc, _, err = self.cli("status", extra=["--allocation", alloc])
         self.assertEqual(rc, 3)
         self.assertIn("exceeds the shared cap", err)
-        document["buckets"]["16b"]["answers"] = 899  # 974 answers still load
+        document["buckets"]["16b"]["answers"] = 894  # 974 answers still load
         write_json(alloc, document)
         self.assertEqual(self.cli("status", extra=["--allocation", alloc])[0], 0)
 
@@ -189,12 +189,12 @@ class DefaultAllocation(BudgetCase):
     def test_allocation_over_the_cap_or_with_another_cap_is_refused(self):
         alloc = os.path.join(self.tmp, "alloc.json")
         document = read_json(lb.DEFAULT_ALLOCATION)
-        document["buckets"]["16b"]["answers"] = 1000  # 10 + 60 + 1000 + 5 = 1075 x 0.001365 = 1.467375 > 1.33
+        document["buckets"]["16b"]["answers"] = 1000  # 10 + 60 + 1000 + 10 = 1080 x 0.001365 = 1.4742 > 1.33
         write_json(alloc, document)
         rc, _, err = self.cli("status", extra=["--allocation", alloc])
         self.assertEqual(rc, 3)
         self.assertIn("exceeds the shared cap", err)
-        document["buckets"]["16b"]["answers"] = 40
+        document["buckets"]["16b"]["answers"] = 80
         document["shared_cap_usd"] = "2.00"
         write_json(alloc, document)
         self.assertEqual(self.cli("status", extra=["--allocation", alloc])[0], 3)
@@ -230,14 +230,14 @@ class PricingAndCostReport(unittest.TestCase):
                 lb.embedding_cost(self.profile, bad)
 
     def test_cost_report_lists_aws_anthropic_voyage_then_the_combined_total(self):
-        report = lb.cost_report(self.profile, 115)
+        report = lb.cost_report(self.profile, 160)
         self.assertEqual(list(report)[:3], ["aws", "anthropic", "voyage"])
-        self.assertEqual(report["anthropic"]["usd"], "0.156975")  # 115 x 0.001365
-        self.assertEqual((report["anthropic"]["input_tokens_estimate"], report["anthropic"]["output_tokens_estimate"]), (115 * 7150, 115 * 1300))
+        self.assertEqual(report["anthropic"]["usd"], "0.218400")  # 160 x 0.001365
+        self.assertEqual((report["anthropic"]["input_tokens_estimate"], report["anthropic"]["output_tokens_estimate"]), (160 * 7150, 160 * 1300))
         self.assertEqual(report["voyage"]["usd"], "0.000000")  # no charge: USD 0 with the usage noted
         self.assertIn("not metered", report["voyage"]["usage"])
         self.assertIsNone(report["aws"]["usd"])
-        self.assertEqual(report["combined_usd"], "0.156975")
+        self.assertEqual(report["combined_usd"], "0.218400")
         self.assertIn("AWS not included", report["combined_scope"])
         full = lb.cost_report(self.profile, 10, embedding_tokens=3000000, aws_usd="0.50")
         self.assertEqual((full["aws"]["usd"], full["anthropic"]["usd"], full["voyage"]["usd"], full["combined_usd"]), ("0.500000", "0.013650", "0.000000", "0.513650"))
@@ -299,9 +299,9 @@ class Transfers(BudgetCase):
         self.assertIn("bucket 14c has only 2 unused answers, cannot move 3", err)
         self.assertEqual(self.cli("transfer", "--from", "14c", "--to", "17", "--answers", "2", "--approval", self.approval("APPROVED_LLM_TRANSFER=14c->17:2"))[0], 0)
         self.assertEqual(self.cli("reserve", "--bucket", "14c", "--answers", "1")[0], 3)  # 14c is now size 8, used 8
-        self.assertEqual(self.cli("reserve", "--bucket", "17", "--answers", "7")[0], 0)  # 17 is now size 7
+        self.assertEqual(self.cli("reserve", "--bucket", "17", "--answers", "12")[0], 0)  # 17 is now size 12 (10 + 2)
         self.assertEqual(self.cli("reserve", "--bucket", "17", "--answers", "1")[0], 3)
-        self.assertIn("TOTAL answers_used=15", self.cli("status")[1])  # moving allowance never changes spend
+        self.assertIn("TOTAL answers_used=20", self.cli("status")[1])  # moving allowance never changes spend
 
     def test_bad_transfer_arguments(self):
         self.init()
@@ -365,7 +365,7 @@ class Concurrency(BudgetCase):
 
         def worker():
             for _ in range(5):
-                ok, _ = budget.try_charge("17", 1)  # bucket 17 holds 5
+                ok, _ = budget.try_charge("17", 1)  # bucket 17 holds 10
                 if ok:
                     granted.append(1)
 
@@ -374,16 +374,16 @@ class Concurrency(BudgetCase):
             t.start()
         for t in threads:
             t.join()
-        self.assertEqual(len(granted), 5)
-        self.assertEqual(budget.state()["used"]["17"], 5)
+        self.assertEqual(len(granted), 10)
+        self.assertEqual(budget.state()["used"]["17"], 10)
 
     def test_concurrent_reservations_never_exceed_a_bucket_processes(self):
         self.init()
         procs = [subprocess.Popen([sys.executable, "-I", SCRIPT, "--ledger", self.ledger, "reserve", "--bucket", "17", "--answers", "1"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for _ in range(14)]
         codes = sorted(p.wait(timeout=60) for p in procs)
-        self.assertEqual(codes, [0] * 5 + [3] * 9)  # exactly the 5 answers of bucket 17 were granted
-        self.assertEqual(len([e for e in self.lines() if e["event"] == "reserve"]), 5)
-        self.assertIn("BUCKET 17 size=5 used=5 remaining=0", self.cli("status")[1])
+        self.assertEqual(codes, [0] * 10 + [3] * 4)  # exactly the 10 answers of bucket 17 were granted
+        self.assertEqual(len([e for e in self.lines() if e["event"] == "reserve"]), 10)
+        self.assertIn("BUCKET 17 size=10 used=10 remaining=0", self.cli("status")[1])
 
     def test_concurrent_total_cap_across_buckets(self):
         self.init()

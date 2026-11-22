@@ -38,7 +38,8 @@ private[rag] object RuntimeStageLog {
       traceId: String,
       runId: String,
       status: String,
-      planId: Option[String]
+      planId: Option[String],
+      reason: Option[String] = None
   ): Unit = {
     val event = ujson.Obj(
       "event" -> "runtime-stage-outcome",
@@ -48,6 +49,9 @@ private[rag] object RuntimeStageLog {
       "outcome" -> status
     )
     planId.foreach(id => event("planId") = correlation(id))
+    // Callers pass only fixed labels (the planner maps any reason outside its own closed codes to a
+    // fixed label); the pattern is a last-resort format guard, not the closed-set check.
+    reason.filter(_.matches("[a-z0-9-]{1,96}")).foreach(r => event("reason") = r)
     logger.info(event.render())
   }
 }

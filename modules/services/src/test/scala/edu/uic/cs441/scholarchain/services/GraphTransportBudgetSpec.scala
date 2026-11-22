@@ -26,7 +26,9 @@ class GraphTransportBudgetSpec extends AnyFunSuite {
     "/internal/v1/graph/nodes/synthetic-node",
     "/internal/v1/graph/nodes/synthetic-node/neighbors",
     "/internal/v1/graph/metrics/synthetic-node",
-    "/internal/v1/graph/paths"
+    "/internal/v1/graph/paths",
+    "/internal/v1/graph/communities/synthetic-community/members",
+    "/internal/v1/graph/communities/synthetic-community/cross-edges"
   )
   private def withStub[A](body: (URI, () => Vector[Map[String, String]]) => A): A = {
     var seen = Vector.empty[Map[String, String]]

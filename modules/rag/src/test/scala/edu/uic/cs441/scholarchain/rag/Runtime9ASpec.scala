@@ -87,28 +87,24 @@ class Runtime9ASpec extends AnyFunSuite {
     )
   }
   test("structured stage logs contain correlation and outcome without question or names") {
-    val logger = org.slf4j.LoggerFactory
-      .getLogger("scholarchain.runtime.stage")
-      .asInstanceOf[ch.qos.logback.classic.Logger]
-    val appender =
-      new ch.qos.logback.core.read.ListAppender[ch.qos.logback.classic.spi.ILoggingEvent]
-    appender.start(); logger.addAppender(appender)
-    val previous = logger.getLevel
-    logger.setLevel(ch.qos.logback.classic.Level.INFO)
-    try {
-      val plan = planned(
+    var plan: QueryPlan = null
+    val events = LogbackTestSupport.capture("scholarchain.runtime.stage") {
+      plan = planned(
         agent(Vector(output(planJson().render()))).plan(ranking, "trace-fixture", provenance)
       )
       new ResearcherResolverAgent(new InMemoryEntityLinkCache, config).resolve(plan)
-      val plannerEvent = ujson.read(appender.list.get(0).getFormattedMessage)
-      val resolverEvent = ujson.read(appender.list.get(1).getFormattedMessage)
-      assert(plannerEvent("traceId").str == "trace-fixture" && plannerEvent("runId").str == run)
-      assert(plannerEvent("stage").str == "planner" && plannerEvent("outcome").str == "planned")
-      assert(
-        resolverEvent("planId").str == plan.planId && resolverEvent("outcome").str == "resolved"
-      )
-      assert(!plannerEvent.obj.contains("question") && !resolverEvent.obj.contains("names"))
-    } finally { logger.detachAppender(appender); logger.setLevel(previous); appender.stop() }
+    }
+    // The capture forces INFO on the stage logger (the scripted check's root is WARN) and suites
+    // run sequentially, so these are exactly this run's two events: planner first, then resolver.
+    val parsed = events.map(ujson.read(_))
+    assert(parsed.map(_("stage").str) == Vector("planner", "resolver"), events.toString)
+    val Vector(plannerEvent, resolverEvent) = parsed: @unchecked
+    assert(plannerEvent("traceId").str == "trace-fixture" && plannerEvent("runId").str == run)
+    assert(plannerEvent("stage").str == "planner" && plannerEvent("outcome").str == "planned")
+    assert(
+      resolverEvent("planId").str == plan.planId && resolverEvent("outcome").str == "resolved"
+    )
+    assert(!plannerEvent.obj.contains("question") && !resolverEvent.obj.contains("names"))
   }
   test("valid LLM plan preserves configured limits, mode and evidence-only option") {
     val c = config.copy(retrievalMode = RetrievalMode.Graph, evidenceOnly = true)

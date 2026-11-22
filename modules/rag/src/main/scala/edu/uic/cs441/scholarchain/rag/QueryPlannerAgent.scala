@@ -11,6 +11,64 @@ enum PlannerResult {
   case Failed(reason: String)
 }
 
+private[rag] object PlannerAgentReasons {
+  private val intentCodes = Set(
+    "unrepresentable-window-intent",
+    "unrepresentable-window-comparison",
+    "unrepresentable-multiple-ranking-intents",
+    "unrepresentable-author-conversion",
+    "unrecognized-operation-intent"
+  )
+  private val decodeCodes = Set(
+    "planner-output-bound",
+    "planner-schema",
+    "contradictory-plan-status",
+    "unsupported-operation-or-window",
+    "window-not-requested-by-question",
+    "invented-extracted-value",
+    "filter-not-grounded-in-request",
+    "named-ranking-population-not-supported",
+    "name-not-grounded-in-named-operation",
+    "unrepresented-question-constraint",
+    "dropped-filter",
+    "path-needs-two-names",
+    "operation-needs-name",
+    "temporal-needs-two-windows",
+    "requested-metric-measure-or-operation-changed",
+    "requested-author-conversion-changed",
+    "invalid-core-plan",
+    "malformed-plan-output"
+  )
+  private val directCodes = Set(
+    "planner-input-bound",
+    "planner-deadline",
+    "unsafe-operation-request",
+    "metric-not-stored",
+    "filtered-metric-not-stored",
+    "fallback-unrecognized-or-unrepresentable-constraint"
+  )
+  private val prefix = "model-plan-rejected-"
+  private val questionPrefix = "question-not-representable-"
+  val intentTag = "intent-"
+
+  /** `code` is one of the planner's own closed codes. A failure of the deterministic question
+    * analysis (tagged `intent-`) is reported as a question property, not as a model fault.
+    */
+  def modelPlanRejected(code: String): String =
+    if (code.startsWith(intentTag)) questionPrefix + code.stripPrefix(intentTag)
+    else prefix + code
+
+  /** The only reasons the stage log may carry. Anything else, notably the free `unsupportedReason`
+    * string of a model that declares UNSUPPORTED, is logged as a fixed label.
+    */
+  def logLabel(reason: String): String = {
+    val closed = directCodes(reason) ||
+      (reason.startsWith(prefix) && decodeCodes(reason.stripPrefix(prefix))) ||
+      (reason.startsWith(questionPrefix) && intentCodes(reason.stripPrefix(questionPrefix)))
+    if (closed) reason else "model-declared-unsupported"
+  }
+}
+
 /** An LLM proposes only allowlisted operations and extracted data. Validation and the fallback are
   * deterministic. The fallback recognizes a small anchored grammar, never approximate NLP.
   */
@@ -182,12 +240,13 @@ final class QueryPlannerAgent(
       usageSink: RuntimeModelUsage => Unit = _ => ()
   ): PlannerResult = {
     val result = planInternal(question, queryId, provenance, usageSink)
-    val (outcome, planId) = result match {
-      case PlannerResult.Planned(p, _, _)  => ("planned", Some(p.planId))
-      case PlannerResult.Unsupported(_, _) => ("unsupported", None)
-      case PlannerResult.Failed(_)         => ("failed", None)
+    val (outcome, planId, reason) = result match {
+      case PlannerResult.Planned(p, _, _) => ("planned", Some(p.planId), None)
+      case PlannerResult.Unsupported(r, _) =>
+        ("unsupported", None, Some(PlannerAgentReasons.logLabel(r)))
+      case PlannerResult.Failed(r) => ("failed", None, Some(PlannerAgentReasons.logLabel(r)))
     }
-    RuntimeStageLog.outcome("planner", queryId, provenance.runId, outcome, planId)
+    RuntimeStageLog.outcome("planner", queryId, provenance.runId, outcome, planId, reason)
     result
   }
   private def planInternal(
@@ -238,6 +297,7 @@ final class QueryPlannerAgent(
       config.deadlines.plannerMs
     )
     var attempt = 0
+    var rejection = Option.empty[String]
     while (attempt <= config.malformedRetries) {
       val remaining = config.deadlines.plannerMs - (clockNanos() - started) / 1000000
       if (remaining <= 0) return PlannerResult.Failed("planner-deadline")
@@ -262,15 +322,16 @@ final class QueryPlannerAgent(
           )
           decode(json, question, queryId, provenance, attempt, false) match {
             case Right(result) => return result
-            case Left(_)       => ()
+            case Left(code)    => rejection = Some(code)
           }
         case LlmResult.Failure(code)
             if code == "llm-invalid-tool-output" || code == "llm-output-bound" =>
           ()
-        case LlmResult.Failure(_) => return fallback(question, queryId, provenance, attempt)
+        case LlmResult.Failure(_) =>
+          return fallback(question, queryId, provenance, attempt, rejection)
       }
     }
-    fallback(question, queryId, provenance, attempt)
+    fallback(question, queryId, provenance, attempt, rejection)
   }
 
   private def decode(
@@ -296,21 +357,32 @@ final class QueryPlannerAgent(
     if (nullable(value, "unsupportedReason").nonEmpty) return Left("contradictory-plan-status")
     val operations =
       strings(value, "operations").map(w => QueryOperation.values.find(_.wire == w).get)
-    val windows = strings(value, "windowIds")
-    val comparison = strings(value, "comparisonWindowIds")
+    val modelWindows = strings(value, "windowIds")
+    val modelComparison = strings(value, "comparisonWindowIds")
     val names = strings(value, "researcherNames")
     val topics = strings(value, "topicFilters")
     val institutions = strings(value, "institutionFilters")
     val venues = strings(value, "venueFilters")
     val expected = intent(question) match {
-      case Left(reason) => return Left(reason)
+      case Left(reason) => return Left(PlannerAgentReasons.intentTag + reason)
       case Right(v)     => v
     }
     if (
-      operations.isEmpty || windows.isEmpty || (windows ++ comparison)
+      operations.isEmpty || (modelWindows ++ modelComparison)
         .exists(w => !config.windowIds.contains(w))
     )
       return Left("unsupported-operation-or-window")
+    // The model only proposes window ids; the question's window semantics are computed by `intent`
+    // and are authoritative. A stored window the question does not request (other than the neutral
+    // default placeholder) contradicts the request and is refused; any other encoding of the
+    // requested windows (which field, which order, empty) is normalised to the deterministic one.
+    if (
+      (modelWindows ++ modelComparison)
+        .exists(w => !expected.windows.contains(w) && w != config.defaultWindowId)
+    )
+      return Left("window-not-requested-by-question")
+    val windows = expected.windows
+    val comparison = expected.comparisons
     if ((names ++ topics ++ institutions ++ venues).exists(t => !norm(question).contains(norm(t))))
       return Left("invented-extracted-value")
     def filterAnchored(values: Vector[String], markers: String): Boolean = values.forall { v =>
@@ -361,8 +433,6 @@ final class QueryPlannerAgent(
         }).exists(t => norm(t) == norm(m.group(2)))
       )
     ) return Left("dropped-filter")
-    if (windows != expected.windows || comparison != expected.comparisons)
-      return Left("requested-window-intent-changed")
     if (operations.contains(QueryOperation.ShortestPath) && names.size != 2)
       return Left("path-needs-two-names")
     if (
@@ -566,8 +636,17 @@ final class QueryPlannerAgent(
       question: String,
       queryId: String,
       provenance: Provenance,
-      attempts: Int
+      attempts: Int,
+      modelRejection: Option[String] = None
   ): PlannerResult = {
+    // A closed decode code from a rejected model plan (never model text) replaces the generic
+    // fallback reason so that the cause stays observable in the result, the audit and the stage log.
+    val unsupported = PlannerResult.Unsupported(
+      modelRejection
+        .map(PlannerAgentReasons.modelPlanRejected)
+        .getOrElse("fallback-unrecognized-or-unrepresentable-constraint"),
+      attempts
+    )
     var remaining = question.trim.stripSuffix("?").trim
     val filters = quotedFilter.findAllMatchIn(remaining).toVector
     remaining = quotedFilter.replaceAllIn(remaining, "").trim.replaceAll("\\s+", " ")
@@ -588,7 +667,11 @@ final class QueryPlannerAgent(
       "(?i)(?:what is the )?shortest (?:coauthor )?path between \"([^\"]+)\" and \"([^\"]+)\"".r
     val coauthors = "(?i)(?:who are the )?direct coauthors of \"([^\"]+)\"".r
     val component = "(?i)(?:what is the )?component (?:of|for) \"([^\"]+)\"".r
-    val semantic = "(?i)explain the (?:research )?topic \"([^\"]+)\"".r
+    // The quoted `topic "..."` clause is removed from `remaining` above, so the explanation form is
+    // what is left of "explain the (research) topic "X"": the verb phrase plus exactly one quoted
+    // filter, which is a topic. Extra topics, venues or institutions are not representable here.
+    val semantic = "(?i)explain the(?: research)?".r
+    val topicFilters = filters.filter(_.group(1).equalsIgnoreCase("topic"))
     val repeated = "(?i)(?:show|rank) (?:the )?strongest repeated collaboration(?:s)?".r
     val parsed: Option[
       (Vector[QueryOperation], Vector[String], Option[CollaborationMetric], Option[String])
@@ -596,7 +679,7 @@ final class QueryPlannerAgent(
       case path(a, b)   => Some((Vector(QueryOperation.ShortestPath), Vector(a, b), None, None))
       case coauthors(a) => Some((Vector(QueryOperation.DirectCoauthors), Vector(a), None, None))
       case component(a) => Some((Vector(QueryOperation.ComponentLookup), Vector(a), None, None))
-      case semantic(_) =>
+      case semantic() if filters.size == 1 && topicFilters.size == 1 =>
         Some((Vector(QueryOperation.SemanticExplanation), Vector.empty, None, None))
       case repeated() =>
         Some(
@@ -646,13 +729,10 @@ final class QueryPlannerAgent(
       case _ => None
     }
     parsed match {
-      case None =>
-        PlannerResult.Unsupported("fallback-unrecognized-or-unrepresentable-constraint", attempts)
+      case None => unsupported
       case Some((ops, names, metric, measure)) =>
         def filter(kind: String) = filters.filter(_.group(1).equalsIgnoreCase(kind)).map(_.group(2))
-        val topics = filter("topic") ++ (remaining match {
-          case semantic(topic) => Vector(topic); case _ => Vector.empty
-        })
+        val topics = filter("topic")
         val value = ujson.Obj(
           "schemaVersion" -> config.plannerSchemaVersion,
           "status" -> "SUPPORTED",
@@ -668,9 +748,7 @@ final class QueryPlannerAgent(
           "authorCountConversion" -> false,
           "unsupportedReason" -> ujson.Null
         )
-        decode(value.render(), question, queryId, provenance, attempts, true).getOrElse(
-          PlannerResult.Unsupported("fallback-unrecognized-or-unrepresentable-constraint", attempts)
-        )
+        decode(value.render(), question, queryId, provenance, attempts, true).getOrElse(unsupported)
     }
   }
 }

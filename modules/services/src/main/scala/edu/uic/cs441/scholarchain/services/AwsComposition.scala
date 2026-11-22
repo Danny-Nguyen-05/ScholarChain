@@ -62,6 +62,7 @@ object AwsComposition {
         case Right(base) =>
           val o = config.overrides
           val updated = base.copy(
+            retrievalMode = o.retrievalMode.getOrElse(base.retrievalMode),
             model = base.model.copy(
               modelId = config.synthesisModelId,
               modelVersion = config.synthesisModelVersion,
@@ -344,7 +345,11 @@ object AwsComposition {
     val semantic = new RemoteSemanticApi(
       new RemoteService(config.semanticBaseUri, token, service, metrics, "semantic")
     )
-    val workflow = new LiveQueryWorkflow(config, runtime, prompts, ports, graph, semantic)
+    // A local stack started without a model key answers queries with one explicit refusal instead
+    // of letting the planner fallback and an abstaining synthesis mask the missing key.
+    val workflow: QueryWorkflow =
+      if (ports.llm eq MissingKeyLlm) MissingKeyLlm.workflow
+      else new LiveQueryWorkflow(config, runtime, prompts, ports, graph, semantic)
     val key = ReadinessProbes.probeKey
     new AwsComposition(
       new QueryService(ports.sessions, workflow, service, metrics),

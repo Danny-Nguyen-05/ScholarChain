@@ -1,5 +1,6 @@
 package edu.uic.cs441.scholarchain.services
 
+import edu.uic.cs441.scholarchain.core.RetrievalMode
 import org.scalatest.funsuite.AnyFunSuite
 
 class AwsConfigSpec extends AnyFunSuite {
@@ -171,6 +172,29 @@ class AwsConfigSpec extends AnyFunSuite {
       forRole("query-api").updated("SCHOLARCHAIN_RUNTIME_SYNCHRONOUS_DEADLINE_MS", "1000")
     val bad = parse("query-api", tooTight).toOption.get.asInstanceOf[QueryRoleConfig]
     assert(AwsComposition.runtimeConfig(bad) == Left("runtime-config-invalid"))
+  }
+
+  test("the runtime retrieval mode override is optional, graph or fused, and never echoed") {
+    val name = "SCHOLARCHAIN_RUNTIME_RETRIEVAL_MODE"
+    def config(env: Map[String, String]) =
+      parse("query-api", env).toOption.get.asInstanceOf[QueryRoleConfig]
+    // Unset: no override, the packaged mode (fused) is kept.
+    val unset = config(forRole("query-api"))
+    assert(unset.overrides.retrievalMode.isEmpty)
+    assert(AwsComposition.runtimeConfig(unset).toOption.get.retrievalMode == RetrievalMode.Fused)
+    for ((wire, mode) <- Seq("graph" -> RetrievalMode.Graph, "fused" -> RetrievalMode.Fused)) {
+      val c = config(forRole("query-api").updated(name, wire))
+      assert(c.overrides.retrievalMode.contains(mode))
+      assert(AwsComposition.runtimeConfig(c).toOption.get.retrievalMode == mode)
+    }
+    for (value <- Seq("vector", "Graph", "unknown-mode-value", "")) {
+      val result = parse("query-api", forRole("query-api").updated(name, value))
+      if (value.isEmpty) assert(result.isRight, "a blank value is an unset value")
+      else {
+        assert(result == Left("invalid-aws-configuration:" + name))
+        assert(!result.left.toOption.get.contains(value))
+      }
+    }
   }
 
   test("the internal token never appears when a role configuration is rendered") {
