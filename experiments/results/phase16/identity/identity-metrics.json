@@ -1,0 +1,7244 @@
+{
+ "cross_check": {
+  "all_agree": true,
+  "by_path": {
+   "development": [
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "DeterministicBibliographic",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      7,
+      0,
+      0,
+      0
+     ],
+     "path": "ExactIdentifier",
+     "recomputed": [
+      7,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      19
+     ],
+     "path": "HardConflict",
+     "recomputed": [
+      0,
+      0,
+      0,
+      19
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "INVALID",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "LlmAdjudicated",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "MISSING",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      4,
+      8
+     ],
+     "path": "Scored",
+     "recomputed": [
+      0,
+      0,
+      4,
+      8
+     ]
+    }
+   ],
+   "development without the 22 AI-assisted pairs": [
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "DeterministicBibliographic",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      6,
+      0,
+      0,
+      0
+     ],
+     "path": "ExactIdentifier",
+     "recomputed": [
+      6,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      19
+     ],
+     "path": "HardConflict",
+     "recomputed": [
+      0,
+      0,
+      0,
+      19
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "INVALID",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "LlmAdjudicated",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "MISSING",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      2,
+      7
+     ],
+     "path": "Scored",
+     "recomputed": [
+      0,
+      0,
+      2,
+      7
+     ]
+    }
+   ],
+   "held-out": [
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "DeterministicBibliographic",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      55,
+      0,
+      0,
+      0
+     ],
+     "path": "ExactIdentifier",
+     "recomputed": [
+      55,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      70
+     ],
+     "path": "HardConflict",
+     "recomputed": [
+      0,
+      0,
+      0,
+      70
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "INVALID",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "LlmAdjudicated",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "MISSING",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      2,
+      0,
+      15,
+      52
+     ],
+     "path": "Scored",
+     "recomputed": [
+      2,
+      0,
+      15,
+      52
+     ]
+    }
+   ],
+   "held-out without the 22 AI-assisted pairs": [
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "DeterministicBibliographic",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      49,
+      0,
+      0,
+      0
+     ],
+     "path": "ExactIdentifier",
+     "recomputed": [
+      49,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      70
+     ],
+     "path": "HardConflict",
+     "recomputed": [
+      0,
+      0,
+      0,
+      70
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "INVALID",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "LlmAdjudicated",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "path": "MISSING",
+     "recomputed": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "agrees": true,
+     "evaluator_json": [
+      2,
+      0,
+      8,
+      52
+     ],
+     "path": "Scored",
+     "recomputed": [
+      2,
+      0,
+      8,
+      52
+     ]
+    }
+   ]
+  },
+  "overall": {
+   "development": [
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 7,
+     "field": "tp",
+     "recomputed": 7,
+     "report_agrees": true,
+     "report_text": 7
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 0,
+     "field": "fp",
+     "recomputed": 0,
+     "report_agrees": true,
+     "report_text": 0
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 4,
+     "field": "fn",
+     "recomputed": 4,
+     "report_agrees": true,
+     "report_text": 4
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 27,
+     "field": "tn",
+     "recomputed": 27,
+     "report_agrees": true,
+     "report_text": 27
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 38,
+     "field": "binary",
+     "recomputed": 38,
+     "report_agrees": true,
+     "report_text": 38
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 2,
+     "field": "uncertain",
+     "recomputed": 2,
+     "report_agrees": true,
+     "report_text": 2
+    }
+   ],
+   "development without the 22 AI-assisted pairs": [
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 6,
+     "field": "tp",
+     "recomputed": 6,
+     "report_agrees": null,
+     "report_text": null
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 0,
+     "field": "fp",
+     "recomputed": 0,
+     "report_agrees": null,
+     "report_text": null
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 2,
+     "field": "fn",
+     "recomputed": 2,
+     "report_agrees": null,
+     "report_text": null
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 26,
+     "field": "tn",
+     "recomputed": 26,
+     "report_agrees": null,
+     "report_text": null
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 34,
+     "field": "binary",
+     "recomputed": 34,
+     "report_agrees": true,
+     "report_text": 34
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 2,
+     "field": "uncertain",
+     "recomputed": 2,
+     "report_agrees": true,
+     "report_text": 2
+    }
+   ],
+   "held-out": [
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 57,
+     "field": "tp",
+     "recomputed": 57,
+     "report_agrees": true,
+     "report_text": 57
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 0,
+     "field": "fp",
+     "recomputed": 0,
+     "report_agrees": true,
+     "report_text": 0
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 15,
+     "field": "fn",
+     "recomputed": 15,
+     "report_agrees": true,
+     "report_text": 15
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 122,
+     "field": "tn",
+     "recomputed": 122,
+     "report_agrees": true,
+     "report_text": 122
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 194,
+     "field": "binary",
+     "recomputed": 194,
+     "report_agrees": true,
+     "report_text": 194
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 6,
+     "field": "uncertain",
+     "recomputed": 6,
+     "report_agrees": true,
+     "report_text": 6
+    }
+   ],
+   "held-out without the 22 AI-assisted pairs": [
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 51,
+     "field": "tp",
+     "recomputed": 51,
+     "report_agrees": true,
+     "report_text": 51
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 0,
+     "field": "fp",
+     "recomputed": 0,
+     "report_agrees": true,
+     "report_text": 0
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 8,
+     "field": "fn",
+     "recomputed": 8,
+     "report_agrees": true,
+     "report_text": 8
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 122,
+     "field": "tn",
+     "recomputed": 122,
+     "report_agrees": true,
+     "report_text": 122
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 181,
+     "field": "binary",
+     "recomputed": 181,
+     "report_agrees": true,
+     "report_text": 181
+    },
+    {
+     "evaluator_agrees": true,
+     "evaluator_json": 1,
+     "field": "uncertain",
+     "recomputed": 1,
+     "report_agrees": true,
+     "report_text": 1
+    }
+   ]
+  }
+ },
+ "gaps": [
+  {
+   "metric": "blocking recall and global identity recall",
+   "reason": "the candidate list is the only population labelled; there is no gold set of true matches independent of the blocker"
+  },
+  {
+   "metric": "per-path metrics for DeterministicBibliographic and LlmAdjudicated",
+   "reason": "no pair took those paths in the sample (zero observations)"
+  },
+  {
+   "metric": "calibration (score reliability) and threshold sweep on held-out data",
+   "reason": "not done by design: no held-out tuning, and the uncalibrated policy emits no probability"
+  },
+  {
+   "metric": "inter-annotator agreement",
+   "reason": "a single reviewer; no second independent label set exists"
+  },
+  {
+   "metric": "real-provider LLM adjudication accuracy",
+   "reason": "no real-provider call was made in Phase 5E"
+  }
+ ],
+ "inputs": {
+  "evaluator-development": {
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development/evaluation.json",
+   "sha256": "02564be525973ee6c58a1ec5053d31784e1329cc9724c14f3ac979edf247f48b"
+  },
+  "evaluator-development-without-assisted": {
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development-without-assisted/evaluation.json",
+   "sha256": "0d42c22443389f1b890db43aeff4fedbf1193bfe07584ed8a7a19a4d45eb548d"
+  },
+  "evaluator-held-out": {
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out/evaluation.json",
+   "sha256": "d4ead7a09aa37d948906d2ddf3426abf1dc1b91c53a3aade8b0a028f3345de3b"
+  },
+  "evaluator-held-out-without-assisted": {
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out-without-assisted/evaluation.json",
+   "sha256": "9c5fde0b4184ca8d0026590ff8e4babe0582c7edf53cbaecffaca09c230458bb"
+  },
+  "exclusions": {
+   "path": "docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+   "sha256": "7b672067ceb0ba067cfe8be917dad753222db73989d6ff050a5cfa74684346c8"
+  },
+  "labels": {
+   "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+   "sha256": "5fbf6f5bdc1d34f7b79e910a07b964b60bdaaf1dfc825de7744b5f684e39e4a6"
+  },
+  "predictions": {
+   "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+   "sha256": "5f95cd8211cbfb5d3430f8eb19f80d7840381f30652648a6275f7ef112505cdf"
+  },
+  "queue": {
+   "path": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+   "sha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f"
+  }
+ },
+ "interpretation": [
+  "On the held-out sample the matcher accepted 0 pair(s) that the reviewer labelled different and withheld 15 of 72 true matches. Precision is 100.0% (57/57; Wilson 95% 93.7-100.0%); recall is 79.2% (57/72; Wilson 95% 68.4-86.9%).",
+  "No accepted pair was wrong in this sample while some true matches were not accepted, so the policy favours precision over recall on this sample.",
+  "Decisive coverage is 48.5% (94/194; Wilson 95% 41.5-55.4%): 30 of 194 binary pairs ended as UNRESOLVED and 70 as CONFLICT (not decided), and decisive accuracy (accuracy among the decided pairs) is 100.0% (94/94; Wilson 95% 96.1-100.0%).",
+  "ExactIdentifier path: TP 55, FP 0, FN 0 of 55 binary pairs. Those pairs were sampled because they share an observed identifier, so this is not a test of identifier-free matching.",
+  "False negatives by matching path: Scored 15; Scored-path recall is 11.8% (2/17; Wilson 95% 3.3-34.3%).",
+  "Read these figures with the intervals above and the sample limits; no claim about the whole corpus follows from this evaluation."
+ ],
+ "population": {
+  "excluded_assisted_pairs": 22,
+  "pairs_without_label": 0,
+  "pairs_without_prediction": 0,
+  "queued_pairs": 300
+ },
+ "schema": "scholarchain.eval16-identity.v1",
+ "slices": {
+  "development": {
+   "by_entity": {
+    "Researcher": {
+     "accuracy": {
+      "k": 16,
+      "n": 20,
+      "value": 0.8,
+      "wilson95": [
+       0.583983,
+       0.919342
+      ]
+     },
+     "binary": 20,
+     "conflict_rate": {
+      "k": 7,
+      "n": 20,
+      "value": 0.35,
+      "wilson95": [
+       0.181192,
+       0.567146
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 7,
+      "n": 20,
+      "value": 0.35,
+      "wilson95": [
+       0.181192,
+       0.567146
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.75
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 10,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.277533
+      ]
+     },
+     "fn": 4,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 7,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 1,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 6,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 4
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 6,
+      "n": 10,
+      "value": 0.6,
+      "wilson95": [
+       0.312674,
+       0.83182
+      ]
+     },
+     "tasks": 20,
+     "tn": 10,
+     "tp": 6,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 6,
+      "n": 20,
+      "value": 0.3,
+      "wilson95": [
+       0.145477,
+       0.518973
+      ]
+     }
+    },
+    "Work": {
+     "accuracy": {
+      "k": 18,
+      "n": 18,
+      "value": 1.0,
+      "wilson95": [
+       0.824121,
+       1.0
+      ]
+     },
+     "binary": 18,
+     "conflict_rate": {
+      "k": 12,
+      "n": 18,
+      "value": 0.6666666666666666,
+      "wilson95": [
+       0.437495,
+       0.837212
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 18,
+      "value": 0.3333333333333333,
+      "wilson95": [
+       0.162788,
+       0.562505
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 17,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.184318
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 12,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 5,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 1,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "tasks": 20,
+     "tn": 17,
+     "tp": 1,
+     "uncertain": 2,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 18,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.175879
+      ]
+     }
+    }
+   },
+   "by_entity_and_path": {
+    "Researcher / ExactIdentifier": {
+     "accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "binary": 6,
+     "conflict_rate": {
+      "k": 0,
+      "n": 6,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 6,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "tasks": 6,
+     "tn": 0,
+     "tp": 6,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 6,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ]
+     }
+    },
+    "Researcher / HardConflict": {
+     "accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "binary": 7,
+     "conflict_rate": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 7,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 7,
+     "tn": 7,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     }
+    },
+    "Researcher / Scored": {
+     "accuracy": {
+      "k": 3,
+      "n": 7,
+      "value": 0.42857142857142855,
+      "wilson95": [
+       0.15822,
+       0.749542
+      ]
+     },
+     "binary": 7,
+     "conflict_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 1,
+      "n": 7,
+      "value": 0.14285714285714285,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 3,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.561497
+      ]
+     },
+     "fn": 4,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 1,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 4
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 4,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.489891
+      ]
+     },
+     "tasks": 7,
+     "tn": 3,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 6,
+      "n": 7,
+      "value": 0.8571428571428571,
+      "wilson95": [
+       0.486872,
+       0.97432
+      ]
+     }
+    },
+    "Work / ExactIdentifier": {
+     "accuracy": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "binary": 1,
+     "conflict_rate": {
+      "k": 0,
+      "n": 1,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.793451
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 1,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "tasks": 1,
+     "tn": 0,
+     "tp": 1,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 1,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.793451
+      ]
+     }
+    },
+    "Work / HardConflict": {
+     "accuracy": {
+      "k": 12,
+      "n": 12,
+      "value": 1.0,
+      "wilson95": [
+       0.757506,
+       1.0
+      ]
+     },
+     "binary": 12,
+     "conflict_rate": {
+      "k": 12,
+      "n": 12,
+      "value": 1.0,
+      "wilson95": [
+       0.757506,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 12,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 13,
+     "tn": 12,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     }
+    },
+    "Work / Scored": {
+     "accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "binary": 5,
+     "conflict_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 5,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 6,
+     "tn": 5,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     }
+    }
+   },
+   "by_path": {
+    "ExactIdentifier": {
+     "accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "binary": 7,
+     "conflict_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 7,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "tasks": 7,
+     "tn": 0,
+     "tp": 7,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     }
+    },
+    "HardConflict": {
+     "accuracy": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "binary": 19,
+     "conflict_rate": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 19,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 20,
+     "tn": 19,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     }
+    },
+    "Scored": {
+     "accuracy": {
+      "k": 8,
+      "n": 12,
+      "value": 0.6666666666666666,
+      "wilson95": [
+       0.390622,
+       0.86188
+      ]
+     },
+     "binary": 12,
+     "conflict_rate": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 12,
+      "value": 0.5,
+      "wilson95": [
+       0.253782,
+       0.746218
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 8,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.324408
+      ]
+     },
+     "fn": 4,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 6,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 4
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 4,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.489891
+      ]
+     },
+     "tasks": 13,
+     "tn": 8,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 6,
+      "n": 12,
+      "value": 0.5,
+      "wilson95": [
+       0.253782,
+       0.746218
+      ]
+     }
+    }
+   },
+   "by_sampling_stratum": {
+    "missing-authoritative-id": {
+     "accuracy": {
+      "k": 8,
+      "n": 12,
+      "value": 0.6666666666666666,
+      "wilson95": [
+       0.390622,
+       0.86188
+      ]
+     },
+     "binary": 12,
+     "conflict_rate": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 12,
+      "value": 0.5,
+      "wilson95": [
+       0.253782,
+       0.746218
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 8,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.324408
+      ]
+     },
+     "fn": 4,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 6,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 4
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 4,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.489891
+      ]
+     },
+     "tasks": 13,
+     "tn": 8,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 6,
+      "n": 12,
+      "value": 0.5,
+      "wilson95": [
+       0.253782,
+       0.746218
+      ]
+     }
+    },
+    "observed-id-disagreement": {
+     "accuracy": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "binary": 19,
+     "conflict_rate": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 19,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 20,
+     "tn": 19,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     }
+    },
+    "shared-observed-id": {
+     "accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "binary": 7,
+     "conflict_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 7,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "tasks": 7,
+     "tn": 0,
+     "tp": 7,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     }
+    }
+   },
+   "overall": {
+    "accuracy": {
+     "k": 34,
+     "n": 38,
+     "value": 0.8947368421052632,
+     "wilson95": [
+      0.758695,
+      0.958297
+     ]
+    },
+    "binary": 38,
+    "conflict_rate": {
+     "k": 19,
+     "n": 38,
+     "value": 0.5,
+     "wilson95": [
+      0.348499,
+      0.651501
+     ]
+    },
+    "decisive_accuracy": {
+     "k": 13,
+     "n": 13,
+     "value": 1.0,
+     "wilson95": [
+      0.771905,
+      1.0
+     ]
+    },
+    "decisive_coverage": {
+     "k": 13,
+     "n": 38,
+     "value": 0.34210526315789475,
+     "wilson95": [
+      0.212124,
+      0.501079
+     ]
+    },
+    "f1": {
+     "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+     "value": 0.7777777777777778
+    },
+    "f1_bootstrap95": {
+     "high": 0.952381,
+     "low": 0.5,
+     "method": "percentile bootstrap",
+     "resamples": 2000,
+     "seed": "eval16-identity-v1",
+     "usable_resamples": 2000
+    },
+    "false_merge_rate": {
+     "k": 0,
+     "n": 27,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.124555
+     ]
+    },
+    "fn": 4,
+    "fp": 0,
+    "outcome_by_gold": {
+     "different": {
+      "ACCEPTED": 0,
+      "CONFLICT": 19,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 6,
+      "UNRESOLVED": 2
+     },
+     "same": {
+      "ACCEPTED": 7,
+      "CONFLICT": 0,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 4
+     },
+     "uncertain": {
+      "ACCEPTED": 0,
+      "CONFLICT": 1,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 1
+     }
+    },
+    "precision": {
+     "k": 7,
+     "n": 7,
+     "value": 1.0,
+     "wilson95": [
+      0.64567,
+      1.0
+     ]
+    },
+    "recall": {
+     "k": 7,
+     "n": 11,
+     "value": 0.6363636363636364,
+     "wilson95": [
+      0.353801,
+      0.848335
+     ]
+    },
+    "tasks": 40,
+    "tn": 27,
+    "tp": 7,
+    "uncertain": 2,
+    "unresolved_rate": {
+     "k": 6,
+     "n": 38,
+     "value": 0.15789473684210525,
+     "wilson95": [
+      0.074439,
+      0.304168
+     ]
+    }
+   }
+  },
+  "development without the 22 AI-assisted pairs": {
+   "by_entity": {
+    "Researcher": {
+     "accuracy": {
+      "k": 14,
+      "n": 16,
+      "value": 0.875,
+      "wilson95": [
+       0.639772,
+       0.965023
+      ]
+     },
+     "binary": 16,
+     "conflict_rate": {
+      "k": 7,
+      "n": 16,
+      "value": 0.4375,
+      "wilson95": [
+       0.230987,
+       0.668214
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 5,
+      "n": 16,
+      "value": 0.3125,
+      "wilson95": [
+       0.141646,
+       0.555956
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.8333333333333334
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 9,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.299145
+      ]
+     },
+     "fn": 2,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 7,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 5,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 5,
+      "n": 7,
+      "value": 0.7142857142857143,
+      "wilson95": [
+       0.358934,
+       0.917781
+      ]
+     },
+     "tasks": 16,
+     "tn": 9,
+     "tp": 5,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 4,
+      "n": 16,
+      "value": 0.25,
+      "wilson95": [
+       0.101821,
+       0.494983
+      ]
+     }
+    },
+    "Work": {
+     "accuracy": {
+      "k": 18,
+      "n": 18,
+      "value": 1.0,
+      "wilson95": [
+       0.824121,
+       1.0
+      ]
+     },
+     "binary": 18,
+     "conflict_rate": {
+      "k": 12,
+      "n": 18,
+      "value": 0.6666666666666666,
+      "wilson95": [
+       0.437495,
+       0.837212
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 18,
+      "value": 0.3333333333333333,
+      "wilson95": [
+       0.162788,
+       0.562505
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 17,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.184318
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 12,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 5,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 1,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "tasks": 20,
+     "tn": 17,
+     "tp": 1,
+     "uncertain": 2,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 18,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.175879
+      ]
+     }
+    }
+   },
+   "by_entity_and_path": {
+    "Researcher / ExactIdentifier": {
+     "accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "binary": 5,
+     "conflict_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 5,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "tasks": 5,
+     "tn": 0,
+     "tp": 5,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     }
+    },
+    "Researcher / HardConflict": {
+     "accuracy": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "binary": 7,
+     "conflict_rate": {
+      "k": 7,
+      "n": 7,
+      "value": 1.0,
+      "wilson95": [
+       0.64567,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 7,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 7,
+     "tn": 7,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     }
+    },
+    "Researcher / Scored": {
+     "accuracy": {
+      "k": 2,
+      "n": 4,
+      "value": 0.5,
+      "wilson95": [
+       0.150039,
+       0.849961
+      ]
+     },
+     "binary": 4,
+     "conflict_rate": {
+      "k": 0,
+      "n": 4,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.489891
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 4,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.489891
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 2,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.65762
+      ]
+     },
+     "fn": 2,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 2,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.65762
+      ]
+     },
+     "tasks": 4,
+     "tn": 2,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 4,
+      "n": 4,
+      "value": 1.0,
+      "wilson95": [
+       0.510109,
+       1.0
+      ]
+     }
+    },
+    "Work / ExactIdentifier": {
+     "accuracy": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "binary": 1,
+     "conflict_rate": {
+      "k": 0,
+      "n": 1,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.793451
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 1,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 1,
+      "n": 1,
+      "value": 1.0,
+      "wilson95": [
+       0.206549,
+       1.0
+      ]
+     },
+     "tasks": 1,
+     "tn": 0,
+     "tp": 1,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 1,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.793451
+      ]
+     }
+    },
+    "Work / HardConflict": {
+     "accuracy": {
+      "k": 12,
+      "n": 12,
+      "value": 1.0,
+      "wilson95": [
+       0.757506,
+       1.0
+      ]
+     },
+     "binary": 12,
+     "conflict_rate": {
+      "k": 12,
+      "n": 12,
+      "value": 1.0,
+      "wilson95": [
+       0.757506,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 12,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 13,
+     "tn": 12,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 12,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.242494
+      ]
+     }
+    },
+    "Work / Scored": {
+     "accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "binary": 5,
+     "conflict_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 5,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 6,
+     "tn": 5,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 5,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.434482
+      ]
+     }
+    }
+   },
+   "by_path": {
+    "ExactIdentifier": {
+     "accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "binary": 6,
+     "conflict_rate": {
+      "k": 0,
+      "n": 6,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 6,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "tasks": 6,
+     "tn": 0,
+     "tp": 6,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 6,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ]
+     }
+    },
+    "HardConflict": {
+     "accuracy": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "binary": 19,
+     "conflict_rate": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 19,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 20,
+     "tn": 19,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     }
+    },
+    "Scored": {
+     "accuracy": {
+      "k": 7,
+      "n": 9,
+      "value": 0.7777777777777778,
+      "wilson95": [
+       0.452589,
+       0.936775
+      ]
+     },
+     "binary": 9,
+     "conflict_rate": {
+      "k": 0,
+      "n": 9,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.299145
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 5,
+      "n": 9,
+      "value": 0.5555555555555556,
+      "wilson95": [
+       0.266651,
+       0.811221
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "fn": 2,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 5,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 2,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.65762
+      ]
+     },
+     "tasks": 10,
+     "tn": 7,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 4,
+      "n": 9,
+      "value": 0.4444444444444444,
+      "wilson95": [
+       0.188779,
+       0.733349
+      ]
+     }
+    }
+   },
+   "by_sampling_stratum": {
+    "missing-authoritative-id": {
+     "accuracy": {
+      "k": 7,
+      "n": 9,
+      "value": 0.7777777777777778,
+      "wilson95": [
+       0.452589,
+       0.936775
+      ]
+     },
+     "binary": 9,
+     "conflict_rate": {
+      "k": 0,
+      "n": 9,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.299145
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 5,
+      "n": 5,
+      "value": 1.0,
+      "wilson95": [
+       0.565518,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 5,
+      "n": 9,
+      "value": 0.5555555555555556,
+      "wilson95": [
+       0.266651,
+       0.811221
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 7,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ]
+     },
+     "fn": 2,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 5,
+       "UNRESOLVED": 2
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 2,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.65762
+      ]
+     },
+     "tasks": 10,
+     "tn": 7,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 4,
+      "n": 9,
+      "value": 0.4444444444444444,
+      "wilson95": [
+       0.188779,
+       0.733349
+      ]
+     }
+    },
+    "observed-id-disagreement": {
+     "accuracy": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "binary": 19,
+     "conflict_rate": {
+      "k": 19,
+      "n": 19,
+      "value": 1.0,
+      "wilson95": [
+       0.831821,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 19,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 1,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 20,
+     "tn": 19,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 19,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.168179
+      ]
+     }
+    },
+    "shared-observed-id": {
+     "accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "binary": 6,
+     "conflict_rate": {
+      "k": 0,
+      "n": 6,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 6,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 6,
+      "n": 6,
+      "value": 1.0,
+      "wilson95": [
+       0.609666,
+       1.0
+      ]
+     },
+     "tasks": 6,
+     "tn": 0,
+     "tp": 6,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 6,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ]
+     }
+    }
+   },
+   "overall": {
+    "accuracy": {
+     "k": 32,
+     "n": 34,
+     "value": 0.9411764705882353,
+     "wilson95": [
+      0.809064,
+      0.983717
+     ]
+    },
+    "binary": 34,
+    "conflict_rate": {
+     "k": 19,
+     "n": 34,
+     "value": 0.5588235294117647,
+     "wilson95": [
+      0.394539,
+      0.711165
+     ]
+    },
+    "decisive_accuracy": {
+     "k": 11,
+     "n": 11,
+     "value": 1.0,
+     "wilson95": [
+      0.741167,
+      1.0
+     ]
+    },
+    "decisive_coverage": {
+     "k": 11,
+     "n": 34,
+     "value": 0.3235294117647059,
+     "wilson95": [
+      0.191316,
+      0.491571
+     ]
+    },
+    "f1": {
+     "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+     "value": 0.8571428571428571
+    },
+    "f1_bootstrap95": {
+     "high": 1.0,
+     "low": 0.545455,
+     "method": "percentile bootstrap",
+     "resamples": 2000,
+     "seed": "eval16-identity-v1",
+     "usable_resamples": 2000
+    },
+    "false_merge_rate": {
+     "k": 0,
+     "n": 26,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.128729
+     ]
+    },
+    "fn": 2,
+    "fp": 0,
+    "outcome_by_gold": {
+     "different": {
+      "ACCEPTED": 0,
+      "CONFLICT": 19,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 5,
+      "UNRESOLVED": 2
+     },
+     "same": {
+      "ACCEPTED": 6,
+      "CONFLICT": 0,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 2
+     },
+     "uncertain": {
+      "ACCEPTED": 0,
+      "CONFLICT": 1,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 1
+     }
+    },
+    "precision": {
+     "k": 6,
+     "n": 6,
+     "value": 1.0,
+     "wilson95": [
+      0.609666,
+      1.0
+     ]
+    },
+    "recall": {
+     "k": 6,
+     "n": 8,
+     "value": 0.75,
+     "wilson95": [
+      0.409275,
+      0.928521
+     ]
+    },
+    "tasks": 36,
+    "tn": 26,
+    "tp": 6,
+    "uncertain": 2,
+    "unresolved_rate": {
+     "k": 4,
+     "n": 34,
+     "value": 0.11764705882352941,
+     "wilson95": [
+      0.046714,
+      0.266208
+     ]
+    }
+   }
+  },
+  "held-out": {
+   "by_entity": {
+    "Researcher": {
+     "accuracy": {
+      "k": 80,
+      "n": 95,
+      "value": 0.8421052631578947,
+      "wilson95": [
+       0.755704,
+       0.901915
+      ]
+     },
+     "binary": 95,
+     "conflict_rate": {
+      "k": 33,
+      "n": 95,
+      "value": 0.3473684210526316,
+      "wilson95": [
+       0.259247,
+       0.447354
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 33,
+      "n": 33,
+      "value": 1.0,
+      "wilson95": [
+       0.89573,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 33,
+      "n": 95,
+      "value": 0.3473684210526316,
+      "wilson95": [
+       0.259247,
+       0.447354
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.8051948051948052
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 49,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.072698
+      ]
+     },
+     "fn": 15,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 33,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 2,
+       "UNRESOLVED": 14
+      },
+      "same": {
+       "ACCEPTED": 31,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 15
+      },
+      "uncertain": {
+       "ACCEPTED": 4,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 31,
+      "n": 31,
+      "value": 1.0,
+      "wilson95": [
+       0.889745,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 31,
+      "n": 46,
+      "value": 0.6739130434782609,
+      "wilson95": [
+       0.529677,
+       0.791341
+      ]
+     },
+     "tasks": 100,
+     "tn": 49,
+     "tp": 31,
+     "uncertain": 5,
+     "unresolved_rate": {
+      "k": 29,
+      "n": 95,
+      "value": 0.30526315789473685,
+      "wilson95": [
+       0.221729,
+       0.403934
+      ]
+     }
+    },
+    "Work": {
+     "accuracy": {
+      "k": 99,
+      "n": 99,
+      "value": 1.0,
+      "wilson95": [
+       0.962647,
+       1.0
+      ]
+     },
+     "binary": 99,
+     "conflict_rate": {
+      "k": 37,
+      "n": 99,
+      "value": 0.37373737373737376,
+      "wilson95": [
+       0.284832,
+       0.472076
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 61,
+      "n": 61,
+      "value": 1.0,
+      "wilson95": [
+       0.940756,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 61,
+      "n": 99,
+      "value": 0.6161616161616161,
+      "wilson95": [
+       0.517732,
+       0.705914
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 73,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.049992
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 37,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 35,
+       "UNRESOLVED": 1
+      },
+      "same": {
+       "ACCEPTED": 26,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "tasks": 100,
+     "tn": 73,
+     "tp": 26,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 1,
+      "n": 99,
+      "value": 0.010101010101010102,
+      "wilson95": [
+       0.001785,
+       0.055015
+      ]
+     }
+    }
+   },
+   "by_entity_and_path": {
+    "Researcher / ExactIdentifier": {
+     "accuracy": {
+      "k": 29,
+      "n": 29,
+      "value": 1.0,
+      "wilson95": [
+       0.88303,
+       1.0
+      ]
+     },
+     "binary": 29,
+     "conflict_rate": {
+      "k": 0,
+      "n": 29,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.11697
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 29,
+      "n": 29,
+      "value": 1.0,
+      "wilson95": [
+       0.88303,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 29,
+      "n": 29,
+      "value": 1.0,
+      "wilson95": [
+       0.88303,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 29,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 4,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 29,
+      "n": 29,
+      "value": 1.0,
+      "wilson95": [
+       0.88303,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 29,
+      "n": 29,
+      "value": 1.0,
+      "wilson95": [
+       0.88303,
+       1.0
+      ]
+     },
+     "tasks": 33,
+     "tn": 0,
+     "tp": 29,
+     "uncertain": 4,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 29,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.11697
+      ]
+     }
+    },
+    "Researcher / HardConflict": {
+     "accuracy": {
+      "k": 33,
+      "n": 33,
+      "value": 1.0,
+      "wilson95": [
+       0.89573,
+       1.0
+      ]
+     },
+     "binary": 33,
+     "conflict_rate": {
+      "k": 33,
+      "n": 33,
+      "value": 1.0,
+      "wilson95": [
+       0.89573,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 33,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 33,
+     "tn": 33,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     }
+    },
+    "Researcher / Scored": {
+     "accuracy": {
+      "k": 18,
+      "n": 33,
+      "value": 0.5454545454545454,
+      "wilson95": [
+       0.379859,
+       0.701571
+      ]
+     },
+     "binary": 33,
+     "conflict_rate": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 4,
+      "n": 4,
+      "value": 1.0,
+      "wilson95": [
+       0.510109,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 4,
+      "n": 33,
+      "value": 0.12121212121212122,
+      "wilson95": [
+       0.048162,
+       0.273255
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.21052631578947367
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 16,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.193608
+      ]
+     },
+     "fn": 15,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 2,
+       "UNRESOLVED": 14
+      },
+      "same": {
+       "ACCEPTED": 2,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 15
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "wilson95": [
+       0.34238,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 2,
+      "n": 17,
+      "value": 0.11764705882352941,
+      "wilson95": [
+       0.03288,
+       0.343364
+      ]
+     },
+     "tasks": 34,
+     "tn": 16,
+     "tp": 2,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 29,
+      "n": 33,
+      "value": 0.8787878787878788,
+      "wilson95": [
+       0.726745,
+       0.951838
+      ]
+     }
+    },
+    "Work / ExactIdentifier": {
+     "accuracy": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "binary": 26,
+     "conflict_rate": {
+      "k": 0,
+      "n": 26,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.128729
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 26,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "tasks": 26,
+     "tn": 0,
+     "tp": 26,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 26,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.128729
+      ]
+     }
+    },
+    "Work / HardConflict": {
+     "accuracy": {
+      "k": 37,
+      "n": 37,
+      "value": 1.0,
+      "wilson95": [
+       0.905942,
+       1.0
+      ]
+     },
+     "binary": 37,
+     "conflict_rate": {
+      "k": 37,
+      "n": 37,
+      "value": 1.0,
+      "wilson95": [
+       0.905942,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 37,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.094058
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 37,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.094058
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 37,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 37,
+     "tn": 37,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 37,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.094058
+      ]
+     }
+    },
+    "Work / Scored": {
+     "accuracy": {
+      "k": 36,
+      "n": 36,
+      "value": 1.0,
+      "wilson95": [
+       0.903581,
+       1.0
+      ]
+     },
+     "binary": 36,
+     "conflict_rate": {
+      "k": 0,
+      "n": 36,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.096419
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 35,
+      "n": 35,
+      "value": 1.0,
+      "wilson95": [
+       0.901099,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 35,
+      "n": 36,
+      "value": 0.9722222222222222,
+      "wilson95": [
+       0.858303,
+       0.99508
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 36,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.096419
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 35,
+       "UNRESOLVED": 1
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 37,
+     "tn": 36,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 1,
+      "n": 36,
+      "value": 0.027777777777777776,
+      "wilson95": [
+       0.00492,
+       0.141697
+      ]
+     }
+    }
+   },
+   "by_path": {
+    "ExactIdentifier": {
+     "accuracy": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "binary": 55,
+     "conflict_rate": {
+      "k": 0,
+      "n": 55,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.065285
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 55,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 4,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "tasks": 59,
+     "tn": 0,
+     "tp": 55,
+     "uncertain": 4,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 55,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.065285
+      ]
+     }
+    },
+    "HardConflict": {
+     "accuracy": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "binary": 70,
+     "conflict_rate": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 70,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 70,
+     "tn": 70,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     }
+    },
+    "Scored": {
+     "accuracy": {
+      "k": 54,
+      "n": 69,
+      "value": 0.782608695652174,
+      "wilson95": [
+       0.671817,
+       0.863592
+      ]
+     },
+     "binary": 69,
+     "conflict_rate": {
+      "k": 0,
+      "n": 69,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052737
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 39,
+      "n": 39,
+      "value": 1.0,
+      "wilson95": [
+       0.910333,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 39,
+      "n": 69,
+      "value": 0.5652173913043478,
+      "wilson95": [
+       0.447884,
+       0.675672
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.21052631578947367
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 52,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.068792
+      ]
+     },
+     "fn": 15,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 37,
+       "UNRESOLVED": 15
+      },
+      "same": {
+       "ACCEPTED": 2,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 15
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      }
+     },
+     "precision": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "wilson95": [
+       0.34238,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 2,
+      "n": 17,
+      "value": 0.11764705882352941,
+      "wilson95": [
+       0.03288,
+       0.343364
+      ]
+     },
+     "tasks": 71,
+     "tn": 52,
+     "tp": 2,
+     "uncertain": 2,
+     "unresolved_rate": {
+      "k": 30,
+      "n": 69,
+      "value": 0.43478260869565216,
+      "wilson95": [
+       0.324328,
+       0.552116
+      ]
+     }
+    }
+   },
+   "by_sampling_stratum": {
+    "missing-authoritative-id": {
+     "accuracy": {
+      "k": 54,
+      "n": 69,
+      "value": 0.782608695652174,
+      "wilson95": [
+       0.671817,
+       0.863592
+      ]
+     },
+     "binary": 69,
+     "conflict_rate": {
+      "k": 0,
+      "n": 69,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052737
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 39,
+      "n": 39,
+      "value": 1.0,
+      "wilson95": [
+       0.910333,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 39,
+      "n": 69,
+      "value": 0.5652173913043478,
+      "wilson95": [
+       0.447884,
+       0.675672
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.21052631578947367
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 52,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.068792
+      ]
+     },
+     "fn": 15,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 37,
+       "UNRESOLVED": 15
+      },
+      "same": {
+       "ACCEPTED": 2,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 15
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 2
+      }
+     },
+     "precision": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "wilson95": [
+       0.34238,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 2,
+      "n": 17,
+      "value": 0.11764705882352941,
+      "wilson95": [
+       0.03288,
+       0.343364
+      ]
+     },
+     "tasks": 71,
+     "tn": 52,
+     "tp": 2,
+     "uncertain": 2,
+     "unresolved_rate": {
+      "k": 30,
+      "n": 69,
+      "value": 0.43478260869565216,
+      "wilson95": [
+       0.324328,
+       0.552116
+      ]
+     }
+    },
+    "observed-id-disagreement": {
+     "accuracy": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "binary": 70,
+     "conflict_rate": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 70,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 70,
+     "tn": 70,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     }
+    },
+    "shared-observed-id": {
+     "accuracy": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "binary": 55,
+     "conflict_rate": {
+      "k": 0,
+      "n": 55,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.065285
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 55,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 4,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 55,
+      "n": 55,
+      "value": 1.0,
+      "wilson95": [
+       0.934715,
+       1.0
+      ]
+     },
+     "tasks": 59,
+     "tn": 0,
+     "tp": 55,
+     "uncertain": 4,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 55,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.065285
+      ]
+     }
+    }
+   },
+   "overall": {
+    "accuracy": {
+     "k": 179,
+     "n": 194,
+     "value": 0.9226804123711341,
+     "wilson95": [
+      0.876361,
+      0.952586
+     ]
+    },
+    "binary": 194,
+    "conflict_rate": {
+     "k": 70,
+     "n": 194,
+     "value": 0.36082474226804123,
+     "wilson95": [
+      0.296554,
+      0.4305
+     ]
+    },
+    "decisive_accuracy": {
+     "k": 94,
+     "n": 94,
+     "value": 1.0,
+     "wilson95": [
+      0.960738,
+      1.0
+     ]
+    },
+    "decisive_coverage": {
+     "k": 94,
+     "n": 194,
+     "value": 0.4845360824742268,
+     "wilson95": [
+      0.415197,
+      0.554476
+     ]
+    },
+    "f1": {
+     "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+     "value": 0.8837209302325582
+    },
+    "f1_bootstrap95": {
+     "high": 0.937063,
+     "low": 0.819672,
+     "method": "percentile bootstrap",
+     "resamples": 2000,
+     "seed": "eval16-identity-v1",
+     "usable_resamples": 2000
+    },
+    "false_merge_rate": {
+     "k": 0,
+     "n": 122,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.030526
+     ]
+    },
+    "fn": 15,
+    "fp": 0,
+    "outcome_by_gold": {
+     "different": {
+      "ACCEPTED": 0,
+      "CONFLICT": 70,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 37,
+      "UNRESOLVED": 15
+     },
+     "same": {
+      "ACCEPTED": 57,
+      "CONFLICT": 0,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 15
+     },
+     "uncertain": {
+      "ACCEPTED": 4,
+      "CONFLICT": 0,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 2
+     }
+    },
+    "precision": {
+     "k": 57,
+     "n": 57,
+     "value": 1.0,
+     "wilson95": [
+      0.936861,
+      1.0
+     ]
+    },
+    "recall": {
+     "k": 57,
+     "n": 72,
+     "value": 0.7916666666666666,
+     "wilson95": [
+      0.684307,
+      0.869479
+     ]
+    },
+    "tasks": 200,
+    "tn": 122,
+    "tp": 57,
+    "uncertain": 6,
+    "unresolved_rate": {
+     "k": 30,
+     "n": 194,
+     "value": 0.15463917525773196,
+     "wilson95": [
+      0.110519,
+      0.212171
+     ]
+    }
+   }
+  },
+  "held-out without the 22 AI-assisted pairs": {
+   "by_entity": {
+    "Researcher": {
+     "accuracy": {
+      "k": 74,
+      "n": 82,
+      "value": 0.9024390243902439,
+      "wilson95": [
+       0.819128,
+       0.949731
+      ]
+     },
+     "binary": 82,
+     "conflict_rate": {
+      "k": 33,
+      "n": 82,
+      "value": 0.4024390243902439,
+      "wilson95": [
+       0.302974,
+       0.510635
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 27,
+      "n": 27,
+      "value": 1.0,
+      "wilson95": [
+       0.875445,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 27,
+      "n": 82,
+      "value": 0.32926829268292684,
+      "wilson95": [
+       0.237201,
+       0.436616
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.8620689655172413
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 49,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.072698
+      ]
+     },
+     "fn": 8,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 33,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 2,
+       "UNRESOLVED": 14
+      },
+      "same": {
+       "ACCEPTED": 25,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 8
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 25,
+      "n": 25,
+      "value": 1.0,
+      "wilson95": [
+       0.866808,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 25,
+      "n": 33,
+      "value": 0.7575757575757576,
+      "wilson95": [
+       0.589754,
+       0.871683
+      ]
+     },
+     "tasks": 82,
+     "tn": 49,
+     "tp": 25,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 22,
+      "n": 82,
+      "value": 0.2682926829268293,
+      "wilson95": [
+       0.184361,
+       0.372962
+      ]
+     }
+    },
+    "Work": {
+     "accuracy": {
+      "k": 99,
+      "n": 99,
+      "value": 1.0,
+      "wilson95": [
+       0.962647,
+       1.0
+      ]
+     },
+     "binary": 99,
+     "conflict_rate": {
+      "k": 37,
+      "n": 99,
+      "value": 0.37373737373737376,
+      "wilson95": [
+       0.284832,
+       0.472076
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 61,
+      "n": 61,
+      "value": 1.0,
+      "wilson95": [
+       0.940756,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 61,
+      "n": 99,
+      "value": 0.6161616161616161,
+      "wilson95": [
+       0.517732,
+       0.705914
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 73,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.049992
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 37,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 35,
+       "UNRESOLVED": 1
+      },
+      "same": {
+       "ACCEPTED": 26,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "tasks": 100,
+     "tn": 73,
+     "tp": 26,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 1,
+      "n": 99,
+      "value": 0.010101010101010102,
+      "wilson95": [
+       0.001785,
+       0.055015
+      ]
+     }
+    }
+   },
+   "by_entity_and_path": {
+    "Researcher / ExactIdentifier": {
+     "accuracy": {
+      "k": 23,
+      "n": 23,
+      "value": 1.0,
+      "wilson95": [
+       0.856883,
+       1.0
+      ]
+     },
+     "binary": 23,
+     "conflict_rate": {
+      "k": 0,
+      "n": 23,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.143117
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 23,
+      "n": 23,
+      "value": 1.0,
+      "wilson95": [
+       0.856883,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 23,
+      "n": 23,
+      "value": 1.0,
+      "wilson95": [
+       0.856883,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 23,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 23,
+      "n": 23,
+      "value": 1.0,
+      "wilson95": [
+       0.856883,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 23,
+      "n": 23,
+      "value": 1.0,
+      "wilson95": [
+       0.856883,
+       1.0
+      ]
+     },
+     "tasks": 23,
+     "tn": 0,
+     "tp": 23,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 23,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.143117
+      ]
+     }
+    },
+    "Researcher / HardConflict": {
+     "accuracy": {
+      "k": 33,
+      "n": 33,
+      "value": 1.0,
+      "wilson95": [
+       0.89573,
+       1.0
+      ]
+     },
+     "binary": 33,
+     "conflict_rate": {
+      "k": 33,
+      "n": 33,
+      "value": 1.0,
+      "wilson95": [
+       0.89573,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 33,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 33,
+     "tn": 33,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 33,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.10427
+      ]
+     }
+    },
+    "Researcher / Scored": {
+     "accuracy": {
+      "k": 18,
+      "n": 26,
+      "value": 0.6923076923076923,
+      "wilson95": [
+       0.500117,
+       0.834987
+      ]
+     },
+     "binary": 26,
+     "conflict_rate": {
+      "k": 0,
+      "n": 26,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.128729
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 4,
+      "n": 4,
+      "value": 1.0,
+      "wilson95": [
+       0.510109,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 4,
+      "n": 26,
+      "value": 0.15384615384615385,
+      "wilson95": [
+       0.0615,
+       0.335312
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.3333333333333333
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 16,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.193608
+      ]
+     },
+     "fn": 8,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 2,
+       "UNRESOLVED": 14
+      },
+      "same": {
+       "ACCEPTED": 2,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 8
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "wilson95": [
+       0.34238,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 2,
+      "n": 10,
+      "value": 0.2,
+      "wilson95": [
+       0.056682,
+       0.509838
+      ]
+     },
+     "tasks": 26,
+     "tn": 16,
+     "tp": 2,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 22,
+      "n": 26,
+      "value": 0.8461538461538461,
+      "wilson95": [
+       0.664688,
+       0.9385
+      ]
+     }
+    },
+    "Work / ExactIdentifier": {
+     "accuracy": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "binary": 26,
+     "conflict_rate": {
+      "k": 0,
+      "n": 26,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.128729
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 26,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 26,
+      "n": 26,
+      "value": 1.0,
+      "wilson95": [
+       0.871271,
+       1.0
+      ]
+     },
+     "tasks": 26,
+     "tn": 0,
+     "tp": 26,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 26,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.128729
+      ]
+     }
+    },
+    "Work / HardConflict": {
+     "accuracy": {
+      "k": 37,
+      "n": 37,
+      "value": 1.0,
+      "wilson95": [
+       0.905942,
+       1.0
+      ]
+     },
+     "binary": 37,
+     "conflict_rate": {
+      "k": 37,
+      "n": 37,
+      "value": 1.0,
+      "wilson95": [
+       0.905942,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 37,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.094058
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 37,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.094058
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 37,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 37,
+     "tn": 37,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 37,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.094058
+      ]
+     }
+    },
+    "Work / Scored": {
+     "accuracy": {
+      "k": 36,
+      "n": 36,
+      "value": 1.0,
+      "wilson95": [
+       0.903581,
+       1.0
+      ]
+     },
+     "binary": 36,
+     "conflict_rate": {
+      "k": 0,
+      "n": 36,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.096419
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 35,
+      "n": 35,
+      "value": 1.0,
+      "wilson95": [
+       0.901099,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 35,
+      "n": 36,
+      "value": 0.9722222222222222,
+      "wilson95": [
+       0.858303,
+       0.99508
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 36,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.096419
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 35,
+       "UNRESOLVED": 1
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 37,
+     "tn": 36,
+     "tp": 0,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 1,
+      "n": 36,
+      "value": 0.027777777777777776,
+      "wilson95": [
+       0.00492,
+       0.141697
+      ]
+     }
+    }
+   },
+   "by_path": {
+    "ExactIdentifier": {
+     "accuracy": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "binary": 49,
+     "conflict_rate": {
+      "k": 0,
+      "n": 49,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.072698
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 49,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "tasks": 49,
+     "tn": 0,
+     "tp": 49,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 49,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.072698
+      ]
+     }
+    },
+    "HardConflict": {
+     "accuracy": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "binary": 70,
+     "conflict_rate": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 70,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 70,
+     "tn": 70,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     }
+    },
+    "Scored": {
+     "accuracy": {
+      "k": 54,
+      "n": 62,
+      "value": 0.8709677419354839,
+      "wilson95": [
+       0.765507,
+       0.933141
+      ]
+     },
+     "binary": 62,
+     "conflict_rate": {
+      "k": 0,
+      "n": 62,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.058344
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 39,
+      "n": 39,
+      "value": 1.0,
+      "wilson95": [
+       0.910333,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 39,
+      "n": 62,
+      "value": 0.6290322580645161,
+      "wilson95": [
+       0.50458,
+       0.738428
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.3333333333333333
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 52,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.068792
+      ]
+     },
+     "fn": 8,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 37,
+       "UNRESOLVED": 15
+      },
+      "same": {
+       "ACCEPTED": 2,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 8
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "wilson95": [
+       0.34238,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 2,
+      "n": 10,
+      "value": 0.2,
+      "wilson95": [
+       0.056682,
+       0.509838
+      ]
+     },
+     "tasks": 63,
+     "tn": 52,
+     "tp": 2,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 23,
+      "n": 62,
+      "value": 0.3709677419354839,
+      "wilson95": [
+       0.261572,
+       0.49542
+      ]
+     }
+    }
+   },
+   "by_sampling_stratum": {
+    "missing-authoritative-id": {
+     "accuracy": {
+      "k": 54,
+      "n": 62,
+      "value": 0.8709677419354839,
+      "wilson95": [
+       0.765507,
+       0.933141
+      ]
+     },
+     "binary": 62,
+     "conflict_rate": {
+      "k": 0,
+      "n": 62,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.058344
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 39,
+      "n": 39,
+      "value": 1.0,
+      "wilson95": [
+       0.910333,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 39,
+      "n": 62,
+      "value": 0.6290322580645161,
+      "wilson95": [
+       0.50458,
+       0.738428
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 0.3333333333333333
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 52,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.068792
+      ]
+     },
+     "fn": 8,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 37,
+       "UNRESOLVED": 15
+      },
+      "same": {
+       "ACCEPTED": 2,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 8
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 1
+      }
+     },
+     "precision": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "wilson95": [
+       0.34238,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 2,
+      "n": 10,
+      "value": 0.2,
+      "wilson95": [
+       0.056682,
+       0.509838
+      ]
+     },
+     "tasks": 63,
+     "tn": 52,
+     "tp": 2,
+     "uncertain": 1,
+     "unresolved_rate": {
+      "k": 23,
+      "n": 62,
+      "value": 0.3709677419354839,
+      "wilson95": [
+       0.261572,
+       0.49542
+      ]
+     }
+    },
+    "observed-id-disagreement": {
+     "accuracy": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "binary": 70,
+     "conflict_rate": {
+      "k": 70,
+      "n": 70,
+      "value": 1.0,
+      "wilson95": [
+       0.947977,
+       1.0
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "decisive_coverage": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "f1": {
+      "note": "undefined (no positive gold and no accepted pair)",
+      "value": null
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 70,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "recall": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "tasks": 70,
+     "tn": 70,
+     "tp": 0,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 70,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.052023
+      ]
+     }
+    },
+    "shared-observed-id": {
+     "accuracy": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "binary": 49,
+     "conflict_rate": {
+      "k": 0,
+      "n": 49,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.072698
+      ]
+     },
+     "decisive_accuracy": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "decisive_coverage": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "f1": {
+      "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+      "value": 1.0
+     },
+     "false_merge_rate": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "wilson95": null
+     },
+     "fn": 0,
+     "fp": 0,
+     "outcome_by_gold": {
+      "different": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "same": {
+       "ACCEPTED": 49,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      },
+      "uncertain": {
+       "ACCEPTED": 0,
+       "CONFLICT": 0,
+       "INVALID": 0,
+       "MISSING": 0,
+       "REJECTED": 0,
+       "UNRESOLVED": 0
+      }
+     },
+     "precision": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "recall": {
+      "k": 49,
+      "n": 49,
+      "value": 1.0,
+      "wilson95": [
+       0.927302,
+       1.0
+      ]
+     },
+     "tasks": 49,
+     "tn": 0,
+     "tp": 49,
+     "uncertain": 0,
+     "unresolved_rate": {
+      "k": 0,
+      "n": 49,
+      "value": 0.0,
+      "wilson95": [
+       0.0,
+       0.072698
+      ]
+     }
+    }
+   },
+   "overall": {
+    "accuracy": {
+     "k": 173,
+     "n": 181,
+     "value": 0.9558011049723757,
+     "wilson95": [
+      0.915221,
+      0.977436
+     ]
+    },
+    "binary": 181,
+    "conflict_rate": {
+     "k": 70,
+     "n": 181,
+     "value": 0.3867403314917127,
+     "wilson95": [
+      0.318848,
+      0.459341
+     ]
+    },
+    "decisive_accuracy": {
+     "k": 88,
+     "n": 88,
+     "value": 1.0,
+     "wilson95": [
+      0.958173,
+      1.0
+     ]
+    },
+    "decisive_coverage": {
+     "k": 88,
+     "n": 181,
+     "value": 0.4861878453038674,
+     "wilson95": [
+      0.414421,
+      0.558529
+     ]
+    },
+    "f1": {
+     "note": "2TP/(2TP+FP+FN); interval: see bootstrap in the overall block",
+     "value": 0.9272727272727272
+    },
+    "f1_bootstrap95": {
+     "high": 0.971963,
+     "low": 0.875,
+     "method": "percentile bootstrap",
+     "resamples": 2000,
+     "seed": "eval16-identity-v1",
+     "usable_resamples": 2000
+    },
+    "false_merge_rate": {
+     "k": 0,
+     "n": 122,
+     "value": 0.0,
+     "wilson95": [
+      0.0,
+      0.030526
+     ]
+    },
+    "fn": 8,
+    "fp": 0,
+    "outcome_by_gold": {
+     "different": {
+      "ACCEPTED": 0,
+      "CONFLICT": 70,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 37,
+      "UNRESOLVED": 15
+     },
+     "same": {
+      "ACCEPTED": 51,
+      "CONFLICT": 0,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 8
+     },
+     "uncertain": {
+      "ACCEPTED": 0,
+      "CONFLICT": 0,
+      "INVALID": 0,
+      "MISSING": 0,
+      "REJECTED": 0,
+      "UNRESOLVED": 1
+     }
+    },
+    "precision": {
+     "k": 51,
+     "n": 51,
+     "value": 1.0,
+     "wilson95": [
+      0.929953,
+      1.0
+     ]
+    },
+    "recall": {
+     "k": 51,
+     "n": 59,
+     "value": 0.864406779661017,
+     "wilson95": [
+      0.754603,
+      0.929658
+     ]
+    },
+    "tasks": 182,
+    "tn": 122,
+    "tp": 51,
+    "uncertain": 1,
+    "unresolved_rate": {
+     "k": 23,
+     "n": 181,
+     "value": 0.1270718232044199,
+     "wilson95": [
+      0.086187,
+      0.183457
+     ]
+    }
+   }
+  }
+ },
+ "threats_to_validity": [
+  "Convenience sample: the 300 queued pairs (200 held-out and 40 development initial reviews, 60 reserves never reviewed) were drawn from candidate pairs by oversampled evidence strata (shared observed id, observed id disagreement, missing authoritative id) with no population weights. The rates are rates in this sample, not rates in the full candidate population (the 5E report states 11,412 decisions) or the corpus.",
+  "The sampling strata are defined by the evidence the matcher itself uses (a shared observed identifier selects the ExactIdentifier path), so per-path precision and recall are partly determined by how the stratum was built.",
+  "Labels are AI-assisted: a language model drafted the labels and one human reviewer ticked checkboxes; 22 Researcher labels (the exclusion file; per the 5E report 18 held-out and 4 development) used external source checks whose evidence was not retained (self-attested). The 'without 22 assisted' slice removes those 22, but the other labels remain AI-drafted, so neither slice is independent blind gold, and there is a single reviewer, so inter-annotator agreement is unmeasured.",
+  "No calibration or threshold tuning was done; the policy is er-offline-uncalibrated-v2 and was not changed for this evaluation. Development sensitivity analysis (eight hypothetical cutoffs) is outside this package and is not calibration.",
+  "Blocking recall (whether true matches ever reach the candidate pair list) and global identity recall are unmeasured, so a pair the blocker never proposed is invisible here. Recall here is recall among the proposed, sampled pairs.",
+  "The course asks for 200 manually reviewed examples. This sample has 200 held-out plus 40 development reviewed pairs; 6 held-out and 2 development pairs are uncertain and not scored, which leaves 194 held-out binary labels. The labels are human-reviewed but AI-drafted (see above).",
+  "Zero observed false positives (precision 100%) is a statement about this sample: the Wilson upper bound of the false merge rate is reported above and is not zero.",
+  "Common-name and unobserved cross-partition leakage risks remain (the split groups known source, identifier and title anchors only).",
+  "The LLM-adjudicated path has no observations (disabled by configuration), and no real provider was called; nothing here speaks to LLM-assisted identity decisions."
+ ]
+}

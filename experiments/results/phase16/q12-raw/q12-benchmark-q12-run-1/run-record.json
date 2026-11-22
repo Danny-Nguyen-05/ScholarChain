@@ -1,0 +1,67 @@
+{
+  "api_key_env": "SCHOLARCHAIN_LOAD_API_KEY",
+  "commit": "ec675d562d9e923f36885d8dc9bd27c04d59b719",
+  "cost_report": {
+    "anthropic": {
+      "answers": 33,
+      "input_tokens_estimate": 235950,
+      "model": "claude-haiku-5-5",
+      "output_tokens_estimate": 42900,
+      "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+      "usd": "0.045045"
+    },
+    "aws": {
+      "usage": "taken from the AWS bill and the pre-spend receipts; not metered here",
+      "usd": null
+    },
+    "combined_scope": "anthropic + voyage only (AWS not included: take it from the bill)",
+    "combined_usd": "0.045045",
+    "voyage": {
+      "model": "voyage-4-lite",
+      "tokens": null,
+      "usage": "tokens not metered here; the first 200000000 account tokens are free so the charge is USD 0 while the account stays under that",
+      "usd": "0.000000"
+    }
+  },
+  "ended_utc": "2026-11-20T21:36:40.865Z",
+  "experiment_id": "q12-benchmark",
+  "llm": {
+    "allocation_sha256": "3bdd1e5f6e181e2a87dca3b327d55cfd15f63d47e4f3a6764af2547deb8e2a17",
+    "answers_charged": 33,
+    "bucket": "16b",
+    "bucket_size": 76,
+    "bucket_used_at_end": 74,
+    "bucket_used_at_start": 41,
+    "estimated_cost_usd": "0.045045",
+    "ledger_path": "/Users/danny/.scholarchain/llm-ledger/haiku-ledger.jsonl",
+    "ledger_total_at_end_usd": "0.121485",
+    "ledger_total_at_start_usd": "0.076440",
+    "note": "estimated from pinned tokens and rates, not metered; the Anthropic console, the Voyage console and the AWS bill are the costs of record",
+    "stopped_reason": null
+  },
+  "manifest_sha256": "4d0d4f0a09c2685d717edc914f9f019a39409cab33b3d372f2946b29d15c45dd",
+  "outcome": "completed",
+  "outcome_reason": "",
+  "outcomes": {
+    "client_error": 4,
+    "expected_refusal": 6,
+    "ok": 23
+  },
+  "profile_sha256": "e3c55afcb34a8674e0383f3e62064ede3db68a47a61280271641dcb44d0f1018",
+  "python": "3.14.5",
+  "questions": {
+    "asked": 33,
+    "file_sha256": "afc09952096c49ebacd61a051542295570ec9bcd39ffb72cb7a3d4fc014e4734",
+    "planned": 33
+  },
+  "run_id": "q12-run-1",
+  "schema": "scholarchain.evalq12-run-record.v1",
+  "started_utc": "2026-11-20T21:34:35.759Z",
+  "target": {
+    "base_url_sha256": "d30a576c0318716717366ab932e3d7dfbc4009a5bc10176403b60892912f070e",
+    "host": "127.0.0.1",
+    "loopback": true,
+    "scheme": "http"
+  },
+  "tree_dirty": false
+}
