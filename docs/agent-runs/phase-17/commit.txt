@@ -1,0 +1,4 @@
+Phase 17 commits on phase-17 (made by the coordinator on the human's yes, see human-gate.md):
+8c1c0c03d6aa0bb5ff20332a326ad6fc282309a6 phase-17 documentation-engineer: README (name, university e-mail, required sections, deliverable index), architecture, data lineage, threat model, service limits, runbook, API reference, evaluation, final report, release manifest, demo script (review rounds 1-2)
+e0aa4d42953c503befa2fef9836c25662ef80574 phase-17 incident-responder: incident index and seven Session 2 incident records of 2026-11-18 (review rounds 1-2)
+The coordinator records commit (this file, the other phase-17 records, the phase-15 addendum and the phase-01 to phase-16 index files) follows these two.
