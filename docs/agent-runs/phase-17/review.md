@@ -28,3 +28,7 @@ Every round-1 finding was checked at its new text and found repaired, with no ne
 Round 1: APPROVE. Verified: the 24 files are J05/J07/J08 stats output of the two `runPipeline` tests in `HadoopPrepReviewSpec` (`:37`, `:98`); the cause through `HadoopPrepPipeline.scala:170-172`, `PrepJobs.scala:851-858`, `PrepSupport.scala:1061-1072` and `HadoopIO.scala:27-35`; an existing regression test (`HadoopPrepReviewSpec.scala:159-171`); no `file:` path left in the working tree; no script, test, manifest or ownership-audit entry depends on the deleted files (Phase 12 snapshot JSONs list them as history only); `human-decision-privacy.md` holds no account ID or personal address and matches `human-gate.md`. Findings: minor, `docs/threat-model.md:63,136` still called the decision pending (documentation-engineer); nit, the record's cross-reference to 17F (coordinator); nit, stale local agent worktree branches still hold the files (local only, not on `origin`; no action).
 
 Re-check: APPROVE. Both repairs in place; threat-model.md has no account ID, e-mail address, user name or home path. One wording nit in `human-decision-privacy.md:3`, fixed by the coordinator.
+
+## Package 17E (work order 3): APPROVE
+
+Reviewer: code-reviewer, Claude Opus 5.5, effort high. Verdict: APPROVE. Findings: minor, `docs/threat-model.md:118` would go stale after ratification (documentation-engineer; updated before the full check); two nits, none blocking. Ratified by the human afterwards (`ratification-17e.md`); hook probes in `hook-probes-17e.md`.

@@ -33,3 +33,7 @@ The coordinator asked two questions in chat (options chosen by the human, verbat
 
 - Review M3 is decided: see `human-decision-privacy.md` (keep; no history rewrite).
 - Package 17I (`work-order-2-stray-files.md`): review APPROVE, full check `20261122T230732Z-61812` `RESULT: PASS gates=7` (`test-report.md`). The coordinator asked: "May I commit these changes in 3 commits and push phase-17?" The human answered: "Commit and push". Covers the hadoop-engineer deletion commit, the documentation-engineer threat-model commit and the coordinator records commit on `phase-17`, and the push of that branch. Not a merge to `main`.
+
+## Addendum 2026-11-22 (9:47 PM CST): package 17E commit
+
+- Package 17E (`work-order-3-hooks-mcp.md`): review APPROVE (`review.md`), human ratification (`ratification-17e.md`), fresh-session hook probes (`hook-probes-17e.md`), full check `20261123T005912Z-79868` `RESULT: PASS gates=7` (`test-report.md`), then the documentation-engineer's text-only update of `docs/threat-model.md:118`. The coordinator asked: "Commit 17E split by owner (factory-engineer, documentation-engineer, coordinator records) and push phase-17? Yes, or not yet?" The human answered: "Commit and push". Covers the factory-engineer commit, the documentation-engineer commit and the coordinator records commit on `phase-17`, and the push of that branch. Not a merge to `main`.

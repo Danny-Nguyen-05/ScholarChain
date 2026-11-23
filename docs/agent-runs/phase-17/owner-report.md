@@ -71,3 +71,20 @@ NEXT GATE: review, full check
 
 FILES MODIFIED: `docs/threat-model.md` lines 63 and 136: the account-ID and e-mail question is stated as decided (keep; no history rewrite) with the coordinator's counts and a link to `human-decision-privacy.md`
 VALIDATION RESULTS (owner-reported): threat-model.md 69 relative links, 0 broken, 0 twelve-digit numbers, 0 '@'; all six files 306 links, 0 broken
+
+## factory-engineer (package 17E, work order 3)
+
+STATUS: DONE (draft; ratified by the human, see `ratification-17e.md`)
+FILES MODIFIED: `.claude/settings.json` (the four hook `command` values in the form `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh`), `.mcp.json` (`github-readonly` header `Authorization: ${GITHUB_MCP_AUTHORIZATION}`), `.claude/MCP-TRUST.md:7` (names the new variable)
+VALIDATION RESULTS (owner-reported): JSON parse OK for both files; `bash -n` OK for the four hooks; `validate-agent-files.sh`: "Validated 18 unique agents, reviewer fence, 32 representative ownership paths and 18 routes", exit 0; `scripts/tests` `test_check.py`: Ran 54 tests, OK
+NEXT GATE: review, ratification, fresh-session probes, full check
+
+## documentation-engineer (package 17E follow-ups)
+
+FILES MODIFIED: `README.md:57`, `:405`, `:417` (name `GITHUB_MCP_AUTHORIZATION`, whose value includes `Bearer `); `docs/threat-model.md:118` (the change is ratified, with links to the ratification record)
+VALIDATION: covered by the coordinator's account-ID scan and full check 3 (`test-report.md`)
+
+## documentation-engineer (17E, after full check 3)
+
+FILES MODIFIED: `docs/threat-model.md:118` only: the hook probes are stated as run on 2026-11-22 (four PASS, one INCONCLUSIVE, file unchanged) with a link to `hook-probes-17e.md`; no stronger claim than the probe record
+VALIDATION RESULTS (owner-reported): 71 relative links, 0 broken; 0 twelve-digit numbers, 0 '@', 0 home paths. Coordinator: line 118 links the probe record and no longer says "pending"; `NoRealAccountIdIsAdded` OK. Text-only change after full check 3; no further full check run
