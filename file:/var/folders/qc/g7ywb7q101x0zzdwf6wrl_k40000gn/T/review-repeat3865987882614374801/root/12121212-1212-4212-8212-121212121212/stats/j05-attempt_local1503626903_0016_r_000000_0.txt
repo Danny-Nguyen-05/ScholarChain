@@ -1,2 +1,0 @@
-largestBlock=1
-largestBlockPairs=0
