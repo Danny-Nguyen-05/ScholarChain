@@ -57,3 +57,9 @@ VALIDATION RESULTS: self-derived statements removed; reshaped table rows checked
 RISKS: length (634 lines, over the 250-400 aim)
 MANUAL ACTION REQUIRED: none
 NEXT GATE: review, full check, human gate
+
+## Phase 17 coordinator index note (added 2026-11-22, package 17G; not part of the copied owner report)
+
+The reports above label their commands "COMMANDS RUN (observed ...)". The same content under the standard label:
+
+COMMANDS RUN: see the "COMMANDS RUN (observed ...)" entries of each report above; the coordinator's commands and results are in `test-report.md`.

@@ -182,3 +182,9 @@ VALIDATION RESULTS: Final reviewer APPROVE, no remaining blocking findings in in
 MANUAL ACTION REQUIRED: Human Phase4 review/acceptance.
 BLOCKED-ON OWNER / EVIDENCE: None for reviewed implementation.
 NEXT GATE: Human decision; no commit/push/cloud/Phase5 performed.
+
+## Phase 17 coordinator index note (added 2026-11-22, package 17G; not part of the copied owner report)
+
+The reports above combine some labels (for example "COMMANDS RUN / TEST RESULTS"). The same content under the standard label:
+
+COMMANDS RUN: see the "COMMANDS RUN / TEST RESULTS" entries above; the exact commands, failed attempts and results are in `test-report.md`.

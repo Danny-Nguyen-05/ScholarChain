@@ -4,3 +4,10 @@ commit: fcbf7610c6fea2d2f45f29993cb67094965160e5
 subject: Record Phase 12D closeout and 12-10 runtime decision
 accepted: 2026-11-05 (America/Chicago), per human-gate.md
 written by the coordinator at the human's request; approval: "I approve the human-gate.md" (Danny Nguyen, chat, 2026-11-05)
+
+Phase 17 coordinator addition (2026-11-22, package 17G): the commit above is the Step D closeout; human-gate.md also accepts the earlier package commits it lists, in full:
+12A a83f62e9af56058a170075f98c4e027d039567ec
+12B 3b0855b9657a72b30e8ac43bd484161a9b886c79
+12C 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f
+12D billing preparation 8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf 4000889e244dacdb4c0445b2f6a93b24841a0ad7
+12D spike first and last source commits f52b981108a4dc4e3945c535ef3a5318924917b5 2d38f0f5772f5322fd579c81c52aaa1b1cc9683a; live evidence 2d2d22492666415264fd507c469dbd9da9852703

@@ -125,3 +125,11 @@ RISKS: Reference consistency cannot independently prove external content or iden
 STATUS: COMPLETE. OWNER: `/root/phase3_dataset_notes_fix`, `dataset-engineer`. FILE MODIFIED: `datasets/schemas/orcid-record.md` only. The owner parsed narrow fields in the current ORCID worktree sample and confirmed the names, Ringgold employment identifier 4365, two education entries, Scopus ID 55497628100, and empty email/funding arrays. Those facts already matched the current note when the owner read it.
 
 The owner corrected the remaining DOI coverage from one group to five of 11 groups (indexes 0, 1, 2, 3, 7), added mapping notes for researcher external IDs, education, and work DOI linkage, and accurately described the sample as a current worktree file. `git show HEAD:datasets/samples/orcid/records.jsonl` failed because the sample is untracked. No sample, checksum, script, or core changes occurred; no behavior tests were needed for this notes-only correction. The final fresh reviewer verified the facts and returned APPROVE with no blockers.
+
+## Phase 17 coordinator index note (added 2026-11-22, package 17G; not part of the copied owner report)
+
+The reports above combine some labels (for example "COMMANDS RUN / TEST RESULTS"). The same content under the standard labels:
+
+COMMANDS RUN: see the "COMMANDS RUN / OWNER-REPORTED TEST RESULTS" and "COMMANDS RUN / TEST RESULTS" entries above, and the commands in `test-report.md`.
+TEST RESULTS: see the same entries above and `test-report.md` (coordinator validation).
+VALIDATION RESULTS: see the "VALIDATION RESULTS / CONTRACT CHOICES" entry above and `test-report.md`.
