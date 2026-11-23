@@ -32,7 +32,7 @@ The software was produced by a one-writer agent system: each artifact class has 
 
 ## Prerequisites
 
-Commands are run from the repository root unless a step says otherwise. Replay status is stated for each command group; "not replayed in 17A (replay in 17G)" means the Phase 17 documentation pass did not run it, and the clean-checkout replay will.
+Commands are run from the repository root unless a step says otherwise. Replay status is stated for each command group. The clean-checkout replay (package 17G) ran on a fresh clone of `main` at `d1d4fe7` on 2026-11-22 with JDK 17, offline; each group below says which commands it observed and which it did not. The record of that replay is `docs/agent-runs/phase-17/17g-replay.md`.
 
 ### Local software
 
@@ -63,7 +63,7 @@ export JAVA_HOME=<your JDK 17 home>          # for example /opt/homebrew/opt/ope
 
 sbt -batch fmt                                # format every module and the build (writes files)
 sbt -batch compile                            # compile
-sbt -batch core/test                          # one module's tests (observed 2026-11-19: 207 succeeded, 0 failed)
+sbt -batch core/test                          # one module's tests (observed in the 17G clean-checkout replay: 208 succeeded, 0 failed)
 sbt -batch check                              # the repository definition of done: format check, compile, all tests, markTestRun
 sbt -batch clean check                        # the same from a clean build (the course's final gate)
 sbt -batch packageRelease                     # Hadoop submit JAR and bundle, Spark job JAR, ER job JAR, service distribution, manifest
@@ -71,7 +71,7 @@ bash scripts/check.sh                         # the seven gates: constitution, h
 bash scripts/package.sh                       # packageRelease plus four linux/amd64 images and a release manifest under target/release/
 ```
 
-Replay status: `sbt -batch core/test` was observed on 2026-11-19 (see exercise E2 below). The other commands in this block are not replayed in 17A (replay in 17G). The last full `scripts/check.sh` run on `main` at `55fb1b3` ended `RESULT: PASS gates=7`; counts are in [reports/release-manifest.md](reports/release-manifest.md). Expect more than ten minutes for a full check. Individual module tests: `sbt -batch <module>/test` for `core`, `hadoop`, `entityResolution`, `sparkAnalytics`, `storage`, `rag`, `services` and `independentTests`; script tests run inside `scripts/check.sh` (`python3 -I -m unittest discover -s scripts/tests`).
+Replay status (17G clean-checkout replay, fresh clone of `main` at `d1d4fe7`, JDK 17, offline, 2026-11-22): `sbt -batch clean check` ended with 1,773 tests succeeded, 0 failed, 2 canceled (test summary lines of 208, 64, 39, 53, 180 with 1 canceled, 298, 194, 707 and 30 with 1 canceled), sbt total time 14:48. `sbt -batch fmt` left the tree unchanged (`git status --porcelain` empty); `sbt -batch compile` succeeded; `sbt -batch core/test` reported 208 succeeded; `sbt -batch packageRelease` succeeded. `bash scripts/package.sh` was not replayed because the Docker daemon was not running. The result of the full `bash scripts/check.sh` on the clone is recorded in `docs/agent-runs/phase-17/17g-replay.md`. The last full `scripts/check.sh` run recorded on `main` was at `55fb1b3` and ended `RESULT: PASS gates=7`; counts are in [reports/release-manifest.md](reports/release-manifest.md). Expect more than ten minutes for a full check. Individual module tests: `sbt -batch <module>/test` for `core`, `hadoop`, `entityResolution`, `sparkAnalytics`, `storage`, `rag`, `services` and `independentTests`; script tests run inside `scripts/check.sh` (`python3 -I -m unittest discover -s scripts/tests`).
 
 ## Terraform format, validate, test and plan commands
 
@@ -83,14 +83,15 @@ terraform validate
 terraform test                                # offline tests with mocked providers
 cd ../..
 
-# Plan (read-only; never applies). Dry run is the default and prints the exact commands:
-bash scripts/plan.sh --env course
+# Plan (read-only; never applies). Dry run is the default and prints the exact commands.
+# --region (or SCHOLARCHAIN_AWS_REGION) is required: without it the script refuses with exit 2.
+bash scripts/plan.sh --env course --region us-east-2
 # Real plan: needs the approved profile and the private variable file; the plan runs from a git archive of the commit
 AWS_PROFILE=<approved profile> SCHOLARCHAIN_TF_PRIVATE_VARS=<private tfvars path> \
   bash scripts/plan.sh --env course --region us-east-2 --execute
 ```
 
-The real plan prints the action list (`PLAN-ACTION:` lines), the plan checksum and a receipt, and writes private files under `target/plans/`. A reviewed plan is not approval to apply; the human records the approval first. Replay status: the first four commands are covered by the Terraform gate of `scripts/check.sh` (included in the full check above); the dry-run `plan.sh` and the real plan are not replayed in 17A (replay in 17G; the real plan needs AWS access and is a human-gated step). Plan checksums from the live session are in [reports/release-manifest.md](reports/release-manifest.md).
+The real plan prints the action list (`PLAN-ACTION:` lines), the plan checksum and a receipt, and writes private files under `target/plans/`. A reviewed plan is not approval to apply; the human records the approval first. Replay status: the first four commands are covered by the Terraform gate of `scripts/check.sh` (included in the full check above). In the 17G replay, `bash scripts/plan.sh --env course` as first written was refused with `region required: --region or SCHOLARCHAIN_AWS_REGION` (exit 2); with `--region us-east-2` it ended `RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan`. The real plan was not replayed: it needs AWS access and is a human-gated step. Plan checksums from the live session are in [reports/release-manifest.md](reports/release-manifest.md).
 
 ## Deployment path (human-gated)
 
@@ -104,23 +105,23 @@ Deployment was done once, in the second live session (2026-11-18), and destroyed
 6. Smoke test: `bash scripts/smoke-test.sh --url https://<api host> --api-key-env SCHOLARCHAIN_SMOKE_API_KEY` (six checks: `healthz`, `readyz`, query, evidence, idempotency, error path).
 7. Rollback: `bash scripts/rollback.sh --env course ...` (dry run unless `--execute`; policy in [scripts/README.md](scripts/README.md)). Rollback was not exercised live.
 
-Replay status: none of these steps was replayed in 17A (replay in 17G is limited to the offline parts; the live steps need the human gate and spend and are not repeated). Evidence of the live run: [docs/agent-runs/phase-15/evidence/session-2/INDEX.md](docs/agent-runs/phase-15/evidence/session-2/INDEX.md).
+Replay status: none of these steps was replayed in the 17G clean-checkout replay (the live steps need the human gate and spend and are not repeated; `scripts/package.sh` needs a Docker daemon, which was not running). Evidence of the live run: [docs/agent-runs/phase-15/evidence/session-2/INDEX.md](docs/agent-runs/phase-15/evidence/session-2/INDEX.md).
 
 ## Bounded data-run path
 
 Three bounded paths, from cheapest to most expensive:
 
-1. **Local runtime smoke (offline, no AWS, no model call):** `bash scripts/smoke-local.sh --build` starts the real `query-api` on loopback in `offline-synthetic` mode with a throwaway key, runs the smoke checks against the fixture question "Synthetic fixture: publication count for A" and stops the service. Recorded result: `RESULT: PASS local offline-synthetic query-api passed all smoke checks` (observed 2026-11-19, exercise E2). This is fixture data. Not replayed in 17A (replay in 17G).
+1. **Local runtime smoke (offline, no AWS, no model call):** `bash scripts/smoke-local.sh --build` starts the real `query-api` on loopback in `offline-synthetic` mode with a throwaway key, runs the smoke checks against the fixture question "Synthetic fixture: publication count for A" and stops the service. Recorded result: `RESULT: PASS local offline-synthetic query-api passed all smoke checks` (observed 2026-11-19, exercise E2). Replayed in 17G on the fresh clone: `RESULT: PASS local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:<port>`. This is fixture data.
 2. **Local pipeline on the real S slice (no AWS):** the Phase 15 P6 local chain runs the exact EMR step chain (stage-in, Hadoop prep, entity resolution, class-origin check, Spark job, copy-out) on the 10,577-work DBLP slice:
    ```bash
    sbt -batch packageEmr
    python3 -I experiments/scripts/make_dblp_subsets.py        # writes target/experiment-inputs/15a/size-{25,50,100}/ (size-100 is the S slice)
    python3 -I scripts/lib/p6_local_chain.py run --size S --retain
    ```
-   It also needs the Hadoop client classpath file and the pinned runtime archive described in `python3 -I scripts/lib/p6_local_chain.py --help` and [experiments/README.md](experiments/README.md). Recorded outcome: six passing local replays with identical logical outputs ([docs/evaluation.md](docs/evaluation.md), group 7). Not replayed in 17A (replay in 17G).
+   It also needs the Hadoop client classpath file and the pinned runtime archive described in `python3 -I scripts/lib/p6_local_chain.py --help` and [experiments/README.md](experiments/README.md). Recorded outcome: six passing local replays with identical logical outputs ([docs/evaluation.md](docs/evaluation.md), group 7). In 17G only `python3 -I scripts/lib/p6_local_chain.py --help` was replayed (exit 0); the chain itself was not run, because it needs the pinned runtime archive and the Hadoop client classpath file.
 3. **Bounded EMR run (cloud, human-gated, costs money):** `scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-100.json --cluster-id <J-id> --execute` after the approval record and pre-spend receipt. In the live session this ran Hadoop and entity resolution to completion and failed at the Spark step ([incident record](docs/incidents/2026-11-18-emr-spark-job-step-emrfilesystem.md)). Do not rerun it without a human decision.
 
-Hadoop-only and module-level bounded runs with fixtures run inside `sbt -batch hadoop/test` and `sbt -batch sparkAnalytics/test`. The dataset samples can be verified without any network: `(cd datasets && shasum -a 256 -c samples/SHA256SUMS)`.
+Hadoop-only and module-level bounded runs with fixtures run inside `sbt -batch hadoop/test` and `sbt -batch sparkAnalytics/test`. The dataset samples can be verified without any network: `(cd datasets && shasum -a 256 -c samples/SHA256SUMS)` (17G replay: 4 files OK).
 
 ## Query examples
 
@@ -145,7 +146,7 @@ curl -sS -H @"$H" -H 'Content-Type: application/json' -X POST "<host>/v1/semanti
 rm -f "$H"
 ```
 
-Replay status: not replayed in 17A (replay in 17G). The local fixture service answers only the supported fixture question ("Synthetic fixture: publication count for A"); a real answer needs a deployed stack with a model key, which is not available now. Real recorded answers, with their evidence and explain records, are in the Q12 raw under [experiments/results/phase16/q12-raw/](experiments/results/phase16/q12-raw/) and are summarised in [docs/evaluation.md](docs/evaluation.md). The body of the `/v1/semantic/retrieve` call is `{question, topK 1..20, filters?}` as the smoke client sends it (`scripts/lib/smoke_client.py`).
+Replay status: the query examples were not replayed in 17G, because no deployed stack exists. The local fixture service answers only the supported fixture question ("Synthetic fixture: publication count for A"); a real answer needs a deployed stack with a model key, which is not available now. Real recorded answers, with their evidence and explain records, are in the Q12 raw under [experiments/results/phase16/q12-raw/](experiments/results/phase16/q12-raw/) and are summarised in [docs/evaluation.md](docs/evaluation.md). The body of the `/v1/semantic/retrieve` call is `{question, topK 1..20, filters?}` as the smoke client sends it (`scripts/lib/smoke_client.py`).
 
 ## Experiment reproduction commands
 
@@ -155,7 +156,7 @@ python3 -I experiments/scripts/eval16_repro.py --verify           # regenerate e
 python3 -I experiments/scripts/eval16_identity.py --out-dir <dir> # one table; the others are eval16_graph.py, eval16_answers.py, eval16_retrieval.py, eval16_perf.py, eval16_factory.py
 ```
 
-Observed in 17A on 2026-11-22 (offline): `eval16_repro.py --verify` ended `REGENERATION: PASS pass=24 fail=0 skipped_scripts=0` with exit status 0; `check_manifests.py` is in the replay table of the [final report](reports/final-report.md). Tables whose inputs are git-ignored raw files regenerate only on the machine that holds them. Method notes and every experiment manifest: [experiments/README.md](experiments/README.md) and [load-tests/README.md](load-tests/README.md). Live experiments (the load test, EMR runs) need the human gate and spend; they are not part of any offline reproduction.
+Observed in 17A on 2026-11-22 (offline, on the author's machine): `eval16_repro.py --verify` ended `REGENERATION: PASS pass=24 fail=0 skipped_scripts=0` with exit status 0. Observed in 17G on 2026-11-22 (fresh clone of `main` at `d1d4fe7`, offline): `python3 -I experiments/scripts/check_manifests.py` ended `RESULT: OK`, and `python3 -I experiments/scripts/eval16_repro.py --verify` ended `REGENERATION: PARTIAL pass=10 fail=0 skipped_scripts=5` with exit status 4, because the five skipped scripts (and their tables) need git-ignored local inputs that a fresh clone does not have. `check_manifests.py` is also in the replay table of the [final report](reports/final-report.md). Tables whose inputs are git-ignored raw files regenerate only on the machine that holds them. Method notes and every experiment manifest: [experiments/README.md](experiments/README.md) and [load-tests/README.md](load-tests/README.md). Live experiments (the load test, EMR runs) need the human gate and spend; they are not part of any offline reproduction.
 
 ## Cleanup path
 
@@ -166,7 +167,7 @@ bash scripts/cleanup.sh --env course --region us-east-2 --profile <approved prof
 bash scripts/cleanup.sh --env course --region us-east-2 --profile <approved profile> --confirm <token> --plan <saved plan> --execute
 ```
 
-The preserved item is the Terraform state; everything else is torn down in two passes after the evidence is archived (`bash scripts/archive-evidence.sh --phase NN --label LABEL --include CATEGORY=PATH`). Order, inventories, provider-key revocation and console checks: [docs/runbook.md](docs/runbook.md). Recorded run: inventory 297 entries before, 65 after pass 1, 63 after pass 2 ([inventories](docs/agent-runs/phase-15/evidence/session-2/inventories/), [Phase 15 human gate](docs/agent-runs/phase-15/human-gate.md)); what remains is two free `terraform_data` guards and tagging-index entries that the orchestrator judged to be leftovers of deleted or inactive resources (the state of the second KMS key in the inventory was not read). Replay status: cleanup was not re-run in 17A and was not rehearsed again (replay in 17G is limited to the dry run).
+The preserved item is the Terraform state; everything else is torn down in two passes after the evidence is archived (`bash scripts/archive-evidence.sh --phase NN --label LABEL --include CATEGORY=PATH`). Order, inventories, provider-key revocation and console checks: [docs/runbook.md](docs/runbook.md). Recorded run: inventory 297 entries before, 65 after pass 1, 63 after pass 2 ([inventories](docs/agent-runs/phase-15/evidence/session-2/inventories/), [Phase 15 human gate](docs/agent-runs/phase-15/human-gate.md)); what remains is two free `terraform_data` guards and tagging-index entries that the orchestrator judged to be leftovers of deleted or inactive resources (the state of the second KMS key in the inventory was not read). Replay status: cleanup was not re-run in 17A and was not run in the 17G clean-checkout replay either (the dry run was not among the commands replayed there).
 
 ## Known limitations
 
@@ -180,7 +181,7 @@ Full list with sources: [reports/final-report.md](reports/final-report.md), "Lim
 - OpenAlex, Crossref and ORCID inputs are small committed samples that were not scaled with the DBLP slices.
 - Vector-only and fused retrieval were not evaluated; the OpenSearch tier and CI workflows were not implemented.
 - The AWS stack is destroyed; no live endpoint exists. Some Phase 16 tables regenerate only on the author's machine.
-- Fresh-clone replay of the README commands is a separate Phase 17 gate (17G).
+- The 17G fresh-clone replay did not cover `scripts/package.sh` (no Docker daemon), the live AWS steps, the P6 local chain run or the query examples against a deployed host; `eval16_repro.py --verify` is partial on a fresh clone (10 pass, 5 scripts skipped for git-ignored inputs).
 
 ## Known repository-history limits
 

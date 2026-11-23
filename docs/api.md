@@ -151,7 +151,7 @@ Internal token. Same body keys, with `topK` up to 50 (default 50), question up t
 
 ## Tests that exercise these routes
 
-Run state: these suites exist in the repository. They were not run in package 17A-1; the final test run is a separate Phase 17 gate.
+Run state: these suites exist in the repository. They were not run in package 17A-1. They are part of the `sbt -batch clean check` of the 17G clean-checkout replay (fresh clone of `main` at `d1d4fe7`, JDK 17, offline, 2026-11-22): 1,773 tests succeeded, 0 failed, 2 canceled.
 
 - `modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/`: `ServiceFoundationSpec`, `PublicSemanticRouteSpec`, `GraphPathsAndCommunitiesSpec`, `RequestNestingSpec`, `GraphRequestDeadlineSpec`, `RetriedSessionCreationSpec`, `SessionBindingRecoverySpec`, `ReadinessGateSpec`.
 - `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/`: `IndependentServices10ASpec` (auth separation, malformed JSON, idempotent replay, log redaction, typed error mapping), `AdversarialRuntimeHttpSpec` (HTTP injection, replay, credential canaries); the test names are listed in the Phase 11 test report ([docs/agent-runs/phase-11/test-report.md](agent-runs/phase-11/test-report.md)).
@@ -166,4 +166,4 @@ grep -n -E 'case \("(GET|POST)"' modules/services/src/main/scala/edu/uic/cs441/s
 grep -n '^  /' modules/services/src/main/resources/openapi/scholarchain.v1.yaml
 ```
 
-The first printed 12 extended-route `case` lines (evidence, explain, query evidence, two public graph routes, six internal graph routes, one internal semantic route). The second printed 19 path entries of the OpenAPI file (the 12 above plus `/healthz`, `/readyz`, `/metrics`, `/v1/query`, `/v1/jobs/{jobId}`, `/v1/jobs/{jobId}/result` and `/v1/semantic/retrieve`; `/v1/query`, the two job routes, the health, metrics and public semantic routes are matched in `handle` rather than `routeExtended`). Running the services (`scripts/smoke-local.sh`) was not replayed in 17A (replay in 17G).
+The first printed 12 extended-route `case` lines (evidence, explain, query evidence, two public graph routes, six internal graph routes, one internal semantic route). The second printed 19 path entries of the OpenAPI file (the 12 above plus `/healthz`, `/readyz`, `/metrics`, `/v1/query`, `/v1/jobs/{jobId}`, `/v1/jobs/{jobId}/result` and `/v1/semantic/retrieve`; `/v1/query`, the two job routes, the health, metrics and public semantic routes are matched in `handle` rather than `routeExtended`). Running the services (`scripts/smoke-local.sh`) was not replayed in 17A. In the 17G clean-checkout replay (fresh clone of `main` at `d1d4fe7`, offline, 2026-11-22) `bash scripts/smoke-local.sh --build` ended `RESULT: PASS local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:<port>`.

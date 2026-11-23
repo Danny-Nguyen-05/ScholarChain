@@ -10,7 +10,7 @@ Operating guide for the human operator: deployment, smoke tests, the bounded dat
 
 ## 0. Replay status of this file
 
-Replayed in package 17A-1, 2026-11-22 (offline, read-only): `bash scripts/<name>.sh --help` for `check`, `package`, `plan`, `deploy`, `rollback`, `cleanup`, `smoke-test`, `smoke-local`, `run-bounded-pipeline`, `run-experiment`, `archive-evidence`, `upload-slice` and `upload-emr-artifacts`: each exited 0 and printed its usage text (between 43 and 190 lines). Everything else below is copied from the committed scripts README, the committed runbooks and the Session 2 evidence. Every command that was not replayed is marked "not replayed in 17A (replay in 17G)". Nothing here reports a result that was not already in a committed record.
+Replayed in package 17A-1, 2026-11-22 (offline, read-only): `bash scripts/<name>.sh --help` for `check`, `package`, `plan`, `deploy`, `rollback`, `cleanup`, `smoke-test`, `smoke-local`, `run-bounded-pipeline`, `run-experiment`, `archive-evidence`, `upload-slice` and `upload-emr-artifacts`: each exited 0 and printed its usage text (between 43 and 190 lines). Everything else below is copied from the committed scripts README, the committed runbooks and the Session 2 evidence. Package 17G then replayed part of this file on a fresh clone of `main` at `d1d4fe7` (JDK 17, offline, 2026-11-22); each section below states what that replay observed. Nothing here reports a result that was not already in a committed record.
 
 ## 1. Ground rules
 
@@ -34,7 +34,7 @@ scripts/package.sh                     # jars, four linux/amd64 images, release 
 scripts/smoke-local.sh --build         # starts query-api in offline-synthetic mode on loopback, runs the smoke test, stops it
 ```
 
-Not replayed in 17A (replay in 17G). Last recorded full check before this phase: `RESULT: PASS gates=7` for the Phase 17 starting commit ([docs/agent-runs/phase-17/prompt.md](agent-runs/phase-17/prompt.md)). Terraform checks without an account, from `infra/terraform`: `terraform init -backend=false -input=false`, `terraform fmt -check -recursive`, `terraform validate`, `terraform test` ([Terraform README](../infra/terraform/README.md)); not replayed in 17A (replay in 17G).
+Last recorded full check before this phase: `RESULT: PASS gates=7` for the Phase 17 starting commit ([docs/agent-runs/phase-17/prompt.md](agent-runs/phase-17/prompt.md)). 17G observed on the clone: `sbt -batch clean check` passed (1,773 tests succeeded, 0 failed, 2 canceled, sbt total time 14:48), `sbt -batch fmt` left the tree unchanged, `compile` and `packageRelease` succeeded, and `bash scripts/plan.sh --env course --region us-east-2` ended `RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan` (without `--region` it is refused with exit 2). The result of the full `scripts/check.sh` on the clone is in `docs/agent-runs/phase-17/17g-replay.md`. `bash scripts/package.sh` was not replayed (the Docker daemon was not running). Terraform checks without an account, from `infra/terraform`: `terraform init -backend=false -input=false`, `terraform fmt -check -recursive`, `terraform validate`, `terraform test` ([Terraform README](../infra/terraform/README.md)); they run in the terraform gate of `scripts/check.sh` and were not run separately in 17G.
 
 The plan for the course environment is made by `scripts/plan.sh --env course --region R --profile P --execute` (read-only; it never applies). The archived plan checksum and receipt belong in the release manifest.
 
@@ -50,7 +50,7 @@ The first deployment is five separate steps, each with its own approval record a
 4. `scripts/plan.sh --env course --region R --profile P --image-revision <HEAD SHA> --execute` with the runtime variables enabled in the private variable file (the runtime plan).
 5. Approval record C, a fresh receipt, then `scripts/deploy.sh --stage runtime-apply --plan <runtime plan> ... --execute`. The script verifies the four ECS services and their task definitions.
 
-Not replayed in 17A (replay in 17G); the live replay needs an AWS account and a human gate and is outside the offline package. Neptune, EMR and the HTTPS listener are enabled by variables in the private tfvars file and went in as separate applies in Session 2 (see the table below). The deployer stack (`infra/terraform/deployer`) must be applied first because it holds the permission boundaries; a Bedrock run additionally needs the matching deployer variables before the base plan ([provider-fallback.md](report/provider-fallback.md), section 4).
+Not replayed in 17A or 17G: the live replay needs an AWS account and a human gate and is outside the offline packages. Neptune, EMR and the HTTPS listener are enabled by variables in the private tfvars file and went in as separate applies in Session 2 (see the table below). The deployer stack (`infra/terraform/deployer`) must be applied first because it holds the permission boundaries; a Bedrock run additionally needs the matching deployer variables before the base plan ([provider-fallback.md](report/provider-fallback.md), section 4).
 
 ### 4.2 What Session 2 did (2026-11-18, UTC)
 
@@ -90,7 +90,7 @@ scripts/smoke-test.sh --url https://<endpoint> --checks healthz,readyz
 scripts/smoke-local.sh                                        # loopback, offline-synthetic, throwaway key
 ```
 
-Not replayed in 17A (replay in 17G). Recorded results: Session 2 ran only `healthz,readyz` (both 200) because the Anthropic secret held a placeholder; the missing and invalid key gave 401 and an unknown evidence id gave 404 ([smoke-14b.log](agent-runs/phase-15/evidence/session-2/rb-runtime/smoke-14b.log), [manual-401.log](agent-runs/phase-15/evidence/session-2/rb-runtime/manual-401.log)). Session 1 passed all six checks against the live model ([phase-14 human gate](agent-runs/phase-14/human-gate.md), B8.8 and B12). The route contract the smoke follows is in [docs/api.md](api.md).
+Not replayed against a deployed host in 17A or 17G (no deployed stack exists). In 17G the local equivalent, `bash scripts/smoke-local.sh --build`, ended `RESULT: PASS local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:<port>`. Recorded results: Session 2 ran only `healthz,readyz` (both 200) because the Anthropic secret held a placeholder; the missing and invalid key gave 401 and an unknown evidence id gave 404 ([smoke-14b.log](agent-runs/phase-15/evidence/session-2/rb-runtime/smoke-14b.log), [manual-401.log](agent-runs/phase-15/evidence/session-2/rb-runtime/manual-401.log)). Session 1 passed all six checks against the live model ([phase-14 human gate](agent-runs/phase-14/human-gate.md), B8.8 and B12). The route contract the smoke follows is in [docs/api.md](api.md).
 
 A manual query, once the key is in the environment (synthetic question; no result is claimed here):
 
@@ -101,7 +101,7 @@ curl -sS -X POST "https://<endpoint>/v1/query" \
   -d '{"question":"Synthetic fixture: publication count for A","output":{"includeScores":false}}'
 ```
 
-Not replayed in 17A (replay in 17G). A 202 reply is followed with `GET /v1/jobs/{jobId}` and `/result`; `/v1/explain/{queryId}` and `/v1/queries/{queryId}/evidence` give the audit.
+Not replayed against a deployed host in 17A or 17G (no deployed stack exists). A 202 reply is followed with `GET /v1/jobs/{jobId}` and `/result`; `/v1/explain/{queryId}` and `/v1/queries/{queryId}/evidence` give the audit.
 
 ## 6. Bounded data run
 
@@ -113,7 +113,7 @@ Two committed paths exist for the size S slice (10,577 works; [data-lineage](dat
 python3 -I scripts/lib/p6_local_chain.py run --size S --root target/phase15/p6 --retain
 ```
 
-Inputs it needs are listed by `python3 -I scripts/lib/p6_local_chain.py --help` (replayed in 17A: exit 0; the options named above are from that text): the four packaged jars from `sbt packageEmr`, the Hadoop client classpath, the S input tree under `target/experiment-inputs/15a/`, the portable runtime archive and JDK 17. The run is not replayed in 17A (replay in 17G). The recorded S run produced `run:ba7402d1-959a-4277-8c6e-e92878a38afa`; its timings are in [performance-metrics.md](../experiments/results/phase16/performance/performance-metrics.md) (last passing S run: Hadoop prep 36.73 s, entity resolution 96.7 s, Spark job 362.87 s, local wall times on one laptop).
+Inputs it needs are listed by `python3 -I scripts/lib/p6_local_chain.py --help` (replayed in 17A and again in 17G: exit 0; the options named above are from that text): the four packaged jars from `sbt packageEmr`, the Hadoop client classpath, the S input tree under `target/experiment-inputs/15a/`, the portable runtime archive and JDK 17. The run itself was not replayed in 17A or 17G: it needs the pinned runtime archive and the Hadoop client classpath file. The recorded S run produced `run:ba7402d1-959a-4277-8c6e-e92878a38afa`; its timings are in [performance-metrics.md](../experiments/results/phase16/performance/performance-metrics.md) (last passing S run: Hadoop prep 36.73 s, entity resolution 96.7 s, Spark job 362.87 s, local wall times on one laptop).
 
 **EMR.** `scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-100.json --cluster-id J-ID` runs only a committed, unchanged, valid manifest and delegates to `scripts/run-bounded-pipeline.sh`, which submits six steps to an existing Terraform-created cluster and never creates infrastructure. Its dry run is the default; `--execute` is a human approval point (budget: USD 0.84, 75 minutes, idle timeout 900 s). The recorded outcome is that the Spark step failed on `EmrFileSystem`; the fix is an open item and no EMR run has completed end to end ([incident](incidents/2026-11-18-emr-spark-job-step-emrfilesystem.md)). Record the cost with the ledger step (`run-bounded-pipeline.sh` in `record-actual` mode) after the cluster ends.
 
@@ -157,7 +157,7 @@ Rollback is a deployment: it needs a new approval record, a fresh pre-spend rece
 - **Infrastructure rollback**: `scripts/rollback.sh --mode infra --previous-commit SHA` runs the current scripts against the Terraform source as committed at that SHA. While the live state shows a deployed runtime, the rollback keeps it by carrying the deployed image revision; while it does not, a rollback bound to a push record is refused.
 - Image tags are immutable in ECR, so a tag cannot be overwritten; roll back by selecting the older digest, never by re-pushing a tag.
 
-Replay status: the dry-run paths and their tests exist offline (`scripts/tests/test_rollback.py` and related suites, not run in 17A); `rollback.sh --help` was replayed (exit 0). No rollback was executed on AWS in either live session: no rollback line appears in the Session 2 decision log (searched). Rollback is therefore documented and tested offline only; the live path is unverified. Not replayed in 17A (replay in 17G).
+Replay status: the dry-run paths and their tests exist offline (`scripts/tests/test_rollback.py` and related suites, which run inside the script-tests gate of `scripts/check.sh`; not run separately in 17A or 17G); `rollback.sh --help` was replayed in 17A (exit 0). No rollback was executed on AWS in either live session: no rollback line appears in the Session 2 decision log (searched). Rollback is therefore documented and tested offline only; the live path is unverified. Not replayed in 17G either.
 
 ## 10. Cleanup
 
@@ -171,7 +171,7 @@ Policy for the course session: a full purge after evidence is archived and downl
 6. **Check, read-only.** KMS key pending deletion, tagging-API inventory, S3 buckets gone, no EIP, NAT, load balancer or Neptune left (console checks by the human). Session 2: 63 inventory entries remained, which the human gate describes as two free guards plus tagging-index entries judged to be leftovers of deleted or inactive resources; the state of the second KMS key in the inventory was not read ([human-gate.md](agent-runs/phase-15/human-gate.md); [after-cleanup inventory](agent-runs/phase-15/evidence/session-2/inventories/after-cleanup-inventory.txt)).
 7. **Read the bills.** Cost Explorer by service for the days after cleanup, and the Anthropic and Voyage consoles. Session 2: no resource still accruing on 2026-11-19 and 2026-11-20 at the reading time (AWS total USD 17.88 for 2026-11-01 to 2026-11-20).
 
-Rehearsal status: the destroy sequence was executed live in Sessions 1 and 2 ([Session 1: 309 to 62 to 60 entries](agent-runs/phase-14/human-gate.md); [Session 2](agent-runs/phase-15/evidence/session-2/section-c/cleanup-results.txt)); the script logic is tested offline in `scripts/tests/test_cleanup.py` (not run in 17A). A new rehearsal needs a live stack and a human gate and was not done in this package. Not replayed in 17A (replay in 17G).
+Rehearsal status: the destroy sequence was executed live in Sessions 1 and 2 ([Session 1: 309 to 62 to 60 entries](agent-runs/phase-14/human-gate.md); [Session 2](agent-runs/phase-15/evidence/session-2/section-c/cleanup-results.txt)); the script logic is tested offline in `scripts/tests/test_cleanup.py` (inside the script-tests gate of `scripts/check.sh`; not run separately in 17A or 17G). A new rehearsal needs a live stack and a human gate and was not done in package 17A or 17G.
 
 ## 11. Where to find things after a run
 

@@ -74,7 +74,7 @@ Outside sbt: `infra/terraform` (Terraform 1.13.5, provider 6.44.0), `scripts/` (
 | Review | an independent read-only `code-reviewer` verdict per work package | `docs/agent-runs/phase-NN/review.md` |
 | Human gate | approval of plans, applies, deployments, scale, destruction, ratification and commits | `docs/agent-runs/phase-NN/human-gate.md` |
 
-Phase 17 repeats the clean-checkout `sbt clean check` and the command replay as package 17G; neither is claimed by this file.
+Package 17G ran the clean-checkout `sbt -batch clean check` on a fresh clone of `main` at `d1d4fe7` (JDK 17, offline, 2026-11-22): 1,773 tests succeeded, 0 failed, 2 canceled, sbt total time 14:48. The record of that replay, including the full `scripts/check.sh` result on the clone, is `docs/agent-runs/phase-17/17g-replay.md`.
 
 ## 2. Runtime architecture
 
@@ -173,7 +173,7 @@ The session stacks were destroyed by each session's cleanup (Session 1 by 2026-1
 | Remote Terraform state; multi-region or disaster recovery | not implemented; local state, one Region | [Terraform README](../infra/terraform/README.md), "State and cleanup design" |
 | Public network ingress by default; WAF | not implemented | [threat model](threat-model.md), section 5 |
 | Deterministic model output on the Anthropic route | not possible (no temperature control) | [provider-fallback.md](report/provider-fallback.md), section 6 |
-| Fresh-clone build and command replay | pending: Phase 17 package 17G | [phase-17 work order](agent-runs/phase-17/prompt.md) |
+| Fresh-clone build and command replay | observed in package 17G on 2026-11-22: `sbt -batch clean check` passed with 1,773 tests succeeded, 0 failed, 2 canceled; the full `scripts/check.sh` result is in `docs/agent-runs/phase-17/17g-replay.md` | [phase-17 work order](agent-runs/phase-17/prompt.md) |
 
 ## 5. Where to go next
 

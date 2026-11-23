@@ -88,3 +88,19 @@ VALIDATION: covered by the coordinator's account-ID scan and full check 3 (`test
 
 FILES MODIFIED: `docs/threat-model.md:118` only: the hook probes are stated as run on 2026-11-22 (four PASS, one INCONCLUSIVE, file unchanged) with a link to `hook-probes-17e.md`; no stronger claim than the probe record
 VALIDATION RESULTS (owner-reported): 71 relative links, 0 broken; 0 twelve-digit numbers, 0 '@', 0 home paths. Coordinator: line 118 links the probe record and no longer says "pending"; `NoRealAccountIdIsAdded` OK. Text-only change after full check 3; no further full check run
+
+## hadoop-engineer (17G close-out, HADOOP-10)
+
+STATUS: DONE
+FILES CREATED: `modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/CoauthorPairGenerationSpec.scala` (37 tests: pair and team expansion, caps and reject text, ordinals, block keys, initials, bibliography keys, pair counts); no production file changed
+COMMANDS RUN (JDK 17): `sbt -batch hadoop/Test/scalafmt`; `sbt -batch "hadoop/testOnly edu.uic.cs441.scholarchain.hadoop.CoauthorPairGenerationSpec"`; `sbt -batch hadoop/test`; `sbt -batch "hadoop/Test/scalafmtCheck"`; `git diff --stat -- modules/hadoop/src/main`
+TEST RESULTS (owner-reported): spec `Tests: succeeded 37, failed 0`; `hadoop/test` `Tests: succeeded 101, failed 0` (5 suites); scalafmtCheck success; `modules/hadoop/src/main` diff empty
+NEXT GATE: review (APPROVE, `review.md`), full check 4 (`test-report.md`)
+
+## documentation-engineer (17G close-out: replay notes, Hadoop documentation, review repairs)
+
+STATUS: DONE
+FILES MODIFIED: `README.md` (replay status at lines 35, 66, 74, 94, 108, 114, 121, 159, 184; the `plan.sh` dry-run command now `bash scripts/plan.sh --env course --region us-east-2`); `docs/architecture.md`, `docs/evaluation.md`, `docs/runbook.md`, `docs/demo-script.md`, `docs/service-limits.md`, `docs/threat-model.md`, `docs/api.md` (17G replay notes); `docs/data-lineage.md` (per-job execution detail, outputs and test fixtures table; known limitations and trade-offs for Hadoop; review repairs at lines 76, 78, 80, 86, 90-92, 102); `reports/final-report.md` ("Commands replayed in 17G" table and replay-status text); `reports/release-manifest.md` (replay-status text only)
+VALIDATION RESULTS (owner-reported): relative-link checks 0 broken; `NoRealAccountIdIsAdded` Ran 2 tests, OK; no account ID, e-mail address or home path added
+ASSUMPTIONS: the HADOOP-04, -06 and -09 limitations are described from the code and records; where no reason was recorded the text says so
+NEXT GATE: review (round 2 APPROVE, `review.md`), full check 4 (`test-report.md`)

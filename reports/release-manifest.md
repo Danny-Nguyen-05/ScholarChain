@@ -2,7 +2,7 @@
 
 Status: draft for the Phase 17 final gate, written on 2026-11-22 by the documentation-engineer (instance 2). Each entry is copied from committed evidence and carries a link. "Not recorded" means no committed evidence holds the value; nothing was filled in from memory. The final commit SHA cannot be known until the release commit exists, so it is marked "set at the release commit".
 
-Rules used: values that name an account (account ID, bucket names, ARNs) are left out on purpose; hashes of public artifacts are copied as recorded. Commands marked "not replayed in 17A (replay in 17G)" were not run for this manifest.
+Rules used: values that name an account (account ID, bucket names, ARNs) are left out on purpose; hashes of public artifacts are copied as recorded. Commands marked "not replayed in 17A" were not run for this manifest; the 17G clean-checkout replay (fresh clone of `main` at `d1d4fe7`, JDK 17, offline, 2026-11-22) ran the commands listed in section 25 of the [final report](final-report.md), and its record is `docs/agent-runs/phase-17/17g-replay.md`.
 
 ## 1. Commit and tag
 
@@ -34,7 +34,7 @@ Source: the full check `scripts/check.sh` run `20261122T055838Z-17867` on `main`
 | Terraform tests (six, in the order printed) | 12, 19, 114, 40, 6, 333 |
 | Overall | `RESULT: PASS gates=7` |
 
-Earlier archived check results for comparison (different trees): `sbt check` at Session 1 closeout, 1567 succeeded, 0 failed, 1 canceled ([Phase 14 human gate](../docs/agent-runs/phase-14/human-gate.md)); regeneration of the Phase 16 tables, `REGENERATION: PASS pass=24 fail=0 skipped_scripts=0` ([regeneration-check.log](../experiments/results/phase16/reproducibility/regeneration-check.log); replayed 2026-11-22 in 17A with the same line, exit 0). `sbt clean check` from a clean checkout: not replayed in 17A (replay in 17G).
+Earlier archived check results for comparison (different trees): `sbt check` at Session 1 closeout, 1567 succeeded, 0 failed, 1 canceled ([Phase 14 human gate](../docs/agent-runs/phase-14/human-gate.md)); regeneration of the Phase 16 tables, `REGENERATION: PASS pass=24 fail=0 skipped_scripts=0` ([regeneration-check.log](../experiments/results/phase16/reproducibility/regeneration-check.log); replayed 2026-11-22 in 17A with the same line, exit 0). `sbt -batch clean check` from a clean checkout: not replayed in 17A; passed in the 17G replay (fresh clone of `main` at `d1d4fe7`, JDK 17, offline, 2026-11-22): 1,773 tests succeeded, 0 failed, 2 canceled, sbt total time 14:48. The full `scripts/check.sh` result on that clone is in `docs/agent-runs/phase-17/17g-replay.md`.
 
 ## 3. Terraform plan checksums
 
@@ -139,7 +139,7 @@ The planner's own model setting is not recorded separately in this manifest. Ins
 | Version ledger | `f268658bd45ea6f73a5dbe394f997aebd9bb2b5061eb30457a85da600e4520dc` (computed 2026-11-22) | [project/Versions.scala](../project/Versions.scala) |
 | Demo clips (Session 2) | per-clip sha256 values | [clips.txt](../docs/agent-runs/phase-15/evidence/session-2/recordings/clips.txt) |
 
-Hashes marked "computed 2026-11-22" were taken from the working tree at `main` `55fb1b3` and must be re-computed at the release commit. Build artifacts of the release commit (JARs, images, service distribution): **not recorded**; a `package.sh` run writes `target/release/<commit>/release-manifest.json`, which is git-ignored (not replayed in 17A, replay in 17G). The Phase 13 record shows the shape of that file for a dirty tree at an older commit ([release-manifest-real.json](../docs/agent-runs/phase-13/evidence/13a/infra/release-manifest-real.json)); it is not the release manifest of this submission.
+Hashes marked "computed 2026-11-22" were taken from the working tree at `main` `55fb1b3` and must be re-computed at the release commit. Build artifacts of the release commit (JARs, images, service distribution): **not recorded**; a `package.sh` run writes `target/release/<commit>/release-manifest.json`, which is git-ignored (`package.sh` was not replayed in 17A or 17G: the Docker daemon was not running in 17G; `sbt -batch packageRelease` succeeded in the 17G replay). The Phase 13 record shows the shape of that file for a dirty tree at an older commit ([release-manifest-real.json](../docs/agent-runs/phase-13/evidence/13a/infra/release-manifest-real.json)); it is not the release manifest of this submission.
 
 ## 10. Deployed revisions, smoke tests and rollback evidence
 
@@ -147,7 +147,7 @@ Hashes marked "computed 2026-11-22" were taken from the working tree at `main` `
 |---|---|
 | Deployed revision (Session 2, destroyed) | commit `bd0b818`, four services at 1/1 and the target healthy ([b6-checklist.log](../docs/agent-runs/phase-15/evidence/session-2/rb-runtime/b6-checklist.log)); ECS task-definition ARNs are in git-ignored deploy manifests and are not recorded here |
 | Smoke tests (live) | `healthz` 200 and `readyz` 200, 2 of 6 checks by design; missing and invalid key 401; unknown evidence 404 ([smoke-14b.log](../docs/agent-runs/phase-15/evidence/session-2/rb-runtime/smoke-14b.log), [manual-401.log](../docs/agent-runs/phase-15/evidence/session-2/rb-runtime/manual-401.log), [p14-7-evidence-404.log](../docs/agent-runs/phase-15/evidence/session-2/rb-runtime/p14-7-evidence-404.log)) |
-| Smoke tests (local, offline) | `bash scripts/smoke-local.sh --build`, recorded `RESULT: PASS` ([Phase 15 test report](../docs/agent-runs/phase-15/test-report.md), line 71); not replayed in 17A (replay in 17G) |
+| Smoke tests (local, offline) | `bash scripts/smoke-local.sh --build`, recorded `RESULT: PASS` ([Phase 15 test report](../docs/agent-runs/phase-15/test-report.md), line 71); not replayed in 17A; replayed in 17G on a fresh clone: `RESULT: PASS local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:<port>` |
 | Failure and recovery | stop-task of the query-api task, recovered in 113 s and 68 s ([p11-failure.log](../docs/agent-runs/phase-15/evidence/session-2/b35-failure/p11-failure.log)) |
 | Rollback | not exercised live. `scripts/rollback.sh` is covered by dry-run records in Phase 13 ([dryrun-rollback.txt](../docs/agent-runs/phase-13/evidence/13a/infra/dryrun-rollback.txt)); Session 2 used cleanup, not rollback |
 | Cleanup and inventories | [before](../docs/agent-runs/phase-15/evidence/session-2/inventories/before-cleanup-inventory.txt) (297 entries), [after pass 1](../docs/agent-runs/phase-15/evidence/session-2/inventories/after-pass-1-inventory.txt) (65), [after cleanup](../docs/agent-runs/phase-15/evidence/session-2/inventories/after-cleanup-inventory.txt) (63) |
@@ -163,6 +163,6 @@ AWS USD 17.88, Anthropic USD 0.08 (earlier phases), Voyage AI USD 0.00, combined
 - A Terraform plan for the release commit (human-gated; the deployment is destroyed).
 - Build artifact hashes of the release commit (`package.sh` output is git-ignored).
 - The full-check result of `20261122T055838Z-17867` inside the repository (to be recorded in `docs/agent-runs/phase-17/test-report.md`).
-- `sbt clean check` from a clean checkout, README command replay, bounded pipeline rerun and cleanup rehearsal (the 17G replay).
+- Bounded pipeline rerun and cleanup rehearsal: not part of the 17G replay (the P6 local chain was not run; cleanup was not run). The clean-checkout `sbt -batch clean check` and the README command replay are recorded above and in `docs/agent-runs/phase-17/17g-replay.md`.
 - Prompt version per answer, from the frozen Q12 raw (not read here).
 - The code-reviewer's final verdict and the test-engineer's final run for Phase 17 (separate gates).
