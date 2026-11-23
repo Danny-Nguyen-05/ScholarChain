@@ -9,4 +9,7 @@ The coordinator records commit for work order 2 follows these two.
 Package 17E commits (work order 3; human's "Commit and push", see human-gate.md addendum of 9:47 PM CST):
 c6b54653d18646a4f08053c71713a6392cec8709 phase-17 factory-engineer: hook commands quote only $CLAUDE_PROJECT_DIR; GitHub MCP Authorization header is a single variable reference GITHUB_MCP_AUTHORIZATION (package 17E, ratified, hook probes, full check PASS)
 bfc0a5bbbcb2696793447cef76f039953647ea61 phase-17 documentation-engineer: README names GITHUB_MCP_AUTHORIZATION; threat model records the 17E ratification and hook probes (package 17E)
-The coordinator records commit for package 17E follows these two.
+The coordinator records commit for package 17E follows these two: d95645c0e5b5aaadeaef3b406e483f8790b4ac8e. Merged to main by pull request 14 at 6cf5aa8ecbfe406174febdc1439aaa7058d88558.
+Work order 4 (17G record gaps) commits (human's "Commit, push and merge", see human-gate.md addendum of 11:30 PM CST):
+30612b4d3a28a71c6666096a705535ed6607d5ee phase-17 factory-engineer: docs/agents.md states that subagents never invoke one another (work order 4, gap 4; review APPROVE, ratified, fresh-session hook probes PASS)
+The coordinator records commit for work order 4 follows this one.

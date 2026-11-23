@@ -3,3 +3,4 @@ Phase 16 commits on phase-15-q12 (made by the coordinator on the human's yes, se
 fa908da6b797eca20283197068513b53d70d2134 phase-16 experiment-engineer (instance B): retrieval, performance and elasticity, agentic-factory and reproducibility evaluation, frozen AWS load raw, tests (review rounds 1-2, check repair 1)
 b391bea7c038d3d54d1eeb181a626a8226df1d52 phase-16 documentation-engineer: evaluation report from the frozen Phase 16 results (review rounds 1-2)
 The coordinator records commit (this file and the other phase-16 records) follows these three.
+Coordinator records commit: a07971d4222e79ac64179be2754cdc55916815cd. Merged to main by pull request 13 at 55fb1b379e2408af0bbfa3a3bc9d2e69b613a84d (Phase 17 coordinator addition, 2026-11-22).
