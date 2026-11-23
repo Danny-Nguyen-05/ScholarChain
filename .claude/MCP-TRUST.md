@@ -4,7 +4,7 @@ The project MCP file is a proposed configuration. JSON validation does not confi
 
 | Server | Purpose and boundary | Prerequisite |
 |---|---|---|
-| `github-readonly` | GitHub repository, issue and pull request inspection. The official remote server's read-only header is enabled. Use a token limited to the private repository and read scopes. | `GITHUB_MCP_TOKEN` in the environment, never in the repository. A GitHub account authorized for the private repository. |
+| `github-readonly` | GitHub repository, issue and pull request inspection. The official remote server's read-only header is enabled. Use a token limited to the private repository and read scopes. | `GITHUB_MCP_AUTHORIZATION` in the environment, holding the whole header value `Bearer <token>`; set it in the shell, never in a tracked file. A GitHub account authorized for the private repository. |
 | `aws-api-readonly` | AWS account inspection. `READ_OPERATIONS_ONLY=true` and local-file `no-access` add server checks. IAM is the primary boundary; use an actual read-only role. Read APIs may still expose sensitive values, so inspect outputs before recording them. | `uvx`, pinned `awslabs.aws-api-mcp-server==1.5.5`, and `SCHOLARCHAIN_AWS_READONLY_PROFILE` naming a read-only AWS profile. No credentials are stored here. |
 | `terraform-registry` | Public Terraform registry and provider documentation only; no HCP Terraform token or workspace access. | Docker and pinned `hashicorp/terraform-mcp-server:1.3.0` image. |
 | `aws-knowledge` | Public AWS documentation and knowledge search. The public endpoint has rate limits; its content is reference material, not execution authority. | Network access to `https://knowledge-mcp.global.api.aws`; no authentication. |

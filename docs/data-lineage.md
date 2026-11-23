@@ -1,0 +1,153 @@
+# ScholarChain data lineage
+
+This file traces one fact from a source dataset to an answer: source dataset, Hadoop output, entity-resolution output, Spark output, stores, evidence ids, answer. Every count and run id below comes from a committed record that is linked next to it. Where a record is outside the repository (git-ignored `target/` files, private logs), the file says so and cites the committed excerpt or summary instead. No figure here was produced by a new run in package 17A-1.
+
+## 1. The chain at a glance
+
+```mermaid
+flowchart LR
+  SRC[Source datasets<br/>DBLP XML, OpenAlex, Crossref, ORCID] --> H[Hadoop prep J01-J09<br/>modules/hadoop]
+  H -->|completed export + run-manifest| ER[Entity resolution<br/>modules/entity-resolution]
+  H --> SP[Spark analytics, 11 jobs<br/>modules/spark]
+  ER -->|accepted links, constraints| SP
+  SP -->|Parquet, Neptune CSV, load manifests| ST[(Stores<br/>S3, Neptune, DynamoDB, S3 Vectors)]
+  ST --> RT[Runtime retrieval<br/>modules/rag, modules/services]
+  RT --> EV[Evidence items<br/>content-bound ids]
+  EV --> V[Claim verifier + audit record]
+  V --> ANS[Answer + claims + links]
+```
+
+Each arrow is a file contract with a completion marker; a downstream stage verifies the upstream marker, manifest and hashes before it reads. The binding rules are in [modules/hadoop/README.md](../modules/hadoop/README.md) (Output reuse), [modules/entity-resolution/README.md](../modules/entity-resolution/README.md) (Outputs and downstream ownership) and [modules/spark/README.md](../modules/spark/README.md) (Shared input, output, and execution rules).
+
+## 2. Source datasets
+
+| Source | Snapshot id used | Retrieval date | License | Record |
+|---|---|---|---|---|
+| DBLP XML | `dblp-2026-10-03` | 2026-10-05 for the committed sample; 2026-10-22 in the Phase 15 inputs file | CC0 1.0 (metadata) | [datasets/dataset-manifest.yaml](../datasets/dataset-manifest.yaml), [datasets/provenance/dblp-snapshot-2026-10-03-dagstuhl.txt](../datasets/provenance/dblp-snapshot-2026-10-03-dagstuhl.txt), [experiments/inputs/15a/datasets.json](../experiments/inputs/15a/datasets.json) |
+| OpenAlex REST | `openalex-rest-2026-10-05` | 2026-10-05 | CC0 1.0 (OpenAlex data) | same manifest and [datasets/acquisition-index.v1.json](../datasets/acquisition-index.v1.json) |
+| Crossref REST | `crossref-rest-2026-10-05` | 2026-10-05 | Crossref documentation CC BY 4.0; REST metadata largely free of copyright, some abstracts may be copyrighted | same |
+| ORCID public API | `orcid-public-api-2026-10-05` | 2026-10-05 | public data file CC0 1.0; public API records subject to ORCID terms and record visibility | same |
+
+The sizes used in the evidence are:
+
+- **Size S (the bounded run).** A bounded slice of the DBLP snapshot: up to 2,500 `inproceedings` per venue from eight venues, years 2005 to 2026. The observed selection is 10,577 publications and 21,819 exact author strings; the largest author list has 71 entries and 63 records exceed 16 authors ([datasets/phase6/README.md](../datasets/phase6/README.md), manifest [dblp-slice-manifest.v1.json](../datasets/phase6/dblp-slice-manifest.v1.json)). The slice is a convenience slice with source-order and per-venue-cap bias, not a representative sample of DBLP. The other three sources are the committed Phase 4 samples ([datasets/samples/](../datasets/samples/), checksums in [SHA256SUMS](../datasets/samples/SHA256SUMS)), unscaled ([experiments/manifests/15a-emr-size-100.json](../experiments/manifests/15a-emr-size-100.json) description).
+- **Size L (local only).** 48,187 publications ([datasets/phase15/dblp-l-slice-manifest.v1.json](../datasets/phase15/dblp-l-slice-manifest.v1.json), `lPublicationCount`). It was run locally through a Spark-only identity bypass, not on EMR ([size-l-local-evidence.json](../experiments/inputs/15a/size-l-local-evidence.json)); entity resolution was bypassed there, as that file discloses.
+
+One full DBLP archive download is recorded: 1,107,081,001 bytes, MD5 `cbd329100ea1bbb2873fa2f6d414ea00` ([dblp-archive-acquisition.v1.json](../datasets/phase6/dblp-archive-acquisition.v1.json)). The archive and the selected XML stay in git-ignored `target/`; the repository holds the manifests and checksums.
+
+## 3. Hadoop preparation, jobs J01 to J09
+
+Source: `modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/` (`PrepJobs.scala`, `HadoopPrepPipeline.scala`, `PrepSupport.scala`, `DblpInput.scala`, `DerivedRecords.scala`) and [modules/hadoop/README.md](../modules/hadoop/README.md). The driver `HadoopPrepPipeline.execute` runs the nine jobs in order J01 to J09, sums the counters, writes `run-manifest.json` and `counter-summary.json`, and writes the completion marker `_SCHOLARCHAIN_COMPLETE` only after every job succeeded and the export has partitions. The job graph is J01 and J02 into J03 into J04; J04 feeds J05 (then J06), J07, J08 and J09.
+
+### Settings shared by all jobs
+
+| Item | Value | Source |
+|---|---|---|
+| Partitioner | Hadoop default `HashPartitioner` for every job | no partitioner class set in the module (searched); README "Job graph" |
+| Combiner | none in any job: block size, observation identity and pair expansion are not safe partial aggregates | README "Job graph" |
+| Reducers | `reducerCount` from the config, applied to every job; 1 in the committed sample config and in the Phase 15 EMR config | [scholarchain.hadoop-prep.v1.json](../modules/core/src/main/resources/scholarchain.hadoop-prep.v1.json), [prep-config.json](../experiments/inputs/15a/prep-config.json) |
+| Compression | `compressionCodec` `none`, `intermediateCompressionEnabled` false in both configs; when enabled, J01 to J08 write compressed part files with the configured codec and J09 stays uncompressed; shuffle compression is off | `PrepJobs.configuration`, `compressIntermediate` |
+| Limits | `maxRecordBytes` 1,048,576; `maxXmlEntityExpansion` 1,048,576; `maxCandidateBlockSize` 32; `maxCandidatePairsPerBlock` 128; `maxAuthorTeamSize` 16; `maxLocalSampleRecords` 100 (sample) and 60,000 (Phase 15) | same configs |
+| Intermediate line cap | J03 to J09 read domain JSON larger than the source record: at least 1 MiB, at most 16 MiB and not below `maxRecordBytes` | `IntermediateBytes`, `useIntermediateCap` |
+| Counters (group `SCHOLARCHAIN`) | `INPUT`, `ACCEPTED`, `REJECTED`, `DUPLICATE`, `CONFLICT`, `OVERSIZE_BLOCK`, `OVERSIZE_TEAM`, `EMITTED_PAIR`, `MISSING_KEY`, `SCHEMA_FAILURE`; `counter-summary.json` holds their sums over the nine jobs | `PrepCounters` |
+| Output location in a run | `<outputRoot>/<run uuid>/intermediate/j01 ... j08`, `<outputRoot>/<run uuid>/export/snapshot=<snapshot>/run=<uuid>/<kind>/part-*`, `stats/`, `run-manifest.json`, `counter-summary.json`, `_SCHOLARCHAIN_COMPLETE` | `HadoopPrepPipeline.runJobs` |
+| S3 prefixes (Phase 15 EMR run) | input `emr/<run prefix>/input/size-100`, output `pipeline/<run prefix>/15a/size-100` in the artifacts bucket (bucket name not recorded here); the Hadoop step wrote to a plain absolute path on the EFS mount and a copy-out step was to move results to the output prefix, but that step never ran | [15a-emr-size-100.json](../experiments/manifests/15a-emr-size-100.json), `scripts/emr/sc-step.sh`, decision log line for block 36 ("EMR copy-out never ran") in [decision-log.md](agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md) |
+| Idempotency | the driver never deletes an output directory; reuse needs the completion marker, `run-manifest.json` and every export partition named by the marker, each bound by relative path, byte length and SHA-256; run id, snapshots, retrieval dates, input checksums, schema and transformation versions and the config fingerprint must match; a changed snapshot does not reuse old results | README "Output reuse"; test "failed run leaves no completion marker and a matching marker can be reused" |
+| Transformation version | `hadoop-prep-j01-j09-v3-stable-overflow-lineage` | `PrepLimits.TransformationVersion` |
+
+### Per-job contracts
+
+"Key" and "value" are the Hadoop `Text` key and value. Records travel as lines `<kind-and-lineage prefix> JSON`; the lineage prefix is private to the module and removed by the next job.
+
+| Job | Input format, key, value | Mapper output (key, value) | Reducer: input and output | Reject conditions (reason code) | Fixture |
+|---|---|---|---|---|---|
+| J01 `DblpExtractJob` (`DblpExtractMapper`) | `DblpXmlInputFormat`: one complete top-level DBLP element per record, splittable unless compressed; key is the byte offset (`LongWritable`); value is a JSON header line (entities, flags) then the record XML | domain `WorkRecord` and related records keyed by record kind with an observation-instance suffix; value is domain JSON | `PassReducer` writes every value unchanged | unterminated or malformed closing tag (`MalformedRecord`); oversize record (`OversizeRecord`); unsafe entity (`UnsafeEntity`); missing title, unsupported element, malformed identifier; sample cap past `maxLocalSampleRecords` (`OversizeRecord`, detail `maxLocalSampleRecords`) | `datasets/samples/dblp/linked-records.xml`; tests in `DblpXmlRegressionSpec`, `HadoopPrepSpec` ("split edges and gzip keep complete records", "a FileSplit inside a comment or CDATA does not invent a publication") |
+| J02 `SourceNormalizeJob` (`OpenAlexMapper`, `CrossrefMapper`, `OrcidMapper` through `MultipleInputs`) | `BoundedLineInputFormat`: one JSON line; key is the file offset; value is the line (a line over `maxRecordBytes` becomes an oversize marker without being kept as a String) | normalized source records (works, ORCID profile and activity, institutions, venues, enrichment links) keyed by record kind plus instance | `PassReducer` | malformed JSON; invalid identifier (DOI, ORCID, venue, topic); oversize line; sample cap | `datasets/samples/{openalex,crossref,orcid}/*`; `SourceEvidenceRegressionSpec`, `HadoopPrepSpec` ("a malformed DOI is an invalid-identifier reject") |
+| J03 `ExactIdentifierIndexJob` (`IndexMapper`) | `BoundedLineInputFormat` over J01 and J02 output | one index row per exact key (DOI, arXiv, ORCID, OpenAlex id and others) keyed by record kind; value `IndexRow` JSON with a payload hash; `MISSING_KEY` counted when a work has no exact key | `PassReducer` | an index row that fails `DomainValidation` (`InvalidIdentifier`) | J01 and J02 output of the sample |
+| J04 `ExactIdentifierJoinJob` (`JoinMapper`) | `BoundedLineInputFormat` over J01, J02, J03 output | key `source`, source record id, snapshot; value is a tagged `idx` or `rec` line | `JoinReducer`: all lines of one observation group; compares complete observations. Identical copies keep one survivor and emit its records, index rows and a derived `Bibliography` row; a differing payload for the same source, record and snapshot drops both sides | `DuplicateIdenticalObservation`, `ConflictingObservation`, group over the observation limit (`OversizeRecord`) | `HadoopPrepSpec` ("duplicate, conflict, shared DOI, ORCID activity, teams, and text refs", "identical payloads survive once and conflicting payloads are not exported") |
+| J05 `BlockingKeyJob` (`BlockMapper`) | `BoundedLineInputFormat` over J04 `Bibliography` rows | one key per blocking key of the row: `exact:`, `name:`, `initial:`, `title-year:`, `venue:`, `affiliation:`, `coauthor:`, or `fallback:` (source plus record id) when nothing else exists; value `BlockMember` JSON; `MISSING_KEY` when only fallback keys exist | `BlockReducer`: the members of one block; keeps distinct members up to `maxCandidateBlockSize` and checks the pair count | block over `maxCandidateBlockSize` (`OversizeBlock`, whole block rejected), pairs over `maxCandidatePairsPerBlock` (`OversizeCandidatePairs`); the reducer writes `largestBlock` stats | `HadoopPrepSpec` ("block and team limits reject the whole group"), `AdversarialBlockingReplaySpec` in `tests/` |
+| J06 `CandidateJoinJob` (`CandidateMapper`) | `BoundedLineInputFormat` over J05 members | key = block key; value `BlockMember` JSON | `CandidateReducer`: emits `MatchCandidate` for each pair in a block, sorted by the candidate observation order key; a `fallback:` block emits nothing | same oversize codes; candidate that fails validation (`SchemaFailure`); `MISSING_KEY` when a pair cannot be built | `HadoopPrepSpec` ("bibliographic candidates do not require a shared DOI") |
+| J07 `PublicationTeamJob` (`TeamMapper`) | `BoundedLineInputFormat` over J04 works | team and authorship records keyed by kind; the mapper records `largestTeam` | `PassReducer` | team over `maxAuthorTeamSize` (`OversizeTeam`, emitted by the mapper) | `HadoopPrepSpec` ("block and team limits reject the whole group") |
+| J08 `CoauthorPairExpansionJob` (`PairMapper`) | `BoundedLineInputFormat` over J04 works | unordered coauthor pair records with work and year provenance; the mapper records `largestPairExpansion` (pair count of the team, `n(n-1)/2`, overflow-safe) | `PassReducer` | team over the team or pair limit (`OversizeTeam`) | `HadoopPrepSpec` ("pair arithmetic is overflow-safe...", "largestPairExpansion counts coauthor teams and not block pairs") |
+| J09 `GraphCandidateExportJob` (`ExportMapper`, `ExportReducer`) | `BoundedLineInputFormat` over J04 to J08 output | key `out` plus snapshot for record lines, key `ref` plus text id for abstract references (`need` and `have` flags) | `ExportReducer` writes through `MultipleOutputs` to `snapshot=<s>/run=<uuid>/<kind>/part`; it also derives `AuthorMention` rows and graph edges from works and topic edges from enrichment links, each validated by `DomainValidation` | graph edge failing validation (`SchemaFailure`); `abstractTextRef` with no emitted text document (`SchemaFailure`) | `HadoopPrepSpec` ("missing abstract document exports its reject in the public reject partition", "a graph edge that fails validation is a schema-failure reject") |
+
+Notes on the mapping to the course's recommended job names. The course lists J03 and J04 as an identifier index and an exact-identifier join. This implementation indexes exact keys in J03 and uses J04 to decide duplicate versus conflicting observations of one source record and to build the bibliography rows that J05 blocks; the exact identifier keys themselves travel in the index rows and the `exact:` blocking keys, so an exact-ID candidate pair arises in J06. The module README states the same behavior.
+
+Export kinds written by J09: `work`, `author-mention`, `institution`, `mention-affiliation`, `venue`, `enrichment`, `text`, `orcid-profile`, `orcid-activity`, `index`, `match-candidate`, `graph-edge`, `reject` (README). Rejects are never dropped silently: each carries the source, locator, snapshot, run id, stage and reason code (`Rejects.record`).
+
+### Observed counters
+
+The Phase 15 EMR run (run `15a-emr-size-100-20261118T163203Z-87466`) printed this line for the Hadoop step ([hadoop-prep-counters.txt](agent-runs/phase-15/evidence/session-2/emr/hadoop-prep-counters.txt), from the downloaded step log):
+
+`INPUT 290343, ACCEPTED 515309, REJECTED 1243, DUPLICATE 0, CONFLICT 0, OVERSIZE_BLOCK 517, OVERSIZE_TEAM 63, EMITTED_PAIR 243321, MISSING_KEY 0, SCHEMA_FAILURE 21`
+
+The Phase 16 performance file states that the Hadoop counters were identical on EMR and on the local run of the same input ([performance-metrics.md](../experiments/results/phase16/performance/performance-metrics.md), line "Hadoop counters identical on EMR and local: True"). The 63 `OVERSIZE_TEAM` rejects agree with the dataset note that 63 records have more than 16 authors ([datasets/phase6/README.md](../datasets/phase6/README.md)). The largest block and team are reported by the `stats/` files of the run, which are in git-ignored `target/` and not read here.
+
+## 4. Entity resolution
+
+Source: `modules/entity-resolution/` and its [README](../modules/entity-resolution/README.md). Input: a completed Hadoop export (the reader verifies the marker and hashes first). The policy used in every evidence run is `er-offline-uncalibrated-v2` with feature policy `er-features-v2`; the LLM adjudicator is disabled (deterministic fake provider, spend limit 0.0), so no model call is part of identity decisions ([config-sources.json](../experiments/inputs/15a/config-sources.json), [identity-metrics.md](../experiments/results/phase16/identity/identity-metrics.md)).
+
+Output per entity type (researcher, work): separate accepted, rejected, unresolved and conflict JSONL streams, accepted pairwise links, one complete grouping-constraint bundle, evidence and decision details, `resolution-manifest.json` binding run, input, policy and every file's length, hash and count, and a completion marker over the manifest. The ER stage assigns no canonical groups; Spark does. Identity evaluation (precision 100.0%, recall 79.2% on 194 held-out binary pairs, with the limits stated there) is in [identity-metrics.md](../experiments/results/phase16/identity/identity-metrics.md) and summarized in [docs/report/evaluation.md](report/evaluation.md), group 1.
+
+## 5. Spark analytics
+
+Source: `modules/spark/` and its [README](../modules/spark/README.md). One run reads one completed Hadoop export and one completed entity-resolution export; their manifests, policy hashes, run ids and snapshots must agree with the Spark config before anything is written. Eleven jobs run in `Phase6Main`:
+
+| Job | Output tables (relative to the export root) |
+|---|---|
+| 1 canonical researchers, works, authorship | `nodes/type={researcher,author_mention,work,venue,institution,topic}`, edges `authored`, `resolves_to`, `published_in`, `affiliated_with`, `has_topic`, `integrity/` |
+| 2 temporal weighted coauthor graph | `edges/type=coauthored_with`, `edges/type=coauthored_with_support` (every supporting work) |
+| 3 breadth and team statistics | `metrics/type=researcher_collaboration/window=...` |
+| 4 connected components | `metrics/type=components`, `component_summaries` |
+| 5 selected paths and distance estimate | `path-evidence/window=...`, `metrics/type=path_length_estimate` |
+| 6 communities (weighted label propagation) | `metrics/type=communities`, `cross_community_edges` |
+| 7 bridge measures | `metrics/type=bridges` |
+| 8 k-core | coreness in the researcher metrics, view `metrics/type=kcore` |
+| 9 temporal comparisons | `metrics/type=temporal_changes` |
+| 10 deterministic semantic summaries | `semantic-summaries/window=...` |
+| 11 Parquet export, manifests, gate | `run-manifest.json`, `run-metadata.json`, `counters.json`, `plans/`, `event-log-summary.json`, `load-manifests/{neptune,dynamodb,s3vectors,s3}.json`, completion marker `_SCHOLARCHAIN_SPARK_COMPLETE`, and the Neptune CSV handoff `neptune-opencypher-csv/` |
+
+Windows: `all-years`, `through-2009`, `2010-2014`, `2015-2019`, `2020-2026`, `since-2015`. Every table carries `runId` and a `schemaVersion`; the logical run id is a deterministic hash of the two input manifest bindings, the config fingerprint, the policy versions and the code version; a different code build gives a different run id. Content hashes are order-independent Merkle hashes over sorted rows, not hashes of Parquet bytes.
+
+### Run `run:ba7402d1-959a-4277-8c6e-e92878a38afa` (size S export)
+
+This is the export the stores, the Q12 answer key and the graph audit use. It is a local run of the Hadoop, entity-resolution and Spark chain on the size S slice (the "P6 chain"); the Session 2 EMR chain on the same slice failed at the Spark step, and the human chose this local export as the fallback ([human-gate.md](agent-runs/phase-15/human-gate.md), EMR pipeline paragraph). The export's file listing and checks:
+
+- 60 files read, file-listing sha256 `e277df62...c910e` (full value in [graph-correctness.md](../experiments/results/phase16/graph/graph-correctness.md)); `SHA256SUMS` of the export checked with 0 failures on 2026-11-18 ([decision log](agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md), block 22).
+- 78,104 node rows (AUTHOR_MENTION 45,591; INSTITUTION 1; RESEARCHER 21,819; TOPIC 3; VENUE 112; WORK 10,578), 100,252 graph-edge rows, 228,715 coauthor-edge rows ([graph-correctness.md](../experiments/results/phase16/graph/graph-correctness.md)).
+- Integrity: 0 of 100,252 graph edges and 0 of 228,715 coauthor edges with an unresolved endpoint; every coauthor edge fully supported by works both endpoints authored; 4 unresolved mentions; `missingGraphEndpoints` 0, `pairCountMismatches` 0 (same file). These checks show internal consistency, not that identity decisions are right.
+- The code and its tests: 6 Spark suites with 47 tests were listed (not run) in that evaluation; the last recorded full check is quoted there.
+
+The Phase 6 original run (Session 1 artifact, run `f6e63b4b`) is a different export and is recorded under [docs/agent-runs/phase-06/evidence/6fg/](agent-runs/phase-06/evidence/6fg/).
+
+## 6. Stores
+
+| Store | What is loaded, from which Spark output | Keys and contract | Evidence it ran |
+|---|---|---|---|
+| S3 (seven versioned buckets: raw, curated, graph, rag, artifacts, logs, reports by role) | Parquet tables and manifests of the export under `<run-prefix>/`; the runtime artifact (a bounded snapshot of selected source tables, at most 10,000 rows and 16 MiB) and immutable evidence and qualification objects | objects under `/versions/` with `If-None-Match: *` and a stored `sha256` | Session 1: 143 files uploaded ([phase-14 human gate](agent-runs/phase-14/human-gate.md)); Session 2: a 321,876,735-byte runtime archive upload, verified after one `RequestTimeout` ([decision log](agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md), the base-apply 1 incident and its recovery entries) |
+| Neptune (openCypher bulk load) | the `neptune-opencypher-csv/data/` nodes, graph edges and coauthor edges of the export | ids are the Spark node and edge ids; coauthor edges keep `evidenceTable` and `evidenceEdgeId` pointing at the support Parquet | Session 1: `graphState=LOAD_COMPLETED` after one failed attempt on a dropped tunnel ([phase-14 human gate](agent-runs/phase-14/human-gate.md)). Session 2: the cluster was created and destroyed; the evidence read for this file does not show a graph load in Session 2 (not verified) |
+| DynamoDB (six on-demand tables) | `ResearcherMetricCache` (researcherId, windowId) from the metrics tables; `EntityLinkCache`; `RunLedger` stage rows; `ArtifactRegistry`; `EvidenceBundle`; `QuerySession` for the runtime | conditional writes; the immutable rows reject changed content ([modules/storage/README.md](../modules/storage/README.md), table list) | a RunLedger RUN item was shown with state complete and 10,001 records (clip REC12) ([decision log](agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md), block 29 line); other tables: not verified by a read in the evidence used here |
+| S3 Vectors (one bucket, five indexes, 256 dimensions, cosine) | rendered semantic summaries and paper abstracts of the export, embedded with Voyage `voyage-4-lite` | each vector key binds provider, model, version, dimension and text hash; a changed text hash is rejected before write | Session 2 ingest 2 (`run-20261118-ingest-2`): written 10,000, rejected 0; per index community 3,292, path 120, paper 3,292, researcher 3,292, topic-institution 4; query smoke 5 of 5 samples, 7 verified pointers ([ingest-report-2.json](agent-runs/phase-15/evidence/session-2/vectors/ingest-report-2.json), [query-report.json](agent-runs/phase-15/evidence/session-2/vectors/query-report.json), [retrieval-metrics.md](../experiments/results/phase16/retrieval/retrieval-metrics.md)). The vector bucket was destroyed on 2026-11-18, so those vectors no longer exist |
+
+The vectors were rendered offline from the same export first (10,000 documents, manifest of 21,231,493 bytes, `embeddingCalls` 0; [render-manifest.log](agent-runs/phase-15/evidence/session-2/vectors/render-manifest.log)). The first ingest attempt rejected all 10,000 items because an invalid Voyage key was stored; nothing was written ([incident record](incidents/2026-11-18-vectors-ingest-1-voyage-401.md)).
+
+## 7. Evidence ids and the answer
+
+1. **Plan.** The planner (`prompts/runtime/planner-v1.md`, schema `prompts/schemas/query-plan-v1.json`) can only propose allowlisted operations; its output is validated against the schema and the request's own constraints before any retrieval ([modules/rag/README.md](../modules/rag/README.md), Phase 9A).
+2. **Retrieval.** Graph retrieval goes through the graph service (Neptune or the bounded artifact); semantic retrieval embeds the question and queries S3 Vectors. A stored vector result is accepted only if provider, model version and dimension equal the query's.
+3. **Evidence items.** Each retrieved record becomes an `EvidenceItem` with a content-bound id: `RuntimeEvidenceIds.bind` hashes the complete item (text, score, source URI, provenance, runtime values) with the marker `runtime-evidence-content-v1`, so a changed payload with an unchanged id fails validation. Formats: `evidence:graph-path:`, `evidence:edge:`, `evidence:metric:`, `profile:` and `chunk:` ([modules/core/README.md](../modules/core/README.md)). Each item carries `provenance` (source dataset, source record id, snapshot) and, for metrics and edges, the Spark run id and policy version.
+4. **Synthesis.** The model gets the evidence and a `claimScaffold` of the exact verifiable claims, and must return a forced tool call (`submit_answer`) that conforms to `prompts/schemas/answer-synthesis-v2.json`. Prompt `synthesis-v2` is pinned by hash.
+5. **Verification.** `ClaimVerificationAgent` checks every proposed claim's type, subject, window and value against the stored evidence. A claim with a missing evidence id, wrong value, fabricated identity or unrelated evidence kind is rejected; only verified claims are rendered; no verified claim gives `ABSTAINED`.
+6. **Audit.** An immutable audit record keeps the plan, attempted and rejected claims, per-claim verdicts, prompt and model versions, the evidence ids, `metricVersions`, `graphRunIds` (the Spark run ids) and latency. The answer is returned only after the audit is readable.
+7. **Answer.** `POST /v1/query` returns `answer`, `claims` and links to `/v1/explain/{queryId}`, `/v1/queries/{queryId}/evidence` and the job result ([docs/api.md](api.md)). `/v1/evidence/{evidenceId}` returns the item with `sourceDataset`, `sourceRecordId` and `snapshot`, which lead back to the Hadoop record and so to the source snapshot.
+
+### Worked trace shape
+
+For a coauthor-count claim on the size S export: answer claim, then `evidence:metric:` item (window, metric version, Spark run id `run:ba7402d1-...`), then the `ResearcherMetricsDetail` row of `metrics/type=researcher_collaboration/window=...`, then the Spark job 3 inputs (membership and weighted edges, which keep every supporting work in `coauthored_with_support`), then Hadoop J07 and J08 team and pair records of the surviving DBLP observation, then the DBLP record id and snapshot `dblp-2026-10-03`. The independent scorer walks the same chain from the answer to the export and found 65 of 65 verified claims in Q12 run 2 consistent with the export (36 of 36 in run 1) ([answer-quality.md](../experiments/results/phase16/answers/answer-quality.md); [evaluation](report/evaluation.md), group 4). Those scores come from one run per code version and from a key built by the same project; read the limits in that file.
+
+## 8. What is not covered here
+
+- Hadoop `stats/` files and the Spark `counters.json` of run ba7402d1 are in git-ignored `target/`; the committed record is the Phase 16 summary quoted above.
+- The EMR Spark step never started (`ClassNotFoundException` for `EmrFileSystem` in a `hadoop fs -copyToLocal` call; [incident record](incidents/2026-11-18-emr-spark-job-step-emrfilesystem.md), [s1-spark-failure.json](agent-runs/phase-15/evidence/session-2/emr/s1-spark-failure.json)), so no Spark output exists from EMR.
+- Vector-only and fused retrieval have no labelled evaluation ([evaluation](report/evaluation.md), group 3).
+- Commands in this file were not replayed in 17A; replay in 17G.

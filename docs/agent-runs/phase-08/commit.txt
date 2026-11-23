@@ -1,0 +1,5 @@
+Phase 08 commits, listed in Phase 17 (package 17D) from the pull-request merge(s) that brought this phase into main (git log <merge>^1..<merge>^2, oldest first).
+
+Merge 0f0eeb1dfd451d9caf86d926d1ec5b7f4a6a97ce Merge pull request #4 from Danny-Nguyen-05/phase-8
+3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e Implement Phase 8A embeddings and stable-slot ingestion
+5fee9ffc607cf802e4aaddf4a261c21f1f232fec Implement Phase 8B local ingestion and retrieval validation

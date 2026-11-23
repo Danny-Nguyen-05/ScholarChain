@@ -1,0 +1,12 @@
+Phase 17 commits on phase-17 (made by the coordinator on the human's yes, see human-gate.md):
+8c1c0c03d6aa0bb5ff20332a326ad6fc282309a6 phase-17 documentation-engineer: README (name, university e-mail, required sections, deliverable index), architecture, data lineage, threat model, service limits, runbook, API reference, evaluation, final report, release manifest, demo script (review rounds 1-2)
+e0aa4d42953c503befa2fef9836c25662ef80574 phase-17 incident-responder: incident index and seven Session 2 incident records of 2026-11-18 (review rounds 1-2)
+The coordinator records commit (this file, the other phase-17 records, the phase-15 addendum and the phase-01 to phase-16 index files) follows these two: b125d0f.
+Work order 2 commits (human's "Commit and push", see human-gate.md addendum):
+89e73c87fb70d1d952d8d65f9eacf96199bc1b8c phase-17 hadoop-engineer: remove 24 stray Hadoop test-output files under file: committed by mistake in Phase 4 (work order 2, review APPROVE)
+625505f7885ed6656c4e1c5208f16d19a0d88ca7 phase-17 documentation-engineer: threat model states the human's privacy decision (keep; no history rewrite)
+The coordinator records commit for work order 2 follows these two.
+Package 17E commits (work order 3; human's "Commit and push", see human-gate.md addendum of 9:47 PM CST):
+c6b54653d18646a4f08053c71713a6392cec8709 phase-17 factory-engineer: hook commands quote only $CLAUDE_PROJECT_DIR; GitHub MCP Authorization header is a single variable reference GITHUB_MCP_AUTHORIZATION (package 17E, ratified, hook probes, full check PASS)
+bfc0a5bbbcb2696793447cef76f039953647ea61 phase-17 documentation-engineer: README names GITHUB_MCP_AUTHORIZATION; threat model records the 17E ratification and hook probes (package 17E)
+The coordinator records commit for package 17E follows these two.

@@ -1,0 +1,7 @@
+Phase 05 commits, listed in Phase 17 (package 17D) from the pull-request merge(s) that brought this phase into main (git log <merge>^1..<merge>^2, oldest first).
+
+Merge 6285210f8b8b2de1fe6d0ae79aecaf3079966fc5 Merge pull request #1 from Danny-Nguyen-05/phase-5
+4ac236fcb01825b73635fa4c762a35bed4b362cd Complete Phase 5A identity contracts, source-grounded conflict validation, and data readiness planning
+c8342d25ba04dede26af10bedc5a76691824d1ca Implement Phase 5B entity resolution and offline adjudication with verified grounding and feature fixes
+61d32a38eaad5b2fc352acf0b7f85f3815c2336d Complete Phase 5C review tooling with durable inputs and lean audit archives
+f5cc51cb01a0fff373c4eb9d4718bb8d2eb0635f Complete Phase 5 entity resolution and limited evaluation; document pending live-provider evidence
