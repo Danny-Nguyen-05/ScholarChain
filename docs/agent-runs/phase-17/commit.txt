@@ -1,4 +1,8 @@
 Phase 17 commits on phase-17 (made by the coordinator on the human's yes, see human-gate.md):
 8c1c0c03d6aa0bb5ff20332a326ad6fc282309a6 phase-17 documentation-engineer: README (name, university e-mail, required sections, deliverable index), architecture, data lineage, threat model, service limits, runbook, API reference, evaluation, final report, release manifest, demo script (review rounds 1-2)
 e0aa4d42953c503befa2fef9836c25662ef80574 phase-17 incident-responder: incident index and seven Session 2 incident records of 2026-11-18 (review rounds 1-2)
-The coordinator records commit (this file, the other phase-17 records, the phase-15 addendum and the phase-01 to phase-16 index files) follows these two.
+The coordinator records commit (this file, the other phase-17 records, the phase-15 addendum and the phase-01 to phase-16 index files) follows these two: b125d0f.
+Work order 2 commits (human's "Commit and push", see human-gate.md addendum):
+89e73c87fb70d1d952d8d65f9eacf96199bc1b8c phase-17 hadoop-engineer: remove 24 stray Hadoop test-output files under file: committed by mistake in Phase 4 (work order 2, review APPROVE)
+625505f7885ed6656c4e1c5208f16d19a0d88ca7 phase-17 documentation-engineer: threat model states the human's privacy decision (keep; no history rewrite)
+The coordinator records commit for work order 2 follows these two.

@@ -22,3 +22,9 @@ Coordinator decisions on round 1: B1 redacted copy (see `repairs.md`); m10 kept,
 ## Round 2: APPROVE
 
 Every round-1 finding was checked at its new text and found repaired, with no new error or overclaim. Remaining items, none blocking: (1) minor, the model note gave no time of day while Work order 3 on 2026-11-16 still ran Opus; the coordinator added the time to the addendum and the documentation-engineer aligned README and final report; (2) minor, `test-report.md` did not exist yet; it is written after the final full check; (3) nit, the source of the 166,088 cache-write figure; fixed by the documentation-engineer. The reviewer asks the human to confirm the B1 redaction default and to decide on the account ID and e-mail addresses already in tracked files and history (M3).
+
+## Package 17I (work order 2): APPROVE
+
+Round 1: APPROVE. Verified: the 24 files are J05/J07/J08 stats output of the two `runPipeline` tests in `HadoopPrepReviewSpec` (`:37`, `:98`); the cause through `HadoopPrepPipeline.scala:170-172`, `PrepJobs.scala:851-858`, `PrepSupport.scala:1061-1072` and `HadoopIO.scala:27-35`; an existing regression test (`HadoopPrepReviewSpec.scala:159-171`); no `file:` path left in the working tree; no script, test, manifest or ownership-audit entry depends on the deleted files (Phase 12 snapshot JSONs list them as history only); `human-decision-privacy.md` holds no account ID or personal address and matches `human-gate.md`. Findings: minor, `docs/threat-model.md:63,136` still called the decision pending (documentation-engineer); nit, the record's cross-reference to 17F (coordinator); nit, stale local agent worktree branches still hold the files (local only, not on `origin`; no action).
+
+Re-check: APPROVE. Both repairs in place; threat-model.md has no account ID, e-mail address, user name or home path. One wording nit in `human-decision-privacy.md:3`, fixed by the coordinator.

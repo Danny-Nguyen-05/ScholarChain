@@ -54,3 +54,20 @@ NEXT GATE: review
 
 FILES CREATED: `docs/agent-runs/phase-15/q12-rerun-addendum.md`; `docs/agent-runs/phase-NN/agent-report.md` for NN = 01-16 (a one-line note plus a copy of that folder's `owner-report.md`; byte-identical below the note except phase 12, where the AWS account ID is replaced by `<acct>`); `docs/agent-runs/phase-{05,08,09,10,11,15}/commit.txt` (from `git log <merge>^1..<merge>^2` of the pull-request merges: 4, 2, 3, 2, 3 and 48 commits); `docs/agent-runs/phase-17/{prompt,owner-report,review,repairs}.md`
 COMMANDS RUN (observed): `diff` of each copy against its original below the note (phases 01 and 16 shown identical; all 16 are 2 lines longer than the original); `python3 -m unittest test_billing_replan_14b.NoRealAccountIdIsAdded` in `tests/infra`: Ran 2 tests, OK (after 17D and after the B1 repair)
+
+## hadoop-engineer (17I, work order 2)
+
+STATUS: DONE
+OWNER: hadoop-engineer
+WORK ORDER: `docs/agent-runs/phase-17/work-order-2-stray-files.md`, package 17I
+FILES DELETED: 24 tracked files under the top-level `file:` directory (J05, J07, J08 job-statistics files and their `.crc` files from `HadoopPrepReviewSpec` temp folders `review-block*` and `review-repeat*`), staged with `git rm -r -q -- 'file:'`
+FILES CREATED / MODIFIED: none
+COMMANDS RUN (observed): `git ls-files 'file:*' | wc -l`: 24; `git diff 3ccd61c HEAD --stat -- modules/hadoop/src/main`: empty; `sbt -batch "hadoop/testOnly edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec"` (JDK 17): `Tests: succeeded 30, failed 0, canceled 0, ignored 0, pending 0`, `All tests passed.`; afterwards `ls -d file:` prints nothing
+CAUSE: a one-slash `file:/<tmp>` stats directory string passed to `FsPaths.file` would resolve `file:` relative to the working directory without the `isFileUri` check (`HadoopIO.scala:27-35`); the current code has that check and a round-trip test (`HadoopPrepReviewSpec.scala:159-171`), so the junk came from an earlier pre-fix working-tree run
+RISKS: no test asserts that a `file:` directory is absent; no `.gitignore` entry (build-engineer's file)
+NEXT GATE: review, full check
+
+## documentation-engineer, instance 1 (17I follow-up)
+
+FILES MODIFIED: `docs/threat-model.md` lines 63 and 136: the account-ID and e-mail question is stated as decided (keep; no history rewrite) with the coordinator's counts and a link to `human-decision-privacy.md`
+VALIDATION RESULTS (owner-reported): threat-model.md 69 relative links, 0 broken, 0 twelve-digit numbers, 0 '@'; all six files 306 links, 0 broken

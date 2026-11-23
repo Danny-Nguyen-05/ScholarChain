@@ -30,3 +30,9 @@ All results below were observed by the coordinator on the final Phase 17 tree: b
 - Phase 17 changed documentation and records only; no source, build, Terraform or test file changed. The full check proves the repository gates still pass on this tree.
 - No AWS, model or network step ran except `terraform init` downloading providers (no AWS API call).
 - This is not the course's final gate: `sbt clean check` from a fresh clone of `main`, the README command replay and the grading agents are package 17G, after the merge to `main`.
+
+## Full check 2 (after package 17I and the threat-model follow-up): PASS
+
+`scripts/check.sh`, run id `20261122T230732Z-61812` (started 2026-11-22T23:07:32Z, 5:07 PM CST), on `phase-17` at `b125d0f` with the 24 staged `file:` deletions, the `docs/threat-model.md` edit and the two new coordinator records: constitution PASS (2071 JSON files parse); hooks PASS (4); shell PASS (27); python PASS (84 files compile); terraform PASS (12, 19, 114, 40, 6, 333 passed, 0 failed); script-tests PASS (`scripts/tests` 1200 OK, `scripts/phase12d-spike/tests` 78 OK, billing 121, 84, 39 OK, `tests/scripts` 487 OK, `tests/infra` 468 OK); sbt PASS (194, 707, 30 succeeded, 0 failed, 1 canceled in the last block). `RESULT: PASS gates=7`, exit code 0. Marker updated 2026-11-22T18:34:22 CST. After the run no `file:` directory exists in the working tree.
+
+Before it: the hadoop-engineer's targeted run `sbt -batch "hadoop/testOnly edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec"`: `Tests: succeeded 30, failed 0` (owner-reported); `NoRealAccountIdIsAdded`: OK (coordinator, after the threat-model edit).

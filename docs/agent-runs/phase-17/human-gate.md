@@ -28,3 +28,8 @@ The coordinator asked two questions in chat (options chosen by the human, verbat
 - Independent review: round 2 APPROVE (`review.md`); repairs in `repairs.md`.
 - Full check run id `20261122T174646Z-52571`: `RESULT: PASS gates=7` (`test-report.md`).
 - Phase 17 is offline: documentation and records only; no AWS step, no model call.
+
+## Addendum 2026-11-22 (6:35 PM CST): work order 2 and the privacy decision
+
+- Review M3 is decided: see `human-decision-privacy.md` (keep; no history rewrite).
+- Package 17I (`work-order-2-stray-files.md`): review APPROVE, full check `20261122T230732Z-61812` `RESULT: PASS gates=7` (`test-report.md`). The coordinator asked: "May I commit these changes in 3 commits and push phase-17?" The human answered: "Commit and push". Covers the hadoop-engineer deletion commit, the documentation-engineer threat-model commit and the coordinator records commit on `phase-17`, and the push of that branch. Not a merge to `main`.
