@@ -94,4 +94,4 @@ The packaged `scholarchain.config.v1.conf` is a local-development placeholder (f
 - Anthropic and Voyage provider rate limits.
 - The Bedrock restriction after 2026-11-10 (the AWS reply is not stored).
 - Neptune engine version in the deployed cluster.
-- Commands in this file were not replayed in 17A; replay in 17G.
+- Commands in this file were not replayed in 17A. The 17G clean-checkout replay (fresh clone of `main` at `d1d4fe7`, offline, 2026-11-22) did not run them individually; it ran `sbt -batch clean check` (1,773 tests succeeded, 0 failed, 2 canceled) and `bash scripts/smoke-local.sh --build` (`RESULT: PASS`). Live service limits remain not verified.

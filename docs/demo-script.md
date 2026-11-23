@@ -1,6 +1,6 @@
 # ScholarChain demonstration video script
 
-**Status: updated for the final demo on 2026-11-22 (Phase 17, package 17A-2) by the documentation-engineer; not approved.** The human reviews it, records the remaining clips and edits the video (17H, outside the repository). The 2026-11-15 draft is in git history. Commands marked "(rehearse)" were not replayed in 17A (replay in 17G). The AWS stack was destroyed on 2026-11-18 ([Phase 15 human gate](agent-runs/phase-15/human-gate.md)), so every live item is shown from a recorded clip or from archived evidence opened on screen, never from a running stack. The Session 2 plan, [session-2-plan.md](runbooks/session-2-plan.md), stays as the plan record; section 4 below states what actually happened.
+**Status: updated for the final demo on 2026-11-22 (Phase 17, package 17A-2) by the documentation-engineer; not approved.** The human reviews it, records the remaining clips and edits the video (17H, outside the repository). The 2026-11-15 draft is in git history. Commands marked "(rehearse)" were not replayed in 17A; the 17G clean-checkout replay (2026-11-22) observed the commands it names in `docs/agent-runs/phase-17/17g-replay.md`; a "(rehearse)" mark that remains means that command was not part of it. The AWS stack was destroyed on 2026-11-18 ([Phase 15 human gate](agent-runs/phase-15/human-gate.md)), so every live item is shown from a recorded clip or from archived evidence opened on screen, never from a running stack. The Session 2 plan, [session-2-plan.md](runbooks/session-2-plan.md), stays as the plan record; section 4 below states what actually happened.
 
 History of earlier amendments (kept): Amended 2026-11-16 (P34 impossible, then option (i) in the plan, section 6.4): Neptune runs at min 1 / max 2.5 NCU with a 5.8 h hard stop (this script said "Neptune capped at 1 NCU"), and R-c is dropped, so the "With R-c" column in section 4 is a record only. Item rows 11 and 14-16 in section 1 said "live with R-c"; they now read "Session 1 result only; R-c dropped". Amended 2026-11-16 (L dropped on EMR): items 9 and 10 show S on EMR plus the measured L local evidence, replacing "two real DBLP sizes on the same cluster".
 
@@ -45,7 +45,7 @@ The course also requires, in its hooks section, "at least three safe probes show
 | 14 | A complete user query through the API. | clip REC14 (Q12 rerun, live model; local loopback stack, not AWS) | recorded 2026-11-21 | 45 | 8:00 |
 | 15 | Evidence and explain endpoints for the answer. | clip REC15 (same rerun) | recorded 2026-11-21 | 40 | 8:40 |
 | 16 | Claim verification behavior, including one unsupported claim test. | clip REC16 (same rerun) + offline test clip | recorded 2026-11-21 + offline | 45 | 9:25 |
-| 17 | Reproduction scripts, agent replay instructions, and a clean-checkout bounded run. | offline | after the 17G replay on `main` | 45 | 10:10 |
+| 17 | Reproduction scripts, agent replay instructions, and a clean-checkout bounded run. | offline | after the 17G replay on `main` (done 2026-11-22) | 45 | 10:10 |
 | 18 | Terraform plan or deployed-resource evidence. | clips REC18a and REC18b | recorded 2026-11-18 | 30 | 10:40 |
 | 19 | CloudWatch elasticity dashboard. | clip REC19 (root console, read-only) | recorded 2026-11-18 | 35 | 11:15 |
 | 20 | Scale-out and scale-in evidence. | clip REC20 (root console, read-only) | recorded 2026-11-18 | 55 | 12:10 |
@@ -101,7 +101,7 @@ Terminal setup for every offline clip: the runbook's "T1 setup" block (JDK 17, `
 - **Say:** "This is the repository's definition of done: formatting, compilation and every module's tests."
 
 ### 8. Dataset manifest and actual source samples (30 s, 4:10), offline
-- **Show:** `sed -n '1,40p' datasets/dataset-manifest.yaml`, then `head -c 800 datasets/samples/dblp/linked-records.xml`, then `(cd datasets && shasum -a 256 -c samples/SHA256SUMS)` (rehearse: check the path format in `SHA256SUMS`).
+- **Show:** `sed -n '1,40p' datasets/dataset-manifest.yaml`, then `head -c 800 datasets/samples/dblp/linked-records.xml`, then `(cd datasets && shasum -a 256 -c samples/SHA256SUMS)` (replayed in 17G from the `datasets` directory: 4 files OK).
 - **Say:** "Every source has a snapshot, a retrieval date, a license and checksums. The DBLP input is a bounded slice of about 10,577 papers, not the full dump."
 
 ### 9. Hadoop execution evidence and counters (45 s, 4:55), clip REC09 (EMR, Session 2)
@@ -140,13 +140,13 @@ Terminal setup for every offline clip: the runbook's "T1 setup" block (JDK 17, `
 
 ### 16. Claim verification, including one unsupported claim test (45 s, 9:25), clip REC16 + offline test clip
 - **Show (recorded):** clip REC16 (recorded 2026-11-21): the claim counts (attempted, verified, rejected) in the explain output. Recorded context: in Q12 run-2, 65 verified claims were re-checked against the export with 0 contradictions, and 6 of 6 abstain-expected questions were correctly abstained ([docs/evaluation.md](evaluation.md), group 4); say that the independent re-check, not the runtime's own counters, is the evidence.
-- **Show (offline clip):** the rag test that feeds the verifier an unsupported claim and sees it rejected, run with `sbt -batch "rag / testOnly <verifier spec>"` (rehearse: fill in the exact spec name from `modules/rag/src/test`; not replayed in 17A, replay in 17G).
+- **Show (offline clip):** the rag test that feeds the verifier an unsupported claim and sees it rejected, run with `sbt -batch "rag / testOnly <verifier spec>"` (rehearse: fill in the exact spec name from `modules/rag/src/test`; the rag tests ran inside the 17G `sbt -batch clean check`, the single spec was not run on its own).
 - **Say:** "The verifier checks every claim against the evidence. A claim with no supporting evidence is rejected, and the system abstains instead of guessing."
 
 ### 17. Reproduction scripts, agent replay instructions, clean-checkout bounded run (45 s, 10:10), offline
 - **Show:**
   - The README sections "Reproducing the agentic workflow" and the new setup, build and bounded-run sections ([README](../README.md#reproducing-the-agentic-workflow)).
-  - Then a fresh clone of `main` in a new directory and the bounded local run: `bash scripts/smoke-local.sh --build` (starts the real query-api offline with a throwaway key and runs the smoke checks on fixture data; rehearse in 17G before recording). Show the recorded result of the clean-checkout replay from `docs/agent-runs/phase-17/` once the 17G run exists; until then no clean-checkout result is claimed.
+  - Then a fresh clone of `main` in a new directory and the bounded local run: `bash scripts/smoke-local.sh --build` (starts the real query-api offline with a throwaway key and runs the smoke checks on fixture data; replayed in 17G on a fresh clone: `RESULT: PASS local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:<port>`). Show the recorded result of the clean-checkout replay from `docs/agent-runs/phase-17/17g-replay.md`.
 - **Say:** "Anyone can replay one bounded phase and the test gates without rebuilding the cloud. The smoke run uses fixture data and contacts nothing."
 
 ### 18. Terraform plan or deployed-resource evidence (30 s, 10:40), clips REC18a and REC18b

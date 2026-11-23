@@ -2,7 +2,7 @@
 
 Author: Danny Nguyen (cnguye69@uic.edu), individual project, CS 441, University of Illinois Chicago.
 
-Status of this document: written on 2026-11-22 by the documentation-engineer (instance 2, packages 17A-2 and 17F) from committed evidence. Every number has a source link. Where evidence is missing the text says "not recorded" or "GAP". No result was produced or re-run for this report; the only commands replayed for it are listed in [section 25](#25-reproduction-and-cleanup-instructions). Companion documents: [README](../README.md), [docs/architecture.md](../docs/architecture.md), [docs/data-lineage.md](../docs/data-lineage.md), [docs/threat-model.md](../docs/threat-model.md), [docs/service-limits.md](../docs/service-limits.md), [docs/runbook.md](../docs/runbook.md), [docs/api.md](../docs/api.md), [docs/evaluation.md](../docs/evaluation.md), [docs/demo-script.md](../docs/demo-script.md), [reports/release-manifest.md](release-manifest.md), [docs/incidents/README.md](../docs/incidents/README.md).
+Status of this document: written on 2026-11-22 by the documentation-engineer (instance 2, packages 17A-2 and 17F) from committed evidence. Every number has a source link. Where evidence is missing the text says "not recorded" or "GAP". No result was produced or re-run for this report; the only commands replayed for it are listed in [section 25](#25-reproduction-and-cleanup-instructions). The 17G clean-checkout replay ran later; its observed results are in the second table of section 25 and its record is `docs/agent-runs/phase-17/17g-replay.md`. Companion documents: [README](../README.md), [docs/architecture.md](../docs/architecture.md), [docs/data-lineage.md](../docs/data-lineage.md), [docs/threat-model.md](../docs/threat-model.md), [docs/service-limits.md](../docs/service-limits.md), [docs/runbook.md](../docs/runbook.md), [docs/api.md](../docs/api.md), [docs/evaluation.md](../docs/evaluation.md), [docs/demo-script.md](../docs/demo-script.md), [reports/release-manifest.md](release-manifest.md), [docs/incidents/README.md](../docs/incidents/README.md).
 
 ## Summary of outcome
 
@@ -218,7 +218,7 @@ Consolidated in [docs/evaluation.md](../docs/evaluation.md), section 6. In short
 - **Entity resolution.** One reviewer; 15 of 72 held-out true matches withheld; no calibration.
 - **Not implemented.** OpenSearch; EMR managed scaling; live Bedrock use.
 - **Cleanup.** 63 inventory entries remain after cleanup: two free `terraform_data` guards and tagging-index entries that the orchestrator judged to be leftovers of deleted or inactive resources; the state of the second KMS key in the inventory was not read ([inventories](../docs/agent-runs/phase-15/evidence/session-2/inventories/)); several console checks were not made ([Phase 15 human gate](../docs/agent-runs/phase-15/human-gate.md), "Not verified").
-- **Reproduction.** The fresh-clone replay is a Phase 17 gate (17G) and is not claimed here; some Phase 16 tables regenerate only on the author's machine.
+- **Reproduction.** The 17G fresh-clone replay (fresh clone of `main` at `d1d4fe7`, JDK 17, offline, 2026-11-22) passed `sbt -batch clean check` (1,773 tests succeeded, 0 failed, 2 canceled) but did not cover `scripts/package.sh`, the live AWS steps, the P6 local chain run or query examples against a deployed host; `eval16_repro.py --verify` is partial on a fresh clone (10 pass, 5 scripts skipped for git-ignored inputs). Some Phase 16 tables regenerate only on the author's machine.
 
 ## 24. Lessons learned
 
@@ -238,7 +238,7 @@ These are lessons the recorded events support, not general advice.
 
 Reproduction: [README](../README.md) (build, test, Terraform plan, deployment path, bounded data run, query examples, cleanup, deliverable index) and [Reproducing the agentic workflow](../README.md#reproducing-the-agentic-workflow). Cloud reproduction needs the human gates in [docs/runbook.md](../docs/runbook.md) and [docs/runbooks/phase-14-live-session.md](../docs/runbooks/phase-14-live-session.md); no live step was repeated for this report and none is needed to read it.
 
-Cleanup: [docs/runbook.md](../docs/runbook.md), `scripts/cleanup.sh` (dry run, `--prepare`, then a confirmed pass bound to a saved plan). The Session 2 cleanup is recorded in the [Phase 15 human gate](../docs/agent-runs/phase-15/human-gate.md) and the [inventories](../docs/agent-runs/phase-15/evidence/session-2/inventories/): 297 entries before, 65 after pass 1, 63 after pass 2. The cleanup script was not rehearsed again in Phase 17A.
+Cleanup: [docs/runbook.md](../docs/runbook.md), `scripts/cleanup.sh` (dry run, `--prepare`, then a confirmed pass bound to a saved plan). The Session 2 cleanup is recorded in the [Phase 15 human gate](../docs/agent-runs/phase-15/human-gate.md) and the [inventories](../docs/agent-runs/phase-15/evidence/session-2/inventories/): 297 entries before, 65 after pass 1, 63 after pass 2. The cleanup script was not rehearsed again in Phase 17A or run in the 17G replay.
 
 Commands replayed for this report (2026-11-22, offline, the author's machine):
 
@@ -249,8 +249,27 @@ Commands replayed for this report (2026-11-22, offline, the author's machine):
 | `python3 -I experiments/scripts/check_manifests.py` | `RESULT: OK (placeholders allowed; run with --final before the commit freeze)`; 106 file hashes verified |
 | `git log --format=%s \| grep -c '^phase-[0-9]'` | 37 of 151 commit subjects (see the README, "Known repository-history limits") |
 | `bash scripts/run-bounded-pipeline.sh --help` | usage text printed (read-only); not a pipeline run |
-| `bash scripts/smoke-local.sh --help` | usage text printed (read-only); the smoke run itself was not replayed in 17A (replay in 17G) |
-| `sbt clean check`, `scripts/plan.sh`, `scripts/deploy.sh`, `scripts/cleanup.sh`, query examples | not replayed in 17A (replay in 17G) |
+| `bash scripts/smoke-local.sh --help` | usage text printed (read-only); the smoke run itself was not replayed in 17A (it was replayed in 17G, second table) |
+| `sbt clean check`, `scripts/plan.sh`, `scripts/deploy.sh`, `scripts/cleanup.sh`, query examples | not replayed in 17A; see the 17G table below for what was replayed later |
+
+Commands replayed in 17G (2026-11-22, fresh clone of `main` at `d1d4fe7`, JDK 17, offline; record `docs/agent-runs/phase-17/17g-replay.md`, which also holds the full `scripts/check.sh` result on the clone):
+
+| Command | Observed |
+|---|---|
+| `sbt -batch clean check` | passed: 1,773 tests succeeded, 0 failed, 2 canceled; sbt total time 14:48 |
+| `sbt -batch fmt` | tree unchanged (`git status --porcelain` empty) |
+| `sbt -batch compile` | success |
+| `sbt -batch core/test` | 208 succeeded |
+| `sbt -batch packageRelease` | success |
+| `(cd datasets && shasum -a 256 -c samples/SHA256SUMS)` | 4 files OK |
+| `python3 -I experiments/scripts/check_manifests.py` | `RESULT: OK` |
+| `python3 -I experiments/scripts/eval16_repro.py --verify` | `REGENERATION: PARTIAL pass=10 fail=0 skipped_scripts=5`, exit 4: the five skipped scripts (and their tables) need git-ignored local inputs that a fresh clone does not have |
+| `bash scripts/plan.sh --env course` | refused: `region required: --region or SCHOLARCHAIN_AWS_REGION`, exit 2 |
+| `bash scripts/plan.sh --env course --region us-east-2` | `RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan` |
+| `bash scripts/smoke-local.sh --build` | `RESULT: PASS local offline-synthetic query-api passed all smoke checks (the six plus the semantic route and its cache counter) on 127.0.0.1:<port>` |
+| `python3 -I scripts/lib/p6_local_chain.py --help` | exit 0 (the chain itself was not run: it needs the pinned runtime archive and the Hadoop client classpath file) |
+
+Not replayed in 17G: `bash scripts/package.sh` (the Docker daemon was not running), the live AWS steps (human-gated, spend), `scripts/deploy.sh`, `scripts/cleanup.sh`, and the query examples (no deployed stack).
 
 ## Contribution table
 
