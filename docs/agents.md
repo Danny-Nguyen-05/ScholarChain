@@ -58,7 +58,7 @@ The Stop hook checks Scala, Java, shell and Python source under `modules/**`, `t
 
 ## Escalation and gates
 
-Return `BLOCKED-ON` with exact path, evidence, required owner and requested decision when ownership is ambiguous, a contract is missing, or a gate is not met. The orchestrator routes the dependency and reruns the blocked agent in a fresh context after repair. Reviewers report defects to the owning agent through the orchestrator; they never fix them.
+Return `BLOCKED-ON` with exact path, evidence, required owner and requested decision when ownership is ambiguous, a contract is missing, or a gate is not met. Subagents never invoke one another; only the orchestrator launches subagents, and a subagent returns any dependency or ownership question to the orchestrator as `BLOCKED-ON` with an exact path and required owner. The orchestrator routes the dependency and reruns the blocked agent in a fresh context after repair. Reviewers report defects to the owning agent through the orchestrator; they never fix them.
 
 The human architect must approve constitutional changes, data destruction, security-sensitive changes, Terraform apply or destroy, deployment, expensive scale changes, destructive cleanup, ambiguous ownership, and any widening of tools or autonomy. A reviewed Terraform plan is not approval to apply. Record the decision in phase evidence before action. Ratified constitutional changes require a fresh session. No agent may ratify its own work, rewrite a human decision, or claim that a platform instruction is a hard sandbox.
 
