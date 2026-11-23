@@ -13,3 +13,8 @@ The coordinator records commit for package 17E follows these two: d95645c0e5b5aa
 Work order 4 (17G record gaps) commits (human's "Commit, push and merge", see human-gate.md addendum of 11:30 PM CST):
 30612b4d3a28a71c6666096a705535ed6607d5ee phase-17 factory-engineer: docs/agents.md states that subagents never invoke one another (work order 4, gap 4; review APPROVE, ratified, fresh-session hook probes PASS)
 The coordinator records commit for work order 4 follows this one.
+The coordinator records commit for work order 4 is 8a7640c7; merged to main by pull request 15 at d1d4fe7.
+17G close-out commits (human's standing permission, narrowed to commit and push without merge, see human-gate.md addendum of 12:20 AM CST on 2026-11-23):
+28b44de2d4ab5e8b9e186904a67941d31e1afd98 phase-17 hadoop-engineer: CoauthorPairGenerationSpec, 37 tests (HADOOP-10; tests only)
+c5e84542d9d7770202ecdc57994b0ee967c61eeb phase-17 documentation-engineer: 17G replay notes, plan.sh --region command, Hadoop per-job execution table and known limitations
+The coordinator records commit for the 17G close-out follows these two. Not merged into main by the coordinator; the human reviews and merges.

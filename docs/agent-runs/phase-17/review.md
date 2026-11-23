@@ -32,3 +32,19 @@ Re-check: APPROVE. Both repairs in place; threat-model.md has no account ID, e-m
 ## Package 17E (work order 3): APPROVE
 
 Reviewer: code-reviewer, Claude Opus 5.5, effort high. Verdict: APPROVE. Findings: minor, `docs/threat-model.md:118` would go stale after ratification (documentation-engineer; updated before the full check); two nits, none blocking. Ratified by the human afterwards (`ratification-17e.md`); hook probes in `hook-probes-17e.md`.
+
+## 17G close-out (HADOOP-10 tests, Hadoop documentation, replay notes, phase-15 split)
+
+Reviewer: code-reviewer, Claude Opus 5.5, effort high, read-only (Read, Grep, Glob).
+
+Round 1: REQUEST CHANGES. The hadoop-engineer's `CoauthorPairGenerationSpec.scala` was accepted as written: 37 tests, each expectation traced by hand against `DerivedRecords.scala`, `PrepSupport.scala`, `StableIds.scala`, `DomainValidation.scala` and `Enums.scala`; questionable current behaviour is labelled, not presented as correct; production code unchanged. The phase-15 `commit.txt` and `merged-subjects.md` were consistent (48 hashes). Findings, all text-only for the documentation-engineer unless noted:
+- MAJOR, `docs/data-lineage.md:76`: said the Hadoop module never reaches S3 itself; in fact it writes through the Hadoop FileSystem API, which accepts `s3://`, `s3a://` and `s3n://` roots (`modules/hadoop/README.md:74`, `HadoopPrepReviewSpec.scala:200`, `:210`, `:237`, `HadoopPrepSpec.scala:731`).
+- MINOR, `data-lineage.md:80`: "every reject adds to `REJECTED`" is false for two J09 paths (`PrepJobs.scala:1066-1078`, `:1145-1165`); an impossible J05/J06 example.
+- MINOR, `data-lineage.md:92`: J09 rejects column incomplete (`OversizeRecord`).
+- MINOR, `data-lineage.md:86`: a J03 fixture reference belonged to J07/J08/J09.
+- MINOR: "five skipped tables" should be five skipped scripts (`evaluation.md:25`, `README.md:159`, `final-report.md:266`).
+- MINOR, provenance: per-suite counts at `README.md:74` to be confirmed against the raw clone log (coordinator confirmed them and recorded them in `17g-replay.md`).
+- MINOR, sequencing (coordinator): `17g-replay.md` must be committed in the same push.
+- NITs: truncated quotes of the `plan.sh` and `smoke-local.sh` result lines; line references at `data-lineage.md:78`, `:102`, the `localize` scope; "14:56" (the sbt log says `Total time: 888 s (14:48)`; corrected everywhere).
+
+Round 2: APPROVE. Every round-1 finding was found repaired at its new text with no new error or overclaim, and no added account ID, e-mail address, home path or grader-addressed text. One optional nit (the J09 fixture label for `HadoopPrepSpec.scala:549`) was applied by the documentation-engineer afterwards. The reviewer's observation that the two uncounted J09 reject paths may be a production defect is outside this work order and is left to the hadoop-engineer and the human.
