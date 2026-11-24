@@ -18,3 +18,6 @@ The coordinator records commit for work order 4 is 8a7640c400e7ac9753f2ca231ff74
 28b44de2d4ab5e8b9e186904a67941d31e1afd98 phase-17 hadoop-engineer: CoauthorPairGenerationSpec, 37 tests (HADOOP-10; tests only)
 c5e84542d9d7770202ecdc57994b0ee967c61eeb phase-17 documentation-engineer: 17G replay notes, plan.sh --region command, Hadoop per-job execution table and known limitations
 The coordinator records commit for the 17G close-out follows these two. Not merged into main by the coordinator; the human reviews and merges.
+Package 17H follow-up commits (human's "Yes, accept and commit", see human-gate.md addendum of 2026-11-24 11:40 AM CST):
+6af88b7a13e825e824cff47c263ab7596a6e2c56 phase-17 documentation-engineer: README links the demonstration video; demo script and final report say who recorded and who edited it
+The coordinator records commit for package 17H follows this one. Merged to main by pull request 16 before it: 50abcb4ae374f5ba2e85f5e02f5f196e5da239c6.
