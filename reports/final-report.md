@@ -75,7 +75,7 @@ The course asks the report to distinguish four classes. The records support thes
 | Agent-generated and accepted without change | 8 of 38 review units were approved at their first verdict ([factory-metrics.md](../experiments/results/phase16/factory/factory-metrics.md)); the heuristic does not list which |
 | Agent-generated and repaired by another agent | 61 repair-round headings; each review finding was routed to the owner by the orchestrator and re-reviewed ([repairs.md](../docs/agent-runs/phase-14/repairs.md) is one example) |
 | Agent-generated and manually edited, disclosed | Ownership deviations accepted by the human in the Phase 14 gate: edits to `tests/infra/**` in commits `155562d` and `2b2d263`, and to `Dockerfile` and `project/**` in `9ee5bbe` ([Phase 14 human gate](../docs/agent-runs/phase-14/human-gate.md)); the human formatted a private tfvars file by hand on 2026-11-20 ([decision log](../docs/agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md)); the Phase 5 ER labels were drafted by a model and reviewed by one human |
-| Human-authored | phase work orders and acceptance criteria; every gate decision; the root-console steps in the live sessions (IAM windows, secret value entry, dashboard reads); ratification; the demo narration (to be recorded by the human) |
+| Human-authored | phase work orders and acceptance criteria; every gate decision; the root-console steps in the live sessions (IAM windows, secret value entry, dashboard reads); ratification; the demo narration (recorded by the human) |
 
 Whether a given source line was edited by hand outside these records is not established by the records.
 
@@ -284,7 +284,7 @@ Individual project; the human author is Danny Nguyen. Agents are tools under the
 | Datasets | selected scope and slice size | dataset-engineer | [datasets/](../datasets/) |
 | Experiments | approved budget and each live action, performed the console steps of the live sessions | experiment-engineer, test-engineer | [experiments/](../experiments/), [phase-16](../docs/agent-runs/phase-16/) |
 | Documentation | reviews and accepts | documentation-engineer | this report and the documents listed at the top |
-| Demonstration | records and narrates the video | documentation-engineer drafted the script | [docs/demo-script.md](../docs/demo-script.md) |
+| Demonstration | records the clips and narrates the video; uploads it | documentation-engineer drafted the script; an agent edited the clips at the human's request (silence cuts, 1.2x speech, title labels and provenance captions); the coordinator added six correction captions and the item 6 owner-report clip after reviews by a separate agent session (pasted in chat, not stored in the repository) | [docs/demo-script.md](../docs/demo-script.md) |
 
 ## Scale table (Phase 17 report template, P28)
 
