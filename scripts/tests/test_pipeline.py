@@ -14,7 +14,7 @@ import subprocess
 import sys
 import unittest
 
-from helpers import FAKE_ACCOUNT, FAKE_SECRET, FAKE_TOKEN, REGION, SCRIPTS_DIR, account_hash, sha256_bytes, utc_hours_ago
+from helpers import FAKE_ACCOUNT, FAKE_SECRET, FAKE_TOKEN, REGION, SCRIPTS_DIR, account_hash, sha256_bytes, utc_hours_ago, write_exec
 from pipeline_helpers import CLUSTER, JOB_SHA, PIPELINE_FIXTURES, RUN, PipelineFixture, read
 
 PIPELINE = os.path.join(SCRIPTS_DIR, "run-bounded-pipeline.sh")
@@ -858,6 +858,134 @@ class StepBodyTests(PipelineFixture):
         result = self.run_body(body)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("does not have the approved sha256", result.stderr)
+        self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
+
+    # ---- Phase 18 (incident 2026-11-18): the S3 template fetch runs in the stock EMR environment, before spark_env ----------------
+    STOCK_HADOOP_CLASSPATH = "/stock/emr/hadoop/classpath/emrfs-hadoop-assembly.jar"
+    TEMPLATE_S3 = "s3://fixture-bucket/art/spark-template.json"
+
+    def s3_template_spark_job(self, fake_hadoop_body=None):
+        """The staged spark-job body with an s3:// template reference (its sha256 stays the local fixture's) and a fake `hadoop`
+        that records the environment it was started with, then copies the fixture template to the destination. Like the real
+        stock client on the cluster it fails (exit 255, EmrFileSystem ClassNotFoundException) when the environment was already
+        switched to the portable runtime: SPARK_HOME set, or the stock HADOOP_CLASSPATH gone."""
+        body = self.spark_job_ready()
+        local = os.path.join(self.inputs, "spark-template.json")
+        self.assertIn("TEMPLATE_REF=" + local, body)
+        body = body.replace("TEMPLATE_REF=" + local, "TEMPLATE_REF=" + self.TEMPLATE_S3)
+        self.envlog = os.path.join(self.node, "hadoop-env.log")
+        write_exec(
+            os.path.join(self.nodebin, "hadoop"),
+            fake_hadoop_body
+            or ('#!/bin/bash\necho "hadoop $*" >> "%s"\n'
+                'if [ "$1 $2" = "fs -copyToLocal" ]; then\n'
+                '  echo "SPARK_HOME=${SPARK_HOME-unset} SPARK_CONF_DIR=${SPARK_CONF_DIR-unset} HADOOP_CLASSPATH=${HADOOP_CLASSPATH-unset} '
+                'CLASSPATH=${CLASSPATH-unset} SPARK_DIST_CLASSPATH=${SPARK_DIST_CLASSPATH-unset}" >> "%s"\n'
+                '  if [ -n "${SPARK_HOME:-}" ] || [ "${HADOOP_CLASSPATH:-}" != "%s" ]; then\n'
+                '    echo "ClassNotFoundException: com.amazon.ws.emr.hadoop.fs.EmrFileSystem" >&2; exit 255; fi\n'
+                '  cp "%s" "$4"\nfi\nexit 0\n') % (self.nodelog, self.envlog, self.STOCK_HADOOP_CLASSPATH, local),
+        )
+        return body
+
+    def stock_emr_env(self):
+        return {"HADOOP_CLASSPATH": self.STOCK_HADOOP_CLASSPATH, "CLASSPATH": "/stock/emr/classpath", "SPARK_DIST_CLASSPATH": "/stock/emr/spark-dist"}
+
+    def test_the_spark_job_template_fetch_runs_in_the_stock_emr_environment_before_spark_env(self):
+        body = self.s3_template_spark_job()
+        result = self.run_body(body, self.stock_emr_env())
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn("EmrFileSystem", result.stderr)
+        with open(self.envlog, encoding="utf-8") as handle:
+            seen = handle.read().splitlines()
+        self.assertEqual(
+            seen,
+            ["SPARK_HOME=unset SPARK_CONF_DIR=unset HADOOP_CLASSPATH=%s CLASSPATH=/stock/emr/classpath SPARK_DIST_CLASSPATH=/stock/emr/spark-dist" % self.STOCK_HADOOP_CLASSPATH],
+            "the one S3 fetch must see the inherited EMR environment, not the portable-runtime one spark_env builds",
+        )
+        calls = self.node_calls()
+        fetch = [i for i, c in enumerate(calls) if c.startswith("hadoop fs -copyToLocal %s " % self.TEMPLATE_S3)]
+        self.assertEqual(len(fetch), 1, calls)
+        submit = [i for i, c in enumerate(calls) if c.startswith("spark-submit ")]
+        self.assertEqual(len(submit), 1, calls)
+        self.assertLess(fetch[0], submit[0], "the template is fetched before spark-submit")
+        self.assertTrue(os.path.isfile(os.path.join(self.run_root, "config", "spark-config.json")), "the rendered config exists")
+
+    def test_the_spark_job_template_fetch_the_fake_client_rejects_a_spark_env_style_environment(self):
+        # Control for the test above: this fake client rejects an environment that lacks the stock EMR classpath (as the one
+        # spark_env builds: HADOOP_CLASSPATH unset, SPARK_HOME exported). It proves the fake can tell the two environments apart, so
+        # the fetch-before-spark_env assertion above is meaningful; it does not run the old order itself.
+        body = self.s3_template_spark_job()
+        result = self.run_body(body, {"HADOOP_CLASSPATH": "/somewhere/else"})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("EmrFileSystem", result.stderr)
+        self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
+
+    def test_the_spark_job_logs_the_named_non_secret_template_fetch_environment(self):
+        body = self.s3_template_spark_job()
+        env = self.stock_emr_env()
+        env.update({"HADOOP_CONF_DIR": "/etc/hadoop/conf", "AWS_SECRET_ACCESS_KEY": FAKE_SECRET, "AWS_SESSION_TOKEN": FAKE_TOKEN})
+        result = self.run_body(body, env)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        lines = [line for line in result.stdout.splitlines() if "template fetch environment:" in line]
+        self.assertEqual(len(lines), 1, result.stdout)
+        self.assertEqual(
+            lines[0],
+            "STEP-LOG spark-job: template fetch environment: SPARK_HOME=unset HADOOP_CONF_DIR=/etc/hadoop/conf HADOOP_CLASSPATH=set JAVA_HOME=unset hadoop=%s/hadoop" % self.nodebin,
+        )
+        everything = result.stdout + result.stderr
+        for secret in (self.STOCK_HADOOP_CLASSPATH, "/stock/emr/classpath", "/stock/emr/spark-dist", FAKE_SECRET, FAKE_TOKEN):
+            self.assertNotIn(secret, everything, "the diagnostic line must not print a classpath value or a credential")
+
+    def test_the_spark_job_does_not_fetch_the_template_without_a_class_origin_result(self):
+        body = self.s3_template_spark_job()
+        os.unlink(os.path.join(self.run_root, "results", "class-origin.json"))
+        result = self.run_body(body, self.stock_emr_env())
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("refusing to start the Spark job", result.stderr)
+        self.assertEqual([c for c in self.node_calls() if c.startswith("hadoop fs -copyToLocal")], [], "no fetch before the class-origin gate")
+        self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
+
+    def test_the_spark_job_does_not_fetch_the_template_when_the_output_directory_exists(self):
+        body = self.s3_template_spark_job()
+        os.makedirs(os.path.join(self.run_root, "spark"))
+        result = self.run_body(body, self.stock_emr_env())
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("already exists", result.stderr)
+        self.assertEqual([c for c in self.node_calls() if c.startswith("hadoop fs -copyToLocal")], [])
+        self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
+
+    def test_the_spark_job_still_refuses_a_fetched_template_with_the_wrong_sha256(self):
+        body = self.s3_template_spark_job(
+            '#!/bin/bash\necho "hadoop $*" >> "%s"\nif [ "$1 $2" = "fs -copyToLocal" ]; then echo \'{"tampered": true}\' > "$4"; fi\nexit 0\n' % self.nodelog
+        )
+        result = self.run_body(body, self.stock_emr_env())
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("sha256 mismatch for %s" % self.TEMPLATE_S3, result.stderr)
+        self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
+        self.assertFalse(os.path.exists(os.path.join(self.run_root, "config", "spark-config.json")))
+
+    def test_the_spark_job_leaves_no_run_directories_behind_when_spark_env_refuses(self):
+        # spark_env runs after the fetch but before any mkdir, so a refused Java or job jar leaves the run retryable (no spark/ output dir).
+        body = self.s3_template_spark_job()
+        write_exec(os.path.join(self.javahome, "bin", "java"), '#!/bin/bash\necho \'openjdk version "11.0.22" 2024-01-16\' >&2\nexit 0\n')
+        result = self.run_body(body, self.stock_emr_env())
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("the resolved Java is not 17", result.stderr, "spark_env itself must be the refusal")
+        self.assertEqual(len([c for c in self.node_calls() if c.startswith("hadoop fs -copyToLocal")]), 1, "refused AFTER the one fetch")
+        self.assertFalse(os.path.exists(os.path.join(self.run_root, "spark")))
+        self.assertFalse(os.path.exists(os.path.join(self.run_root, "config")))
+        self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
+
+    def test_the_spark_job_leaves_no_run_directories_behind_when_the_job_jar_sha256_is_wrong(self):
+        body = self.s3_template_spark_job()
+        with open(self.jobjar, "wb") as handle:
+            handle.write(b"another jar")
+        result = self.run_body(body, self.stock_emr_env())
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("does not have the approved sha256", result.stderr, "spark_env itself must be the refusal")
+        self.assertEqual(len([c for c in self.node_calls() if c.startswith("hadoop fs -copyToLocal")]), 1, "refused AFTER the one fetch")
+        self.assertFalse(os.path.exists(os.path.join(self.run_root, "spark")))
+        self.assertFalse(os.path.exists(os.path.join(self.run_root, "config")))
         self.assertEqual([c for c in self.node_calls() if c.startswith("spark-submit")], [])
 
     # ---- hadoop prep: ceilings repeated on the cluster ----------------------------------------------------------------------------

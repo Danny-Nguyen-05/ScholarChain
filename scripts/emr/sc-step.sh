@@ -328,12 +328,20 @@ body_spark_class_origin() {
   verify_class_origin
 }
 
+# Phase 18 (incident 2026-11-18, EmrFileSystem ClassNotFoundException): the template fetch is an S3 `hadoop fs -copyToLocal`, and
+# it must run in the stock EMR environment, exactly like the S3 fetches of hadoop-prep (which runs no environment change at all) and
+# entity-resolution (which ran after resolve_java only, never after spark_env) that succeeded on the same cluster. spark_env swaps
+# the process to the portable runtime (SPARK_HOME, PATH, and CLASSPATH, SPARK_DIST_CLASSPATH, HADOOP_CLASSPATH and SPARK_CLASSPATH
+# unset), so the fetch now happens BEFORE spark_env. Every fail-closed check keeps its place relative to the fetch (class-origin
+# result, output directory not reused, template sha256 in localize). spark_env's own checks (Java 17, job jar sha256) now run after
+# the fetch but still before any run directory is created, before the render and before the spark-submit.
 body_spark_job() {
   yarn_traps
-  spark_env
+  require_mount
   SPARK_STEP="bounded"
-  local work hadoop_run er_run spark_out
-  # Fail closed again here: the Spark job never starts without a passing class-origin result for this run.
+  local work hadoop_run er_run spark_out spark_home_state hadoop_classpath_state
+  # Fail closed again here: the Spark job never starts without a passing class-origin result for this run. The class-origin verifier needs
+  # only python3, RUNTIME_DIR, JOB_JAR and the run root (parameters, not the Spark environment), so it runs in the stock environment.
   [[ -f "${RUN_ROOT}/results/class-origin.json" ]] || die "no class-origin result for this run: refusing to start the Spark job"
   verify_class_origin
   hadoop_run="$(discover_run hadoop)"
@@ -341,9 +349,16 @@ body_spark_job() {
   [[ -d "${er_run}" ]] || die "no entity-resolution output at ${er_run}"
   spark_out="${RUN_ROOT}/spark"
   [[ ! -e "${spark_out}" ]] || die "${spark_out} already exists"
-  mkdir -p "${spark_out}" "${RUN_ROOT}/spark-checkpoint" "${RUN_ROOT}/config" "${MNT}/staging"
   work="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"
+  # Day-2 diagnosability: named, non-secret facts only (a path, or set/unset); never the environment, never a classpath value.
+  spark_home_state="unset"
+  hadoop_classpath_state="unset"
+  [[ -z "${SPARK_HOME:-}" ]] || spark_home_state="set"
+  [[ -z "${HADOOP_CLASSPATH:-}" ]] || hadoop_classpath_state="set"
+  log "template fetch environment: SPARK_HOME=${spark_home_state} HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-unset} HADOOP_CLASSPATH=${hadoop_classpath_state} JAVA_HOME=${JAVA_HOME:-unset} hadoop=$(command -v hadoop 2>/dev/null || echo none)"
   localize "${TEMPLATE_REF}" "${work}/spark-template.json" "${TEMPLATE_SHA}"
+  spark_env
+  mkdir -p "${spark_out}" "${RUN_ROOT}/spark-checkpoint" "${RUN_ROOT}/config" "${MNT}/staging"
   verify_program "${RENDER_PY}" "${RENDER_PY_SHA}"
   python3 "${RENDER_PY}" "${work}/spark-template.json" "${RUN_ROOT}/config/spark-config.json" "${hadoop_run}" "${er_run}" "${spark_out}" "${RUN_ROOT}/spark-checkpoint"
   build_spark_cmd "${SPARK_MAIN}" "${RUN_ROOT}/config/spark-config.json"

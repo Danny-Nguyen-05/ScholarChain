@@ -223,7 +223,7 @@ service_capacity = {
 #     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-ceiling-check.py",        sha256 = "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c", dest = "/opt/scholarchain-spike/bin/sc-ceiling-check.py" },
 #     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-class-origin-verify.py",  sha256 = "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79", dest = "/opt/scholarchain-spike/bin/sc-class-origin-verify.py" },
 #     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-render-spark-config.py",  sha256 = "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c", dest = "/opt/scholarchain-spike/bin/sc-render-spark-config.py" },
-#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-step.sh",                 sha256 = "b79f5c1f50f1bf95a2d57c891f82df65d92aee50ab6888e8c3f2a12771b9ff2d", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-step.sh",                 sha256 = "1edcf68d29481015da5675aad7fbe74d4af685f9d0c27a5378f23ffeab7c8eed", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
 #   ]
 #   # Task nodes and managed scaling stay off (G3) unless the caps in infra/terraform/README.md are changed deliberately.
 #   # Phase 15 D3: primary_instance_type defaults to "r5.xlarge" and instance_type (core and task) to "m5.xlarge"; leave both unset.
