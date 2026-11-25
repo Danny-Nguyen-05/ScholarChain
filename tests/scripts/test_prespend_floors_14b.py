@@ -277,11 +277,12 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
         conf = (S.REPO / "scripts/config/release.conf").read_text()
         values = dict(re.findall(r"^([A-Z_]+)=(\S+)", conf, re.M))
         self.assertEqual(float(values["PRESPEND_MIN_HEADROOM_USD"]), 2.0)  # floor 2 since Phase 15 option (i) (was 3)
-        # Phase 15 P25 (user, 2026-11-16, prompt.md line 131): 4 runs / USD 3.36 cumulative (were 3 / 2.52); user decision
-        # 2026-11-16 "Raise cap to 3.53" = 1.68 (Session 1) + 1.85 (Session 2 D3 block); the per-run cap stays 3
-        self.assertEqual(float(values["EMR_CUMULATIVE_CAP_USD"]), 3.53)
+        # History: Phase 15 P25 (user, 2026-11-16, prompt.md line 131) 4 runs / USD 3.36 (were 3 / 2.52), then "Raise cap to 3.53" = 1.68 + 1.85.
+        # Phase 18 18B (human decisions 2026-11-24, docs/agent-runs/phase-18/human-gate.md, "Raise to 120 min (Recommended)" and "Yes, allow 1
+        # retry"): 5 runs / USD 4.70 = 2.05 (ledger) + 1.25 + 0.14 + 1.25 + 0.01; the per-run cap stays 3
+        self.assertEqual(float(values["EMR_CUMULATIVE_CAP_USD"]), 4.70)
         self.assertEqual(float(values["EMR_MAX_RUN_USD"]), 3.0)
-        self.assertEqual(int(values["EMR_MAX_LIVE_RUNS"]), 4)
+        self.assertEqual(int(values["EMR_MAX_LIVE_RUNS"]), 5)
         common = (S.REPO / "scripts/lib/common.sh").read_text()
         pinned = re.search(r'^SC_PINNED_KEYS="([^"]*)"', common, re.M).group(1).split()
         for key in ("PRESPEND_MIN_HEADROOM_USD", "PRESPEND_MAX_AGE_HOURS", "EMR_CUMULATIVE_CAP_USD", "PRESPEND_PROJECT_CEILING_USD"):
