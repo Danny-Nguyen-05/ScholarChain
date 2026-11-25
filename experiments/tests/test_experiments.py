@@ -104,15 +104,18 @@ class CommittedManifests(unittest.TestCase):
             self.assertEqual(manifest["id"], "15a-emr-size-%s" % size)
             self.assertEqual(manifest["teardown"], {"mode": "auto-termination", "max_idle_timeout_seconds": 900})
             self.assertEqual(manifest["budget"]["max_capacity"], 1 + manifest["pipeline"]["core_count"] + manifest["pipeline"]["max_task_count"])
-            self.assertEqual((manifest["budget"]["max_capacity"], manifest["budget"]["max_usd"], manifest["pipeline"]["instance_type"]), (2, 0.84, "m5.xlarge"))
+            # history 0.84 (90 min); size S 1.25 (120 min, human 2026-11-24, docs/agent-runs/phase-18/human-gate.md)
+            self.assertEqual((manifest["budget"]["max_capacity"], manifest["budget"]["max_usd"], manifest["pipeline"]["instance_type"]), (2, 1.25 if label == "size-100" else 0.84, "m5.xlarge"))
             self.assertEqual(manifest["pipeline"]["input_prefix"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/input/size-%s" % size)
             self.assertEqual(manifest["pipeline"]["output_prefix"], "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-%s" % size)
             self.assertEqual(manifest["metrics"]["locations"], ["s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-%s/metrics/" % size])
 
-    def test_size_s_is_the_75_minute_r5_primary_run(self):
+    def test_size_s_is_the_120_minute_r5_primary_run(self):
         manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-100.json"))
-        # user, 2026-11-16 ("S run cap and D3 go-ahead"): 75 min, r5.xlarge primary, m5.xlarge core, no task nodes
-        self.assertEqual(manifest["budget"]["max_runtime_minutes"], 75)
+        # user, 2026-11-16 ("S run cap and D3 go-ahead"): r5.xlarge primary, m5.xlarge core, no task nodes; the cap was 75 minutes, raised to 120
+        # (max_usd 0.84 -> 1.25) by the human on 2026-11-24 ("Raise to 120 min", docs/agent-runs/phase-18/human-gate.md)
+        self.assertEqual(manifest["budget"]["max_runtime_minutes"], 120)
+        self.assertEqual(manifest["budget"]["max_usd"], 1.25)
         self.assertEqual((manifest["pipeline"]["primary_instance_type"], manifest["pipeline"]["instance_type"]), ("r5.xlarge", "m5.xlarge"))
         self.assertEqual((manifest["pipeline"]["core_count"], manifest["pipeline"]["max_task_count"]), (1, 0))
         # P1: the Hadoop prep config is an uploaded artifact (the key the infra-engineer's --hadoop-config option writes), pinned by sha256
@@ -144,9 +147,11 @@ class CommittedManifests(unittest.TestCase):
         manifest["pipeline"]["max_task_count"] = 1
         self.assertEqual(str(check.g6_estimate(manifest, pricing)), "1.26")  # 3 x 0.24 x 1.75
         s = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-100.json"))
-        # D3: primary r5.xlarge 0.252 + 0.063 = 0.315/h, core m5.xlarge 0.240/h; (75 min + 900 s) = 1.5 h; 0.555 x 1.5 = 0.8325 -> 0.84
+        # D3: primary r5.xlarge 0.252 + 0.063 = 0.315/h, core m5.xlarge 0.240/h; (120 min + 900 s) = 2.25 h; 0.555 x 2.25 = 1.24875 -> 1.25
+        self.assertEqual(str(check.g6_estimate(s, pricing)), "1.25")
+        s["budget"]["max_runtime_minutes"] = 75  # the former cap: 0.555 x 1.5 = 0.8325 -> 0.84
         self.assertEqual(str(check.g6_estimate(s, pricing)), "0.84")
-        s["budget"]["max_runtime_minutes"] = 90  # 0.555 x 1.75 = 0.97125 -> 0.98, above the 0.84 budget: why S is capped at 75
+        s["budget"]["max_runtime_minutes"] = 90  # 0.555 x 1.75 = 0.97125 -> 0.98
         self.assertEqual(str(check.g6_estimate(s, pricing)), "0.98")
         s["budget"]["max_runtime_minutes"] = 60  # 0.555 x 1.25 = 0.69375 -> 0.70
         self.assertEqual(str(check.g6_estimate(s, pricing)), "0.70")
@@ -239,6 +244,9 @@ class Fixture(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.root, True)
         for relative in ("scripts/config", "scripts/lib", "experiments/manifests", "experiments/inputs", "load-tests/config"):
             shutil.copytree(os.path.join(REPO, relative), os.path.join(self.root, relative), ignore=shutil.ignore_patterns("__pycache__"))
+        evidence = os.path.join("docs", "agent-runs", "phase-15", "evidence", "session-2", "emr", "emr-actual-1end.log")  # the Session 2 S attempt
+        os.makedirs(os.path.join(self.root, os.path.dirname(evidence)))
+        shutil.copy(os.path.join(REPO, evidence), os.path.join(self.root, evidence))
         for name in ("loadgen.py", "llm_budget.py"):
             shutil.copy(os.path.join(REPO, "load-tests", name), os.path.join(self.root, "load-tests", name))
         self.conf = os.path.join(self.root, "scripts", "config", "release.conf")
@@ -249,10 +257,11 @@ class Fixture(unittest.TestCase):
                 shutil.copy(os.path.join(REPO, entry["path"]), target)
 
     def pin_session2(self):
-        """The pins the infra-engineer is asked for: the P22 sample ceiling and the P25 ledger (4 runs, 3.53 USD cap)."""
+        """The pins the infra-engineer is asked for: the P22 sample ceiling and the EMR ledger (5 runs, 4.70 USD cap; human 2026-11-24, 120-minute S
+        cap and one more retry, docs/agent-runs/phase-18/human-gate.md; the P25 pins were 4 runs and 3.53 USD)."""
         self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "60000")
-        self.set_pin("EMR_MAX_LIVE_RUNS", "4")
-        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")
+        self.set_pin("EMR_MAX_LIVE_RUNS", "5")
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "4.70")
 
     def write_l_slice(self, count=48187, sha=None):
         evidence = read_json(L_EVIDENCE)["slice"]
@@ -378,9 +387,9 @@ class RenderAndCheck(Fixture):
         failed, _, lines = self.run_check(final=True)
         self.assertTrue(failed)
         self.assertTrue(any("CHECK-FAILED: 15a-emr-size-l.json is not in the EMR run set" in line and "local evidence only" in line for line in lines))
-        self.assertTrue(any("15A ledger 3.36 USD over 4 runs" in line for line in lines))  # the refused manifest is not charged
+        self.assertTrue(any("15A ledger reserves 4.55 USD over 5 runs" in line for line in lines))  # the refused manifest is not charged
 
-    def test_size_s_is_required_and_must_keep_the_d3_types_and_the_75_minute_cap(self):
+    def test_size_s_is_required_and_must_keep_the_d3_types_and_the_120_minute_cap(self):
         self.pin_session2()
         path = self.manifest_path("15a-emr-size-100.json")
         original = read_json(path)
@@ -391,12 +400,19 @@ class RenderAndCheck(Fixture):
         self.assertTrue(failed)
         self.assertTrue(any("primary/core types are m5.xlarge/m5.xlarge; D3 approved r5.xlarge primary and m5.xlarge core" in line for line in lines))
         mutated = json.loads(json.dumps(original))
-        mutated["budget"]["max_runtime_minutes"] = 90
+        mutated["budget"]["max_runtime_minutes"] = 150  # 0.555 x 2.75 = 1.52625 -> 1.53, above the 1.25 budget and the 120-minute pin
         write_text(path, json.dumps(mutated))
         failed, _, lines = self.run_check()
         self.assertTrue(failed)
-        self.assertTrue(any("G6 estimate 0.98 exceeds budget.max_usd 0.84" in line for line in lines))
-        self.assertTrue(any("max_runtime_minutes is 90 but the approved cap for size S run and one retry is 75 minutes" in line for line in lines))
+        self.assertTrue(any("G6 estimate 1.53 exceeds budget.max_usd 1.25" in line for line in lines))
+        self.assertTrue(any("max_runtime_minutes is 150 but the approved cap for size S run and one retry is 120 minutes" in line for line in lines))
+        mutated = json.loads(json.dumps(original))
+        mutated["budget"]["max_runtime_minutes"] = 75  # the former cap is no longer the approved one
+        mutated["budget"]["max_usd"] = 0.84
+        write_text(path, json.dumps(mutated))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("max_runtime_minutes is 75 but the approved cap for size S run and one retry is 120 minutes" in line for line in lines))
         os.remove(path)
         failed, _, lines = self.run_check()
         self.assertTrue(failed)
@@ -446,8 +462,12 @@ class RenderAndCheck(Fixture):
         self.pin_session2()
         failed, blocked, lines = self.run_check()
         self.assertFalse(failed or blocked, "\n".join(lines))
-        # Session 1 history 0.84 + 0.84, then S and one S retry 0.84 + 0.84 = 3.36 against the 3.53 USD / 4-run P25 cap: margin 0.17 USD and 0 runs
-        self.assertTrue(any("15A ledger 3.36 USD over 4 runs (Session 1 history + S + one S retry) <= cumulative cap 3.53 USD / 4 runs (margin 0.17 USD, 0 runs)" in line for line in lines))
+        # The ledger holds Session 1 history 0.84 + 0.84, the Session 2 S attempt of 2026-11-18 recorded at 0.37 (emr-actual-1end.log:9-10), then S and
+        # one S retry 1.25 + 1.25: 4.55 USD of reserves over 5 runs against the 4.70 USD / 5-run cap, margin 0.15 USD and no spare run
+        self.assertTrue(any("15A ledger reserves 4.55 USD over 5 runs (Session 1 history 1.68 + Session 2 S attempt as recorded 0.37 + S + one S retry) <= cumulative cap 4.70 USD / 5 runs (margin 0.15 USD against the reserves, 0 spare runs)" in line for line in lines))
+        # the stricter admission rule of scripts/lib/budget.py: recorded 2.05, idle tail 0.14, measured bound 4.70 - 2.05 - 0.14 - 1.25 = 1.26, margin 0.01
+        self.assertTrue(any("recorded 2.05 USD (Session 1 history 1.68 + Session 2 attempt 0.37)" in line and "4.70 - 2.05 - 0.14 - 1.25 = 1.26" in line
+                            and "leaves a margin of 0.01 USD" in line for line in lines))
         path = self.manifest_path("15a-emr-size-25.json")
         original = read_json(path)
         mutated = json.loads(json.dumps(original))
@@ -463,15 +483,47 @@ class RenderAndCheck(Fixture):
         self.assertTrue(failed)
         self.assertTrue(any("max_runtime_minutes is 120 but the approved cap for Session 1 history is 90 minutes" in line for line in lines))
         write_text(path, json.dumps(original))
-        self.set_pin("EMR_CUMULATIVE_CAP_USD", "2.52")  # the pre-P25 ledger: a pin owned elsewhere
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")  # the pre-Phase-18 ledger cap (P25): a pin owned elsewhere
         failed, blocked, lines = self.run_check()
         self.assertFalse(failed, "\n".join(lines))
         self.assertTrue(blocked)
-        self.assertTrue(any("CHECK-BLOCKED: 15A ledger 3.36 USD over 4 runs" in line and "cumulative cap 2.52 USD" in line and "P25" in line for line in lines))
-        self.set_pin("EMR_CUMULATIVE_CAP_USD", "3.53")
-        self.set_pin("EMR_MAX_LIVE_RUNS", "3")  # a second S attempt would be run 4
+        self.assertTrue(any("CHECK-BLOCKED: 15A ledger reserves 4.55 USD over 5 runs" in line and "cumulative cap 3.53 USD" in line for line in lines))
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "4.54")  # 4.18 (Session 2 attempt dropped from the model) would fit; 4.55 does not
         failed, blocked, lines = self.run_check()
         self.assertTrue(blocked and not failed)
+        self.assertTrue(any("CHECK-BLOCKED: 15A ledger reserves 4.55 USD" in line for line in lines))
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "4.70")
+        self.set_pin("EMR_MAX_LIVE_RUNS", "4")  # the real ledger already holds 3 runs, so S plus one retry is run 5: 4 runs cannot hold it
+        failed, blocked, lines = self.run_check()
+        self.assertTrue(blocked and not failed)
+        self.assertTrue(any("CHECK-BLOCKED: 15A ledger reserves 4.55 USD over 5 runs" in line and "/ 4 runs pinned" in line for line in lines))
+
+    def test_the_stricter_admission_rule_blocks_even_when_the_reserves_fit(self):
+        """4.68 holds the 4.55 reserves, but run 5 after a run 4 at its full 1.25 estimate needs 2.05 + 1.25 + 0.14 + 1.25 = 4.69 (budget.py ledger_problems)."""
+        self.pin_session2()
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "4.69")  # margin exactly 0.00: still admitted
+        failed, blocked, lines = self.run_check()
+        self.assertFalse(failed or blocked, "\n".join(lines))
+        self.assertTrue(any("leaves a margin of 0.00 USD" in line for line in lines))
+        self.set_pin("EMR_CUMULATIVE_CAP_USD", "4.68")
+        failed, blocked, lines = self.run_check()
+        self.assertTrue(blocked and not failed)
+        self.assertFalse(any("CHECK-BLOCKED: 15A ledger reserves" in line for line in lines))  # the reserves figure (4.55) still fits
+        self.assertTrue(any("CHECK-BLOCKED: 15A real admission" in line and "leaves a margin of -0.01 USD" in line for line in lines))
+
+    def test_the_session_2_attempt_is_modelled_from_its_committed_evidence(self):
+        self.pin_session2()
+        path = os.path.join(self.root, check.SESSION2_EVIDENCE)
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        write_text(path, text.replace("measured_usd=0.37", "measured_usd=0.38"))  # the recorded figure changed: the model is stale
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("no longer states measured_usd=0.37 tail_seconds=0 tail_usd=0.00" in line for line in lines))
+        os.remove(path)
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("emr-actual-1end.log is missing" in line for line in lines))
 
     def test_allocation_over_the_shared_cap_fails(self):
         path = self.manifest_path("llm-allocation.json")

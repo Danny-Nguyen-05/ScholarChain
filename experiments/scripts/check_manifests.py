@@ -4,7 +4,7 @@
   python3 -I experiments/scripts/check_manifests.py [--final]
 
 Checks
-  15A  experiments/manifests/15a-*.json: size-25 and size-50 (Session 1 history, 90 min, m5.xlarge) and size-100 = size S (75 min,
+  15A  experiments/manifests/15a-*.json: size-25 and size-50 (Session 1 history, 90 min, m5.xlarge) and size-100 = size S (120 min,
        r5.xlarge primary + m5.xlarge core, charged twice: run plus one retry); any other 15A manifest fails (size L is local evidence only,
        experiments/inputs/15a/size-l-local-evidence.json)
        * policy: only the committed token ${SCHOLARCHAIN_ARTIFACTS_BUCKET} names a bucket (no literal bucket),
@@ -12,9 +12,11 @@ Checks
        * scripts/lib/experiment.py validate (the validator run-experiment.sh uses) on a temporary copy in which the tokens are replaced by
          syntactically valid dummy names, with the pinned caps read from scripts/config/release.conf;
        * the G6 estimate ((primary rate + core and task rates) x (runtime + idle timeout), the primary priced at primary_instance_type) from
-         scripts/config/emr-pricing.conf is within budget.max_usd; max_runtime_minutes equals the approved cap (history 90, S 75); the ledger
-         (history + 2 x S) must fit EMR_CUMULATIVE_CAP_USD and EMR_MAX_LIVE_RUNS (otherwise CHECK-BLOCKED, exit 3: the P25 ledger decision is
-         the human's and the pin is infra-engineer's); the configuration checks below apply to S only;
+         scripts/config/emr-pricing.conf is within budget.max_usd; max_runtime_minutes equals the approved cap (history 90, S 120); the ledger
+         (Session 1 history 2 x 0.84 + the Session 2 S attempt recorded at 0.37, evidence docs/agent-runs/phase-15/evidence/session-2/emr/
+         emr-actual-1end.log + 2 x S reserves, 5 runs) must fit EMR_CUMULATIVE_CAP_USD and EMR_MAX_LIVE_RUNS, and so must the stricter
+         admission rule of scripts/lib/budget.py (measured actuals 2.05 + the 0.14 idle tail of run 4 + the 1.25 retry estimate); otherwise
+         CHECK-BLOCKED, exit 3: the ledger decision is the human's and the pin is infra-engineer's; the configuration checks below apply to S only;
        * the four configuration URIs (hadoop_config, er_policy, er_config, spark_config_template) are
          s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/<name>.json and their artifact_sha256 equal the sha256 of
          the repository files listed in experiments/inputs/15a/config-sources.json (which must match the files);
@@ -73,8 +75,14 @@ S_MANIFEST = "15a-emr-size-100.json"
 EMR_LEDGER = {
     "15a-emr-size-25.json": ("Session 1 history", 1, 90),
     "15a-emr-size-50.json": ("Session 1 history", 1, 90),
-    S_MANIFEST: ("size S run and one retry", 2, 75),
+    S_MANIFEST: ("size S run and one retry", 2, 120),  # 75 -> 120 min, max_usd 0.84 -> 1.25: human, 2026-11-24, docs/agent-runs/phase-18/human-gate.md
 }
+# The ledger also holds a third run that has no manifest here: the Session 2 S attempt of 2026-11-18 (75-minute cap, reserved 0.84), recorded
+# at its measured actual. It is history, not a reserve: it counts as one live run and its recorded USD amount, never as a new estimate.
+# Source (committed evidence): LEDGER-ACTUAL line "measured_usd=0.37 tail_seconds=0 tail_usd=0.00" and "live_runs=3 of 4 cumulative_usd=2.05".
+SESSION2_EVIDENCE = os.path.join("docs", "agent-runs", "phase-15", "evidence", "session-2", "emr", "emr-actual-1end.log")
+SESSION2_EVIDENCE_LINES = ("measured_usd=0.37 tail_seconds=0 tail_usd=0.00", "live_runs=3 of 4 cumulative_usd=2.05")
+SESSION2_ATTEMPT_USD = D("0.37")
 S_INSTANCE_TYPES = ("r5.xlarge", "m5.xlarge")  # D3: (primary, core)
 L_EVIDENCE = os.path.join("experiments", "inputs", "15a", "size-l-local-evidence.json")
 L_SLICE_MANIFEST = os.path.join("datasets", "phase15", "dblp-l-slice-manifest.v1.json")
@@ -105,14 +113,18 @@ def hourly_rate(pricing, instance_type):
     return D(pricing["EMR_RATE_EC2_" + suffix]) + D(pricing["EMR_RATE_EMR_" + suffix])
 
 
+def g6_hourly(manifest, pricing):
+    """primary rate + (core + task) x core rate, USD per hour; the primary is priced at its own type (pipeline.primary_instance_type)."""
+    pipeline = manifest["pipeline"]
+    primary = hourly_rate(pricing, pipeline.get("primary_instance_type", pipeline["instance_type"]))
+    return primary + hourly_rate(pricing, pipeline["instance_type"]) * (pipeline["core_count"] + pipeline.get("max_task_count", 0))
+
+
 def g6_estimate(manifest, pricing):
     """(primary rate + (core + task) x core rate) x (runtime + idle timeout), rounded up to the cent. The primary is priced at its own type
     (pipeline.primary_instance_type, default instance_type; Phase 15 D3), as scripts/lib/budget.py does."""
-    pipeline, budget = manifest["pipeline"], manifest["budget"]
-    primary = hourly_rate(pricing, pipeline.get("primary_instance_type", pipeline["instance_type"]))
-    others = hourly_rate(pricing, pipeline["instance_type"]) * (pipeline["core_count"] + pipeline.get("max_task_count", 0))
-    seconds = budget["max_runtime_minutes"] * 60 + manifest["teardown"]["max_idle_timeout_seconds"]
-    return ((primary + others) * D(seconds) / D(3600)).quantize(CENT, rounding=decimal.ROUND_UP)
+    seconds = manifest["budget"]["max_runtime_minutes"] * 60 + manifest["teardown"]["max_idle_timeout_seconds"]
+    return (g6_hourly(manifest, pricing) * D(seconds) / D(3600)).quantize(CENT, rounding=decimal.ROUND_UP)
 
 
 TOKENS = ("${SCHOLARCHAIN_ARTIFACTS_BUCKET}", "${SCHOLARCHAIN_RUN_PREFIX}")
@@ -232,7 +244,7 @@ def check_15a(root, final, lines):
         lines.append("CHECK-FAILED: prep config maxLocalSampleRecords=%s < %d = %s %d + %d other-source records (records past the bound are rejected)" % (prep.get("maxLocalSampleRecords"), need, basis, l_records, others))
     else:
         lines.append("CHECK-OK: prep config maxLocalSampleRecords=%s >= %d = %s %d + %d other-source records" % (prep["maxLocalSampleRecords"], need, basis, l_records, others))
-    total, ledger_runs = D(0), 0
+    total, ledger_runs, history, s_facts = D(0), 0, D(0), None
     for name in names:
         role, charged, approved_minutes = EMR_LEDGER[name]
         path = os.path.join(manifests_dir, name)
@@ -258,6 +270,10 @@ def check_15a(root, final, lines):
         estimate = g6_estimate(manifest, pricing)
         total += estimate * charged
         ledger_runs += charged
+        if name == S_MANIFEST:
+            s_facts = (estimate, g6_hourly(manifest, pricing), manifest["teardown"]["max_idle_timeout_seconds"])
+        else:
+            history += estimate * charged
         if estimate > D(str(manifest["budget"]["max_usd"])):
             failed = True
             lines.append("CHECK-FAILED: %s: G6 estimate %s exceeds budget.max_usd %s" % (name, estimate, manifest["budget"]["max_usd"]))
@@ -308,14 +324,52 @@ def check_15a(root, final, lines):
             for row in placeholder_problems(text):
                 failed = True
                 lines.append("CHECK-FAILED: %s: %s" % (name, row))
+    failed = check_session2_evidence(root, lines) or failed
     cap, runs = D(conf["EMR_CUMULATIVE_CAP_USD"]), int(conf["EMR_MAX_LIVE_RUNS"])
-    if total > cap or ledger_runs > runs:
+    reserves, all_runs = total + SESSION2_ATTEMPT_USD, ledger_runs + 1
+    parts = "Session 1 history %s + Session 2 S attempt as recorded %s + S + one S retry" % (history, SESSION2_ATTEMPT_USD)
+    if reserves > cap or all_runs > runs:
         blocked = True
-        lines.append("CHECK-BLOCKED: 15A ledger %s USD over %d runs (Session 1 history + S + one S retry) exceeds the cumulative cap %s USD / %d runs pinned in scripts/config/release.conf (P25: the human decides, infra-engineer pins EMR_MAX_LIVE_RUNS and EMR_CUMULATIVE_CAP_USD)" % (total, ledger_runs, cap, runs))
+        lines.append("CHECK-BLOCKED: 15A ledger reserves %s USD over %d runs (%s) exceed the cumulative cap %s USD / %d runs pinned in scripts/config/release.conf (the human decides, infra-engineer pins EMR_MAX_LIVE_RUNS and EMR_CUMULATIVE_CAP_USD)" % (reserves, all_runs, parts, cap, runs))
     else:
-        lines.append("CHECK-OK: 15A ledger %s USD over %d runs (Session 1 history + S + one S retry) <= cumulative cap %s USD / %d runs (margin %s USD, %d runs)" % (total, ledger_runs, cap, runs, cap - total, runs - ledger_runs))
+        lines.append("CHECK-OK: 15A ledger reserves %s USD over %d runs (%s) <= cumulative cap %s USD / %d runs (margin %s USD against the reserves, %d spare runs)" % (reserves, all_runs, parts, cap, runs, cap - reserves, runs - all_runs))
+    # The stricter rule scripts/lib/budget.py applies at admission: recorded measured actuals (history + the Session 2 attempt at its actual),
+    # plus the provisional idle tail of a cluster that is still up, plus the new run's estimate. The retry (run 5) is admitted iff run 4's recorded
+    # cost (measured + tail) leaves room; run 4 at its full estimate is the worst case the gate can model.
+    recorded = history + SESSION2_ATTEMPT_USD
+    if s_facts is None:  # the size S manifest failed validation above; the reserves line and CHECK-FAILED already say so
+        failed = check_l_evidence(root, facts, lines) or failed
+        return failed, blocked
+    s_estimate, s_hourly, idle_seconds = s_facts
+    tail = (s_hourly * D(idle_seconds) / D(3600)).quantize(CENT, rounding=decimal.ROUND_UP)  # the provisional tail of a cluster still up
+    bound = cap - recorded - tail - s_estimate
+    strict_margin = bound - s_estimate
+    detail = ("recorded %s USD (Session 1 history %s + Session 2 attempt %s); run 4 admitted if %s + %s <= %s; run 5 admitted iff run 4's measured cost is at most "
+              "%s - %s - %s - %s = %s; run 4 measuring its full estimate %s leaves a margin of %s USD" % (
+                  recorded, history, SESSION2_ATTEMPT_USD, recorded, s_estimate, cap, cap, recorded, tail, s_estimate, bound, s_estimate, strict_margin))
+    if strict_margin < 0:
+        blocked = True
+        lines.append("CHECK-BLOCKED: 15A real admission (scripts/lib/budget.py ledger_problems, idle tail %s USD) can refuse the retry even when run 4 measures only its estimate: %s" % (tail, detail))
+    else:
+        lines.append("CHECK-OK: 15A real admission (scripts/lib/budget.py ledger_problems, idle tail %s USD; stricter than the reserves figure above): %s" % (tail, detail))
     failed = check_l_evidence(root, facts, lines) or failed
     return failed, blocked
+
+
+def check_session2_evidence(root, lines):
+    """The Session 2 S attempt (USD 0.37, 1 run) is modelled from committed evidence, not from memory: the file must still say so."""
+    try:
+        with open(os.path.join(root, SESSION2_EVIDENCE), encoding="utf-8") as handle:
+            text = handle.read()
+    except OSError:
+        lines.append("CHECK-FAILED: %s is missing; the ledger model needs the recorded Session 2 S attempt (USD %s)" % (SESSION2_EVIDENCE, SESSION2_ATTEMPT_USD))
+        return True
+    missing = [row for row in SESSION2_EVIDENCE_LINES if row not in text]
+    if missing:
+        lines.append("CHECK-FAILED: %s no longer states %s; update the Session 2 ledger model" % (SESSION2_EVIDENCE, " and ".join(missing)))
+        return True
+    lines.append("CHECK-OK: Session 2 S attempt recorded at USD %s (1 run) per %s" % (SESSION2_ATTEMPT_USD, SESSION2_EVIDENCE))
+    return False
 
 
 def check_l_evidence(root, facts, lines):

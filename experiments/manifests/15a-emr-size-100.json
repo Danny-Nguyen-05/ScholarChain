@@ -1,11 +1,11 @@
 {
   "budget": {
     "max_capacity": 2,
-    "max_runtime_minutes": 75,
-    "max_usd": 0.84,
+    "max_runtime_minutes": 120,
+    "max_usd": 1.25,
     "region": "us-east-2"
   },
-  "description": "Experiment 15A, size S (10,577 works, 100 percent of the Phase 6 DBLP slice dblp-2026-10-03; see experiments/README.md): Hadoop prep, entity resolution and Spark on EMR. One r5.xlarge primary (entity resolution runs there, 12g heap) and one m5.xlarge core node, 75 minutes at most, 900 s idle auto-termination, budget 0.84 USD (run and at most one retry). The other three sources are the committed Phase 4 samples, unscaled. Spark template: experiments/inputs/15a/spark-emr-template.json (64 shuffle partitions). Size L is not run on EMR (local evidence only).",
+  "description": "Experiment 15A, size S (10,577 works, 100 percent of the Phase 6 DBLP slice dblp-2026-10-03; see experiments/README.md): Hadoop prep, entity resolution and Spark on EMR. One r5.xlarge primary (entity resolution runs there, 12g heap) and one m5.xlarge core node, 120 minutes at most (raised from 75 by the human on 2026-11-24, docs/agent-runs/phase-18/human-gate.md), 900 s idle auto-termination, budget 1.25 USD (run and at most one retry). The other three sources are the committed Phase 4 samples, unscaled. Spark template: experiments/inputs/15a/spark-emr-template.json (64 shuffle partitions). Size L is not run on EMR (local evidence only).",
   "id": "15a-emr-size-100",
   "metrics": {
     "locations": [

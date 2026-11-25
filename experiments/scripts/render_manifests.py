@@ -2,9 +2,10 @@
 """Render the runnable Experiment 15A manifest (stdlib; python3 -I): experiments/manifests/15a-emr-size-100.json, size S.
 
 Session 2 (user decisions 2026-11-16, docs/agent-runs/phase-15/prompt.md "L, second size" and "S run cap and D3 go-ahead"):
-  * S is the only EMR run (run plus at most one retry): 75 minutes, r5.xlarge primary (pipeline.primary_instance_type) and one
-    m5.xlarge core node (pipeline.instance_type), 900 s idle auto-termination, budget 0.84 USD
-    (G6 estimate = (0.315 + 0.240) x (4500 + 900) / 3600 = 0.8325, rounded up to the cent);
+  * S is the only EMR run (run plus at most one retry): 120 minutes (raised from 75 by the human on 2026-11-24,
+    docs/agent-runs/phase-18/human-gate.md), r5.xlarge primary (pipeline.primary_instance_type) and one
+    m5.xlarge core node (pipeline.instance_type), 900 s idle auto-termination, budget 1.25 USD
+    (G6 estimate = (0.315 + 0.240) x (7200 + 900) / 3600 = 1.24875, rounded up to the cent);
   * L does NOT run on EMR (P25 rule): no manifest is rendered for it; its local evidence is experiments/inputs/15a/size-l-local-evidence.json;
   * 15a-emr-size-25.json and 15a-emr-size-50.json are Session 1's historical m5.xlarge runs (ledger history): this script never writes them.
 
@@ -51,7 +52,8 @@ CONFIG_SOURCES = os.path.join("experiments", "inputs", "15a", "config-sources.js
 S_LABEL = "size-100"
 LABELS = (S_LABEL,)  # the runnable EMR set; size-25 and size-50 are Session 1 history, L is local evidence only
 PRIMARY_INSTANCE_TYPE, CORE_INSTANCE_TYPE = "r5.xlarge", "m5.xlarge"  # D3 (user, 2026-11-16)
-MAX_RUNTIME_MINUTES = 75  # S run cap (user, 2026-11-16)
+MAX_RUNTIME_MINUTES = 120  # S run cap (user, 2026-11-24, docs/agent-runs/phase-18/human-gate.md; was 75 from 2026-11-16)
+MAX_USD = 1.25  # G6 estimate for 120 min: 0.555 x (7200 + 900) / 3600 = 1.24875, rounded up
 ARTIFACT_KEYS = {
     "hadoop_submit_jar": "jars/hadoop-submit.jar",
     "hadoop_libjars": "jars/hadoop-bundle.jar",
@@ -64,7 +66,7 @@ ARTIFACT_KEYS = {
 DESCRIPTION_S = (
     "Experiment 15A, size S (10,577 works, 100 percent of the Phase 6 DBLP slice dblp-2026-10-03; see experiments/README.md): Hadoop prep, "
     "entity resolution and Spark on EMR. One r5.xlarge primary (entity resolution runs there, 12g heap) and one m5.xlarge core node, "
-    "75 minutes at most, 900 s idle auto-termination, budget 0.84 USD (run and at most one retry). The other three sources are the "
+    "120 minutes at most (raised from 75 by the human on 2026-11-24, docs/agent-runs/phase-18/human-gate.md), 900 s idle auto-termination, budget 1.25 USD (run and at most one retry). The other three sources are the "
     "committed Phase 4 samples, unscaled. Spark template: experiments/inputs/15a/spark-emr-template.json (64 shuffle partitions). "
     "Size L is not run on EMR (local evidence only)."
 )
@@ -100,7 +102,7 @@ def manifest(label, shas, region):
         "schema": "scholarchain.experiment-manifest.v1",
         "id": "15a-emr-%s" % label,
         "description": DESCRIPTION_S,
-        "budget": {"max_usd": 0.84, "max_runtime_minutes": MAX_RUNTIME_MINUTES, "max_capacity": 2, "region": region},
+        "budget": {"max_usd": MAX_USD, "max_runtime_minutes": MAX_RUNTIME_MINUTES, "max_capacity": 2, "region": region},
         "teardown": {"mode": "auto-termination", "max_idle_timeout_seconds": 900},
         "pipeline": {
             "instance_type": CORE_INSTANCE_TYPE,

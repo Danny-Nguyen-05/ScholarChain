@@ -570,7 +570,7 @@
   },
   {
    "path": "experiments/scripts/check_manifests.py",
-   "sha256": "8121c6b2fba3368b8182a9ac96f68ff1b494cda0b6d737d443df9bfa98351e56"
+   "sha256": "5240a76104ea9fb8aa7e9590e22d0d2bad873f989249a89d57e8396b3b67365e"
   },
   {
    "path": "experiments/tests/test_eval16_a.py",
