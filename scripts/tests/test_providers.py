@@ -174,8 +174,8 @@ class ConfigMirrorsTerraformTests(unittest.TestCase):
 
     def test_the_caps_are_unchanged_and_the_project_ceiling_is_pinned(self):
         values = conf()
-        # Phase 15 P25 (user decision 2026-11-16, phase-15 prompt.md line 131): 4 runs; repair round (user decision 2026-11-16, "Raise cap to 3.53"): USD 3.53 cumulative (was 3.36); the per-run cap is unchanged.
-        self.assertEqual((values["EMR_MAX_RUN_USD"], values["EMR_MAX_LIVE_RUNS"], values["EMR_CUMULATIVE_CAP_USD"]), ("3", "4", "3.53"))
+        # Phase 15 P25 (user decision 2026-11-16, phase-15 prompt.md line 131): 4 runs; repair round (user decision 2026-11-16, "Raise cap to 3.53"): USD 3.53 cumulative (was 3.36); the per-run cap is unchanged. Phase 18 18B (human-gate.md, 2026-11-24 about 5:40 PM CST, "Raise to 120 min" and "Yes, allow 1 retry"): 5 runs, USD 4.70 cumulative; the per-run cap is still 3.
+        self.assertEqual((values["EMR_MAX_RUN_USD"], values["EMR_MAX_LIVE_RUNS"], values["EMR_CUMULATIVE_CAP_USD"]), ("3", "5", "4.70"))
         # Phase 15 "R-b option decision" (prompt.md): floor 2 / project <= 23.00 (the floor was 3).
         self.assertEqual((values["PRESPEND_MAX_AGE_HOURS"], values["PRESPEND_MIN_HEADROOM_USD"]), ("24", "2"))
         self.assertEqual(values["PRESPEND_PROJECT_CEILING_USD"], "25")

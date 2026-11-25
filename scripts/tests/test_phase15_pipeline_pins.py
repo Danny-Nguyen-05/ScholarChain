@@ -270,6 +270,11 @@ class CopyOutTests(unittest.TestCase):
 # 2 x (0.192 + 0.048) x (90 min + 900 s = 1.75 h) = 0.84, so runs 3 and 4 fit (3.36) and run 5 is refused by the count.
 # Repair round (user decision 2026-11-16, verbatim "Raise cap to 3.53"): the cumulative cap is now 3.53 = 1.68 + 3.33 h x 0.555 USD/h
 # = 1.68 + 1.85, so a retry survives the measured-actual tail (scripts/lib/budget.py ledger_totals); the run count stays 4.
+# Phase 18 18B (human decisions 2026-11-24 about 5:40 PM CST, docs/agent-runs/phase-18/human-gate.md: "Raise to 120 min (Recommended)" and
+# "Yes, allow 1 retry"): release.conf now pins 5 runs and USD 4.70. The Phase 15 arithmetic below is kept on the explicit historic caps
+# (4 runs, USD 3.53) so it still proves the ledger machinery; the live values are asserted in test_the_pins_are_the_approved_values and
+# the Phase 18 admission arithmetic is in test_d3_emr_primary.Phase18LedgerTests.
+HISTORIC_MAX_RUNS, HISTORIC_CAP = "4", "3.53"
 BUDGET = os.path.join(SCRIPTS_DIR, "lib", "budget.py")
 
 
@@ -287,8 +292,7 @@ class LedgerCapTests(unittest.TestCase):
         os.makedirs(self.home)
         os.makedirs(self.repo)
         self.ledger = os.path.join(self.home, ".scholarchain", "emr-ledger", "runs.jsonl")
-        values = conf()
-        self.max_runs, self.cap = values["EMR_MAX_LIVE_RUNS"], values["EMR_CUMULATIVE_CAP_USD"]
+        self.max_runs, self.cap = HISTORIC_MAX_RUNS, HISTORIC_CAP
         rc, out, err = budget("ledger-init", "--root", self.home, "--within-name", ".scholarchain under HOME", "--within",
                               os.path.join(self.home, ".scholarchain"), "--ledger", self.ledger, "--repo-root", self.repo,
                               "--initialized-by", "fixture", "--initialized-utc", "2026-11-06T09:00:00Z")
@@ -311,7 +315,8 @@ class LedgerCapTests(unittest.TestCase):
             return len(handle.readlines())
 
     def test_the_pins_are_the_approved_values(self):
-        self.assertEqual((self.max_runs, self.cap, conf()["EMR_MAX_RUN_USD"]), ("4", "3.53", "3"))
+        live = conf()
+        self.assertEqual((live["EMR_MAX_LIVE_RUNS"], live["EMR_CUMULATIVE_CAP_USD"], live["EMR_MAX_RUN_USD"]), ("5", "4.70", "3"))  # Phase 18 18B: was 4 and 3.53
 
     def test_the_cap_is_session_1_plus_3_33_hours_at_the_s_rate(self):
         rc, out, _ = budget("estimate", "--instance-type", "m5.xlarge", "--primary-count", 1, "--core-count", 1, "--task-count", 0, "--minutes", 90,
@@ -320,7 +325,7 @@ class LedgerCapTests(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertEqual(json.loads(out)["estimate_usd"], "0.84")
         # Session 1: 2 x 0.84 = 1.68; 3.33 h x 0.555 USD/h = 1.84815, rounded up to the cent = 1.85; 168 + 185 = 353 cents
-        self.assertEqual(2 * 84 + 185, int(self.cap.replace(".", "")))
+        self.assertEqual(2 * 84 + 185, int(self.cap.replace(".", "")))  # the Phase 15 cap (HISTORIC_CAP)
 
     def test_runs_3_and_4_are_reserved_and_run_5_is_refused(self):
         rc, out, _ = self.reserve("s2-run-3")

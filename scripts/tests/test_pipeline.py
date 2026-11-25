@@ -563,6 +563,7 @@ class ExecuteGateTests(PipelineFixture):
 
     def test_g6_four_live_runs_in_the_ledger_refuse(self):
         """Phase 15 P25 (user decision 2026-11-16): the live-run limit is 4. 4 x 0.50 + 1.26 = 3.26 stays under the 3.53 cap (repair round, user decision 2026-11-16), so only the count refuses."""
+        self.use_config(EMR_MAX_LIVE_RUNS="4", EMR_CUMULATIVE_CAP_USD="3.53")  # Phase 15 caps as explicit fixtures; live caps (Phase 18 18B: 5 and 4.70) are tested below
         args = self.ready()
         self.write_ledger(["0.50", "0.50", "0.50", "0.50"])
         self.refused(self.execute(args), "4 live EMR runs are already recorded in the ledger (limit 4)")
@@ -570,6 +571,7 @@ class ExecuteGateTests(PipelineFixture):
 
     def test_g6_the_cumulative_estimate_may_not_exceed_3_53(self):
         """Hand-derived with the pinned cap 3.53 (user decision 2026-11-16, "Raise cap to 3.53") and this run's estimate 1.26 (2 x 0.24 x 2.625 h)."""
+        self.use_config(EMR_MAX_LIVE_RUNS="4", EMR_CUMULATIVE_CAP_USD="3.53")  # Phase 15 caps as explicit fixtures; live caps (Phase 18 18B: 5 and 4.70) are tested below
         args = self.ready()
         self.write_ledger(["1.00", "1.28"])  # 2.28 + 1.26 = 3.54 > 3.53
         self.refused(self.execute(args), "cumulative estimate 3.54 USD (recorded 2.28 + this run 1.26) would exceed the cap 3.53 USD")
@@ -579,12 +581,28 @@ class ExecuteGateTests(PipelineFixture):
 
     def test_g6_a_third_run_that_the_count_allows_is_still_refused_when_it_would_pass_the_3_53_cap(self):
         """Two recorded runs of 0.50 and 0.60 total 1.10; a third of 1.26 makes 2.36 (allowed); a ledger of 1.50, 1.00 makes 3.76 > 3.53 (refused)."""
+        self.use_config(EMR_MAX_LIVE_RUNS="4", EMR_CUMULATIVE_CAP_USD="3.53")  # Phase 15 caps as explicit fixtures; live caps (Phase 18 18B: 5 and 4.70) are tested below
         args = self.ready()
         self.write_ledger(["0.50", "0.60"])
         self.assertEqual(self.execute(args).rc, 0)
         self.setUp_clean()
         self.write_ledger(["1.50", "1.00"])
         self.refused(self.execute(args), "cumulative estimate 3.76 USD (recorded 2.50 + this run 1.26) would exceed the cap 3.53 USD")
+
+    def test_g6_phase_18_live_caps_admit_a_fifth_run_and_refuse_a_sixth(self):
+        """Phase 18 18B (human-gate.md 2026-11-24: "Yes, allow 1 retry"), the live release.conf caps 5 runs and USD 4.70 and this run's
+        default estimate 1.26. Four recorded runs totalling 3.44 admit it (3.44 + 1.26 = 4.70, inclusive); 3.45 refuses it (4.71 > 4.70);
+        five recorded runs refuse it by the count whatever they sum to."""
+        args = self.ready()
+        self.write_ledger(["0.84", "0.84", "0.37", "1.39"])  # 4 runs, 3.44
+        self.assertEqual(self.execute(args).rc, 0)
+        self.setUp_clean()
+        self.write_ledger(["0.84", "0.84", "0.37", "1.40"])  # 4 runs, 3.45
+        self.refused(self.execute(self.ready(serial=1)), "cumulative estimate 4.71 USD (recorded 3.45 + this run 1.26) would exceed the cap 4.70 USD")
+        self.setUp_clean()
+        self.write_ledger(["0.50", "0.50", "0.50", "0.50", "0.50"])  # 5 runs, 2.50
+        self.refused(self.execute(self.ready(serial=2)), "5 live EMR runs are already recorded in the ledger (limit 5)")
+        self.assertEqual(self.calls(), [])
 
     def test_g6_a_malformed_ledger_refuses_rather_than_reading_as_empty(self):
         args = self.ready()
@@ -595,7 +613,7 @@ class ExecuteGateTests(PipelineFixture):
 
     def test_g6_each_execute_adds_one_ledger_line_so_the_fifth_run_is_refused(self):
         # This test isolates the run COUNT limit (4, Phase 15 P25): four runs of 1.26 (5.04) would exceed the 3.53 USD cumulative cap, which has its own tests.
-        self.use_config(EMR_CUMULATIVE_CAP_USD="9.50")
+        self.use_config(EMR_MAX_LIVE_RUNS="4", EMR_CUMULATIVE_CAP_USD="9.50")
         for index in range(4):
             args = self.ready(serial=index, **{"--run-id": "bp-test-%04d" % (index + 10)})
             self.setUp_clean()
@@ -1223,8 +1241,8 @@ class Phase4ParityTests(unittest.TestCase):
         weights = re.search(r"^PIPELINE_STEP_WEIGHTS=(.*)$", conf, re.M).group(1).split()
         self.assertEqual(sum(int(w.split("=")[1]) for w in weights), 100)
         self.assertEqual(re.search(r"^EMR_MAX_RUN_USD=(.*)$", conf, re.M).group(1), "3")
-        self.assertEqual(re.search(r"^EMR_MAX_LIVE_RUNS=(.*)$", conf, re.M).group(1), "4")
-        self.assertEqual(re.search(r"^EMR_CUMULATIVE_CAP_USD=(.*)$", conf, re.M).group(1), "3.53")
+        self.assertEqual(re.search(r"^EMR_MAX_LIVE_RUNS=(.*)$", conf, re.M).group(1), "5")  # Phase 18 18B: was 4
+        self.assertEqual(re.search(r"^EMR_CUMULATIVE_CAP_USD=(.*)$", conf, re.M).group(1), "4.70")  # Phase 18 18B: was 3.53
 
     def test_the_committed_pricing_file_has_one_human_controlled_flag_and_cites_sources_and_a_retrieval_date(self):
         pricing = read(os.path.join(SCRIPTS_DIR, "config", "emr-pricing.conf"))

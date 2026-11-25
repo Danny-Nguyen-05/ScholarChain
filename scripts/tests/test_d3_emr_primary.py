@@ -13,6 +13,10 @@ Session 1's ledger holds 2 x 0.84 = 1.68, so S + one S retry = 1.68 + 0.84 + 0.8
 because --record-actual measures S from cluster creation and adds a 0.14 idle tail per cluster; the retry (0.84) is admitted iff S measured
 <= 3.53 - 1.68 - 0.84 - 0.14 = 0.87 (the quoted "3.36" above is the cap before that decision).
 Step timeouts at 75 minutes from PIPELINE_STEP_WEIGHTS (5/20/20/5/40/10 percent of 4500 s): 225, 900, 900, 225, 1800, 450 s.
+Phase 18 18B (human decisions 2026-11-24 about 5:40 PM CST, docs/agent-runs/phase-18/human-gate.md: "Raise to 120 min (Recommended)" and "Yes,
+allow 1 retry"): the live ledger caps are now 5 runs and USD 4.70 and the S run may take 120 minutes (estimate 1.25; step timeouts 360, 1440,
+1440, 360, 2880, 720 s). The Phase 15 arithmetic classes below keep the Phase 15 caps (HISTORIC_MAX_RUNS 4, HISTORIC_CAP 3.53) as explicit
+fixtures so they still prove the ledger machinery; the Phase 18 classes at the end of the file use the live release.conf values.
 Fake aws/yarn/hadoop binaries only; no network, no credentials, no cloud call.
 """
 import hashlib
@@ -32,7 +36,9 @@ BUDGET = os.path.join(SCRIPTS_DIR, "lib", "budget.py")
 EXPERIMENT_PY = os.path.join(SCRIPTS_DIR, "lib", "experiment.py")
 REPO = os.path.dirname(SCRIPTS_DIR)
 STEP_SECONDS_75 = (("stage-in", 225), ("hadoop-prep", 900), ("entity-resolution", 900), ("spark-class-origin", 225), ("spark-job", 1800), ("copy-out", 450))
+STEP_SECONDS_120 = (("stage-in", 360), ("hadoop-prep", 1440), ("entity-resolution", 1440), ("spark-class-origin", 360), ("spark-job", 2880), ("copy-out", 720))
 RATES = ["--rate", "m5.xlarge=0.192,0.048", "--rate", "r5.xlarge=0.252,0.063"]
+HISTORIC_MAX_RUNS, HISTORIC_CAP = "4", "3.53"  # Phase 15 values (the arithmetic classes keep their hand-derived numbers)
 
 
 def run(*args):
@@ -84,7 +90,7 @@ class PinTests(unittest.TestCase):
 
     def test_the_ledger_caps_and_step_weights_are_the_ones_the_arithmetic_uses(self):
         release = conf("scripts/config/release.conf")
-        self.assertEqual((release["EMR_MAX_LIVE_RUNS"], release["EMR_CUMULATIVE_CAP_USD"], release["PIPELINE_MAX_IDLE_TIMEOUT_SECONDS"]), ("4", "3.53", "900"))
+        self.assertEqual((release["EMR_MAX_LIVE_RUNS"], release["EMR_CUMULATIVE_CAP_USD"], release["PIPELINE_MAX_IDLE_TIMEOUT_SECONDS"]), ("5", "4.70", "900"))  # Phase 18 18B: was 4 and 3.53
         self.assertEqual(release["PIPELINE_STEP_WEIGHTS"], "stage-in=5 hadoop-prep=20 entity-resolution=20 spark-class-origin=5 spark-job=40 copy-out=10")
 
     def test_terraform_defaults_to_an_r5_primary_and_an_m5_core(self):
@@ -117,6 +123,17 @@ class PerGroupEstimateTests(unittest.TestCase):
         self.assertEqual((doc["primary_instance_type"], doc["primary_ec2_rate_usd_per_hour"], doc["primary_emr_rate_usd_per_hour"]), ("r5.xlarge", "0.252", "0.063"))
         self.assertEqual((doc["instance_type"], doc["instances"]), ("m5.xlarge", 2))
         self.assertIn("primary x (primary EC2 + EMR)", doc["formula"])
+
+    def test_the_120_minute_s_run_is_1_25_and_one_cent_less_budget_refuses(self):
+        """Phase 18 18B: (120 x 60 + 900) / 3600 = 2.25 h; 0.555 x 2.25 = 1.24875, rounded UP to the cent = 1.25 (it is 0.84 at 75 minutes)."""
+        rc, out, _ = self.estimate(120, budget="1.25")
+        self.assertEqual(rc, 0, out)
+        doc = json.loads(out)
+        self.assertEqual((doc["hourly_usd"], doc["billed_seconds"], doc["estimate_usd"], doc["max_runtime_minutes"]), ("0.555", 8100, "1.25", 120))
+        rc, out, _ = self.estimate(120, budget="1.24")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("estimate 1.25 USD exceeds the declared budget 1.24 USD", out)
+        self.assertEqual(json.loads(self.estimate(120)[1])["estimate_usd"], "1.25", "below the per-run cap EMR_MAX_RUN_USD (3)")
 
     def test_the_coordinators_cap_table_rounded_up(self):
         # 90 min: 0.555 x 1.75 = 0.97125 -> 0.98; 60 min: 0.555 x 1.25 = 0.69375 -> 0.70 (prompt.md: 0.971 / 0.833 / 0.694 unrounded)
@@ -154,8 +171,7 @@ class LedgerBase(unittest.TestCase):
         os.makedirs(self.repo)
         self.ledger = os.path.join(self.home, ".scholarchain", "emr-ledger", "runs.jsonl")
         os.makedirs(os.path.dirname(self.ledger))
-        release = conf("scripts/config/release.conf")
-        self.cap, self.max_runs = release["EMR_CUMULATIVE_CAP_USD"], release["EMR_MAX_LIVE_RUNS"]
+        self.cap, self.max_runs = HISTORIC_CAP, HISTORIC_MAX_RUNS
         with open(self.ledger, "w", encoding="utf-8") as handle:
             handle.write(json.dumps({"event": "init", "initialized_by": "fixture", "initialized_utc": "2026-11-13T00:00:00Z"}) + "\n")
         for index, value in enumerate(("0.84", "0.84")):  # Session 1's two runs (prompt.md, P25 coordinator check)
@@ -365,6 +381,94 @@ class RecordActualTests(LedgerBase):
         self.assertEqual(self.check()[0], 1)
 
 
+class Phase18LedgerTests(LedgerBase):
+    """Phase 18 18B, the live release.conf caps (5 runs, USD 4.70) against the ledger as it stood on 2026-11-24 (3 runs, USD 2.05 recorded:
+    the fixture is Session 1's 0.84 + 0.84 plus a third run recorded at 0.37; only the sum and the count matter to admission).
+    Admission (scripts/lib/budget.py ledger_problems): refused when runs >= max runs or recorded + estimate > cap (inclusive).
+    Per-run estimate at the 120-minute total cap: 1.25. Run 4: 2.05 + 1.25 = 3.30. Run 5 after run 4 recorded at its measured cost m (plus the
+    0.14 idle tail while the cluster is up): 2.05 + m + 0.14 + 1.25 <= 4.70, i.e. m <= 1.26 (m = 1.25 gives 4.69). A sixth run: the count."""
+
+    def setUp(self):
+        super().setUp()
+        release = conf("scripts/config/release.conf")
+        self.cap, self.max_runs = release["EMR_CUMULATIVE_CAP_USD"], release["EMR_MAX_LIVE_RUNS"]
+        self.append({"event": "reserve", "run_id": "session-2-run-3", "estimate_usd": "0.37", "approval_record_sha256": "%064x" % 3})
+        self.assertEqual(self.cumulative(), ("3", "2.05"))
+
+    def run_4_measured(self, seconds):
+        """Reserve run 4 at 1.25, then record its actual on a WAITING cluster created 16:00:00Z, measured to 16:00 + seconds."""
+        rc, out, _ = self.reserve("run-4", "1.25")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("live_runs=4 of 5 cumulative_usd=3.30", out)  # 2.05 + 1.25
+        as_of = "2026-11-18T%02d:%02d:00Z" % (16 + seconds // 3600, seconds % 3600 // 60)
+        rc, out, _ = self.record("run-4", describe(state="WAITING", ended=None), as_of=as_of, recorded="2026-11-18T20:00:00Z")
+        self.assertEqual(rc, 0, out)
+        return out
+
+    def test_the_live_pins_are_five_runs_and_4_70_and_the_project_constants_are_unchanged(self):
+        release = conf("scripts/config/release.conf")
+        self.assertEqual((release["EMR_MAX_RUN_USD"], release["EMR_MAX_LIVE_RUNS"], release["EMR_CUMULATIVE_CAP_USD"]), ("3", "5", "4.70"))
+        self.assertEqual((release["PIPELINE_MAX_RUNTIME_MINUTES"], release["PIPELINE_MAX_IDLE_TIMEOUT_SECONDS"]), ("180", "900"))
+        self.assertEqual((release["PRESPEND_MIN_HEADROOM_USD"], release["PRESPEND_PROJECT_CEILING_USD"], release["PRESPEND_MAX_AGE_HOURS"]), ("2", "25", "24"))
+        text = read(os.path.join(REPO, "scripts/config/release.conf"))
+        self.assertIn("docs/agent-runs/phase-18/human-gate.md", text)
+        self.assertIn('"Raise to 120 min (Recommended)"', text)
+        self.assertIn('"Yes, allow 1 retry"', text)
+        self.assertEqual(int(release["EMR_CUMULATIVE_CAP_USD"].replace(".", "")), 205 + 125 + 14 + 125 + 1, "4.69 plus one cent of room")
+
+    def test_run_4_at_the_120_minute_estimate_is_admitted(self):
+        rc, out, _ = self.check("1.25")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("LEDGER: live_runs=3 of 5 cumulative_usd=2.05 this_run_usd=1.25 cap_usd=4.70", out)
+        self.assertEqual(self.reserve("run-4", "1.25")[0], 0)
+
+    def test_run_5_is_admitted_when_run_4_measured_its_full_estimate_and_a_sixth_is_refused(self):
+        # 8100 s x 0.555 / 3600 = 1.24875 -> 1.25; tail 900 s x 0.555 / 3600 = 0.13875 -> 0.14; recorded 2.05 + 1.25 + 0.14 = 3.44
+        out = self.run_4_measured(8100)
+        self.assertIn("measured_usd=1.25 tail_seconds=900 tail_usd=0.14", out)
+        self.assertEqual(self.cumulative(), ("4", "3.44"))
+        rc, out, _ = self.check("1.25")  # 3.44 + 1.25 = 4.69 <= 4.70
+        self.assertEqual(rc, 0, out)
+        rc, out, _ = self.reserve("run-5", "1.25")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("live_runs=5 of 5 cumulative_usd=4.69", out)
+        before = read(self.ledger)
+        rc, out, _ = self.check("0.01")
+        self.assertEqual(rc, 1)
+        self.assertIn("5 live EMR runs are already recorded in the ledger (limit 5)", out)
+        rc, out, _ = self.reserve("run-6", "0.01")
+        self.assertEqual(rc, 1)
+        self.assertIn("5 live EMR runs are already recorded in the ledger (limit 5)", out)
+        self.assertEqual(read(self.ledger), before, "a refused reservation writes nothing")
+
+    def test_run_5_is_still_admitted_when_run_4_measured_1_26_and_refused_at_1_27(self):
+        # 8160 s -> 1.258 -> 1.26: 2.05 + 1.26 + 0.14 = 3.45; 3.45 + 1.25 = 4.70 <= 4.70 (inclusive)
+        out = self.run_4_measured(8160)
+        self.assertIn("measured_usd=1.26 tail_seconds=900 tail_usd=0.14", out)
+        rc, out, _ = self.check("1.25")
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(self.reserve("run-5", "1.25")[0], 0)
+        self.assertEqual(self.cumulative(), ("5", "4.70"))
+
+    def test_run_5_is_refused_when_run_4_measured_1_27(self):
+        # 8220 s -> 1.26725 -> 1.27: 2.05 + 1.27 + 0.14 = 3.46; 3.46 + 1.25 = 4.71 > 4.70
+        out = self.run_4_measured(8220)
+        self.assertIn("measured_usd=1.27 tail_seconds=900 tail_usd=0.14", out)
+        rc, out, _ = self.check("1.25")
+        self.assertEqual(rc, 1)
+        self.assertIn("cumulative estimate 4.71 USD (recorded 3.46 + this run 1.25) would exceed the cap 4.70 USD", out)
+        rc, out, _ = self.reserve("run-5", "1.25")
+        self.assertEqual(rc, 1)
+        self.assertEqual(self.cumulative(), ("4", "3.46"), "a refused reservation writes nothing")
+
+    def test_the_old_75_minute_cap_arithmetic_would_have_refused_run_5_by_the_count(self):
+        # Without the Phase 18 change: 4 runs maximum, so run 4 fills the ledger and run 5 is refused whatever it costs
+        self.assertEqual(self.reserve("run-4", "1.25")[0], 0)
+        rc, out, _ = run("ledger-check", "--ledger", self.ledger, "--repo-root", self.repo, "--estimate", "0.01", "--max-runs", HISTORIC_MAX_RUNS, "--cumulative-cap", "99")
+        self.assertEqual(rc, 1)
+        self.assertIn("4 live EMR runs are already recorded in the ledger (limit 4)", out)
+
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 class PipelinePrimaryTests(PipelineFixture):
     S_OVER = {"--primary-instance-type": "r5.xlarge", "--max-task-count": "0", "--max-runtime-minutes": "75", "--budget-usd": "0.84"}
@@ -387,6 +491,46 @@ class PipelinePrimaryTests(PipelineFixture):
         self.assertIn("ER_XMX=12g", result.stdout)
         self.assertIn("a r5.xlarge primary and only m5.xlarge core and task groups", result.out)
         self.assertEqual(self.calls(), [])
+
+    def test_the_120_minute_dry_run_has_the_phase_18_step_timeouts_and_the_1_25_estimate(self):
+        """Phase 18 18B: 7200 s x weights 5/20/20/5/40/10 percent = 360, 1440, 1440, 360, 2880 (spark-job, 48 minutes), 720 s; estimate 1.25."""
+        result = self.dry(**dict(self.S_OVER, **{"--max-runtime-minutes": "120", "--budget-usd": "1.25"}))
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertIn("ESTIMATE-USD: 1.25", result.stdout)
+        self.assertIn("PLAN: max-runtime-minutes: 120", result.stdout)
+        for name, seconds in STEP_SECONDS_120:
+            self.assertIn("STEP-TIMEOUT: %s %ss " % (name, seconds), result.stdout)
+            self.assertIn("PLAN: step %s: timeout=%ds" % (name, seconds), result.stdout)
+        self.assertEqual(sum(s for _, s in STEP_SECONDS_120), 120 * 60)
+        self.assertEqual(dict(STEP_SECONDS_120)["spark-job"], 48 * 60)
+        self.assertEqual(self.calls(), [])
+        # the declared budget must cover the estimate: 1.24 is refused before any cloud call
+        low = self.dry(**dict(self.S_OVER, **{"--max-runtime-minutes": "120", "--budget-usd": "1.24"}))
+        self.assertNotEqual(low.rc, 0, low.out)
+        self.assertEqual(self.calls(), [])
+
+    def test_the_120_minute_execute_is_admitted_as_run_4_and_run_5_and_refused_as_run_6(self):
+        """Phase 18 18B at the execute gate, live release.conf caps (5 runs, USD 4.70), estimate 1.25. Ledger as of 2026-11-24: 3 runs, 2.05.
+        Run 4: 2.05 + 1.25 = 3.30. Run 5 after run 4 recorded at 1.25 plus the 0.14 tail (3.44): 3.44 + 1.25 = 4.69 <= 4.70. Run 6: the count."""
+        plan = dict(self.S_OVER, **{"--max-runtime-minutes": "120", "--budget-usd": "1.25"})
+        override = {"APPROVED_BUDGET_USD": "1.25", "APPROVED_MAX_CAPACITY": "2", "APPROVED_MAX_RUNTIME_MINUTES": "120"}
+        for serial, (label, ledger, rc, needle) in enumerate((
+            ("run 4", ["0.84", "0.84", "0.37"], 0, None),
+            ("run 5", ["0.84", "0.84", "0.37", "1.39"], 0, None),  # 3.44 recorded
+            ("run 5 two cents over", ["0.84", "0.84", "0.37", "1.41"], 3, "cumulative estimate 4.71 USD (recorded 3.46 + this run 1.25) would exceed the cap 4.70 USD"),
+            ("run 6", ["0.84", "0.84", "0.37", "1.39", "0.01"], 3, "5 live EMR runs are already recorded in the ledger (limit 5)"),
+        )):
+            with self.subTest(label):
+                self.setUp_clean()
+                self.write_ledger(ledger)
+                result = self.execute(self.ready(serial=serial, record_override=override, **dict(plan, **{"--run-id": "bp-test-%04d" % (serial + 40)})), FAKE_EMR_GROUPS=json.dumps(groups()))
+                self.assertEqual(result.rc, rc, result.out)
+                if needle:
+                    self.assertIn(needle, result.out)
+                    self.assertEqual(self.submitted_steps(), [])
+                else:
+                    self.assertIn("ESTIMATE-USD: 1.25", result.stdout)
+                    self.assertEqual(len(self.submitted_steps()), 6)
 
     def test_the_primary_type_is_part_of_the_approved_run_configuration(self):
         self.assertNotEqual(self.run_config_sha(**self.S_OVER), self.run_config_sha(**dict(self.S_OVER, **{"--primary-instance-type": "m5.xlarge"})))
@@ -439,7 +583,7 @@ class PipelinePrimaryTests(PipelineFixture):
         self.assertEqual(result.rc, 0, result.out)
         self.assertIn("LEDGER-ACTUAL: run=%s cluster=%s" % (RUN, CLUSTER), result.stdout)
         self.assertIn("measured_usd=0.47 tail_seconds=0 tail_usd=0.00 reserved_estimate_usd=0.84", result.stdout)
-        self.assertIn("cumulative_usd=0.47 (was 0.84; 1 run(s) now counted at actuals) cap_usd=3.53", result.stdout)
+        self.assertIn("cumulative_usd=0.47 (was 0.84; 1 run(s) now counted at actuals) cap_usd=4.70", result.stdout)
         self.assertIn("RESULT: PASS", result.stdout)
         self.assertEqual(self.calls(), [], "--record-actual makes no aws call")
         with open(self.ledger_path(), encoding="utf-8") as handle:
@@ -492,6 +636,18 @@ class ExperimentPrimaryTests(ExperimentFixture):
             self.assertIn("pipeline| STEP-TIMEOUT: %s %ss " % (name, seconds), result.stdout)
         self.assertIn("pipeline| PLAN: primary-instance-type: r5.xlarge (core and task: m5.xlarge)", result.stdout)
         self.assertIn("ER_XMX=12g", result.stdout)
+        self.assertEqual(self.calls(), [])
+
+    def test_a_synthetic_s_manifest_at_120_minutes_dry_runs_with_the_phase_18_step_timeouts(self):
+        document = self.manifest()
+        document["budget"].update({"max_runtime_minutes": 120, "max_usd": 1.25, "max_capacity": 2})
+        document["pipeline"].update({"instance_type": "m5.xlarge", "primary_instance_type": "r5.xlarge", "core_count": 1, "max_task_count": 0})
+        result = self.experiment(manifest=self.commit_manifest(document))
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertIn("EXPERIMENT-LIMITS: max_usd=1.25 max_runtime_minutes=120 max_capacity=2", result.stdout)
+        self.assertIn("pipeline| ESTIMATE-USD: 1.25", result.stdout)
+        for name, seconds in STEP_SECONDS_120:
+            self.assertIn("pipeline| STEP-TIMEOUT: %s %ss " % (name, seconds), result.stdout)
         self.assertEqual(self.calls(), [])
 
     def test_the_manifest_primary_type_becomes_the_pipeline_flag(self):
