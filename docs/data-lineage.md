@@ -141,12 +141,20 @@ Windows: `all-years`, `through-2009`, `2010-2014`, `2015-2019`, `2020-2026`, `si
 
 ### Run `run:ba7402d1-959a-4277-8c6e-e92878a38afa` (size S export)
 
-This is the export the stores, the Q12 answer key and the graph audit use. It is a local run of the Hadoop, entity-resolution and Spark chain on the size S slice (the "P6 chain"); the Session 2 EMR chain on the same slice failed at the Spark step, and the human chose this local export as the fallback ([human-gate.md](agent-runs/phase-15/human-gate.md), EMR pipeline paragraph). The export's file listing and checks:
+This is the export the stores, the Q12 answer key and the graph audit use. It is a local run of the Hadoop, entity-resolution and Spark chain on the size S slice (the "P6 chain"); the Session 2 EMR chain (2026-11-18) on the same slice failed at the Spark step, and the human chose this local export as the fallback (the Phase 18 EMR run of 2026-11-25 is described in the next subsection) ([human-gate.md](agent-runs/phase-15/human-gate.md), EMR pipeline paragraph). The export's file listing and checks:
 
 - 60 files read, file-listing sha256 `e277df62...c910e` (full value in [graph-correctness.md](../experiments/results/phase16/graph/graph-correctness.md)); `SHA256SUMS` of the export checked with 0 failures on 2026-11-18 ([decision log](agent-runs/phase-15/evidence/session-2/00-timeline/decision-log.md), block 22).
 - 78,104 node rows (AUTHOR_MENTION 45,591; INSTITUTION 1; RESEARCHER 21,819; TOPIC 3; VENUE 112; WORK 10,578), 100,252 graph-edge rows, 228,715 coauthor-edge rows ([graph-correctness.md](../experiments/results/phase16/graph/graph-correctness.md)).
 - Integrity: 0 of 100,252 graph edges and 0 of 228,715 coauthor edges with an unresolved endpoint; every coauthor edge fully supported by works both endpoints authored; 4 unresolved mentions; `missingGraphEndpoints` 0, `pairCountMismatches` 0 (same file). These checks show internal consistency, not that identity decisions are right.
 - The code and its tests: 6 Spark suites with 47 tests were listed (not run) in that evaluation; the last recorded full check is quoted there.
+
+### Run `run:30b3ef84-11dc-4c8c-b9c2-c632477d7282` (size S, EMR, Phase 18, 2026-11-25)
+
+This is the Spark export of the EMR retry (run `15a-emr-size-100-20261125T174034Z-99560`, 17:40:34Z to 18:14:39Z) after the Phase 18 fix to `scripts/emr/sc-step.sh`. All six steps completed and the export carries the `_SCHOLARCHAIN_SPARK_COMPLETE` marker ([Phase 18 test report](agent-runs/phase-18/test-report.md), Day 2). Its lineage in the counters file: Hadoop run `run:1c9222da-8c90-4e2a-96a4-aff08ca46318` (snapshot `crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05`), entity-resolution run `run:08c55f9a-b026-4555-8402-4e5c1c8dd64e`, policy `er-offline-uncalibrated-v2` ([spark-counters.json](agent-runs/phase-18/evidence/day2/emr/spark-counters.json), `context.lineage`).
+
+- Counters: canonicalWorks 10,578, canonicalResearchers 21,819, allYearsEdges 81,181, components 3,942, crossCommunityEdges 17,589, communityIterations 20 with `communityConverged` 0 (the community step stopped at its iteration limit without converging), `missingGraphEndpoints` 0 and `pairCountMismatches` 0 (same file).
+- The works, researchers and all-years coauthor-edge counts equal the figures of the local export above (10,578; 21,819; 81,181 in [graph-correctness.md](../experiments/results/phase16/graph/graph-correctness.md)). No full comparison of the two exports was made. The run ids differ; the logical run id is derived from the input bindings, config fingerprint, policy versions and code version (above), and the upstream Hadoop and entity-resolution run ids of the EMR run are the ones named above, so the difference is expected from the different upstream runs. The jar hashes of the EMR upload are the same as in Session 2 ([release-manifest](../reports/release-manifest.md), section 9). Which input differs was not examined.
+- Not used downstream: the stores, the Q12 answer key and the Phase 16 tables use the local export `run:ba7402d1-...`. The full 2026-11-25 export (468 objects) was downloaded to the author's machine and is not in the repository; only the counters file is committed.
 
 The Phase 6 original run (Session 1 artifact, run `f6e63b4b`) is a different export and is recorded under [docs/agent-runs/phase-06/evidence/6fg/](agent-runs/phase-06/evidence/6fg/).
 
@@ -177,7 +185,7 @@ For a coauthor-count claim on the size S export: answer claim, then `evidence:me
 
 ## 8. What is not covered here
 
-- Hadoop `stats/` files and the Spark `counters.json` of run ba7402d1 are in git-ignored `target/`; the committed record is the Phase 16 summary quoted above.
-- The EMR Spark step never started (`ClassNotFoundException` for `EmrFileSystem` in a `hadoop fs -copyToLocal` call; [incident record](incidents/2026-11-18-emr-spark-job-step-emrfilesystem.md), [s1-spark-failure.json](agent-runs/phase-15/evidence/session-2/emr/s1-spark-failure.json)), so no Spark output exists from EMR.
+- Hadoop `stats/` files and the Spark `counters.json` of run ba7402d1 are in git-ignored `target/`; the committed record is the Phase 16 summary quoted above. For the Phase 18 EMR run 30b3ef84 only the counters file is committed.
+- In Session 2 (2026-11-18) the EMR Spark step never started (`ClassNotFoundException` for `EmrFileSystem` in a `hadoop fs -copyToLocal` call; [incident record](incidents/2026-11-18-emr-spark-job-step-emrfilesystem.md), [s1-spark-failure.json](agent-runs/phase-15/evidence/session-2/emr/s1-spark-failure.json)), so no Spark output existed from EMR then. After the Phase 18 fix the step completed once on EMR (2026-11-25, run 30b3ef84 above, one run, not repeated); nothing downstream was rebuilt from it.
 - Vector-only and fused retrieval have no labelled evaluation ([evaluation](report/evaluation.md), group 3).
 - Commands in this file were not replayed in 17A. In the 17G clean-checkout replay (fresh clone of `main` at `d1d4fe7`, JDK 17, offline, 2026-11-22) `(cd datasets && shasum -a 256 -c samples/SHA256SUMS)` reported 4 files OK. The other commands here were not run in that replay; the hadoop module tests ran inside its `sbt -batch clean check` (1,773 tests succeeded, 0 failed, 2 canceled).

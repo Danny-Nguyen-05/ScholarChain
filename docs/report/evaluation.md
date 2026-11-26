@@ -21,6 +21,7 @@ Source files (relative links used below):
 - **Vector-only and fused retrieval is a GAP.** No labelled vector-only or fused run exists.
 - **Cost, two Anthropic scopes that are not added together.** (1) The Q12 key: the Anthropic Console shows USD 0.08 for key CS441-key on 2026-11-20 and 2026-11-21 UTC only (USD 0.04 each day); this is the cost of record for that key. The token-derived synthesis-only figure for the same runs is a lower bound, and planner calls are not recorded. (2) Earlier phases (Session 1 16B and 14C, a different Anthropic key): project ledger USD 0.075075, receipt figure USD 0.08 (`cost-report.log` line 4); the 16B run-record estimate is USD 0.054600. The Console USD 0.08 is therefore not the total model spend. A per-provider table is in group 4.
 - **The fresh-clone build is pending (Phase 17).** It is not claimed here.
+- **Phase 18 note (added 2026-11-26).** The EMR Spark failure in the EMR table is the 2026-11-18 measurement and is kept as measured. A dated Phase 18 note after that table records the retry (run 5) of 2026-11-25, in which all six steps completed; no Phase 16 table was regenerated from it.
 - **Negative results stay.** They are listed in each group and summarised at the end.
 
 ### Evaluation data and independence
@@ -438,6 +439,16 @@ AWS-EMR size-100 run (m5.xlarge core, r5.xlarge primary, commit `bd0b818`). Only
 
 hadoop-prep input records per second (INPUT counter 290343): local 7904.792, EMR (lower bound) 592.537; Hadoop counters identical on EMR and local. EMR billing window (ledger): 2377.157 s at USD 0.555/h, measured USD 0.37; the billed window includes idle time after the failed Spark step. The local P6 chain table (sizes S and L, LOCAL-MAC) is in the source; its last passing S run has stage-in 0.12, hadoop-prep 36.73, entity-resolution 96.7, spark-class-origin 2.88, spark-job 362.87 and copy-out 2.8 s. Spark-only bypass runs: S wall 459.84 s, L wall 1110.14 s.
 
+**Phase 18 note (dated 2026-11-25; added 2026-11-26, the table above is unchanged and stays the Session 2 measurement of 2026-11-18).** After the Phase 18 fix to `scripts/emr/sc-step.sh` (the `spark-job` template fetch now runs before `spark_env`), the retry (run 5) of the size-S EMR run on 2026-11-25 completed all six steps. The first attempt that day (run 4, `15a-emr-size-100-20261125T173348Z-95764`) failed at `hadoop-prep` ([incident, root cause open](../incidents/2026-11-25-emr-hadoop-prep-intermediate-missing.md)); the retry (run 5, `15a-emr-size-100-20261125T174034Z-99560`, 17:40:34Z to 18:14:39Z, same cluster) passed ([emr-run-2.log](../agent-runs/phase-18/evidence/day2/emr/emr-run-2.log)).
+
+| step (run 5) | state | duration from the EMR console Steps tab (human screenshot, not kept) | upper bound from submit-to-result times in the run log |
+|---|---|---|---|
+| hadoop-prep | COMPLETED | 7m6s | 7m42s |
+| entity-resolution | COMPLETED | 6m2s | 6m43s |
+| spark-job | COMPLETED | 16m38s | 17m29s |
+
+Source for both columns: [Phase 18 test report](../agent-runs/phase-18/test-report.md), Day 2. The other three steps (stage-in, spark-class-origin, copy-out) are COMPLETED in the log; no duration is quoted for them here. Spark export `run:30b3ef84-11dc-4c8c-b9c2-c632477d7282`: canonicalWorks 10,578, canonicalResearchers 21,819, allYearsEdges 81,181, components 3,942, communityIterations 20 with the community step not converged ([spark-counters.json](../agent-runs/phase-18/evidence/day2/emr/spark-counters.json)). EMR ledger after termination: 5 of 5 live runs, USD 2.65 of the USD 4.70 cap, ledger estimates at 0.555 USD per hour ([emr-actual-2end.log](../agent-runs/phase-18/evidence/day2/emr/emr-actual-2end.log)). Comparison with the local run (spark-job 362.87 s) is not made: the EMR figures come from one run on the EMR nodes, and the local timing is a laptop wall time. Limits: one run, not repeated; the cause of the 2026-11-18 failure was inferred from the ordering change and not reproduced; the Phase 16 tables of this file were not regenerated from the EMR export.
+
 LLM answer latency (end to end, one request per question):
 
 | run | environment | n | outcomes | p50 ms (95% CI) | p95 ms | p99 ms |
@@ -460,7 +471,7 @@ Cost evidence: whole-project AWS bill (Cost Explorer) USD 17.88 for 2026-11-01..
 - **Recomputation of the P35 local-rehearsal rows from the repository:** its raw `requests.jsonl` (83 MB) is not frozen in the repository (hash-only: the sha256 is in the committed `raw.sha256`) and stays on the laptop, so those rows regenerate only on that machine. The AWS `rb-20261118` raw (11 MB) is frozen and hash-verified under `experiments/results/phase16/performance/raw-rb-20261118`, but a clean clone still cannot rerun `eval16_perf.py`: it also needs the git-ignored P35 raw and P6 work inputs and exits 3 without them (`eval16_repro.py --verify` would show PARTIAL for performance).
 - **Cooldown-observe phase result:** skipped after the abort.
 - **Cost of the ECS/ALB load and cost per request:** the bill is a whole-day, whole-account figure; no per-service, per-hour or per-resource export was saved before the stack was destroyed.
-- **EMR scaling and Spark runtime on EMR:** only one EMR size-100 run reached the Spark step and it failed. The five size-25 runs of 2026-11-14 ended with exit codes 3, 5, 5, 5, 4 and produced no Hadoop counters. No EMR cluster size was completed end to end.
+- **EMR scaling and Spark runtime on EMR:** at the Phase 16 freeze, only one EMR size-100 run (2026-11-18) had reached the Spark step and it failed. The five size-25 runs of 2026-11-14 ended with exit codes 3, 5, 5, 5, 4 and produced no Hadoop counters. At that freeze no EMR cluster size was completed end to end. Dated update (Phase 18, 2026-11-25): the retry (run 5) of the size-100 (size S) manifest completed all six steps, Spark included, after the script fix; one run, not repeated, no other EMR size was run, and no Phase 16 table was regenerated from it (see the Phase 18 note in the EMR section).
 - **Neptune and DynamoDB request latency under load:** no per-store latency export exists; only the aborted semantic-route run was executed.
 
 ### Threats to validity
@@ -569,7 +580,7 @@ The four checks the course names:
 | check | status | what exists | what is missing |
 |---|---|---|---|
 | clean-checkout build | **PENDING (Phase 17): not done** | `scripts/check.sh` ran on clean snapshots in Phase 14 (a clone plus the working-tree changes, identity proved with `cmp`) | a fresh clone of the pushed branch with no prior `target/` state, running `sbt check` and `scripts/check.sh` to `RESULT: PASS gates=7` |
-| bounded pipeline replay | PARTIAL | local P6 chain replayed repeatedly; same Hadoop counters on EMR and locally | an end-to-end EMR replay (the Spark step failed and the stack is destroyed); a replay from a fresh clone |
+| bounded pipeline replay | PARTIAL | local P6 chain replayed repeatedly; same Hadoop counters on EMR and locally | an end-to-end EMR replay at the Phase 16 freeze (the Spark step had failed and the stack was destroyed; the Phase 18 run of 2026-11-25 completed once, see the Phase 18 note in the EMR section, and is not repeated); a replay from a fresh clone |
 | deployment from an approved plan | DONE in Session 2 (2026-11-18); stack destroyed afterwards | every mutating stage ran after an approval record bound to the plan sha256; human gates recorded in `docs/agent-runs/phase-15/human-gate.md` | a second deployment from a fresh clone (not run; no spend this phase) |
 | regeneration of reported tables | see below | every Phase 16 table is written by a committed `eval16_*.py` script | tables whose inputs are git-ignored raw files can be regenerated only on the machine holding `target/`; in a clean clone they SKIP |
 
@@ -628,7 +639,7 @@ The logical outputs of the local pipeline are identical across six passing repla
 - Entity resolution: 15 of 72 true held-out matches were withheld; the Scored path has recall 2/17; no LLM-adjudicated path was observed.
 - Graph: 852 RESEARCHER nodes have no AUTHORED edge (3.9049%), 1030 have no coauthor edge in any window (4.7207%), and the lone INSTITUTION node has no incident edge. The support-table checks pass (269753 = 269753; 267597 = 267597).
 - AWS load run `rb-20261118`: aborted at 20:52:49.770Z after a burst of 67 failed requests; the cooldown phase never ran.
-- AWS-EMR: the size-100 Spark step failed ("Unknown Error."); the five size-25 runs of 2026-11-14 ended with non-zero exit codes and produced no Hadoop counters.
+- AWS-EMR: the size-100 Spark step failed ("Unknown Error.") on 2026-11-18 (it completed once on 2026-11-25 after the Phase 18 fix, one run, not repeated); the five size-25 runs of 2026-11-14 ended with non-zero exit codes and produced no Hadoop counters.
 - Factory: 8 of 38 review units were approved at first review.
 - Retrieval: vector-only and fused comparison is a GAP.
 - Reproducibility: the fresh-clone build is pending (Phase 17); the regeneration check passes only on the machine that holds the git-ignored raw files.

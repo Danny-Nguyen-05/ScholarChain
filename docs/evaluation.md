@@ -23,6 +23,7 @@ Manifest for groups 1, 2 and 4: [16-evaluation.json](../experiments/manifests/16
 - **Vector-only and fused retrieval is a GAP.** No labelled vector-only or fused run exists.
 - **Two Anthropic cost scopes are not added together.** See section 3, group 4.
 - **The fresh-clone build was pending when Phase 16 closed.** Package 17G then ran `sbt -batch clean check` on a fresh clone of `main` at `d1d4fe7` (JDK 17, offline, 2026-11-22): 1,773 tests succeeded, 0 failed, 2 canceled, sbt total time 14:48. The same clone gave `RESULT: OK` for `check_manifests.py` and `REGENERATION: PARTIAL pass=10 fail=0 skipped_scripts=5` (exit 4) for `eval16_repro.py --verify`; the five skipped scripts (and their tables) need git-ignored local inputs that a fresh clone does not have. See [reports/release-manifest.md](../reports/release-manifest.md) for the test run recorded for the release.
+- **Phase 18 note (added 2026-11-26).** The EMR Spark failure described in group 5 is the 2026-11-18 measurement. After a script fix, the retry (run 5) of the size-S EMR run on 2026-11-25 completed all six steps; it is recorded in a dated note in group 5, and no Phase 16 table was regenerated from it.
 - **Negative results stay.** They are summarised in section 5.
 
 ## 3. Methods and results by group
@@ -183,6 +184,8 @@ Failure injection (stop-task, probes about every 6 s): stop-task 21:37:55Z, reco
 
 EMR (AWS-EMR size-100 run `15a-emr-size-100-20261118T163203Z-87466`, m5.xlarge core, r5.xlarge primary): stage-in, hadoop-prep, entity-resolution and spark-class-origin COMPLETED; **the spark-job step FAILED**, so EMR has no Spark runtime to report. Step times are upper bounds from submission instants. hadoop-prep input records per second (INPUT counter 290343): local 7904.792, EMR (lower bound) 592.537; Hadoop counters were identical on EMR and local. EMR billing window 2377.157 s at USD 0.555/h, measured USD 0.37. S3 Vectors ingest: 10000 vectors in 2778.273 s = 3.599 vectors/s, concurrency 8, rejected 0.
 
+Phase 18 note (dated 2026-11-25; added 2026-11-26; the paragraph above is the Phase 16 record of 2026-11-18 and is unchanged): after the Phase 18 fix to `scripts/emr/sc-step.sh`, the retry (run 5, `15a-emr-size-100-20261125T174034Z-99560`) of a first attempt (run 4) that failed at `hadoop-prep` completed all six steps on 2026-11-25, `spark-job` included. Step durations of that run from the EMR console (screenshot, not kept): hadoop-prep 7m6s, entity-resolution 6m2s, spark-job 16m38s; upper bounds from the run log 7m42s, 6m43s and 17m29s. Spark counters: canonicalWorks 10,578, canonicalResearchers 21,819, allYearsEdges 81,181, components 3,942. Ledger: 5 of 5 live runs, USD 2.65 of USD 4.70 (estimates). Sources: [Phase 18 test report](agent-runs/phase-18/test-report.md), [spark-counters.json](agent-runs/phase-18/evidence/day2/emr/spark-counters.json), [emr-actual-2end.log](agent-runs/phase-18/evidence/day2/emr/emr-actual-2end.log), [incident](incidents/2026-11-25-emr-hadoop-prep-intermediate-missing.md). One run, not repeated; no Phase 16 table was regenerated from it, so the "Gaps" line below (any complete EMR run) describes the Phase 16 state and is now partly met at size S only.
+
 Gaps: scale-out and scale-in delay as single numbers; throughput at 2 tasks versus 1 task; repeats of the AWS load run; Neptune and DynamoDB latency under load; EMR scaling and any complete EMR run. Threats: single runs; local rows share the laptop with the load generator; the AWS run used the semantic route only and covers about 32 s of hold-50; the 83 MB local P35 raw is hash-only; a clean clone cannot rerun `eval16_perf.py` (it also needs git-ignored inputs and exits 3; `eval16_repro.py --verify` would show PARTIAL for performance). Interpretation: on AWS the semantic route held 0 errors through level-50 and p95 grew from 193.556 ms to 826.71 ms; the first errors came in hold-50 as a burst of 503 and 504 responses that ended the run before the second task was running. No scaling claim (speed-up with size, or throughput at 2 tasks) follows.
 
 ### Group 6. Agentic factory
@@ -211,7 +214,7 @@ Source: [reproducibility-evidence.md](../experiments/results/phase16/reproducibi
 | check | status (as of Phase 16) |
 |---|---|
 | clean-checkout build | **PENDING, Phase 17: not done** at the time of the Phase 16 record |
-| bounded pipeline replay | PARTIAL: local P6 chain replayed repeatedly; same Hadoop counters on EMR and locally; no end-to-end EMR replay (the Spark step failed) |
+| bounded pipeline replay | PARTIAL: local P6 chain replayed repeatedly; same Hadoop counters on EMR and locally; Phase 16 state: no end-to-end EMR replay (the Spark step failed). Phase 18 (2026-11-25): one size-S EMR run completed all six steps (see the Phase 18 note in group 5); not repeated |
 | deployment from an approved plan | DONE in Session 2 (2026-11-18); stack destroyed afterwards; every mutating stage ran after an approval record bound to the plan sha256 |
 | regeneration of reported tables | every Phase 16 table is written by a committed `eval16_*.py` script; tables with git-ignored inputs regenerate only on the machine that holds them |
 
@@ -263,7 +266,7 @@ The table above is the authoritative form; the two charts show run-1 and run-2 s
 - Entity resolution: 15 of 72 true held-out matches were withheld; Scored-path recall 2/17.
 - Graph: 852 RESEARCHER nodes without an AUTHORED edge; the lone INSTITUTION node has no incident edge.
 - AWS load run `rb-20261118`: aborted after a burst of 67 failed requests; the cooldown phase never ran.
-- AWS-EMR: the size-100 Spark step failed; the five size-25 runs of 2026-11-14 ended with non-zero exit codes and no Hadoop counters.
+- AWS-EMR: the size-100 Spark step failed on 2026-11-18 (it completed once on 2026-11-25 after the Phase 18 fix; one run, not repeated); the five size-25 runs of 2026-11-14 ended with non-zero exit codes and no Hadoop counters.
 - Factory: 8 of 38 review units approved at first review.
 - Retrieval: vector-only and fused comparison is a GAP.
 
