@@ -323,10 +323,10 @@ DESTROY-ACTION: delete module.workflow.aws_iam_role.producer
 DESTROY-ACTION: delete module.workflow.aws_iam_role_policy.producer
 DESTROY-ACTION: delete module.workflow.aws_sfn_state_machine.embedding_dispatch
 DESTROY-ACTION: delete terraform_data.phase12b_guard
-CONFIRM-TOKEN: b0d4a4219c58f156925bbfda9c3fc31c18b03b626b8ae36dfac9ae53bfbb1750
+CONFIRM-TOKEN: <used-one-time-token>
 STEP: confirm
-[2026-11-18T21:57:37Z] [20261118T215234Z-26875] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm b0d4a4219c58f156925bbfda9c3fc31c18b03b626b8ae36dfac9ae53bfbb1750 --plan <repo>/target/plans/20261118T215234Z-26875/destroy-course.tfplan; nothing was destroyed
-RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm b0d4a4219c58f156925bbfda9c3fc31c18b03b626b8ae36dfac9ae53bfbb1750 --plan <repo>/target/plans/20261118T215234Z-26875/destroy-course.tfplan; nothing was destroyed
+[2026-11-18T21:57:37Z] [20261118T215234Z-26875] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm <used-one-time-token> --plan <repo>/target/plans/20261118T215234Z-26875/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm <used-one-time-token> --plan <repo>/target/plans/20261118T215234Z-26875/destroy-course.tfplan; nothing was destroyed
 
 ## <repo>/target/phase15/session2/evidence/cleanup-pass-1.log (423 lines, sha256 e2b21c398b6bf79675ebbb909736e6cd2be6728e1a44624d866039bc20859693)
 STEP: start
@@ -606,10 +606,10 @@ STEP: protection-check
 STEP: destroy-plan
 STEP: destroy-policy
 DESTROY-ACTION: delete module.network.aws_eip.nat
-CONFIRM-TOKEN: 52881220c8f4e85cbe1201e918860e17da8b4587a8f755f05567611a19f768de
+CONFIRM-TOKEN: <used-one-time-token>
 STEP: confirm
-[2026-11-18T22:32:39Z] [20261118T223224Z-34185] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 52881220c8f4e85cbe1201e918860e17da8b4587a8f755f05567611a19f768de --plan <repo>/target/plans/20261118T223224Z-34185/destroy-course.tfplan; nothing was destroyed
-RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 52881220c8f4e85cbe1201e918860e17da8b4587a8f755f05567611a19f768de --plan <repo>/target/plans/20261118T223224Z-34185/destroy-course.tfplan; nothing was destroyed
+[2026-11-18T22:32:39Z] [20261118T223224Z-34185] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm <used-one-time-token> --plan <repo>/target/plans/20261118T223224Z-34185/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm <used-one-time-token> --plan <repo>/target/plans/20261118T223224Z-34185/destroy-course.tfplan; nothing was destroyed
 
 ## <repo>/target/phase15/session2/evidence/cleanup-pass-2.log (222 lines, sha256 973687fed39c50ea3a6734769e7b937a39f31e4099e9d81e4b95f118f785a917)
 STEP: start

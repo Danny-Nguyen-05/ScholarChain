@@ -107,7 +107,7 @@ Each RESULT line with its line number is in `reproducibility-evidence.json` (dep
 - `docs/agent-runs/phase-15/evidence/session-2/emr/emr-upload-results.txt` 308a17157e761164856efa361a04226136d6c984ae3fe28dbeba11884cdf32b8
 - `docs/agent-runs/phase-15/evidence/session-2/emr/hadoop-prep-counters.txt` 6698639ba02f95209d0c5d62b7d9cb8fe14dde1dcb74220bc6a7ad9a06875760
 - `docs/agent-runs/phase-15/evidence/session-2/rb-runtime/rb-runtime-results.txt` 4c290dc9018fdbca9910044810e14bf2325e0857271a37119abc267496e6d222
-- `docs/agent-runs/phase-15/evidence/session-2/section-c/cleanup-results.txt` 7acc371ec67341d11f642e067cb331f7075aad385198dd369fbc3c2c0685370e
+- `docs/agent-runs/phase-15/evidence/session-2/section-c/cleanup-results.txt` 2846ef8b18f3418a1ff310c3cb7cb3b428de00421c71d00da725994fc7c91aff
 - `docs/agent-runs/phase-15/evidence/session-2/stage-a/stagea-results.txt` fcd2b8ad8f6a605512d4951bb9b49a899f1be2eb627c1a1f572ed1037a1bcf46
 - `docs/agent-runs/phase-15/test-report.md` ad7aef99f0db930f0badd309e44a87eb67fe83b6f165f5995959321aa09f4455
 - `scripts/check.sh` da62fc8884a75799a0c9e39a2a6aacf4b95dea91b91b2c41f502951f4b1379b7
