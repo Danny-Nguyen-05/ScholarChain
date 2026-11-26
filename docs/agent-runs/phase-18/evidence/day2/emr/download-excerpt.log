@@ -1,0 +1,6 @@
+source: <repo>/target/phase18/day2/evidence/download.log
+lines: 5418
+sha256: 278e4e96e7f098bf882b422a8f6cd0a251ca3028785e469f141b4504bb367d5a
+s3 download entries: 468
+error or failed mentions: 0
+---

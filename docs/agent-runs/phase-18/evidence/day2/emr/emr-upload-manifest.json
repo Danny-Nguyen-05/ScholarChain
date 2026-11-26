@@ -1,0 +1,178 @@
+{
+  "bucket": "scholarchain-course-<acct>-artifacts",
+  "commit": "fe0b6ccdf1089deb24e2967a09d94ada9b1aae33",
+  "created_utc": "2026-11-25T17:16:47Z",
+  "datasets": [
+    {
+      "bytes": 6053225,
+      "files": 4,
+      "label": "size-100"
+    }
+  ],
+  "files": [
+    {
+      "bytes": 17220,
+      "checksum_sha256_b64": "LZDzvJU4pqwC/kzPagVg6S60HAJrYDI5SYPnx7OQUHA=",
+      "class": "bootstrap",
+      "key": "emr/run-20261125/bin/bootstrap.sh",
+      "sha256": "2d90f3bc9538a6ac02fe4ccf6a0560e92eb41c026b6032394983e7c7b3905070",
+      "status": "uploaded",
+      "version_id": "Mnuu7bvxJRsKtXImZrMxk3sW4CuzkSHz"
+    },
+    {
+      "bytes": 1147,
+      "checksum_sha256_b64": "oHq9hMvg5dMLBnJqc1Nd9MeqUaACDQWZVNm3+at5gyw=",
+      "class": "config:er-config.json",
+      "key": "emr/run-20261125/config/er-config.json",
+      "sha256": "a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c",
+      "status": "uploaded",
+      "version_id": "emFBLQJK7JpiFJ7c13kQ8yJH4EiE0ULz"
+    },
+    {
+      "bytes": 1755,
+      "checksum_sha256_b64": "LT0S50ibGEN/lrCXVHCRAMvDUp/9T8/Q/2gH24fyqT8=",
+      "class": "config:er-policy.json",
+      "key": "emr/run-20261125/config/er-policy.json",
+      "sha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f",
+      "status": "uploaded",
+      "version_id": "fFRosGMmdWLIbjT36HZp9K2sCGlBs2CV"
+    },
+    {
+      "bytes": 417,
+      "checksum_sha256_b64": "UzAhS9ooTEFSpwBUmUK0CTGmSZS4Kxns3Zm8rbnxvFc=",
+      "class": "config:hadoop-config.json",
+      "key": "emr/run-20261125/config/hadoop-config.json",
+      "sha256": "5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57",
+      "status": "uploaded",
+      "version_id": "DUXaSnzggzdOm8SCxN.qyG3OJZCEa35P"
+    },
+    {
+      "bytes": 1562,
+      "checksum_sha256_b64": "k0HBYsiwXJSWaFCD1aRwp39VXuJGJutLlGpDnh/YIGo=",
+      "class": "config:spark-config-template.json",
+      "key": "emr/run-20261125/config/spark-config-template.json",
+      "sha256": "9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a",
+      "status": "uploaded",
+      "version_id": "5BhvKeRBIQ.h9qte9nwDdEdk4Mb31W4m"
+    },
+    {
+      "bytes": 9405,
+      "checksum_sha256_b64": "puPEDheLfOf3TthwpItKKVHeFwXnoO2Pj9QIOLxNOcw=",
+      "class": "input:size-100",
+      "key": "emr/run-20261125/input/size-100/datasets/samples/crossref/works.jsonl",
+      "sha256": "a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+      "status": "uploaded",
+      "version_id": "dlFGZQOiZKQo7oiRjwdietx0BJxOqWML"
+    },
+    {
+      "bytes": 6003592,
+      "checksum_sha256_b64": "wloeGg1Rerqt83DIizUoA5xQrY7DeQwnOBo8Li7N5SI=",
+      "class": "input:size-100",
+      "key": "emr/run-20261125/input/size-100/datasets/samples/dblp/linked-records.xml",
+      "sha256": "c25a1e1a0d517abaadf370c88b3528039c50ad8ec3790c27381a3c2e2ecde522",
+      "status": "uploaded",
+      "version_id": "m3_dJFfkzCxrlD.fE1bRUZqPS.E6UTZK"
+    },
+    {
+      "bytes": 11576,
+      "checksum_sha256_b64": "bP8S8uwUOazGa4mpwwxUqpC+yOPhHDF1YfPkoPmmXYw=",
+      "class": "input:size-100",
+      "key": "emr/run-20261125/input/size-100/datasets/samples/openalex/works.jsonl",
+      "sha256": "6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+      "status": "uploaded",
+      "version_id": "6UoKopMG_yHx95mLN7YNBTKwa489qDNd"
+    },
+    {
+      "bytes": 28652,
+      "checksum_sha256_b64": "UABpSo6T9f8jk/fyX5qQjROee6INJsDZgUHlzh4HAyU=",
+      "class": "input:size-100",
+      "key": "emr/run-20261125/input/size-100/datasets/samples/orcid/records.jsonl",
+      "sha256": "5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325",
+      "status": "uploaded",
+      "version_id": "yeMmASnGH9TDjCA4haoNxfKOmkyxlRxb"
+    },
+    {
+      "bytes": 12863882,
+      "checksum_sha256_b64": "6N9O4mnxovEADNiMqtLRsZ54948r4JI4ozctjOflJ2g=",
+      "class": "jar:entity-resolution-job-jar",
+      "key": "emr/run-20261125/jars/entity-resolution.jar",
+      "sha256": "e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768",
+      "status": "uploaded",
+      "version_id": "dm4DUZ4iA.jhH.NBa2vQYMRiOOJoa7IH"
+    },
+    {
+      "bytes": 12144487,
+      "checksum_sha256_b64": "dqG0Vc4i04zDMlWSp9ELxS0tibIIZV63uObKSEFUg4o=",
+      "class": "jar:hadoop-dependency-bundle",
+      "key": "emr/run-20261125/jars/hadoop-bundle.jar",
+      "sha256": "76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a",
+      "status": "uploaded",
+      "version_id": "7j2fbxQqjq6jumOAxJy5_eWOZ.KhHbr."
+    },
+    {
+      "bytes": 12162464,
+      "checksum_sha256_b64": "Pe/o5qo2iOS+u4f412YRX9jpYHMskaiY25/+fhJ6YcY=",
+      "class": "jar:hadoop-submit-jar",
+      "key": "emr/run-20261125/jars/hadoop-submit.jar",
+      "sha256": "3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6",
+      "status": "uploaded",
+      "version_id": "vNt8PC_q3Rs0QOuQzRr4o2IKWnBMfu82"
+    },
+    {
+      "bytes": 11734907,
+      "checksum_sha256_b64": "IsGSisb2SDGkeY7JtpmcpJXl0jdC1BOoSRCmk6gELkQ=",
+      "class": "jar:spark-job-jar",
+      "key": "emr/run-20261125/jars/spark-job.jar",
+      "sha256": "22c1928ac6f64831a4798ec9b6999ca495e5d23742d413a84910a693a8042e44",
+      "status": "uploaded",
+      "version_id": "dkchfjGOngAoD4bgE87rVDItDTMpjnY_"
+    },
+    {
+      "bytes": 2084,
+      "checksum_sha256_b64": "V+lUPNlNWSS/tLuM7BUK11W6JR7ltoIiddm8elbRC1w=",
+      "class": "step-program",
+      "key": "emr/run-20261125/steps/sc-ceiling-check.py",
+      "sha256": "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c",
+      "status": "uploaded",
+      "version_id": "Tz5cpYahWSImj6gD0UvNDLFT51t6A_dv"
+    },
+    {
+      "bytes": 4139,
+      "checksum_sha256_b64": "XfkZemD+QVMIWTd1GGCbZ8cO7GDJPIJW5nQq1f/Renk=",
+      "class": "step-program",
+      "key": "emr/run-20261125/steps/sc-class-origin-verify.py",
+      "sha256": "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79",
+      "status": "uploaded",
+      "version_id": "9V8OH2Jly9XVJFQRh9NxZegMgZFX1yo3"
+    },
+    {
+      "bytes": 1070,
+      "checksum_sha256_b64": "XWBtSIOg1OTYaf9/aatWMXdDpJEpQKw05cgDN6j6BWw=",
+      "class": "step-program",
+      "key": "emr/run-20261125/steps/sc-render-spark-config.py",
+      "sha256": "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c",
+      "status": "uploaded",
+      "version_id": "8NtKLlfc8rTskt0mZ.wNJkmUw0EjKnhO"
+    },
+    {
+      "bytes": 24632,
+      "checksum_sha256_b64": "Htz2jSlIEBXaVnWq1/vnTUr2hfnQwnpTePI//qt8ju0=",
+      "class": "step-program",
+      "key": "emr/run-20261125/steps/sc-step.sh",
+      "sha256": "1edcf68d29481015da5675aad7fbe74d4af685f9d0c27a5378f23ffeab7c8eed",
+      "status": "uploaded",
+      "version_id": ".L_UdDTAtvHhO3VgVD7Vd_oETpEATUyJ"
+    }
+  ],
+  "plan_sha256": "944e04bd92708f37e31fa5af4410d020479323814557a8d4cb6d8bb4fc6fab3e",
+  "region": "us-east-2",
+  "root_prefix": "emr/run-20261125",
+  "run_prefix": "run-20261125",
+  "schema": "scholarchain.emr-upload-manifest.v1",
+  "totals": {
+    "bytes": 55012991,
+    "files": 17,
+    "unchanged": 0,
+    "uploaded": 17
+  }
+}

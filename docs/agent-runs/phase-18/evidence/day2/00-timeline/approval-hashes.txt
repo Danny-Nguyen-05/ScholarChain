@@ -1,0 +1,14 @@
+Approval records and pre-spend receipts of Day 2 (git-ignored, under <repo>/target/phase18/day2/approvals/; contents not copied).
+8ae4315113e85239768aaff922751e85ff0717a21a1f56f3f4e1dd5224431f4b  cleanup-prepare.md
+7f3de0ec145c3827771391678b880e370518b491e3fcd69702ece3aa4b3c9bed  emr-run-1.md
+8a133e28faddce5967487a2606d864e847bc83e8d422ec067428f8d763fb10fc  emr-run-1.prose.md
+3b503fed4ba4ff4f22b0a027a1754abb73faa640e4df4ffeabf82ebf56e962e4  emr-run-2.md
+8f10485af34e7a1d06c8283f782d057062a9bedeb59ade6e18464b47d287f634  emr-run-2.prose.md
+16817387e4bebcf8039b5f31f5172f06b2d6bd9587a43d364f52c2da66d6f6af  emr-upload.md
+897ffdf9dd3fcb3e525c88c7749bfe8b278a3a3e8317aa70b910348eff6923de  prespend-cleanup-prepare.json
+897ffdf9dd3fcb3e525c88c7749bfe8b278a3a3e8317aa70b910348eff6923de  prespend-emr-runs.json
+897ffdf9dd3fcb3e525c88c7749bfe8b278a3a3e8317aa70b910348eff6923de  prespend-stagea-base.json
+897ffdf9dd3fcb3e525c88c7749bfe8b278a3a3e8317aa70b910348eff6923de  prespend-stagea-emr.json
+f930fafa29a035adbb4d2f2f182d69e8da96d45a38c7b861f94362930cd8df45  stagea-base.md
+f65afd50a202abef9aec621a35fcf2ea8ab16c403644089ae0af7b3d9c0e19f4  stagea-emr.md
+536daf09b48a1e6dbe2b74734c21667def92af3d467a085f8ddd72ea04ceca87  stagea-upload.md

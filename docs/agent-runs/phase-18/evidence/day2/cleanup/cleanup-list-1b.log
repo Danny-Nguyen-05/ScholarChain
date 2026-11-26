@@ -1,0 +1,572 @@
+STEP: start
+[2026-11-25T18:58:46Z] [20261125T185846Z-29671] INFO script=cleanup.sh mode=execute run_id=20261125T185846Z-29671 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-25T18:58:46Z] [20261125T185846Z-29671] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+PRESERVE: terraform-state
+PRESERVE-RULES types: aws_s3_object
+PRESERVE-RULES addresses: module.foundation.
+TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.datalake.,module.s3vectors.,module.identity.aws_kms_key.data,module.identity.aws_kms_alias.data,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.deployment,module.identity.aws_iam_role.neptune_tunnel_task,module.identity.aws_iam_role.emr_ec2,module.identity.aws_iam_role.emr_service,module.identity.aws_iam_role.neptune_loader,module.identity.aws_iam_role_policy.,module.identity.aws_iam_instance_profile.emr,module.observability.aws_cloudwatch_metric_alarm.,module.observability.aws_cloudwatch_dashboard.,module.observability.aws_cloudwatch_log_group.,aws_acm_certificate.api,aws_acm_certificate_validation.api,aws_secretsmanager_secret.anthropic,aws_secretsmanager_secret.voyage,terraform_data.phase12b_guard
+PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true,aws_lb:enable_deletion_protection=true,aws_dynamodb_table:deletion_protection_enabled=true,aws_ecr_repository:force_delete=false,aws_s3_bucket:force_destroy=false,aws_s3vectors_vector_bucket:force_destroy=false
+STEP: output-paths
+[2026-11-25T18:58:46Z] [20261125T185846Z-29671] INFO plan outputs go to the fresh target/plans/20261125T185846Z-29671 (ignored); evidence goes to target/cleanup-evidence/20261125T185846Z-29671 (absent beforehand)
+STEP: account-identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-25T18:58:47Z] [20261125T185846Z-29671] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-25T18:58:47Z] [20261125T185846Z-29671] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+[2026-11-25T18:58:47Z] [20261125T185846Z-29671] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1215, "sha256": "49da20824248cdbadbe6db2d06ccf2fcf1ac2ffcb1c2d364a3ce8be13b5ef166"}
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T185846Z-29671/tfdata terraform -chdir=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase14b.a_timeout_equal_to_the_interval_is_refused_by_the_target_group in modules/runtime
+  | - test.tests.phase14b.an_interval_below_5_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_interval_above_300_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_interval_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_above_120_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_healthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14a.the_runtime_module_keeps_mode_unconfigured_and_adds_no_aws_variable_without_the_acknowledgment in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_default_has_no_request_policy_no_rate_limit_env_and_three_cpu_policies in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_https_creates_the_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_image_revision_has_no_policy_and_no_alb in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_the_runtime_disabled_has_no_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_https_is_refused_by_the_precondition in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_without_https_and_without_target_still_plans in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_query_api_only in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_absent_outside_the_aws_mode in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_target in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_on_the_acm_path_creates_exactly_one_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_burst in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_burst_above_1000000 in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_rate_above_100000 in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_default_has_container_insights_enabled_and_the_worker_backlog_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_container_insights_false_disables_the_cluster_setting_and_removes_the_worker_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_without_an_image_revision_has_no_worker_policy_even_with_insights_on in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_disabled_runtime_has_no_policies_and_still_records_the_setting in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_null_container_insights_falls_back_to_the_true_default in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_are_not_injected_while_the_composition_is_unverified in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_join_the_service_secrets_in_the_aws_mode_and_stay_out_of_the_environment in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_rejects_an_unknown_provider in modules/runtime
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+STEP: before-inventory
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-bootstrap state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-25T18:58:49Z] [20261125T185846Z-29671] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-execution state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-25T18:58:50Z] [20261125T185846Z-29671] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/deployer state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-25T18:58:50Z] [20261125T185846Z-29671] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark-isolated state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-25T18:58:51Z] [20261125T185846Z-29671] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-25T18:58:51Z] [20261125T185846Z-29671] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T185846Z-29671/tfdata terraform -chdir=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform state list
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json
+[2026-11-25T19:00:53Z] [20261125T185846Z-29671] INFO before inventory: 331 entries
+STEP: classify-state
+NOT-TARGETED terraform_data.configuration_guard (no teardown rule)
+NOT-TARGETED terraform_data.provider_guard (no teardown rule)
+TEARDOWN aws_acm_certificate.api[0]
+TEARDOWN aws_secretsmanager_secret.anthropic[0]
+TEARDOWN aws_secretsmanager_secret.voyage[0]
+TEARDOWN module.datalake.aws_s3_bucket.zone["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket.zone["curated"]
+TEARDOWN module.datalake.aws_s3_bucket.zone["graph"]
+TEARDOWN module.datalake.aws_s3_bucket.zone["logs"]
+TEARDOWN module.datalake.aws_s3_bucket.zone["rag"]
+TEARDOWN module.datalake.aws_s3_bucket.zone["raw"]
+TEARDOWN module.datalake.aws_s3_bucket.zone["reports"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["curated"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["graph"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["logs"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["rag"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["raw"]
+TEARDOWN module.datalake.aws_s3_bucket_lifecycle_configuration.zone["reports"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["curated"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["graph"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["logs"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["rag"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["raw"]
+TEARDOWN module.datalake.aws_s3_bucket_ownership_controls.zone["reports"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["curated"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["graph"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["logs"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["rag"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["raw"]
+TEARDOWN module.datalake.aws_s3_bucket_policy.tls["reports"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["curated"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["graph"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["logs"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["rag"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["raw"]
+TEARDOWN module.datalake.aws_s3_bucket_public_access_block.zone["reports"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["curated"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["graph"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["logs"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["rag"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["raw"]
+TEARDOWN module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["reports"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["artifacts"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["curated"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["graph"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["logs"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["rag"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["raw"]
+TEARDOWN module.datalake.aws_s3_bucket_versioning.zone["reports"]
+TEARDOWN module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+TEARDOWN module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+TEARDOWN module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+TEARDOWN module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+TEARDOWN module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+TEARDOWN module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+TEARDOWN module.emr.aws_efs_access_point.staging[0]
+TEARDOWN module.emr.aws_efs_backup_policy.staging[0]
+TEARDOWN module.emr.aws_efs_file_system.staging[0]
+TEARDOWN module.emr.aws_efs_file_system_policy.staging[0]
+TEARDOWN module.emr.aws_efs_mount_target.staging[0]
+TEARDOWN module.emr.aws_emr_cluster.pipeline[0]
+TEARDOWN module.emr.aws_emr_security_configuration.encrypted[0]
+TEARDOWN module.emr.aws_iam_role_policy.node[0]
+TEARDOWN module.emr.aws_security_group.efs[0]
+TEARDOWN module.emr.aws_vpc_security_group_egress_rule.emr_to_efs[0]
+TEARDOWN module.emr.aws_vpc_security_group_ingress_rule.efs_from_emr[0]
+TEARDOWN module.identity.aws_iam_instance_profile.emr
+TEARDOWN module.identity.aws_iam_role.deployment
+TEARDOWN module.identity.aws_iam_role.emr_ec2
+TEARDOWN module.identity.aws_iam_role.emr_service
+TEARDOWN module.identity.aws_iam_role.execution["embedding-worker"]
+TEARDOWN module.identity.aws_iam_role.execution["graph-service"]
+TEARDOWN module.identity.aws_iam_role.execution["query-api"]
+TEARDOWN module.identity.aws_iam_role.execution["semantic-service"]
+TEARDOWN module.identity.aws_iam_role.neptune_loader
+TEARDOWN module.identity.aws_iam_role.task["embedding-worker"]
+TEARDOWN module.identity.aws_iam_role.task["graph-service"]
+TEARDOWN module.identity.aws_iam_role.task["query-api"]
+TEARDOWN module.identity.aws_iam_role.task["semantic-service"]
+TEARDOWN module.identity.aws_iam_role_policy.emr_control[0]
+TEARDOWN module.identity.aws_iam_role_policy.emr_data
+TEARDOWN module.identity.aws_iam_role_policy.emr_disk_encryption[0]
+TEARDOWN module.identity.aws_iam_role_policy.execution["embedding-worker"]
+TEARDOWN module.identity.aws_iam_role_policy.execution["graph-service"]
+TEARDOWN module.identity.aws_iam_role_policy.execution["query-api"]
+TEARDOWN module.identity.aws_iam_role_policy.execution["semantic-service"]
+TEARDOWN module.identity.aws_iam_role_policy.neptune_loader
+TEARDOWN module.identity.aws_iam_role_policy.task["embedding-worker"]
+TEARDOWN module.identity.aws_iam_role_policy.task["graph-service"]
+TEARDOWN module.identity.aws_iam_role_policy.task["query-api"]
+TEARDOWN module.identity.aws_iam_role_policy.task["semantic-service"]
+TEARDOWN module.identity.aws_kms_alias.data
+TEARDOWN module.identity.aws_kms_key.data
+TEARDOWN module.messaging.aws_sqs_queue.dead_letter
+TEARDOWN module.messaging.aws_sqs_queue.embedding
+TEARDOWN module.messaging.aws_sqs_queue_policy.tls["dead_letter"]
+TEARDOWN module.messaging.aws_sqs_queue_policy.tls["embedding"]
+TEARDOWN module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter
+TEARDOWN module.network.aws_eip.nat
+TEARDOWN module.network.aws_internet_gateway.course
+TEARDOWN module.network.aws_nat_gateway.course
+TEARDOWN module.network.aws_route.default["application"]
+TEARDOWN module.network.aws_route.default["public"]
+TEARDOWN module.network.aws_route_table.application
+TEARDOWN module.network.aws_route_table.data
+TEARDOWN module.network.aws_route_table.public
+TEARDOWN module.network.aws_route_table_association.application["0"]
+TEARDOWN module.network.aws_route_table_association.application["1"]
+TEARDOWN module.network.aws_route_table_association.data["0"]
+TEARDOWN module.network.aws_route_table_association.data["1"]
+TEARDOWN module.network.aws_route_table_association.public["0"]
+TEARDOWN module.network.aws_route_table_association.public["1"]
+TEARDOWN module.network.aws_security_group.emr_service_access
+TEARDOWN module.network.aws_security_group.role["alb"]
+TEARDOWN module.network.aws_security_group.role["embedding-worker"]
+TEARDOWN module.network.aws_security_group.role["emr"]
+TEARDOWN module.network.aws_security_group.role["endpoints"]
+TEARDOWN module.network.aws_security_group.role["graph-service"]
+TEARDOWN module.network.aws_security_group.role["neptune"]
+TEARDOWN module.network.aws_security_group.role["query-api"]
+TEARDOWN module.network.aws_security_group.role["semantic-service"]
+TEARDOWN module.network.aws_subnet.application["0"]
+TEARDOWN module.network.aws_subnet.application["1"]
+TEARDOWN module.network.aws_subnet.data["0"]
+TEARDOWN module.network.aws_subnet.data["1"]
+TEARDOWN module.network.aws_subnet.public["0"]
+TEARDOWN module.network.aws_subnet.public["1"]
+TEARDOWN module.network.aws_vpc.course
+TEARDOWN module.network.aws_vpc_endpoint.gateway["dynamodb"]
+TEARDOWN module.network.aws_vpc_endpoint.gateway["s3"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.dependency["alb_query"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.dependency["graph_neptune"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.dependency["query_graph"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.dependency["query_semantic"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.emr_self
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.https["embedding-worker"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.https["emr"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.https["graph-service"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.https["query-api"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.https["semantic-service"]
+TEARDOWN module.network.aws_vpc_security_group_egress_rule.neptune_s3
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.dependency["alb_query"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.dependency["graph_neptune"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.dependency["query_graph"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.dependency["query_semantic"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.emr_self
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.endpoint["embedding-worker"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.endpoint["emr"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.endpoint["graph-service"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.endpoint["query-api"]
+TEARDOWN module.network.aws_vpc_security_group_ingress_rule.endpoint["semantic-service"]
+TEARDOWN module.observability.aws_cloudwatch_log_group.neptune_audit
+TEARDOWN module.observability.aws_cloudwatch_log_group.service["embedding-worker"]
+TEARDOWN module.observability.aws_cloudwatch_log_group.service["graph-service"]
+TEARDOWN module.observability.aws_cloudwatch_log_group.service["query-api"]
+TEARDOWN module.observability.aws_cloudwatch_log_group.service["semantic-service"]
+TEARDOWN module.observability.aws_cloudwatch_metric_alarm.api_errors
+TEARDOWN module.observability.aws_cloudwatch_metric_alarm.latency["graph-service"]
+TEARDOWN module.observability.aws_cloudwatch_metric_alarm.latency["query-api"]
+TEARDOWN module.observability.aws_cloudwatch_metric_alarm.queue_age
+TEARDOWN module.runtime.aws_ecr_repository.service["embedding-worker"]
+TEARDOWN module.runtime.aws_ecr_repository.service["graph-service"]
+TEARDOWN module.runtime.aws_ecr_repository.service["query-api"]
+TEARDOWN module.runtime.aws_ecr_repository.service["semantic-service"]
+TEARDOWN module.runtime.aws_ecs_cluster.course
+TEARDOWN module.runtime.aws_service_discovery_private_dns_namespace.course
+TEARDOWN module.s3vectors.aws_s3vectors_index.document["collaboration-community-v1"]
+TEARDOWN module.s3vectors.aws_s3vectors_index.document["collaboration-path-v1"]
+TEARDOWN module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]
+TEARDOWN module.s3vectors.aws_s3vectors_index.document["researcher-profile-v1"]
+TEARDOWN module.s3vectors.aws_s3vectors_index.document["topic-institution-summary-v1"]
+TEARDOWN module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+TEARDOWN module.s3vectors.aws_s3vectors_vector_bucket_policy.tls
+TEARDOWN module.workflow.aws_iam_role.producer
+TEARDOWN module.workflow.aws_iam_role_policy.producer
+TEARDOWN module.workflow.aws_sfn_state_machine.embedding_dispatch
+TEARDOWN terraform_data.phase12b_guard
+TEARDOWN-TARGET: aws_acm_certificate.api
+TEARDOWN-TARGET: aws_secretsmanager_secret.<redacted>
+TEARDOWN-TARGET: aws_secretsmanager_secret.<redacted>
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket.zone
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket_lifecycle_configuration.zone
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket_ownership_controls.zone
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket_policy.tls
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket_public_access_block.zone
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone
+TEARDOWN-TARGET: module.datalake.aws_s3_bucket_versioning.zone
+TEARDOWN-TARGET: module.dynamodb.aws_dynamodb_table.table
+TEARDOWN-TARGET: module.emr.aws_efs_access_point.staging
+TEARDOWN-TARGET: module.emr.aws_efs_backup_policy.staging
+TEARDOWN-TARGET: module.emr.aws_efs_file_system.staging
+TEARDOWN-TARGET: module.emr.aws_efs_file_system_policy.staging
+TEARDOWN-TARGET: module.emr.aws_efs_mount_target.staging
+TEARDOWN-TARGET: module.emr.aws_emr_cluster.pipeline
+TEARDOWN-TARGET: module.emr.aws_emr_security_configuration.encrypted
+TEARDOWN-TARGET: module.emr.aws_iam_role_policy.node
+TEARDOWN-TARGET: module.emr.aws_security_group.efs
+TEARDOWN-TARGET: module.emr.aws_vpc_security_group_egress_rule.emr_to_efs
+TEARDOWN-TARGET: module.emr.aws_vpc_security_group_ingress_rule.efs_from_emr
+TEARDOWN-TARGET: module.identity.aws_iam_instance_profile.emr
+TEARDOWN-TARGET: module.identity.aws_iam_role.deployment
+TEARDOWN-TARGET: module.identity.aws_iam_role.emr_ec2
+TEARDOWN-TARGET: module.identity.aws_iam_role.emr_service
+TEARDOWN-TARGET: module.identity.aws_iam_role.execution
+TEARDOWN-TARGET: module.identity.aws_iam_role.neptune_loader
+TEARDOWN-TARGET: module.identity.aws_iam_role.task
+TEARDOWN-TARGET: module.identity.aws_iam_role_policy.emr_control
+TEARDOWN-TARGET: module.identity.aws_iam_role_policy.emr_data
+TEARDOWN-TARGET: module.identity.aws_iam_role_policy.emr_disk_encryption
+TEARDOWN-TARGET: module.identity.aws_iam_role_policy.execution
+TEARDOWN-TARGET: module.identity.aws_iam_role_policy.neptune_loader
+TEARDOWN-TARGET: module.identity.aws_iam_role_policy.task
+TEARDOWN-TARGET: module.identity.aws_kms_alias.data
+TEARDOWN-TARGET: module.identity.aws_kms_key.data
+TEARDOWN-TARGET: module.messaging.aws_sqs_queue.dead_letter
+TEARDOWN-TARGET: module.messaging.aws_sqs_queue.embedding
+TEARDOWN-TARGET: module.messaging.aws_sqs_queue_policy.tls
+TEARDOWN-TARGET: module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter
+TEARDOWN-TARGET: module.network.aws_eip.nat
+TEARDOWN-TARGET: module.network.aws_internet_gateway.course
+TEARDOWN-TARGET: module.network.aws_nat_gateway.course
+TEARDOWN-TARGET: module.network.aws_route.default
+TEARDOWN-TARGET: module.network.aws_route_table.application
+TEARDOWN-TARGET: module.network.aws_route_table.data
+TEARDOWN-TARGET: module.network.aws_route_table.public
+TEARDOWN-TARGET: module.network.aws_route_table_association.application
+TEARDOWN-TARGET: module.network.aws_route_table_association.data
+TEARDOWN-TARGET: module.network.aws_route_table_association.public
+TEARDOWN-TARGET: module.network.aws_security_group.emr_service_access
+TEARDOWN-TARGET: module.network.aws_security_group.role
+TEARDOWN-TARGET: module.network.aws_subnet.application
+TEARDOWN-TARGET: module.network.aws_subnet.data
+TEARDOWN-TARGET: module.network.aws_subnet.public
+TEARDOWN-TARGET: module.network.aws_vpc.course
+TEARDOWN-TARGET: module.network.aws_vpc_endpoint.gateway
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_egress_rule.dependency
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_egress_rule.emr_self
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_egress_rule.https
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_egress_rule.neptune_s3
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_ingress_rule.dependency
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_ingress_rule.emr_self
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes
+TEARDOWN-TARGET: module.network.aws_vpc_security_group_ingress_rule.endpoint
+TEARDOWN-TARGET: module.observability.aws_cloudwatch_log_group.neptune_audit
+TEARDOWN-TARGET: module.observability.aws_cloudwatch_log_group.service
+TEARDOWN-TARGET: module.observability.aws_cloudwatch_metric_alarm.api_errors
+TEARDOWN-TARGET: module.observability.aws_cloudwatch_metric_alarm.latency
+TEARDOWN-TARGET: module.observability.aws_cloudwatch_metric_alarm.queue_age
+TEARDOWN-TARGET: module.runtime.aws_ecr_repository.service
+TEARDOWN-TARGET: module.runtime.aws_ecs_cluster.course
+TEARDOWN-TARGET: module.runtime.aws_service_discovery_private_dns_namespace.course
+TEARDOWN-TARGET: module.s3vectors.aws_s3vectors_index.document
+TEARDOWN-TARGET: module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+TEARDOWN-TARGET: module.s3vectors.aws_s3vectors_vector_bucket_policy.tls
+TEARDOWN-TARGET: module.workflow.aws_iam_role.producer
+TEARDOWN-TARGET: module.workflow.aws_iam_role_policy.producer
+TEARDOWN-TARGET: module.workflow.aws_sfn_state_machine.embedding_dispatch
+TEARDOWN-TARGET: terraform_data.phase12b_guard
+STEP: protection-check
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T185846Z-29671/tfdata terraform -chdir=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json
+no teardown resource has active deletion protection
+STEP: destroy-plan
+CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T185846Z-29671/tfdata terraform -chdir=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform plan -destroy -input=false -lock-timeout=60s -var-file=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -var=cleanup_mode=true -target=aws_acm_certificate.api -target=aws_secretsmanager_secret.<redacted> -target=aws_secretsmanager_secret.<redacted> -target=module.datalake.aws_s3_bucket.zone -target=module.datalake.aws_s3_bucket_lifecycle_configuration.zone -target=module.datalake.aws_s3_bucket_ownership_controls.zone -target=module.datalake.aws_s3_bucket_policy.tls -target=module.datalake.aws_s3_bucket_public_access_block.zone -target=module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone -target=module.datalake.aws_s3_bucket_versioning.zone -target=module.dynamodb.aws_dynamodb_table.table -target=module.emr.aws_efs_access_point.staging -target=module.emr.aws_efs_backup_policy.staging -target=module.emr.aws_efs_file_system.staging -target=module.emr.aws_efs_file_system_policy.staging -target=module.emr.aws_efs_mount_target.staging -target=module.emr.aws_emr_cluster.pipeline -target=module.emr.aws_emr_security_configuration.encrypted -target=module.emr.aws_iam_role_policy.node -target=module.emr.aws_security_group.efs -target=module.emr.aws_vpc_security_group_egress_rule.emr_to_efs -target=module.emr.aws_vpc_security_group_ingress_rule.efs_from_emr -target=module.identity.aws_iam_instance_profile.emr -target=module.identity.aws_iam_role.deployment -target=module.identity.aws_iam_role.emr_ec2 -target=module.identity.aws_iam_role.emr_service -target=module.identity.aws_iam_role.execution -target=module.identity.aws_iam_role.neptune_loader -target=module.identity.aws_iam_role.task -target=module.identity.aws_iam_role_policy.emr_control -target=module.identity.aws_iam_role_policy.emr_data -target=module.identity.aws_iam_role_policy.emr_disk_encryption -target=module.identity.aws_iam_role_policy.execution -target=module.identity.aws_iam_role_policy.neptune_loader -target=module.identity.aws_iam_role_policy.task -target=module.identity.aws_kms_alias.data -target=module.identity.aws_kms_key.data -target=module.messaging.aws_sqs_queue.dead_letter -target=module.messaging.aws_sqs_queue.embedding -target=module.messaging.aws_sqs_queue_policy.tls -target=module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter -target=module.network.aws_eip.nat -target=module.network.aws_internet_gateway.course -target=module.network.aws_nat_gateway.course -target=module.network.aws_route.default -target=module.network.aws_route_table.application -target=module.network.aws_route_table.data -target=module.network.aws_route_table.public -target=module.network.aws_route_table_association.application -target=module.network.aws_route_table_association.data -target=module.network.aws_route_table_association.public -target=module.network.aws_security_group.emr_service_access -target=module.network.aws_security_group.role -target=module.network.aws_subnet.application -target=module.network.aws_subnet.data -target=module.network.aws_subnet.public -target=module.network.aws_vpc.course -target=module.network.aws_vpc_endpoint.gateway -target=module.network.aws_vpc_security_group_egress_rule.dependency -target=module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service -target=module.network.aws_vpc_security_group_egress_rule.emr_self -target=module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes -target=module.network.aws_vpc_security_group_egress_rule.https -target=module.network.aws_vpc_security_group_egress_rule.neptune_s3 -target=module.network.aws_vpc_security_group_ingress_rule.dependency -target=module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service -target=module.network.aws_vpc_security_group_ingress_rule.emr_self -target=module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes -target=module.network.aws_vpc_security_group_ingress_rule.endpoint -target=module.observability.aws_cloudwatch_log_group.neptune_audit -target=module.observability.aws_cloudwatch_log_group.service -target=module.observability.aws_cloudwatch_metric_alarm.api_errors -target=module.observability.aws_cloudwatch_metric_alarm.latency -target=module.observability.aws_cloudwatch_metric_alarm.queue_age -target=module.runtime.aws_ecr_repository.service -target=module.runtime.aws_ecs_cluster.course -target=module.runtime.aws_service_discovery_private_dns_namespace.course -target=module.s3vectors.aws_s3vectors_index.document -target=module.s3vectors.aws_s3vectors_vector_bucket.embeddings -target=module.s3vectors.aws_s3vectors_vector_bucket_policy.tls -target=module.workflow.aws_iam_role.producer -target=module.workflow.aws_iam_role_policy.producer -target=module.workflow.aws_sfn_state_machine.embedding_dispatch -target=terraform_data.phase12b_guard -out=<repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T185846Z-29671/tfdata terraform -chdir=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T185846Z-29671/tfdata terraform -chdir=<repo>/target/plans/20261125T185846Z-29671/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -no-color <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan
+DESTROY-PLAN-SHA256: dae69598b4e1abaa679def619033d9ef9762717ff1db31adab2e97656a1ca656
+DESTROY-PLAN-FILE: <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan
+DESTROY-PLAN-TEXT: <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan.txt sha256=ce18f377f9c53d749edb6e68ee803aa9d5fa61a0c8461986513b34e4fbb302cb (complete plan text; private, never share or commit it)
+STEP: destroy-policy
+DESTROY-ACTION: delete aws_acm_certificate.api[0]
+DESTROY-ACTION: delete aws_secretsmanager_secret.<redacted>[0]
+DESTROY-ACTION: delete aws_secretsmanager_secret.<redacted>[0]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_lifecycle_configuration.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_ownership_controls.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_policy.tls["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_public_access_block.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["reports"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["artifacts"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["curated"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["graph"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["logs"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["rag"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["raw"]
+DESTROY-ACTION: delete module.datalake.aws_s3_bucket_versioning.zone["reports"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+DESTROY-ACTION: delete module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+DESTROY-ACTION: delete module.emr.aws_efs_access_point.staging[0]
+DESTROY-ACTION: delete module.emr.aws_efs_backup_policy.staging[0]
+DESTROY-ACTION: delete module.emr.aws_efs_file_system.staging[0]
+DESTROY-ACTION: delete module.emr.aws_efs_file_system_policy.staging[0]
+DESTROY-ACTION: delete module.emr.aws_efs_mount_target.staging[0]
+DESTROY-ACTION: delete module.emr.aws_emr_security_configuration.encrypted[0]
+DESTROY-ACTION: delete module.emr.aws_iam_role_policy.node[0]
+DESTROY-ACTION: delete module.emr.aws_security_group.efs[0]
+DESTROY-ACTION: delete module.emr.aws_vpc_security_group_egress_rule.emr_to_efs[0]
+DESTROY-ACTION: delete module.emr.aws_vpc_security_group_ingress_rule.efs_from_emr[0]
+DESTROY-ACTION: delete module.identity.aws_iam_instance_profile.emr
+DESTROY-ACTION: delete module.identity.aws_iam_role.deployment
+DESTROY-ACTION: delete module.identity.aws_iam_role.emr_ec2
+DESTROY-ACTION: delete module.identity.aws_iam_role.emr_service
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["embedding-worker"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["graph-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["query-api"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.execution["semantic-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.neptune_loader
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["embedding-worker"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["graph-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["query-api"]
+DESTROY-ACTION: delete module.identity.aws_iam_role.task["semantic-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.emr_control[0]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.emr_data
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.emr_disk_encryption[0]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["embedding-worker"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["graph-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["query-api"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.execution["semantic-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.neptune_loader
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["embedding-worker"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["graph-service"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["query-api"]
+DESTROY-ACTION: delete module.identity.aws_iam_role_policy.task["semantic-service"]
+DESTROY-ACTION: delete module.identity.aws_kms_alias.data
+DESTROY-ACTION: delete module.identity.aws_kms_key.data
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue.dead_letter
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue.embedding
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_policy.tls["dead_letter"]
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_policy.tls["embedding"]
+DESTROY-ACTION: delete module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter
+DESTROY-ACTION: delete module.network.aws_eip.nat
+DESTROY-ACTION: delete module.network.aws_internet_gateway.course
+DESTROY-ACTION: delete module.network.aws_nat_gateway.course
+DESTROY-ACTION: delete module.network.aws_route.default["application"]
+DESTROY-ACTION: delete module.network.aws_route.default["public"]
+DESTROY-ACTION: delete module.network.aws_route_table.application
+DESTROY-ACTION: delete module.network.aws_route_table.data
+DESTROY-ACTION: delete module.network.aws_route_table.public
+DESTROY-ACTION: delete module.network.aws_route_table_association.application["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.application["1"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.data["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.data["1"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.public["0"]
+DESTROY-ACTION: delete module.network.aws_route_table_association.public["1"]
+DESTROY-ACTION: delete module.network.aws_security_group.emr_service_access
+DESTROY-ACTION: delete module.network.aws_security_group.role["alb"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["embedding-worker"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["emr"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["endpoints"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["graph-service"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["neptune"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["query-api"]
+DESTROY-ACTION: delete module.network.aws_security_group.role["semantic-service"]
+DESTROY-ACTION: delete module.network.aws_subnet.application["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.application["1"]
+DESTROY-ACTION: delete module.network.aws_subnet.data["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.data["1"]
+DESTROY-ACTION: delete module.network.aws_subnet.public["0"]
+DESTROY-ACTION: delete module.network.aws_subnet.public["1"]
+DESTROY-ACTION: delete module.network.aws_vpc.course
+DESTROY-ACTION: delete module.network.aws_vpc_endpoint.gateway["dynamodb"]
+DESTROY-ACTION: delete module.network.aws_vpc_endpoint.gateway["s3"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["alb_query"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["graph_neptune"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["query_graph"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.dependency["query_semantic"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_self
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["embedding-worker"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["emr"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["graph-service"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["query-api"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.https["semantic-service"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_egress_rule.neptune_s3
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["alb_query"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["graph_neptune"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["query_graph"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.dependency["query_semantic"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_self
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["embedding-worker"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["emr"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["graph-service"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["query-api"]
+DESTROY-ACTION: delete module.network.aws_vpc_security_group_ingress_rule.endpoint["semantic-service"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.neptune_audit
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["embedding-worker"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["graph-service"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["query-api"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_log_group.service["semantic-service"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.api_errors
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.latency["graph-service"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.latency["query-api"]
+DESTROY-ACTION: delete module.observability.aws_cloudwatch_metric_alarm.queue_age
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["embedding-worker"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["graph-service"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["query-api"]
+DESTROY-ACTION: delete module.runtime.aws_ecr_repository.service["semantic-service"]
+DESTROY-ACTION: delete module.runtime.aws_ecs_cluster.course
+DESTROY-ACTION: delete module.runtime.aws_service_discovery_private_dns_namespace.course
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["collaboration-community-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["collaboration-path-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["<redacted>"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_index.document["topic-institution-summary-v1"]
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+DESTROY-ACTION: delete module.s3vectors.aws_s3vectors_vector_bucket_policy.tls
+DESTROY-ACTION: delete module.workflow.aws_iam_role.producer
+DESTROY-ACTION: delete module.workflow.aws_iam_role_policy.producer
+DESTROY-ACTION: delete module.workflow.aws_sfn_state_machine.embedding_dispatch
+DESTROY-ACTION: delete terraform_data.phase12b_guard
+CONFIRM-BINDING: plan_sha256=dae69598b4e1abaa679def619033d9ef9762717ff1db31adab2e97656a1ca656 account_sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e region=us-east-2 environment=course actions=183
+CONFIRM-TOKEN: 4028d4fffcc48aa898e7a3dc3ac93d18e0e8ec26d6eb8532d146d4c9d5f8a442
+KEY-REVOCATION-REMINDER: the destroy deletes the Secrets Manager containers scholarchain-course/anthropic-api-key and scholarchain-course/voyage-api-key (force delete, no recovery window) but does NOT revoke the keys.
+KEY-REVOCATION-REMINDER: after the destroy, REVOKE BOTH keys in the provider consoles yourself: the Anthropic API key in the Anthropic Console and the Voyage AI API key in the Voyage AI dashboard, then check the key list in each console shows it gone. Record the time of each revocation in the evidence (never the key).
+STEP: confirm
+[2026-11-25T19:01:10Z] [20261125T185846Z-29671] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 4028d4fffcc48aa898e7a3dc3ac93d18e0e8ec26d6eb8532d146d4c9d5f8a442 --plan <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 4028d4fffcc48aa898e7a3dc3ac93d18e0e8ec26d6eb8532d146d4c9d5f8a442 --plan <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan; nothing was destroyed

@@ -1,0 +1,256 @@
+STEP: start
+[2026-11-25T16:48:49Z] [20261125T164849Z-66547] INFO script=plan.sh mode=execute run_id=20261125T164849Z-66547 repo_root=<repo>
+STEP: inputs
+STEP: output-paths
+[2026-11-25T16:48:49Z] [20261125T164849Z-66547] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261125T164849Z-66547
+STEP: terraform-version
+[2026-11-25T16:48:49Z] [20261125T164849Z-66547] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-25T16:48:49Z] [20261125T164849Z-66547] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+[2026-11-25T16:48:49Z] [20261125T164849Z-66547] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1009, "sha256": "03e3ebe7e8739c164b9a4a10920410e7f8c47a96063e026388ddab287c2fcb71"}
+[2026-11-25T16:48:49Z] [20261125T164849Z-66547] INFO env=course region=us-east-2 source_commit=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 scripts_commit=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 clean=true plan=<repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+STEP: account-identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T164849Z-66547/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-25T16:48:50Z] [20261125T164849Z-66547] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: terraform-init
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T164849Z-66547/tfdata terraform -chdir=<repo>/target/plans/20261125T164849Z-66547/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase14b.a_grace_period_above_3600_seconds_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_negative_grace_period_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_grace_period_is_rejected in modules/runtime
+  | - test.tests.phase14b.the_guard_floor_is_healthy_threshold_times_interval_inclusive_90_seconds_by_default in modules/runtime
+  | - test.tests.phase14b.a_grace_period_of_89_seconds_is_refused_by_the_guard in modules/runtime
+  | - test.tests.phase14b.zero_grace_is_refused_by_the_guard_while_query_api_is_load_balanced in modules/runtime
+  | - test.tests.phase14b.zero_grace_without_a_load_balancer_is_not_guarded_and_stays_absent in modules/runtime
+  | - test.tests.phase14b.the_guard_follows_the_timing_overrides_healthy_5_times_interval_60_needs_300_seconds in modules/runtime
+  | - test.tests.phase14b.the_guard_accepts_exactly_healthy_5_times_interval_60_equals_300_seconds in modules/runtime
+  | - test.tests.phase14b.the_target_group_health_check_is_explicit_30_3_3_with_readyz_and_200 in modules/runtime
+  | - test.tests.phase14b.the_target_group_timing_is_explicit_even_without_a_certificate in modules/runtime
+  | - test.tests.phase14b.the_target_group_timing_can_be_overridden in modules/runtime
+  | - test.tests.phase14b.the_lowest_allowed_timing_5_2_2_2_is_accepted in modules/runtime
+  | - test.tests.phase14b.the_highest_allowed_timing_300_120_10_10_is_accepted in modules/runtime
+  | - test.tests.phase14b.a_timeout_equal_to_the_interval_is_refused_by_the_target_group in modules/runtime
+  | - test.tests.phase14b.an_interval_below_5_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_interval_above_300_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_interval_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_above_120_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_healthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_default_has_container_insights_enabled_and_the_worker_backlog_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_container_insights_false_disables_the_cluster_setting_and_removes_the_worker_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_without_an_image_revision_has_no_worker_policy_even_with_insights_on in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_disabled_runtime_has_no_policies_and_still_records_the_setting in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_null_container_insights_falls_back_to_the_true_default in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_are_not_injected_while_the_composition_is_unverified in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_join_the_service_secrets_in_the_aws_mode_and_stay_out_of_the_environment in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_rejects_an_unknown_provider in modules/runtime
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+STEP: terraform-plan
+CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T164849Z-66547/tfdata terraform -chdir=<repo>/target/plans/20261125T164849Z-66547/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform plan -input=false -lock-timeout=60s -var-file=<repo>/target/plans/20261125T164849Z-66547/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -out=<repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+[2026-11-25T16:48:54Z] [20261125T164849Z-66547] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1009, "sha256": "03e3ebe7e8739c164b9a4a10920410e7f8c47a96063e026388ddab287c2fcb71"}
+STEP: terraform-show
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T164849Z-66547/tfdata terraform -chdir=<repo>/target/plans/20261125T164849Z-66547/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+STEP: terraform-show-text
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T164849Z-66547/tfdata terraform -chdir=<repo>/target/plans/20261125T164849Z-66547/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -no-color <repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+STEP: plan-receipt
+saved plan target ok: provider region us-east-2, account hash matches, environment course, project scholarchain, image_revision none
+PLAN-ACTIONS-BEGIN count=171 (address and action only; no attribute or variable values)
+PLAN-ACTION: create aws_acm_certificate.api[0]
+PLAN-ACTION: create aws_secretsmanager_secret.anthropic[0]
+PLAN-ACTION: create aws_secretsmanager_secret.voyage[0]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket.zone["reports"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_lifecycle_configuration.zone["reports"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_ownership_controls.zone["reports"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_policy.tls["reports"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_public_access_block.zone["reports"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone["reports"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["artifacts"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["curated"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["graph"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["logs"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["rag"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["raw"]
+PLAN-ACTION: create module.datalake.aws_s3_bucket_versioning.zone["reports"]
+PLAN-ACTION: create module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+PLAN-ACTION: create module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+PLAN-ACTION: create module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+PLAN-ACTION: create module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+PLAN-ACTION: create module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+PLAN-ACTION: create module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+PLAN-ACTION: create module.identity.aws_iam_instance_profile.emr
+PLAN-ACTION: create module.identity.aws_iam_role.deployment
+PLAN-ACTION: create module.identity.aws_iam_role.emr_ec2
+PLAN-ACTION: create module.identity.aws_iam_role.emr_service
+PLAN-ACTION: create module.identity.aws_iam_role.execution["embedding-worker"]
+PLAN-ACTION: create module.identity.aws_iam_role.execution["graph-service"]
+PLAN-ACTION: create module.identity.aws_iam_role.execution["query-api"]
+PLAN-ACTION: create module.identity.aws_iam_role.execution["semantic-service"]
+PLAN-ACTION: create module.identity.aws_iam_role.neptune_loader
+PLAN-ACTION: create module.identity.aws_iam_role.task["embedding-worker"]
+PLAN-ACTION: create module.identity.aws_iam_role.task["graph-service"]
+PLAN-ACTION: create module.identity.aws_iam_role.task["query-api"]
+PLAN-ACTION: create module.identity.aws_iam_role.task["semantic-service"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.emr_data
+PLAN-ACTION: create module.identity.aws_iam_role_policy.execution["embedding-worker"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.execution["graph-service"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.execution["query-api"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.execution["semantic-service"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.neptune_loader
+PLAN-ACTION: create module.identity.aws_iam_role_policy.task["embedding-worker"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.task["graph-service"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.task["query-api"]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.task["semantic-service"]
+PLAN-ACTION: create module.identity.aws_kms_alias.data
+PLAN-ACTION: create module.identity.aws_kms_key.data
+PLAN-ACTION: create module.messaging.aws_sqs_queue.dead_letter
+PLAN-ACTION: create module.messaging.aws_sqs_queue.embedding
+PLAN-ACTION: create module.messaging.aws_sqs_queue_policy.tls["dead_letter"]
+PLAN-ACTION: create module.messaging.aws_sqs_queue_policy.tls["embedding"]
+PLAN-ACTION: create module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter
+PLAN-ACTION: create module.network.aws_eip.nat
+PLAN-ACTION: create module.network.aws_internet_gateway.course
+PLAN-ACTION: create module.network.aws_nat_gateway.course
+PLAN-ACTION: create module.network.aws_route.default["application"]
+PLAN-ACTION: create module.network.aws_route.default["public"]
+PLAN-ACTION: create module.network.aws_route_table.application
+PLAN-ACTION: create module.network.aws_route_table.data
+PLAN-ACTION: create module.network.aws_route_table.public
+PLAN-ACTION: create module.network.aws_route_table_association.application["0"]
+PLAN-ACTION: create module.network.aws_route_table_association.application["1"]
+PLAN-ACTION: create module.network.aws_route_table_association.data["0"]
+PLAN-ACTION: create module.network.aws_route_table_association.data["1"]
+PLAN-ACTION: create module.network.aws_route_table_association.public["0"]
+PLAN-ACTION: create module.network.aws_route_table_association.public["1"]
+PLAN-ACTION: create module.network.aws_security_group.emr_service_access
+PLAN-ACTION: create module.network.aws_security_group.role["alb"]
+PLAN-ACTION: create module.network.aws_security_group.role["embedding-worker"]
+PLAN-ACTION: create module.network.aws_security_group.role["emr"]
+PLAN-ACTION: create module.network.aws_security_group.role["endpoints"]
+PLAN-ACTION: create module.network.aws_security_group.role["graph-service"]
+PLAN-ACTION: create module.network.aws_security_group.role["neptune"]
+PLAN-ACTION: create module.network.aws_security_group.role["query-api"]
+PLAN-ACTION: create module.network.aws_security_group.role["semantic-service"]
+PLAN-ACTION: create module.network.aws_subnet.application["0"]
+PLAN-ACTION: create module.network.aws_subnet.application["1"]
+PLAN-ACTION: create module.network.aws_subnet.data["0"]
+PLAN-ACTION: create module.network.aws_subnet.data["1"]
+PLAN-ACTION: create module.network.aws_subnet.public["0"]
+PLAN-ACTION: create module.network.aws_subnet.public["1"]
+PLAN-ACTION: create module.network.aws_vpc.course
+PLAN-ACTION: create module.network.aws_vpc_endpoint.gateway["dynamodb"]
+PLAN-ACTION: create module.network.aws_vpc_endpoint.gateway["s3"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.dependency["alb_query"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.dependency["graph_neptune"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.dependency["query_graph"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.dependency["query_semantic"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.emr_self
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.https["embedding-worker"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.https["emr"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.https["graph-service"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.https["query-api"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.https["semantic-service"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_egress_rule.neptune_s3
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.dependency["alb_query"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.dependency["graph_neptune"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.dependency["query_graph"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.dependency["query_semantic"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.emr_self
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.endpoint["embedding-worker"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.endpoint["emr"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.endpoint["graph-service"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.endpoint["query-api"]
+PLAN-ACTION: create module.network.aws_vpc_security_group_ingress_rule.endpoint["semantic-service"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_log_group.neptune_audit
+PLAN-ACTION: create module.observability.aws_cloudwatch_log_group.service["embedding-worker"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_log_group.service["graph-service"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_log_group.service["query-api"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_log_group.service["semantic-service"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_metric_alarm.api_errors
+PLAN-ACTION: create module.observability.aws_cloudwatch_metric_alarm.latency["graph-service"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_metric_alarm.latency["query-api"]
+PLAN-ACTION: create module.observability.aws_cloudwatch_metric_alarm.queue_age
+PLAN-ACTION: create module.runtime.aws_ecr_repository.service["embedding-worker"]
+PLAN-ACTION: create module.runtime.aws_ecr_repository.service["graph-service"]
+PLAN-ACTION: create module.runtime.aws_ecr_repository.service["query-api"]
+PLAN-ACTION: create module.runtime.aws_ecr_repository.service["semantic-service"]
+PLAN-ACTION: create module.runtime.aws_ecs_cluster.course
+PLAN-ACTION: create module.runtime.aws_service_discovery_private_dns_namespace.course
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_index.document["collaboration-community-v1"]
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_index.document["collaboration-path-v1"]
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_index.document["researcher-profile-v1"]
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_index.document["topic-institution-summary-v1"]
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+PLAN-ACTION: create module.s3vectors.aws_s3vectors_vector_bucket_policy.tls
+PLAN-ACTION: create module.workflow.aws_iam_role.producer
+PLAN-ACTION: create module.workflow.aws_iam_role_policy.producer
+PLAN-ACTION: create module.workflow.aws_sfn_state_machine.embedding_dispatch
+PLAN-ACTION: create terraform_data.phase12b_guard
+PLAN-ACTIONS-END count=171
+summary: add=171 change=0 destroy=0 replace=0 iam_changes=25 stateful_changes=71
+plan_sha256=b1b73a15d9efd48ea9b1d9d6863eac29468aa00d46c900b0443bc3cedc2cb40c
+account_binding=matched
+[2026-11-25T16:48:57Z] [20261125T164849Z-66547] INFO receipt: <repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.receipt.json
+PLAN-FILE: <repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+PLAN-RECEIPT: <repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.receipt.json sha256=22ad91e609c0d91e4c40af8574430ddb242ed8a687a4a2074ccb31b270ea43c1
+PLAN-TEXT: <repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.txt sha256=37397cf959b4f27864048bc4b769f87d7249f8e6a72205a208f4bee1681bc4cc (the COMPLETE plan text for the exact saved plan; private, never share or commit it)
+APPROVAL-RECORD-CANDIDATE (review, then the human writes the Phase 14 record; plan.sh never writes it):
+APPROVED_PLAN_SHA256=b1b73a15d9efd48ea9b1d9d6863eac29468aa00d46c900b0443bc3cedc2cb40c
+APPROVED_RECEIPT_SHA256=22ad91e609c0d91e4c40af8574430ddb242ed8a687a4a2074ccb31b270ea43c1
+APPROVED_COMMIT=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+APPROVED_ACCOUNT_SHA256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+APPROVED_REGION=us-east-2
+APPROVED_ENVIRONMENT=course
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+APPROVED_STAGE=<one of base-apply | runtime-apply (a push approval record names no plan: see scripts/README.md)>
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261125T164849Z-66547/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.receipt.json plan_sha256=b1b73a15d9efd48ea9b1d9d6863eac29468aa00d46c900b0443bc3cedc2cb40c

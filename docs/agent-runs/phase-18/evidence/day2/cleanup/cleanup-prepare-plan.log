@@ -1,0 +1,160 @@
+STEP: start
+[2026-11-25T18:35:21Z] [20261125T183521Z-19861] INFO script=cleanup.sh mode=execute run_id=20261125T183521Z-19861 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-25T18:35:21Z] [20261125T183521Z-19861] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+PRESERVE: terraform-state
+PRESERVE-RULES types: aws_s3_object
+PRESERVE-RULES addresses: module.foundation.
+TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.datalake.,module.s3vectors.,module.identity.aws_kms_key.data,module.identity.aws_kms_alias.data,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.deployment,module.identity.aws_iam_role.neptune_tunnel_task,module.identity.aws_iam_role.emr_ec2,module.identity.aws_iam_role.emr_service,module.identity.aws_iam_role.neptune_loader,module.identity.aws_iam_role_policy.,module.identity.aws_iam_instance_profile.emr,module.observability.aws_cloudwatch_metric_alarm.,module.observability.aws_cloudwatch_dashboard.,module.observability.aws_cloudwatch_log_group.,aws_acm_certificate.api,aws_acm_certificate_validation.api,aws_secretsmanager_secret.anthropic,aws_secretsmanager_secret.voyage,terraform_data.phase12b_guard
+PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true,aws_lb:enable_deletion_protection=true,aws_dynamodb_table:deletion_protection_enabled=true,aws_ecr_repository:force_delete=false,aws_s3_bucket:force_destroy=false,aws_s3vectors_vector_bucket:force_destroy=false
+STEP: output-paths
+[2026-11-25T18:35:21Z] [20261125T183521Z-19861] INFO plan outputs go to the fresh target/plans/20261125T183521Z-19861 (ignored); evidence goes to target/cleanup-evidence/20261125T183521Z-19861 (absent beforehand)
+STEP: account-identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-25T18:35:22Z] [20261125T183521Z-19861] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-25T18:35:22Z] [20261125T183521Z-19861] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+[2026-11-25T18:35:22Z] [20261125T183521Z-19861] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1196, "sha256": "99c073ee91b40752a520fa432b8d6ccda172b2ce72799c109d300a8a5d66ee87"}
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T183521Z-19861/tfdata terraform -chdir=<repo>/target/plans/20261125T183521Z-19861/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase14b.a_timeout_equal_to_the_interval_is_refused_by_the_target_group in modules/runtime
+  | - test.tests.phase14b.an_interval_below_5_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_interval_above_300_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_interval_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_above_120_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_healthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase15_elasticity_dashboard.base_has_23_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.alb_only_has_32_metrics_and_the_plan_panels in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.neptune_only_has_28_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.emr_only_has_29_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.alb_and_neptune_have_37_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.alb_and_emr_have_38_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.neptune_and_emr_have_34_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.all_three_sources_have_43_metrics_at_most_50 in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.dashboard_off_creates_no_dashboard in modules/observability
+  | - test.tests.phase15_p41_runtime.module_default_has_no_request_policy_no_rate_limit_env_and_three_cpu_policies in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_https_creates_the_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_image_revision_has_no_policy_and_no_alb in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_the_runtime_disabled_has_no_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_https_is_refused_by_the_precondition in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_without_https_and_without_target_still_plans in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_query_api_only in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_absent_outside_the_aws_mode in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_target in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_on_the_acm_path_creates_exactly_one_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_burst in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_burst_above_1000000 in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_rate_above_100000 in modules/runtime
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+STEP: protection-check
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T183521Z-19861/tfdata terraform -chdir=<repo>/target/plans/20261125T183521Z-19861/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["artifacts"] force_destroy=false
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["curated"] force_destroy=false
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["graph"] force_destroy=false
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["logs"] force_destroy=false
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["rag"] force_destroy=false
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["raw"] force_destroy=false
+PROTECTION-ACTIVE: module.datalake.aws_s3_bucket.zone["reports"] force_destroy=false
+PROTECTION-ACTIVE: module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"] deletion_protection_enabled=true
+PROTECTION-ACTIVE: module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"] deletion_protection_enabled=true
+PROTECTION-ACTIVE: module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"] deletion_protection_enabled=true
+PROTECTION-ACTIVE: module.dynamodb.aws_dynamodb_table.table["QuerySession"] deletion_protection_enabled=true
+PROTECTION-ACTIVE: module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"] deletion_protection_enabled=true
+PROTECTION-ACTIVE: module.dynamodb.aws_dynamodb_table.table["RunLedger"] deletion_protection_enabled=true
+PROTECTION-ACTIVE: module.runtime.aws_ecr_repository.service["embedding-worker"] force_delete=false
+PROTECTION-ACTIVE: module.runtime.aws_ecr_repository.service["graph-service"] force_delete=false
+PROTECTION-ACTIVE: module.runtime.aws_ecr_repository.service["query-api"] force_delete=false
+PROTECTION-ACTIVE: module.runtime.aws_ecr_repository.service["semantic-service"] force_delete=false
+PROTECTION-ACTIVE: module.s3vectors.aws_s3vectors_vector_bucket.embeddings force_destroy=false
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["artifacts"]
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["curated"]
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["graph"]
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["logs"]
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["rag"]
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["raw"]
+PREPARE-TARGET: module.datalake.aws_s3_bucket.zone["reports"]
+PREPARE-TARGET: module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+PREPARE-TARGET: module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+PREPARE-TARGET: module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+PREPARE-TARGET: module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+PREPARE-TARGET: module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+PREPARE-TARGET: module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+PREPARE-TARGET: module.runtime.aws_ecr_repository.service["embedding-worker"]
+PREPARE-TARGET: module.runtime.aws_ecr_repository.service["graph-service"]
+PREPARE-TARGET: module.runtime.aws_ecr_repository.service["query-api"]
+PREPARE-TARGET: module.runtime.aws_ecr_repository.service["semantic-service"]
+PREPARE-TARGET: module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+STEP: prepare-plan
+CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T183521Z-19861/tfdata terraform -chdir=<repo>/target/plans/20261125T183521Z-19861/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform plan -input=false -lock-timeout=60s -var-file=<repo>/target/plans/20261125T183521Z-19861/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -var=cleanup_mode=true -target=module.datalake.aws_s3_bucket.zone\[\"artifacts\"\] -target=module.datalake.aws_s3_bucket.zone\[\"curated\"\] -target=module.datalake.aws_s3_bucket.zone\[\"graph\"\] -target=module.datalake.aws_s3_bucket.zone\[\"logs\"\] -target=module.datalake.aws_s3_bucket.zone\[\"rag\"\] -target=module.datalake.aws_s3_bucket.zone\[\"raw\"\] -target=module.datalake.aws_s3_bucket.zone\[\"reports\"\] -target=module.dynamodb.aws_dynamodb_table.table\[\"ArtifactRegistry\"\] -target=module.dynamodb.aws_dynamodb_table.table\[\"EntityLinkCache\"\] -target=module.dynamodb.aws_dynamodb_table.table\[\"EvidenceBundle\"\] -target=module.dynamodb.aws_dynamodb_table.table\[\"QuerySession\"\] -target=module.dynamodb.aws_dynamodb_table.table\[\"ResearcherMetricCache\"\] -target=module.dynamodb.aws_dynamodb_table.table\[\"RunLedger\"\] -target=module.runtime.aws_ecr_repository.service\[\"embedding-worker\"\] -target=module.runtime.aws_ecr_repository.service\[\"graph-service\"\] -target=module.runtime.aws_ecr_repository.service\[\"query-api\"\] -target=module.runtime.aws_ecr_repository.service\[\"semantic-service\"\] -target=module.s3vectors.aws_s3vectors_vector_bucket.embeddings -out=<repo>/target/plans/20261125T183521Z-19861/prepare-course.tfplan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T183521Z-19861/tfdata terraform -chdir=<repo>/target/plans/20261125T183521Z-19861/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261125T183521Z-19861/prepare-course.tfplan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T183521Z-19861/tfdata terraform -chdir=<repo>/target/plans/20261125T183521Z-19861/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -no-color <repo>/target/plans/20261125T183521Z-19861/prepare-course.tfplan
+STEP: prepare-policy
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["artifacts"]
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["curated"]
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["graph"]
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["logs"]
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["rag"]
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["raw"]
+PREPARE-CHANGE: update module.datalake.aws_s3_bucket.zone["reports"]
+PREPARE-CHANGE: update module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+PREPARE-CHANGE: update module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+PREPARE-CHANGE: update module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+PREPARE-CHANGE: update module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+PREPARE-CHANGE: update module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+PREPARE-CHANGE: update module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+PREPARE-CHANGE: update module.runtime.aws_ecr_repository.service["embedding-worker"]
+PREPARE-CHANGE: update module.runtime.aws_ecr_repository.service["graph-service"]
+PREPARE-CHANGE: update module.runtime.aws_ecr_repository.service["query-api"]
+PREPARE-CHANGE: update module.runtime.aws_ecr_repository.service["semantic-service"]
+PREPARE-CHANGE: update module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+STEP: plan-receipt
+saved plan target ok: provider region us-east-2, account hash matches, environment course, project scholarchain, image_revision none
+PLAN-ACTIONS-BEGIN count=18 (address and action only; no attribute or variable values)
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["artifacts"]
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["curated"]
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["graph"]
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["logs"]
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["rag"]
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["raw"]
+PLAN-ACTION: update module.datalake.aws_s3_bucket.zone["reports"]
+PLAN-ACTION: update module.dynamodb.aws_dynamodb_table.table["ArtifactRegistry"]
+PLAN-ACTION: update module.dynamodb.aws_dynamodb_table.table["EntityLinkCache"]
+PLAN-ACTION: update module.dynamodb.aws_dynamodb_table.table["EvidenceBundle"]
+PLAN-ACTION: update module.dynamodb.aws_dynamodb_table.table["QuerySession"]
+PLAN-ACTION: update module.dynamodb.aws_dynamodb_table.table["ResearcherMetricCache"]
+PLAN-ACTION: update module.dynamodb.aws_dynamodb_table.table["RunLedger"]
+PLAN-ACTION: update module.runtime.aws_ecr_repository.service["embedding-worker"]
+PLAN-ACTION: update module.runtime.aws_ecr_repository.service["graph-service"]
+PLAN-ACTION: update module.runtime.aws_ecr_repository.service["query-api"]
+PLAN-ACTION: update module.runtime.aws_ecr_repository.service["semantic-service"]
+PLAN-ACTION: update module.s3vectors.aws_s3vectors_vector_bucket.embeddings
+PLAN-ACTIONS-END count=18
+summary: add=0 change=18 destroy=0 replace=0 iam_changes=0 stateful_changes=14
+plan_sha256=dfce69317e96c593424cdec6233ef3c384eb5752290ca9507c6675dd7e338255
+account_binding=matched
+PLAN-FILE: <repo>/target/plans/20261125T183521Z-19861/prepare-course.tfplan
+PLAN-RECEIPT: <repo>/target/plans/20261125T183521Z-19861/prepare-course.tfplan.receipt.json sha256=891c357a7c26a93e2722a142135fad7daa2d4606bfb4c25f4e5b2715fd05db73
+PLAN-TEXT: <repo>/target/plans/20261125T183521Z-19861/prepare-course.tfplan.txt sha256=fefc879463a5117d25e938684c26ad3404adc90c7818d9bc327d93eef10f2438 (complete plan text; private, never share or commit it)
+APPROVAL-RECORD-CANDIDATE (review, then the human writes a NEW record; cleanup.sh never writes it):
+APPROVED_PLAN_SHA256=dfce69317e96c593424cdec6233ef3c384eb5752290ca9507c6675dd7e338255
+APPROVED_RECEIPT_SHA256=891c357a7c26a93e2722a142135fad7daa2d4606bfb4c25f4e5b2715fd05db73
+APPROVED_COMMIT=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+APPROVED_ACCOUNT_SHA256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+APPROVED_REGION=us-east-2
+APPROVED_ENVIRONMENT=course
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+APPROVED_STAGE=cleanup-prepare
+RESULT: PASS preparation plan recorded, NOT applied; apply it with scripts/deploy.sh --stage cleanup-prepare after the approval record, then re-run the cleanup listing

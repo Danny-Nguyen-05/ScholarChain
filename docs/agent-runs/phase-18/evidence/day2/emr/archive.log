@@ -1,0 +1,15 @@
+01 <repo>/target/phase18/day2/evidence/stagea-base-plan.log original-sha256=22ad91e609c0d91e4c40af8574430ddb242ed8a687a4a2074ccb31b270ea43c1
+02 <repo>/target/phase18/day2/evidence/stagea-upload-plan.log original-sha256=4c2349603a9cb5fca3ec6a964c47c4a6453e4a8e26344a6f2c1b22618749a558
+03 <repo>/target/phase18/day2/evidence/stagea-emr-plan.log original-sha256=71c98a75677a62cfc08b1842b80770fc40464cf5abc8f2a9b0b613f5562c625e
+STEP: start
+[2026-11-25T18:21:55Z] [20261125T182155Z-14498] INFO script=archive-evidence.sh mode=local-archive run_id=20261125T182155Z-14498 repo_root=<repo>
+STEP: archive-inputs
+STEP: archive-scan
+ARCHIVE-SCAN: copy=30
+STEP: archive-write
+ARCHIVE-WRITTEN: phase-18/evidence/day2-v1 copied=30 indexed-external=0 skipped-metadata=0
+ARCHIVE-INDEX: <repo>/target/phase18/archive/phase-18/evidence/day2-v1/INDEX.json
+STEP: archive-verify
+ARCHIVE-VERIFIED: 30 copied file(s) match their recorded sha256, no metadata member, no account id, secret or credential shape
+STEP: archive-complete
+RESULT: PASS evidence directory <repo>/target/phase18/archive/phase-18/evidence/day2-v1 written and verified

@@ -1,0 +1,16 @@
+10f85e67bdd59836a1ae4d3f61d4b8a0a0497027bd529a2c4e41a04c44c6ec49  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+Plan: 0 to add, 0 to change, 13 to destroy.
+delete aws_iam_role.operator["cleanup"]
+delete aws_iam_role.operator["loader"]
+delete aws_iam_role.operator["reader"]
+delete aws_iam_role.operator_pipeline[0]
+delete aws_iam_role_policy.operator["cleanup--data"]
+delete aws_iam_role_policy.operator["loader--data"]
+delete aws_iam_role_policy.operator["loader--tunnel"]
+delete aws_iam_role_policy.operator["reader--data"]
+delete aws_iam_role_policy.operator_login["cleanup"]
+delete aws_iam_role_policy.operator_login["loader"]
+delete aws_iam_role_policy.operator_login["reader"]
+delete aws_iam_role_policy.operator_pipeline[0]
+delete aws_iam_role_policy.operator_pipeline_login[0]
+Apply complete! Resources: 0 added, 0 changed, 13 destroyed.

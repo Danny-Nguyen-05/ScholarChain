@@ -1,0 +1,124 @@
+STEP: start
+[2026-11-26T02:45:43Z] [20261126T024543Z-58345] INFO script=cleanup.sh mode=execute run_id=20261126T024543Z-58345 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-26T02:45:43Z] [20261126T024543Z-58345] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+PRESERVE: terraform-state
+PRESERVE-RULES types: aws_s3_object
+PRESERVE-RULES addresses: module.foundation.
+TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.datalake.,module.s3vectors.,module.identity.aws_kms_key.data,module.identity.aws_kms_alias.data,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.deployment,module.identity.aws_iam_role.neptune_tunnel_task,module.identity.aws_iam_role.emr_ec2,module.identity.aws_iam_role.emr_service,module.identity.aws_iam_role.neptune_loader,module.identity.aws_iam_role_policy.,module.identity.aws_iam_instance_profile.emr,module.observability.aws_cloudwatch_metric_alarm.,module.observability.aws_cloudwatch_dashboard.,module.observability.aws_cloudwatch_log_group.,aws_acm_certificate.api,aws_acm_certificate_validation.api,aws_secretsmanager_secret.anthropic,aws_secretsmanager_secret.voyage,terraform_data.phase12b_guard
+PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true,aws_lb:enable_deletion_protection=true,aws_dynamodb_table:deletion_protection_enabled=true,aws_ecr_repository:force_delete=false,aws_s3_bucket:force_destroy=false,aws_s3vectors_vector_bucket:force_destroy=false
+STEP: output-paths
+[2026-11-26T02:45:44Z] [20261126T024543Z-58345] INFO plan outputs go to the fresh target/plans/20261126T024543Z-58345 (ignored); evidence goes to target/cleanup-evidence/20261126T024543Z-58345 (absent beforehand)
+STEP: account-identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-26T02:45:44Z] [20261126T024543Z-58345] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-26T02:45:45Z] [20261126T024543Z-58345] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+[2026-11-26T02:45:45Z] [20261126T024543Z-58345] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1399, "sha256": "6ef6b92b7b2159e4fc5d5f0877d55df83fb68044c899431020b7fad13b3dc664"}
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024543Z-58345/tfdata terraform -chdir=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase12a.optional_bootstrap_preserves_state in modules/foundation/bootstrap
+  | - test.tests.phase14a.the_runtime_module_keeps_mode_unconfigured_and_adds_no_aws_variable_without_the_acknowledgment in modules/runtime
+  | - test.tests.phase15_elasticity_dashboard.base_has_23_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.alb_only_has_32_metrics_and_the_plan_panels in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.neptune_only_has_28_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.emr_only_has_29_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.alb_and_neptune_have_37_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.alb_and_emr_have_38_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.neptune_and_emr_have_34_metrics in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.all_three_sources_have_43_metrics_at_most_50 in modules/observability
+  | - test.tests.phase15_elasticity_dashboard.dashboard_off_creates_no_dashboard in modules/observability
+  | - test.tests.phase15_p41_runtime.module_default_has_no_request_policy_no_rate_limit_env_and_three_cpu_policies in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_https_creates_the_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_image_revision_has_no_policy_and_no_alb in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_the_runtime_disabled_has_no_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_https_is_refused_by_the_precondition in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_without_https_and_without_target_still_plans in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_query_api_only in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_absent_outside_the_aws_mode in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_target in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_on_the_acm_path_creates_exactly_one_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_burst in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_burst_above_1000000 in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_rate_above_100000 in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_default_has_container_insights_enabled_and_the_worker_backlog_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_container_insights_false_disables_the_cluster_setting_and_removes_the_worker_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_without_an_image_revision_has_no_worker_policy_even_with_insights_on in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_disabled_runtime_has_no_policies_and_still_records_the_setting in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_null_container_insights_falls_back_to_the_true_default in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_are_not_injected_while_the_composition_is_unverified in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_join_the_service_secrets_in_the_aws_mode_and_stay_out_of_the_environment in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_rejects_an_unknown_provider in modules/runtime
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+STEP: before-inventory
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-bootstrap state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:45:47Z] [20261126T024543Z-58345] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-execution state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:45:47Z] [20261126T024543Z-58345] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/deployer state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:45:47Z] [20261126T024543Z-58345] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark-isolated state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:45:48Z] [20261126T024543Z-58345] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:45:49Z] [20261126T024543Z-58345] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024543Z-58345/tfdata terraform -chdir=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform state list
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json
+[2026-11-26T02:45:50Z] [20261126T024543Z-58345] INFO before inventory: 48 entries
+STEP: classify-state
+NOT-TARGETED terraform_data.configuration_guard (no teardown rule)
+NOT-TARGETED terraform_data.provider_guard (no teardown rule)
+TEARDOWN module.network.aws_eip.nat
+TEARDOWN-TARGET: module.network.aws_eip.nat
+STEP: protection-check
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024543Z-58345/tfdata terraform -chdir=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json
+no teardown resource has active deletion protection
+STEP: destroy-plan
+CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024543Z-58345/tfdata terraform -chdir=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform plan -destroy -input=false -lock-timeout=60s -var-file=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -var=cleanup_mode=true -target=module.network.aws_eip.nat -out=<repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024543Z-58345/tfdata terraform -chdir=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024543Z-58345/tfdata terraform -chdir=<repo>/target/plans/20261126T024543Z-58345/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -no-color <repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan
+DESTROY-PLAN-SHA256: e411950d5d28f4ad4195d33bce8cc39c094f29d75257a64d5f0870cd4fb8e6c7
+DESTROY-PLAN-FILE: <repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan
+DESTROY-PLAN-TEXT: <repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan.txt sha256=1d6aa5e13b4e2514281ab3304bf733a66c396a1c9a5a2605489837218f160899 (complete plan text; private, never share or commit it)
+STEP: destroy-policy
+DESTROY-ACTION: delete module.network.aws_eip.nat
+CONFIRM-BINDING: plan_sha256=e411950d5d28f4ad4195d33bce8cc39c094f29d75257a64d5f0870cd4fb8e6c7 account_sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e region=us-east-2 environment=course actions=1
+CONFIRM-TOKEN: 65ac40e28a6581a91eb29d15eb96e4a2e99dbe8148b3c12a4dc7ad3355b0055f
+KEY-REVOCATION-REMINDER: the destroy deletes the Secrets Manager containers scholarchain-course/anthropic-api-key and scholarchain-course/voyage-api-key (force delete, no recovery window) but does NOT revoke the keys.
+KEY-REVOCATION-REMINDER: after the destroy, REVOKE BOTH keys in the provider consoles yourself: the Anthropic API key in the Anthropic Console and the Voyage AI API key in the Voyage AI dashboard, then check the key list in each console shows it gone. Record the time of each revocation in the evidence (never the key).
+STEP: confirm
+[2026-11-26T02:45:57Z] [20261126T024543Z-58345] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 65ac40e28a6581a91eb29d15eb96e4a2e99dbe8148b3c12a4dc7ad3355b0055f --plan <repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 65ac40e28a6581a91eb29d15eb96e4a2e99dbe8148b3c12a4dc7ad3355b0055f --plan <repo>/target/plans/20261126T024543Z-58345/destroy-course.tfplan; nothing was destroyed

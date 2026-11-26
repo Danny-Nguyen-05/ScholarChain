@@ -1,0 +1,131 @@
+STEP: start
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO script=deploy.sh mode=execute run_id=20261125T172606Z-90273 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO clean tree at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.1 h old, headroom 3.44 USD; spend to date AWS 17.88 + Anthropic 0.08 + Voyage 0.00 = 17.96 USD
+STEP: plan-checksum
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: state-binding
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 1182 sha256 7b459d54bebf1e727224a6207c1d3662abd09e641d640c7f607505037d2fc606
+STEP: plan-inspect
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-25T17:26:07Z] [20261125T172606Z-90273] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+source tree ok: sha256 bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172606Z-90273/tfdata terraform -chdir=<repo>/target/plans/20261125T172606Z-90273/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase14b.an_interval_below_5_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_interval_above_300_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_interval_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_above_120_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_healthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14a.the_runtime_module_keeps_mode_unconfigured_and_adds_no_aws_variable_without_the_acknowledgment in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_default_has_container_insights_enabled_and_the_worker_backlog_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_container_insights_false_disables_the_cluster_setting_and_removes_the_worker_policy in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_without_an_image_revision_has_no_worker_policy_even_with_insights_on in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_disabled_runtime_has_no_policies_and_still_records_the_setting in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_null_container_insights_falls_back_to_the_true_default in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_are_not_injected_while_the_composition_is_unverified in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_provider_key_bindings_join_the_service_secrets_in_the_aws_mode_and_stay_out_of_the_environment in modules/runtime
+  | - test.tests.phase14b_cost_runtime.module_rejects_an_unknown_provider in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_default_has_no_request_policy_no_rate_limit_env_and_three_cpu_policies in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_https_creates_the_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_image_revision_has_no_policy_and_no_alb in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_the_runtime_disabled_has_no_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_https_is_refused_by_the_precondition in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_without_https_and_without_target_still_plans in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_query_api_only in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_absent_outside_the_aws_mode in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_target in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_on_the_acm_path_creates_exactly_one_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_burst in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_burst_above_1000000 in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_rate_above_100000 in modules/runtime
+  | - test.tests.phase12a.optional_bootstrap_preserves_state in modules/foundation/bootstrap
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172606Z-90273/tfdata terraform -chdir=<repo>/target/plans/20261125T172606Z-90273/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261125T172606Z-90273/verified/copy-course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan-90273-1-1-26932
+saved plan target ok: provider region us-east-2, account hash matches, environment course, project scholarchain, image_revision none
+STEP: runtime-preservation
+RUNTIME-LIVE: no (0 deployed-runtime indicator instance(s) of module.runtime in the live state: aws_ecs_service=0 aws_lb=0 aws_lb_target_group=0 aws_lb_listener=0; a complete runtime has aws_ecs_service=4 aws_lb=1 aws_lb_target_group=1 aws_lb_listener=0-1; the ECS cluster and ECR repositories of a runtime-disabled base apply are not indicators)
+runtime preservation ok: the bound state shows no live runtime; nothing to preserve
+RUNTIME-LIVE: no (0 deployed-runtime indicator instance(s) of module.runtime in the live state: aws_ecs_service=0 aws_lb=0 aws_lb_target_group=0 aws_lb_listener=0; a complete runtime has aws_ecs_service=4 aws_lb=1 aws_lb_target_group=1 aws_lb_listener=0-1; the ECS cluster and ECR repositories of a runtime-disabled base apply are not indicators)
+runtime preservation ok: the bound state shows no live runtime; nothing to preserve
+STEP: release-manifest
+[2026-11-25T17:26:10Z] [20261125T172606Z-90273] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-25T17:26:10Z] [20261125T172606Z-90273] INFO runtime archive upload skipped by --skip-runtime-archive
+STEP: account-check
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-25T17:26:11Z] [20261125T172606Z-90273] INFO account sha256 matches the approval record
+STEP: terraform-apply
+pre-spend receipt ok: monitoring active, snapshot 1.1 h old, headroom 3.44 USD; spend to date AWS 17.88 + Anthropic 0.08 + Voyage 0.00 = 17.96 USD
+[2026-11-25T17:26:11Z] [20261125T172606Z-90273] INFO pre-spend receipt re-verified before terraform-apply
+[2026-11-25T17:26:11Z] [20261125T172606Z-90273] INFO state binding ok: lineage fd2e2d33-a06e-1a87-ddf1-4c75db336a80 serial 1182 sha256 7b459d54bebf1e727224a6207c1d3662abd09e641d640c7f607505037d2fc606
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172606Z-90273/tfdata terraform -chdir=<repo>/target/plans/20261125T172606Z-90273/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform apply -input=false -lock-timeout=60s <repo>/target/plans/20261125T172606Z-90273/verified/copy-course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan-90273-1-1-26932
+  |   "embedding-worker" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker"
+  |   "graph-service" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service"
+  |   "query-api" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api"
+  |   "semantic-service" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service"
+  | }
+  | required_tags = {
+  |   "course" = "CS441"
+  |   "environment" = "course"
+  |   "expiration_date" = "2026-11-25"
+  |   "owner" = "danny"
+  |   "project" = "scholarchain"
+  | }
+  | role_arns = {
+  |   "deployment" = "arn:aws:iam::<acct>:role/scholarchain-course-deployment"
+  |   "emr_ec2" = "<redacted>"
+  |   "emr_profile" = "arn:aws:iam::<acct>:instance-profile/scholarchain-course-emr"
+  |   "emr_service" = "arn:aws:iam::<acct>:role/scholarchain-course-emr-service"
+  |   "execution" = {
+  |     "embedding-worker" = "arn:aws:iam::<acct>:role/scholarchain-course-embedding-worker-execution"
+  |     "graph-service" = "arn:aws:iam::<acct>:role/scholarchain-course-graph-service-execution"
+  |     "query-api" = "arn:aws:iam::<acct>:role/scholarchain-course-query-api-execution"
+  |     "semantic-service" = "arn:aws:iam::<acct>:role/scholarchain-course-semantic-service-execution"
+  |   }
+  |   "neptune_loader" = "arn:aws:iam::<acct>:role/scholarchain-course-neptune-loader"
+  |   "tasks" = {
+  |     "embedding-worker" = "arn:aws:iam::<acct>:role/scholarchain-course-embedding-worker-task"
+  |     "graph-service" = "arn:aws:iam::<acct>:role/scholarchain-course-graph-service-task"
+  |     "query-api" = "arn:aws:iam::<acct>:role/scholarchain-course-query-api-task"
+  |     "semantic-service" = "arn:aws:iam::<acct>:role/scholarchain-course-semantic-service-task"
+  |   }
+  | }
+  | table_names = {
+  |   "ArtifactRegistry" = "scholarchain-course-ArtifactRegistry"
+  |   "EntityLinkCache" = "scholarchain-course-EntityLinkCache"
+  |   "EvidenceBundle" = "scholarchain-course-EvidenceBundle"
+  |   "QuerySession" = "scholarchain-course-QuerySession"
+  |   "ResearcherMetricCache" = "scholarchain-course-ResearcherMetricCache"
+  |   "RunLedger" = "scholarchain-course-RunLedger"
+  | }
+  | vector_bucket_name = "scholarchain-course-<acct>-vectors"
+STEP: runtime-archive-upload
+[2026-11-25T17:32:09Z] [20261125T172606Z-90273] INFO skipped by --skip-runtime-archive
+STEP: write-deploy-manifest
+wrote <repo>/target/release/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/deploy-manifest-base-apply-20261125T172606Z-90273.json
+RESULT: PASS stage base-apply complete; manifest=<repo>/target/release/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/deploy-manifest-base-apply-20261125T172606Z-90273.json

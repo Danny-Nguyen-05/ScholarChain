@@ -1,0 +1,193 @@
+STEP: start
+[2026-11-26T02:46:08Z] [20261126T024608Z-59055] INFO script=cleanup.sh mode=execute run_id=20261126T024608Z-59055 repo_root=<repo>
+STEP: inputs
+STEP: terraform-version
+[2026-11-26T02:46:08Z] [20261126T024608Z-59055] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+PRESERVE: terraform-state
+PRESERVE-RULES types: aws_s3_object
+PRESERVE-RULES addresses: module.foundation.
+TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.datalake.,module.s3vectors.,module.identity.aws_kms_key.data,module.identity.aws_kms_alias.data,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.deployment,module.identity.aws_iam_role.neptune_tunnel_task,module.identity.aws_iam_role.emr_ec2,module.identity.aws_iam_role.emr_service,module.identity.aws_iam_role.neptune_loader,module.identity.aws_iam_role_policy.,module.identity.aws_iam_instance_profile.emr,module.observability.aws_cloudwatch_metric_alarm.,module.observability.aws_cloudwatch_dashboard.,module.observability.aws_cloudwatch_log_group.,aws_acm_certificate.api,aws_acm_certificate_validation.api,aws_secretsmanager_secret.anthropic,aws_secretsmanager_secret.voyage,terraform_data.phase12b_guard
+PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true,aws_lb:enable_deletion_protection=true,aws_dynamodb_table:deletion_protection_enabled=true,aws_ecr_repository:force_delete=false,aws_s3_bucket:force_destroy=false,aws_s3vectors_vector_bucket:force_destroy=false
+STEP: output-paths
+[2026-11-26T02:46:08Z] [20261126T024608Z-59055] INFO plan outputs go to the fresh target/plans/20261126T024608Z-59055 (ignored); evidence goes to target/cleanup-evidence/20261126T024608Z-59055 (absent beforehand)
+STEP: account-identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-26T02:46:09Z] [20261126T024608Z-59055] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: source
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-26T02:46:09Z] [20261126T024608Z-59055] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+[2026-11-26T02:46:09Z] [20261126T024608Z-59055] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1399, "sha256": "6ef6b92b7b2159e4fc5d5f0877d55df83fb68044c899431020b7fad13b3dc664"}
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024608Z-59055/tfdata terraform -chdir=<repo>/target/plans/20261126T024608Z-59055/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase14b.zero_grace_is_refused_by_the_guard_while_query_api_is_load_balanced in modules/runtime
+  | - test.tests.phase14b.zero_grace_without_a_load_balancer_is_not_guarded_and_stays_absent in modules/runtime
+  | - test.tests.phase14b.the_guard_follows_the_timing_overrides_healthy_5_times_interval_60_needs_300_seconds in modules/runtime
+  | - test.tests.phase14b.the_guard_accepts_exactly_healthy_5_times_interval_60_equals_300_seconds in modules/runtime
+  | - test.tests.phase14b.the_target_group_health_check_is_explicit_30_3_3_with_readyz_and_200 in modules/runtime
+  | - test.tests.phase14b.the_target_group_timing_is_explicit_even_without_a_certificate in modules/runtime
+  | - test.tests.phase14b.the_target_group_timing_can_be_overridden in modules/runtime
+  | - test.tests.phase14b.the_lowest_allowed_timing_5_2_2_2_is_accepted in modules/runtime
+  | - test.tests.phase14b.the_highest_allowed_timing_300_120_10_10_is_accepted in modules/runtime
+  | - test.tests.phase14b.a_timeout_equal_to_the_interval_is_refused_by_the_target_group in modules/runtime
+  | - test.tests.phase14b.an_interval_below_5_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_interval_above_300_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_interval_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_above_120_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_healthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_default_has_no_request_policy_no_rate_limit_env_and_three_cpu_policies in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_https_creates_the_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_image_revision_has_no_policy_and_no_alb in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_with_the_runtime_disabled_has_no_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_without_https_is_refused_by_the_precondition in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_without_https_and_without_target_still_plans in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_query_api_only in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_rate_limit_env_is_absent_outside_the_aws_mode in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_target in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_target_on_the_acm_path_creates_exactly_one_policy in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_burst in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_burst_above_1000000 in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_rate_above_100000 in modules/runtime
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+STEP: before-inventory
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-bootstrap state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:11Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-execution state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:11Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/deployer state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:12Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark-isolated state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:12Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:13Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024608Z-59055/tfdata terraform -chdir=<repo>/target/plans/20261126T024608Z-59055/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform state list
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json
+[2026-11-26T02:46:14Z] [20261126T024608Z-59055] INFO before inventory: 48 entries
+STEP: verify-saved-plan
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024608Z-59055/tfdata terraform -chdir=<repo>/target/plans/20261126T024608Z-59055/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261126T024608Z-59055/verified/copy-destroy-course.tfplan-59055-10-6-29554
+DESTROY-ACTION: delete module.network.aws_eip.nat
+DESTROY-PLAN-SHA256: e411950d5d28f4ad4195d33bce8cc39c094f29d75257a64d5f0870cd4fb8e6c7
+[2026-11-26T02:46:15Z] [20261126T024608Z-59055] INFO confirmation token matches the exact saved plan, the live account hash, region, environment and action list
+STEP: protection-check
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024608Z-59055/tfdata terraform -chdir=<repo>/target/plans/20261126T024608Z-59055/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json
+no teardown resource has active deletion protection
+STEP: destroy-apply
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024608Z-59055/tfdata terraform -chdir=<repo>/target/plans/20261126T024608Z-59055/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform apply -input=false -lock-timeout=60s <repo>/target/plans/20261126T024608Z-59055/verified/copy-destroy-course.tfplan-59055-10-6-29554
+  |   "embedding-worker" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker"
+  |   "graph-service" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service"
+  |   "query-api" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api"
+  |   "semantic-service" = "<acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service"
+  | }
+  | required_tags = {
+  |   "course" = "CS441"
+  |   "environment" = "course"
+  |   "expiration_date" = "2026-11-25"
+  |   "owner" = "danny"
+  |   "project" = "scholarchain"
+  | }
+  | role_arns = {
+  |   "deployment" = "arn:aws:iam::<acct>:role/scholarchain-course-deployment"
+  |   "emr_ec2" = "<redacted>"
+  |   "emr_profile" = "arn:aws:iam::<acct>:instance-profile/scholarchain-course-emr"
+  |   "emr_service" = "arn:aws:iam::<acct>:role/scholarchain-course-emr-service"
+  |   "execution" = {
+  |     "embedding-worker" = "arn:aws:iam::<acct>:role/scholarchain-course-embedding-worker-execution"
+  |     "graph-service" = "arn:aws:iam::<acct>:role/scholarchain-course-graph-service-execution"
+  |     "query-api" = "arn:aws:iam::<acct>:role/scholarchain-course-query-api-execution"
+  |     "semantic-service" = "arn:aws:iam::<acct>:role/scholarchain-course-semantic-service-execution"
+  |   }
+  |   "neptune_loader" = "arn:aws:iam::<acct>:role/scholarchain-course-neptune-loader"
+  |   "tasks" = {
+  |     "embedding-worker" = "arn:aws:iam::<acct>:role/scholarchain-course-embedding-worker-task"
+  |     "graph-service" = "arn:aws:iam::<acct>:role/scholarchain-course-graph-service-task"
+  |     "query-api" = "arn:aws:iam::<acct>:role/scholarchain-course-query-api-task"
+  |     "semantic-service" = "arn:aws:iam::<acct>:role/scholarchain-course-semantic-service-task"
+  |   }
+  | }
+  | table_names = {
+  |   "ArtifactRegistry" = "scholarchain-course-ArtifactRegistry"
+  |   "EntityLinkCache" = "scholarchain-course-EntityLinkCache"
+  |   "EvidenceBundle" = "scholarchain-course-EvidenceBundle"
+  |   "QuerySession" = "scholarchain-course-QuerySession"
+  |   "ResearcherMetricCache" = "scholarchain-course-ResearcherMetricCache"
+  |   "RunLedger" = "scholarchain-course-RunLedger"
+  | }
+  | vector_bucket_name = "scholarchain-course-<acct>-vectors"
+STEP: after-inventory
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-bootstrap state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:19Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/billing-bootstrap; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/billing-execution state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:20Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/billing-execution; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/deployer state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:20Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/deployer; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark-isolated state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:21Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/spikes/emr-spark-isolated; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=<repo>/infra/terraform/spikes/emr-spark state list
+  | No state file was found!
+  |
+  | State management commands require a state file. Run this command
+  | in a directory where Terraform has been run or use the -state flag
+  | to point the command to a specific state location.
+[2026-11-26T02:46:21Z] [20261126T024608Z-59055] WARN terraform state list failed for infra/terraform/spikes/emr-spark; treated as empty
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261126T024608Z-59055/tfdata terraform -chdir=<repo>/target/plans/20261126T024608Z-59055/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform state list
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json
+[2026-11-26T02:46:23Z] [20261126T024608Z-59055] INFO after inventory: 46 entries
+[2026-11-26T02:46:23Z] [20261126T024608Z-59055] INFO before=48 entries, after=46 entries; files in <repo>/target/cleanup-evidence/20261126T024608Z-59055
+KEY-REVOCATION-REMINDER: the destroy deletes the Secrets Manager containers scholarchain-course/anthropic-api-key and scholarchain-course/voyage-api-key (force delete, no recovery window) but does NOT revoke the keys.
+KEY-REVOCATION-REMINDER: after the destroy, REVOKE BOTH keys in the provider consoles yourself: the Anthropic API key in the Anthropic Console and the Voyage AI API key in the Voyage AI dashboard, then check the key list in each console shows it gone. Record the time of each revocation in the evidence (never the key).
+RESULT: PASS destroy pass complete; before=48 after=46; evidence=<repo>/target/cleanup-evidence/20261126T024608Z-59055

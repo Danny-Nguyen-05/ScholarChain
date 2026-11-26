@@ -1,0 +1,130 @@
+STEP: start
+[2026-11-25T17:12:42Z] [20261125T171242Z-81839] INFO script=upload-emr-artifacts.sh mode=execute run_id=20261125T171242Z-81839 repo_root=<repo>
+STEP: inputs
+STEP: approval-record
+STEP: artifact-scan
+EMR-UPLOAD: run=run-20261125 files=17 bytes=55012991 datasets=1
+PLAN-SHA256: 944e04bd92708f37e31fa5af4410d020479323814557a8d4cb6d8bb4fc6fab3e
+EMR-INPUT-DATASET: label=size-100 files=4 bytes=6053225 skipped_hidden=0
+UPLOAD-FILE: 0 class=bootstrap key=emr/run-20261125/bin/bootstrap.sh bytes=17220 sha256=<redacted>
+UPLOAD-FILE: 1 class=config:er-config.json key=emr/run-20261125/config/er-config.json bytes=1147 sha256=a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c
+UPLOAD-FILE: 2 class=config:er-policy.json key=emr/run-20261125/config/er-policy.json bytes=1755 sha256=2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f
+UPLOAD-FILE: 3 class=config:hadoop-config.json key=emr/run-20261125/config/hadoop-config.json bytes=417 sha256=5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57
+UPLOAD-FILE: 4 class=config:spark-config-template.json key=emr/run-20261125/config/spark-config-template.json bytes=1562 sha256=9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a
+UPLOAD-FILE: 5 class=input:size-100 key=emr/run-20261125/input/size-100/datasets/samples/crossref/works.jsonl bytes=9405 sha256=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc
+UPLOAD-FILE: 6 class=input:size-100 key=emr/run-20261125/input/size-100/datasets/samples/dblp/linked-records.xml bytes=6003592 sha256=c25a1e1a0d517abaadf370c88b3528039c50ad8ec3790c27381a3c2e2ecde522
+UPLOAD-FILE: 7 class=input:size-100 key=emr/run-20261125/input/size-100/datasets/samples/openalex/works.jsonl bytes=11576 sha256=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c
+UPLOAD-FILE: 8 class=input:size-100 key=emr/run-20261125/input/size-100/datasets/samples/orcid/records.jsonl bytes=28652 sha256=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325
+UPLOAD-FILE: 9 class=jar:entity-resolution-job-jar key=emr/run-20261125/jars/entity-resolution.jar bytes=12863882 sha256=e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768
+UPLOAD-FILE: 10 class=jar:hadoop-dependency-bundle key=emr/run-20261125/jars/hadoop-bundle.jar bytes=12144487 sha256=76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a
+UPLOAD-FILE: 11 class=jar:hadoop-submit-jar key=emr/run-20261125/jars/hadoop-submit.jar bytes=12162464 sha256=3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6
+UPLOAD-FILE: 12 class=jar:spark-job-jar key=emr/run-20261125/jars/spark-job.jar bytes=11734907 sha256=<redacted>
+UPLOAD-FILE: 13 class=step-program key=emr/run-20261125/steps/sc-ceiling-check.py bytes=2084 sha256=<redacted>
+UPLOAD-FILE: 14 class=step-program key=emr/run-20261125/steps/sc-class-origin-verify.py bytes=4139 sha256=<redacted>
+UPLOAD-FILE: 15 class=step-program key=emr/run-20261125/steps/sc-render-spark-config.py bytes=1070 sha256=<redacted>
+UPLOAD-FILE: 16 class=step-program key=emr/run-20261125/steps/sc-step.sh bytes=24632 sha256=<redacted>
+STEP: next-values
+EMR-CONFIG: bootstrap_uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/bin/bootstrap.sh bootstrap_sha256=<redacted>
+EMR-RENDER: --sha er-config=a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/config/er-config.json
+EMR-RENDER: --sha er-policy=2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/config/er-policy.json
+EMR-RENDER: --sha hadoop-config=5330214bda284c4152a700549942b40931a64994b82b19ecdd99bcadb9f1bc57    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/config/hadoop-config.json
+EMR-RENDER: --sha spark-config-template=9341c162c8b05c9496685083d5a470a77f555ee24626eb4b946a439e1fd8206a    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/config/spark-config-template.json
+EMR-RENDER: --sha er-jar=e8df4ee269f1a2f1000cd88caad2d1b19e78f78f2be09238a3372d8ce7e52768    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/jars/entity-resolution.jar
+EMR-RENDER: --sha hadoop-libjars=76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/jars/hadoop-bundle.jar
+EMR-RENDER: --sha hadoop-submit-jar=3defe8e6aa3688e4bebb87f8d766115fd8e960732c91a898db9ffe7e127a61c6    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/jars/hadoop-submit.jar
+EMR-CONFIG: job_jar_uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/jars/spark-job.jar job_jar_sha256=<redacted>
+EMR-RENDER: --sha job-jar=<redacted>    # ref s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/jars/spark-job.jar
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/steps/sc-ceiling-check.py sha256=<redacted> dest=<redacted>
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/steps/sc-class-origin-verify.py sha256=<redacted> dest=<redacted>
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/steps/sc-render-spark-config.py sha256=<redacted> dest=<redacted>
+EMR-CONFIG: extra_artifact uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/steps/sc-step.sh sha256=<redacted> dest=<redacted>
+EMR-PIPELINE: input-prefix label=size-100 uri=s3://scholarchain-course-<acct>-artifacts/emr/run-20261125/input/size-100 files=4 bytes=6053225
+EMR-PIPELINE: output prefix (written by the EMR instance role, not uploaded here): s3://scholarchain-course-<acct>-artifacts/pipeline/run-20261125/15a/size-N
+EMR-PIPELINE: the G5 runtime archive is uploaded by deploy.sh base-apply, not by this script
+APPROVAL-LINE: APPROVED_ACTION=upload-emr-artifacts
+APPROVAL-LINE: APPROVED_PLAN_SHA256=944e04bd92708f37e31fa5af4410d020479323814557a8d4cb6d8bb4fc6fab3e
+APPROVAL-LINE: APPROVED_ACCOUNT_SHA256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+APPROVAL-LINE: APPROVED_REGION=us-east-2
+STEP: approval-record
+APPROVAL-OK: action=upload-emr-artifacts plan_sha256=944e04bd92708f37e31fa5af4410d020479323814557a8d4cb6d8bb4fc6fab3e region=us-east-2
+STEP: identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Arn --output text
+[2026-11-25T17:12:43Z] [20261125T171242Z-81839] INFO caller is a scholarchain-course-operator-pipeline session of the bucket's account
+STEP: preflight
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api list-objects-v2 --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --prefix emr/run-20261125/ --output json
+PREFLIGHT: listed=1 planned=17 existing=0 new=17
+STEP: upload
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/bin/bootstrap.sh --body <repo>/scripts/emr/bootstrap.sh --checksum-algorithm SHA256 --checksum-sha256 LZDzvJU4pqwC/kzPagVg6S60HAJrYDI5SYPnx7OQUHA= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/bin/bootstrap.sh bytes=17220
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/er-config.json --body <repo>/docs/agent-runs/phase-06/evidence/6fg/local-er-config.json --checksum-algorithm SHA256 --checksum-sha256 oHq9hMvg5dMLBnJqc1Nd9MeqUaACDQWZVNm3+at5gyw= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/config/er-config.json bytes=1147
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/er-policy.json --body <repo>/modules/entity-resolution/src/main/resources/phase5-policy.v1.json --checksum-algorithm SHA256 --checksum-sha256 LT0S50ibGEN/lrCXVHCRAMvDUp/9T8/Q/2gH24fyqT8= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/config/er-policy.json bytes=1755
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/hadoop-config.json --body <repo>/experiments/inputs/15a/prep-config.json --checksum-algorithm SHA256 --checksum-sha256 UzAhS9ooTEFSpwBUmUK0CTGmSZS4Kxns3Zm8rbnxvFc= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/config/hadoop-config.json bytes=417
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/spark-config-template.json --body <repo>/experiments/inputs/15a/spark-emr-template.json --checksum-algorithm SHA256 --checksum-sha256 k0HBYsiwXJSWaFCD1aRwp39VXuJGJutLlGpDnh/YIGo= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/config/spark-config-template.json bytes=1562
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/crossref/works.jsonl --body <repo>/target/experiment-inputs/15a/size-100/datasets/samples/crossref/works.jsonl --checksum-algorithm SHA256 --checksum-sha256 puPEDheLfOf3TthwpItKKVHeFwXnoO2Pj9QIOLxNOcw= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/input/size-100/datasets/samples/crossref/works.jsonl bytes=9405
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/dblp/linked-records.xml --body <repo>/target/experiment-inputs/15a/size-100/datasets/samples/dblp/linked-records.xml --checksum-algorithm SHA256 --checksum-sha256 wloeGg1Rerqt83DIizUoA5xQrY7DeQwnOBo8Li7N5SI= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/input/size-100/datasets/samples/dblp/linked-records.xml bytes=6003592
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/openalex/works.jsonl --body <repo>/target/experiment-inputs/15a/size-100/datasets/samples/openalex/works.jsonl --checksum-algorithm SHA256 --checksum-sha256 bP8S8uwUOazGa4mpwwxUqpC+yOPhHDF1YfPkoPmmXYw= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/input/size-100/datasets/samples/openalex/works.jsonl bytes=11576
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/orcid/records.jsonl --body <repo>/target/experiment-inputs/15a/size-100/datasets/samples/orcid/records.jsonl --checksum-algorithm SHA256 --checksum-sha256 UABpSo6T9f8jk/fyX5qQjROee6INJsDZgUHlzh4HAyU= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/input/size-100/datasets/samples/orcid/records.jsonl bytes=28652
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/entity-resolution.jar --body <repo>/modules/entity-resolution/target/er-job_3-0.1.0-SNAPSHOT.jar --checksum-algorithm SHA256 --checksum-sha256 6N9O4mnxovEADNiMqtLRsZ54948r4JI4ozctjOflJ2g= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/jars/entity-resolution.jar bytes=12863882
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/hadoop-bundle.jar --body <repo>/modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar --checksum-algorithm SHA256 --checksum-sha256 dqG0Vc4i04zDMlWSp9ELxS0tibIIZV63uObKSEFUg4o= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/jars/hadoop-bundle.jar bytes=12144487
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/hadoop-submit.jar --body <repo>/modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar --checksum-algorithm SHA256 --checksum-sha256 Pe/o5qo2iOS+u4f412YRX9jpYHMskaiY25/+fhJ6YcY= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/jars/hadoop-submit.jar bytes=12162464
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/spark-job.jar --body <repo>/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar --checksum-algorithm SHA256 --checksum-sha256 IsGSisb2SDGkeY7JtpmcpJXl0jdC1BOoSRCmk6gELkQ= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/jars/spark-job.jar bytes=11734907
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-ceiling-check.py --body <repo>/scripts/emr/sc-ceiling-check.py --checksum-algorithm SHA256 --checksum-sha256 V+lUPNlNWSS/tLuM7BUK11W6JR7ltoIiddm8elbRC1w= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/steps/sc-ceiling-check.py bytes=2084
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-class-origin-verify.py --body <repo>/scripts/emr/sc-class-origin-verify.py --checksum-algorithm SHA256 --checksum-sha256 XfkZemD+QVMIWTd1GGCbZ8cO7GDJPIJW5nQq1f/Renk= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/steps/sc-class-origin-verify.py bytes=4139
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-render-spark-config.py --body <repo>/scripts/emr/sc-render-spark-config.py --checksum-algorithm SHA256 --checksum-sha256 XWBtSIOg1OTYaf9/aatWMXdDpJEpQKw05cgDN6j6BWw= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/steps/sc-render-spark-config.py bytes=1070
+CMD: timeout=3600s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api put-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-step.sh --body <repo>/scripts/emr/sc-step.sh --checksum-algorithm SHA256 --checksum-sha256 Htz2jSlIEBXaVnWq1/vnTUr2hfnQwnpTePI//qt8ju0= --if-none-match \* --output json
+UPLOADED: emr/run-20261125/steps/sc-step.sh bytes=24632
+STEP: verify
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/bin/bootstrap.sh --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/bin/bootstrap.sh bytes=17220
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/er-config.json --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/config/er-config.json bytes=1147
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/er-policy.json --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/config/er-policy.json bytes=1755
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/hadoop-config.json --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/config/hadoop-config.json bytes=417
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/config/spark-config-template.json --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/config/spark-config-template.json bytes=1562
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/crossref/works.jsonl --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/input/size-100/datasets/samples/crossref/works.jsonl bytes=9405
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/dblp/linked-records.xml --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/input/size-100/datasets/samples/dblp/linked-records.xml bytes=6003592
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/openalex/works.jsonl --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/input/size-100/datasets/samples/openalex/works.jsonl bytes=11576
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/input/size-100/datasets/samples/orcid/records.jsonl --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/input/size-100/datasets/samples/orcid/records.jsonl bytes=28652
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/entity-resolution.jar --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/jars/entity-resolution.jar bytes=12863882
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/hadoop-bundle.jar --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/jars/hadoop-bundle.jar bytes=12144487
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/hadoop-submit.jar --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/jars/hadoop-submit.jar bytes=12162464
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/jars/spark-job.jar --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/jars/spark-job.jar bytes=11734907
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-ceiling-check.py --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/steps/sc-ceiling-check.py bytes=2084
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-class-origin-verify.py --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/steps/sc-class-origin-verify.py bytes=4139
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-render-spark-config.py --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/steps/sc-render-spark-config.py bytes=1070
+CMD: timeout=120s env AWS_PROFILE=scholarchain-pipeline AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket scholarchain-course-<acct>-artifacts --key emr/run-20261125/steps/sc-step.sh --checksum-mode ENABLED --output json
+VERIFIED: emr/run-20261125/steps/sc-step.sh bytes=24632
+STEP: manifest
+UPLOAD-MANIFEST: target/phase18/day2/evidence/emr-upload-manifest.json
+UPLOAD-MANIFEST-SHA256: 3d86dbe198d8ca2d094eb2d42a625dd524fab92925c7e3e0290f69637cadb40f
+RESULT: PASS 17 file(s) verified under emr/run-20261125/ (17 uploaded, 0 unchanged); manifest target/phase18/day2/evidence/emr-upload-manifest.json

@@ -1,0 +1,7 @@
+Demo clips recorded on 2026-11-25 (outside the repository).
+57791e27acdd08ab2a8a66fe37bdd7613a33959ff5b23988fda6fdf7069b749e  p18-clip1-emr-steps-2026-11-25.mov  3596487 bytes
+a372b79d797bbc14fa40409e4a3ce9ab549fbac172e3d477099f2d1d9e920b55  p18-clip2-s3-spark-output-2026-11-25.mov  2069798 bytes
+dfcf540c72aab36d74b9dbc48150b372b33cd0e7e85dbb3859ccb3fa5d7e555e  p18-clip3-terminal-run-pass-2026-11-25.mov  2368694 bytes
+da4df2d6c6fe375687c2486553f3d4ad47c8c46bfcebb43845f9623758f0f95c  p18-clip4-counters-2026-11-25.mov  1261450 bytes
+f707b777894e27909cc733aaa932e60c512190d600acedb141a2ae2761b20d81  p18-clip5-cleanup-result-2026-11-25.mov  5351672 bytes
+0d12eae8f9936e6006a9688e4c7b79c7d1d89ce342c07d1050914baf077cad1d  p18-clip7-final-inventory-2026-11-25.mov  4396048 bytes

@@ -77,3 +77,51 @@ The frozen Phase 15 project plan (2026-11-16) totals USD 24.07 with the new EMR 
 
 - The S run on EMR at 120 minutes (Day 2).
 - Stale live docs (`docs/service-limits.md`, `docs/runbook.md`, `reports/release-manifest.md`): documentation-engineer, Day 3.
+
+# Day 2: live EMR proof and cleanup (2026-11-25)
+
+Assembled by the coordinator from observed output after the session. Evidence: `evidence/day2/` (index `evidence/day2/INDEX.md`; redacted copies). Human decisions: `human-gate.md`, Day 2 section. HEAD `fe0b6cc` throughout; no sbt, packaging or commit during the session.
+
+## Result
+
+**The Phase 18 fix works on EMR.** In run 5 the `spark-job` step (`s-08041352ORZOW9X35U3M`) COMPLETED. The uploaded step program was `sc-step.sh` sha256 `1edcf68d…` (`evidence/day2/emr/emr-upload-manifest.json:162`; decision log 11:23 CST entry), equal to the committed file and the pin in `infra/terraform/emr-step-programs.json:7`; the run log masks the hash. This closes the 18A "Not verified" item on the fix, with two limits: one run, not repeated; and the cause is inferred from the ordering change, because the 2026-11-18 error was not reproduced and the kit's `template fetch environment:` log line is not in the copied evidence. The other 18A item, the old hash in the ignored `course.local.tfvars`, was updated by the human before the plan: kit block 7 counted the old hash 0 times.
+
+## EMR runs, size S, cluster `j-05116692OZ06APLO3FMD`
+
+| Run | Run id | Result | Evidence |
+|---|---|---|---|
+| 4 (attempt 1) | `15a-emr-size-100-20261125T173348Z-95764` | FAILED at `hadoop-prep` (`InvalidInputException`, job 2 input `intermediate/j02` not found on the shared mount), pipeline exit 4. Not the Phase 18 path. Incident `docs/incidents/2026-11-25-emr-hadoop-prep-intermediate-missing.md`, root cause open | `emr/emr-run-1.log` |
+| 5 (retry) | `15a-emr-size-100-20261125T174034Z-99560` | PASS, 17:40:34Z-18:14:39Z: stage-in, hadoop-prep, entity-resolution, spark-class-origin, spark-job, copy-out all COMPLETED; exit 0 | `emr/emr-run-2.log` |
+
+Step durations of run 5 from the EMR console Steps tab (human screenshot, not kept; clip 1): hadoop-prep 7m6s, entity-resolution 6m2s, spark-job 16m38s. Upper bounds from submit-to-result times in `emr/emr-run-2.log`: 7m42s, 6m43s and 17m29s.
+
+Export `spark/run:30b3ef84-11dc-4c8c-b9c2-c632477d7282` with `_SCHOLARCHAIN_SPARK_COMPLETE`. Counters (`emr/spark-counters.json`): canonicalWorks 10578, canonicalResearchers 21819, allYearsEdges 81181, components 3942, communityIterations 20 (not converged), crossCommunityEdges 17589. Download: 468 objects, 0 error mentions (`emr/download-excerpt.log`); archive `day2-v1` written and verified, 30 entries (`emr/archive.log`).
+
+EMR ledger after termination (`emr/emr-actual-2end.log`): 5 of 5 live runs, USD 2.65 of the 4.70 cap. Day 2 EMR ledger estimate USD 0.60 (run 4 0.09, run 5 0.51); these are ledger estimates (0.555 USD/h times the measured window), not billed amounts. No further run is possible without a new human decision.
+
+## Other live gates
+
+| Step | Result | Evidence |
+|---|---|---|
+| Deployer and operator roles (IAM window 1, 16:37:43Z-16:45:21Z) | 31 added | `stage-a/deployer-apply.log` |
+| Stage-a base-apply | PASS, plan `IDENTICAL` to the reviewed list | `stage-a/stagea-base-plan.log`, `stage-a/stagea-base-apply.log` |
+| Runtime archive upload | PASS, 321,876,735 bytes in about 84 s | `stage-a/stagea-upload.log` |
+| EMR artifact upload | PASS, 17 files verified | `emr/emr-upload.log` |
+| EMR enable | PASS, 13 creates, `IDENTICAL` | `emr/stagea-emr-plan.log`, `emr/stagea-emr-apply.log` |
+| Cleanup-prepare | PASS (second plan attempt; the first stopped at `account-identity`, expired session, nothing ran) | `cleanup/cleanup-prepare-plan.log`, `cleanup/cleanup-prepare.log` |
+| Destroy pass 1 | PARTIAL as expected at `aws_eip.nat` DisassociateAddress 403; 331 to 87 inventory entries | `cleanup/cleanup-pass-1.log` |
+| Destroy pass 2 | PASS, only `aws_eip.nat`; 48 to 46 | `cleanup/cleanup-pass-2.log` |
+| C4 (IAM window 2, 02:57:35Z-03:11:50Z on 2026-11-26) | 13 destroyed | `p39/deployer-c4.log` |
+| P39 | 18 destroyed, deployer state empty, `get-role` NoSuchEntity, roles diff only `scholarchain-deployer` | `p39/p39-deployer-removal.log`, `p39/p39-roles-*.txt` |
+| Final inventory (console; NAT, Elastic IPs and S3 in clip 5, the rest in clip 7) | No running EMR, NAT, Elastic IP, load balancer, Neptune, EFS, ECS cluster, course bucket or course secret; IAM roles only `scholarchain-billing-deployer` and AWS service-linked roles; KMS key pending deletion | `00-timeline/decision-log.md`, `recordings/clips.txt` |
+
+The 46 inventory entries left after pass 2 are tag-index records: 35 ECS task-definition revisions, 7 terminated EMR clusters, the deleted ECS cluster, the KMS key (pending deletion) and 2 Terraform guard records. None is billable.
+
+Between destroy pass 1 (ended 19:09:49Z) and pass 2 (02:44:38Z on 2026-11-26) about 7.6 hours passed, and the NAT Elastic IP stayed allocated (`cleanup/pass-1-after-inventory.txt`, `cleanup/pass-2-before-inventory.txt`), about USD 0.04 at the AWS list price for a public IPv4 address (USD 0.005 per hour; not from repository evidence). Pass 1 printed a `KEY-REVOCATION-REMINDER` for the two provider-key secret containers; the Day 2 kit has no step that stores a key value, so no Day 2 key needs revoking.
+
+## Not verified (Day 2)
+
+- The cause of the run 4 `hadoop-prep` failure (hypothesis: shared-mount visibility). No root-cause run; the ledger has no run left.
+- The fix was proven by one run, not repeated.
+- Why the inventory fell from 87 (end of pass 1) to 48 (start of pass 2); likely tag-index lag after deletions.
+- Final cost: the console showed USD 19.26 of the USD 25 budget at about 9:12 PM CST; Cost Explorer lags, so the final Day 2 figure is not yet known.

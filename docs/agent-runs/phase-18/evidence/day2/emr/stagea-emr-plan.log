@@ -1,0 +1,98 @@
+STEP: start
+[2026-11-25T17:24:25Z] [20261125T172425Z-89082] INFO script=plan.sh mode=execute run_id=20261125T172425Z-89082 repo_root=<repo>
+STEP: inputs
+STEP: output-paths
+[2026-11-25T17:24:25Z] [20261125T172425Z-89082] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261125T172425Z-89082
+STEP: terraform-version
+[2026-11-25T17:24:26Z] [20261125T172425Z-89082] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+CMD: git archive --format=tar fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 infra/terraform | tar -x -C <run-dir>/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+[2026-11-25T17:24:26Z] [20261125T172425Z-89082] INFO materialized infra/terraform at fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=bb0dd376ac19dad42185a0c3532cf17f985a64b77194436cb92fcc3363d129a7
+[2026-11-25T17:24:26Z] [20261125T172425Z-89082] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1182, "sha256": "7b459d54bebf1e727224a6207c1d3662abd09e641d640c7f607505037d2fc606"}
+[2026-11-25T17:24:26Z] [20261125T172425Z-89082] INFO env=course region=us-east-2 source_commit=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 scripts_commit=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33 clean=true plan=<repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+STEP: account-identity
+CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172425Z-89082/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text
+[2026-11-25T17:24:27Z] [20261125T172425Z-89082] INFO account sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+STEP: terraform-init
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172425Z-89082/tfdata terraform -chdir=<repo>/target/plans/20261125T172425Z-89082/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform init -input=false -lockfile=readonly
+  | - test.tests.phase15_p41_runtime.module_refuses_a_fractional_burst in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_burst_above_1000000 in modules/runtime
+  | - test.tests.phase15_p41_runtime.module_refuses_rate_above_100000 in modules/runtime
+  | - test.tests.phase14a.the_runtime_module_keeps_mode_unconfigured_and_adds_no_aws_variable_without_the_acknowledgment in modules/runtime
+  | - test.tests.phase14b.query_api_behind_the_alb_gets_the_default_300_second_grace_period_and_no_other_service_does in modules/runtime
+  | - test.tests.phase14b.query_api_without_a_certificate_has_no_load_balancer_and_no_grace_period in modules/runtime
+  | - test.tests.phase14b.a_non_default_grace_period_reaches_only_query_api in modules/runtime
+  | - test.tests.phase14b.the_upper_bound_3600_is_accepted in modules/runtime
+  | - test.tests.phase14b.a_grace_period_above_3600_seconds_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_negative_grace_period_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_grace_period_is_rejected in modules/runtime
+  | - test.tests.phase14b.the_guard_floor_is_healthy_threshold_times_interval_inclusive_90_seconds_by_default in modules/runtime
+  | - test.tests.phase14b.a_grace_period_of_89_seconds_is_refused_by_the_guard in modules/runtime
+  | - test.tests.phase14b.zero_grace_is_refused_by_the_guard_while_query_api_is_load_balanced in modules/runtime
+  | - test.tests.phase14b.zero_grace_without_a_load_balancer_is_not_guarded_and_stays_absent in modules/runtime
+  | - test.tests.phase14b.the_guard_follows_the_timing_overrides_healthy_5_times_interval_60_needs_300_seconds in modules/runtime
+  | - test.tests.phase14b.the_guard_accepts_exactly_healthy_5_times_interval_60_equals_300_seconds in modules/runtime
+  | - test.tests.phase14b.the_target_group_health_check_is_explicit_30_3_3_with_readyz_and_200 in modules/runtime
+  | - test.tests.phase14b.the_target_group_timing_is_explicit_even_without_a_certificate in modules/runtime
+  | - test.tests.phase14b.the_target_group_timing_can_be_overridden in modules/runtime
+  | - test.tests.phase14b.the_lowest_allowed_timing_5_2_2_2_is_accepted in modules/runtime
+  | - test.tests.phase14b.the_highest_allowed_timing_300_120_10_10_is_accepted in modules/runtime
+  | - test.tests.phase14b.a_timeout_equal_to_the_interval_is_refused_by_the_target_group in modules/runtime
+  | - test.tests.phase14b.an_interval_below_5_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_interval_above_300_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_interval_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_timeout_above_120_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_healthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_healthy_threshold_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_below_2_is_rejected in modules/runtime
+  | - test.tests.phase14b.an_unhealthy_threshold_above_10_is_rejected in modules/runtime
+  | - test.tests.phase14b.a_fractional_unhealthy_threshold_is_rejected in modules/runtime
+  | Initializing provider plugins...
+  | - terraform.io/builtin/terraform is built in to Terraform
+  | - Reusing previous version of hashicorp/aws from the dependency lock file
+  | - Using hashicorp/aws v6.44.0 from the shared cache directory
+  |
+  | Terraform has been successfully initialized!
+STEP: terraform-plan
+CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172425Z-89082/tfdata terraform -chdir=<repo>/target/plans/20261125T172425Z-89082/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform plan -input=false -lock-timeout=60s -var-file=<repo>/target/plans/20261125T172425Z-89082/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -out=<repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+[2026-11-25T17:24:44Z] [20261125T172425Z-89082] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 1182, "sha256": "7b459d54bebf1e727224a6207c1d3662abd09e641d640c7f607505037d2fc606"}
+STEP: terraform-show
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172425Z-89082/tfdata terraform -chdir=<repo>/target/plans/20261125T172425Z-89082/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -json <repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+STEP: terraform-show-text
+CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=<repo>/target/plans/20261125T172425Z-89082/tfdata terraform -chdir=<repo>/target/plans/20261125T172425Z-89082/source/fe0b6ccdf1089deb24e2967a09d94ada9b1aae33/infra/terraform show -no-color <repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+STEP: plan-receipt
+saved plan target ok: provider region us-east-2, account hash matches, environment course, project scholarchain, image_revision none
+PLAN-ACTIONS-BEGIN count=13 (address and action only; no attribute or variable values)
+PLAN-ACTION: create module.emr.aws_efs_access_point.staging[0]
+PLAN-ACTION: create module.emr.aws_efs_backup_policy.staging[0]
+PLAN-ACTION: create module.emr.aws_efs_file_system.staging[0]
+PLAN-ACTION: create module.emr.aws_efs_file_system_policy.staging[0]
+PLAN-ACTION: create module.emr.aws_efs_mount_target.staging[0]
+PLAN-ACTION: create module.emr.aws_emr_cluster.pipeline[0]
+PLAN-ACTION: create module.emr.aws_emr_security_configuration.encrypted[0]
+PLAN-ACTION: create module.emr.aws_iam_role_policy.node[0]
+PLAN-ACTION: create module.emr.aws_security_group.efs[0]
+PLAN-ACTION: create module.emr.aws_vpc_security_group_egress_rule.emr_to_efs[0]
+PLAN-ACTION: create module.emr.aws_vpc_security_group_ingress_rule.efs_from_emr[0]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.emr_control[0]
+PLAN-ACTION: create module.identity.aws_iam_role_policy.emr_disk_encryption[0]
+PLAN-ACTIONS-END count=13
+summary: add=13 change=0 destroy=0 replace=0 iam_changes=3 stateful_changes=5
+plan_sha256=468c8713e0958cc4052113a816a6635dcde3654b587207141f4c3a1033949b94
+account_binding=matched
+[2026-11-25T17:24:47Z] [20261125T172425Z-89082] INFO receipt: <repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.receipt.json
+PLAN-FILE: <repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan
+PLAN-RECEIPT: <repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.receipt.json sha256=71c98a75677a62cfc08b1842b80770fc40464cf5abc8f2a9b0b613f5562c625e
+PLAN-TEXT: <repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.txt sha256=5afd6b2b39e9b51e53acda7d94c0deeb4ea452ed298fea212fc6f4706b9c51f4 (the COMPLETE plan text for the exact saved plan; private, never share or commit it)
+APPROVAL-RECORD-CANDIDATE (review, then the human writes the Phase 14 record; plan.sh never writes it):
+APPROVED_PLAN_SHA256=468c8713e0958cc4052113a816a6635dcde3654b587207141f4c3a1033949b94
+APPROVED_RECEIPT_SHA256=71c98a75677a62cfc08b1842b80770fc40464cf5abc8f2a9b0b613f5562c625e
+APPROVED_COMMIT=fe0b6ccdf1089deb24e2967a09d94ada9b1aae33
+APPROVED_ACCOUNT_SHA256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e
+APPROVED_REGION=us-east-2
+APPROVED_ENVIRONMENT=course
+APPROVED_PRESPEND_SHA256=<sha256 of the human-written pre-spend receipt: shasum -a 256 <file>>
+APPROVED_STAGE=<one of base-apply | runtime-apply (a push approval record names no plan: see scripts/README.md)>
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261125T172425Z-89082/course-fe0b6ccdf1089deb24e2967a09d94ada9b1aae33.tfplan.receipt.json plan_sha256=468c8713e0958cc4052113a816a6635dcde3654b587207141f4c3a1033949b94

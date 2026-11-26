@@ -1,0 +1,1 @@
+delete module.network.aws_eip.nat

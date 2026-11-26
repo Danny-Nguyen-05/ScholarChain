@@ -1,0 +1,3 @@
+Downloads folder <home>/Documents/scholarchain-day2-downloads (outside the repository).
+SHA256SUMS lines: 473
+SHA256SUMS sha256: 690925386e4ed9020f402526d0796a1424d24f02eec9d9c89c930720d1ec274d

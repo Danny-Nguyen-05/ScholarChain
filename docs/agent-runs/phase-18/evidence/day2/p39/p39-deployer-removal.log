@@ -1,0 +1,35 @@
+P39 start 2026-11-26T03:02:59Z
+      18
+STATE-MATCHES-EXPECTED
+06c6ef0ac475235c41aca3aa0be6d1bfad8cf804c9dcf756d082e46be8bc1562  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate.pre-p39-20261126T030651Z.bak
+Plan: 0 to add, 0 to change, 18 to destroy.
+delete aws_iam_policy.main_boundary_emr[0]
+delete aws_iam_policy.main_boundary_runtime[0]
+delete aws_iam_policy.permission_set["phase14-main--compute"]
+delete aws_iam_policy.permission_set["phase14-main--data"]
+delete aws_iam_policy.permission_set["phase14-main--emr-efs"]
+delete aws_iam_policy.permission_set["phase14-main--iam"]
+delete aws_iam_policy.permission_set["phase14-main--keys-obs"]
+delete aws_iam_policy.permission_set["phase14-main--network"]
+delete aws_iam_policy.permission_set["phase14-main--network-mod"]
+delete aws_iam_role.deployer
+delete aws_iam_role_policy.login
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--compute"]
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--data"]
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--emr-efs"]
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--iam"]
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--keys-obs"]
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--network"]
+delete aws_iam_role_policy_attachment.permission_set["phase14-main--network-mod"]
+PLAN-MATCHES-EXPECTED
+P39 apply start 03:08:06Z
+Apply complete! Resources: 0 added, 0 changed, 18 destroyed.
+18
+P39 apply end 03:08:08Z
+40e184f45273dbd50fd6f5a51fd78f31184140c72518ecf570a3ee10bfb93b62  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+       0
+NoSuchEntity
+get-role exit=254
+2d1
+< scholarchain-deployer
+IAM window 2 CLOSED 03:11:50Z

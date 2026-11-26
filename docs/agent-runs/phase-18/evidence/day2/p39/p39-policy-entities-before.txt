@@ -1,0 +1,27 @@
+== scholarchain-deployer-phase14-main--emr-efs
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-deployer-phase14-main--compute
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-deployer-phase14-main--keys-obs
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-deployer-phase14-main--iam
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-course-permissions-boundary
+{"roles":[],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-deployer-phase14-main--network
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-course-emr-service-boundary
+{"roles":[],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-deployer-phase14-main--data
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0
+== scholarchain-deployer-phase14-main--network-mod
+{"roles":["scholarchain-deployer"],"users":[],"groups":[]}
+aws-exit=0

@@ -1,0 +1,42 @@
+3d8c90b13fdd56304991fbf2dd8d4a20c0d58598cb840b16ac3151284fbdf5c6  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+Plan: 31 to add, 0 to change, 0 to destroy.
+create aws_iam_policy.main_boundary_emr[0]
+create aws_iam_policy.main_boundary_runtime[0]
+create aws_iam_policy.permission_set["phase14-main--compute"]
+create aws_iam_policy.permission_set["phase14-main--data"]
+create aws_iam_policy.permission_set["phase14-main--emr-efs"]
+create aws_iam_policy.permission_set["phase14-main--iam"]
+create aws_iam_policy.permission_set["phase14-main--keys-obs"]
+create aws_iam_policy.permission_set["phase14-main--network"]
+create aws_iam_policy.permission_set["phase14-main--network-mod"]
+create aws_iam_role.deployer
+create aws_iam_role.operator["cleanup"]
+create aws_iam_role.operator["loader"]
+create aws_iam_role.operator["reader"]
+create aws_iam_role.operator_pipeline[0]
+create aws_iam_role_policy.login
+create aws_iam_role_policy.operator["cleanup--data"]
+create aws_iam_role_policy.operator["loader--data"]
+create aws_iam_role_policy.operator["loader--tunnel"]
+create aws_iam_role_policy.operator["reader--data"]
+create aws_iam_role_policy.operator_login["cleanup"]
+create aws_iam_role_policy.operator_login["loader"]
+create aws_iam_role_policy.operator_login["reader"]
+create aws_iam_role_policy.operator_pipeline[0]
+create aws_iam_role_policy.operator_pipeline_login[0]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--compute"]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--data"]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--emr-efs"]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--iam"]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--keys-obs"]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--network"]
+create aws_iam_role_policy_attachment.permission_set["phase14-main--network-mod"]
+Apply complete! Resources: 31 added, 0 changed, 0 destroyed.
+10f85e67bdd59836a1ae4d3f61d4b8a0a0497027bd529a2c4e41a04c44c6ec49  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+7
+3600
+14400
+14400
+14400
+14400
+scholarchain-course-operator-pipeline-data	scholarchain-course-operator-pipeline-same-device-login
