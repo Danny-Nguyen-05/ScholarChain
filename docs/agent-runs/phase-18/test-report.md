@@ -125,3 +125,52 @@ Between destroy pass 1 (ended 19:09:49Z) and pass 2 (02:44:38Z on 2026-11-26) ab
 - The fix was proven by one run, not repeated.
 - Why the inventory fell from 87 (end of pass 1) to 48 (start of pass 2); likely tag-index lag after deletions.
 - Final cost: the console showed USD 19.26 of the USD 25 budget at about 9:12 PM CST; Cost Explorer lags, so the final Day 2 figure is not yet known.
+
+# Day 3: token redaction (2026-11-26)
+
+Records-only change: the used one-time destroy confirmation tokens were redacted in the Phase 18 Day 2 cleanup listings (`df299ea`) and, by the human's one-time exception, in the Phase 15 session-2 cleanup excerpt, with the Phase 16 reproducibility evidence regenerated (`b11afe9`). Decisions: `human-gate.md`, "Day 3 decisions". Reviews: `df299ea` review round 2 APPROVE; `b11afe9` review APPROVE.
+
+## Owner-reported checks for `b11afe9`
+
+- Phase 15 session-2 `INDEX.md`: 74 rows, 0 sha256 mismatches (coordinator).
+- `python3 -I experiments/scripts/eval16_repro.py --verify`: `REGENERATION: PASS pass=24 fail=0 skipped_scripts=0` (experiment-engineer).
+- `python3 -I experiments/scripts/check_manifests.py`: `RESULT: OK`, 106 file hashes verified (experiment-engineer).
+- `python3 -I -m unittest discover -s experiments/tests`: `Ran 260 tests`, `OK` (experiment-engineer).
+
+## Full check after APPROVE
+
+Command: `scripts/check.sh` (JDK 17), run id `20261126T170301Z-26256`, 11:03 AM to 12:22 PM CST. Logs: `target/check-logs/20261126T170301Z-26256/` (git-ignored).
+
+| Gate | Result |
+|---|---|
+| constitution | PASS (1s) |
+| hooks | PASS (1s) |
+| shell | PASS (7s) |
+| python | PASS (1s) |
+| terraform | FAIL (84s): `terraform fmt -check -recursive failed` on two git-ignored local files, `infra/terraform/deployer/deployer.local.tfvars` and `infra/terraform/environments/course.local.tfvars`, left unformatted by Day 2 edits; all Terraform test suites passed (largest: 333 passed, 0 failed) |
+| script-tests | PASS (3853s) |
+| sbt | PASS (822s); 9 sbt test summaries: 1,810 succeeded, 0 failed, 2 canceled |
+
+`RESULT: FAIL failed: terraform`.
+
+The coordinator then ran `terraform fmt` on the two ignored files at the human's request (whitespace only; only the file names were printed, contents not read), and `terraform fmt -check -recursive infra/terraform` exited 0. Rerun: `scripts/check.sh --only terraform`, run id `20261126T190048Z-32280`: `GATE: terraform PASS (63s)`, `RESULT: PARTIAL passed=1` (PARTIAL by design for `--only`). Together the two runs pass all 7 gates; no single run passed all 7 after the change.
+
+# Day 3: Phase 18 docs update (2026-11-26)
+
+Docs-only change: README, final report, release manifest, `docs/**` pages, `experiments/README.md` and the Day 3 section above, updated for the Phase 18 EMR proof and the token redaction. Owners: documentation-engineer and experiment-engineer; coordinator for this file. Review round 2 APPROVE (round 1 REQUEST CHANGES; all findings fixed by their owners; four optional nits left). The coordinator's link check over the 11 changed Markdown files found 935 links and 0 problems.
+
+## Full check after APPROVE
+
+Command: `scripts/check.sh` (JDK 17), run id `20261126T192732Z-47531`, 1:27 PM to 2:45 PM CST. Logs: `target/check-logs/20261126T192732Z-47531/` (git-ignored).
+
+| Gate | Result |
+|---|---|
+| constitution | PASS (1s) |
+| hooks | PASS (0s) |
+| shell | PASS (8s) |
+| python | PASS (0s) |
+| terraform | PASS (62s); all Terraform test suites passed (largest: 333 passed, 0 failed) |
+| script-tests | PASS (3790s) |
+| sbt | PASS (820s); 9 sbt test summaries: 1,810 succeeded, 0 failed, 2 canceled |
+
+`RESULT: PASS gates=7`. This run follows the `terraform fmt` of the two ignored local tfvars, so it is also the first single run after the token redaction to pass all 7 gates.
