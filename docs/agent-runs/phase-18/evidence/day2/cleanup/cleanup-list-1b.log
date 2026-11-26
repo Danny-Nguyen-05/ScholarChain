@@ -564,9 +564,9 @@ DESTROY-ACTION: delete module.workflow.aws_iam_role_policy.producer
 DESTROY-ACTION: delete module.workflow.aws_sfn_state_machine.embedding_dispatch
 DESTROY-ACTION: delete terraform_data.phase12b_guard
 CONFIRM-BINDING: plan_sha256=dae69598b4e1abaa679def619033d9ef9762717ff1db31adab2e97656a1ca656 account_sha256=32c67ff8da449cda3889494d51cb67b975431575cadce3aa6dc0da0aae60bf3e region=us-east-2 environment=course actions=183
-CONFIRM-TOKEN: 4028d4fffcc48aa898e7a3dc3ac93d18e0e8ec26d6eb8532d146d4c9d5f8a442
+CONFIRM-TOKEN: <used-one-time-token>
 KEY-REVOCATION-REMINDER: the destroy deletes the Secrets Manager containers scholarchain-course/anthropic-api-key and scholarchain-course/voyage-api-key (force delete, no recovery window) but does NOT revoke the keys.
 KEY-REVOCATION-REMINDER: after the destroy, REVOKE BOTH keys in the provider consoles yourself: the Anthropic API key in the Anthropic Console and the Voyage AI API key in the Voyage AI dashboard, then check the key list in each console shows it gone. Record the time of each revocation in the evidence (never the key).
 STEP: confirm
-[2026-11-25T19:01:10Z] [20261125T185846Z-29671] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 4028d4fffcc48aa898e7a3dc3ac93d18e0e8ec26d6eb8532d146d4c9d5f8a442 --plan <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan; nothing was destroyed
-RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm 4028d4fffcc48aa898e7a3dc3ac93d18e0e8ec26d6eb8532d146d4c9d5f8a442 --plan <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan; nothing was destroyed
+[2026-11-25T19:01:10Z] [20261125T185846Z-29671] ERROR refused at step confirm: human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm <used-one-time-token> --plan <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan; nothing was destroyed
+RESULT: REFUSED step=confirm reason=human confirmation required: review every DESTROY-ACTION above, then re-run with --confirm <used-one-time-token> --plan <repo>/target/plans/20261125T185846Z-29671/destroy-course.tfplan; nothing was destroyed
