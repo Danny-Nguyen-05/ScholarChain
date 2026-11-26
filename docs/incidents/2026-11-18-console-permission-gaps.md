@@ -75,3 +75,13 @@ Proposals for the owners; none is decided.
 - `../agent-runs/phase-15/human-gate.md` (open items, deviations 1 and 2)
 - `../agent-runs/phase-15/evidence/session-2/INDEX.md`
 - `2026-11-18-kit-missing-a7-b3b-c5-policies.md`
+
+## Recurrence notes (2026-11-25)
+
+Appended on 2026-11-25; the text above is not changed. Source: the Day 2 decision log (`../agent-runs/phase-18/evidence/day2/00-timeline/decision-log.md`) and the masked cleanup logs `../agent-runs/phase-18/evidence/day2/cleanup/cleanup-pass-1.log` and `../agent-runs/phase-18/evidence/day2/cleanup/cleanup-pass-2.log`.
+
+- Destroy pass 1 (19:02:46Z-19:09:49Z) again ended PARTIAL only at `aws_eip.nat`: `DisassociateAddress` returned 403. The inventory went from 331 to 87 entries (`cleanup-pass-1.log`). The destroy script now words this as the expected carried item.
+- Pass 2 (02:46:08Z-02:46:23Z on 2026-11-26) deleted only `aws_eip.nat`. `RESULT: PASS`, inventory 48 to 46 (`cleanup-pass-2.log`). Why pass 2 succeeds without the permission is still not recorded. IAM was not widened.
+- P39 block 7: `budgets:ViewBudget` was refused again for the admin user. The human read the budget in the console as root instead: USD 25.00 budget, USD 19.26 actual (decision log, 21:12 CST entry).
+- The proposed follow-up above (list `aws_eip.nat` as an expected pass-1 403 and a pass 2) still applies to the kit and runbook.
+

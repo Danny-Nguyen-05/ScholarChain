@@ -81,3 +81,14 @@ No retry. The human's decision of 2026-11-18T17:00:30Z (quoted above) confirmed 
 - `../agent-runs/phase-15/human-gate.md` (Session results, open items)
 - `../../experiments/results/phase16/performance/performance-metrics.md` (sections 5 and 9)
 - `../runbooks/session-2-plan.md`
+
+## Resolution update (2026-11-25)
+
+Status: resolved (fix verified on EMR, one run). This status supersedes the Status line at the top of the record. The text above is the record as written on 2026-11-18 to 2026-11-20 and is not changed.
+
+- Fix: Phase 18 package 18A changed `scripts/emr/sc-step.sh` so that the EMR `spark-job` template fetch runs before the portable-runtime environment (`spark_env`) is set. The fixed file has sha256 `1edcf68d29481015da5675aad7fbe74d4af685f9d0c27a5378f23ffeab7c8eed` and is committed on branch `phase-18` (HEAD `fe0b6cc` on Day 2). The same hash was seen as the installed step runner in the Day 2 EMR config write and upload checks (decision log, 11:23 CST entry).
+- Live proof: on Day 2 (2026-11-25), EMR size S, cluster `j-05116692OZ06APLO3FMD`, run 5 `15a-emr-size-100-20261125T174034Z-99560` (17:40:34Z-18:14:39Z) completed all six steps. The `spark-job` step `s-08041352ORZOW9X35U3M` COMPLETED. Run 5 was a retry of run 4, which had failed earlier at `hadoop-prep` for an unrelated reason (see `2026-11-25-emr-hadoop-prep-intermediate-missing.md`).
+- Output: export `spark/run:30b3ef84-11dc-4c8c-b9c2-c632477d7282`, with the `_SCHOLARCHAIN_SPARK_COMPLETE` marker. Counters: canonicalWorks 10578, canonicalResearchers 21819, allYearsEdges 81181, components 3942.
+- Step durations in run 5: hadoop-prep 7m6s, entity-resolution 6m2s, spark-job 16m38s (source: EMR console Steps tab, human screenshot during the session; clip `p18-clip1-emr-steps-2026-11-25.mov`, hash in `../agent-runs/phase-18/evidence/day2/recordings/clips.txt`).
+- Limits: one live run only. No separate root-cause run was made; the fix is inferred from the ordering change (template fetch before `spark_env`) and verified by the passing step, not by a reproduction of the 2026-11-18 error. The first Phase 15 follow-up row above (find and fix the missing class) is met by this fix; the stderr-evidence row is unchanged.
+- Sources: `../agent-runs/phase-18/evidence/day2/00-timeline/decision-log.md` (11:23, 12:18 and 12:20 CST entries) and `../agent-runs/phase-18/evidence/day2/emr/emr-run-2.log` (masked). The sc-step.sh sha256 equals `shasum` of the committed `scripts/emr/sc-step.sh` and the pin in `infra/terraform/emr-step-programs.json:7` (confirmed by the coordinator). The step durations are from the EMR console Steps tab, human screenshot during the session; clip `p18-clip1-emr-steps-2026-11-25.mov` (hash in `../agent-runs/phase-18/evidence/day2/recordings/clips.txt`).

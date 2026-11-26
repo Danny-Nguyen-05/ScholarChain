@@ -81,3 +81,12 @@ Proposals for the owners; none is decided.
 - `../agent-runs/phase-15/human-gate.md` (open items, deviation 5)
 - `../../experiments/results/phase16/performance/performance-metrics.md` (sections 3 and 9)
 - `../runbooks/session-2-plan.md` (token-expiry row)
+
+## Recurrence notes (2026-11-25)
+
+Appended on 2026-11-25; the text above is not changed. Source: the Day 2 decision log (`../agent-runs/phase-18/evidence/day2/00-timeline/decision-log.md`, 12:36 and 20:44 CST entries).
+
+- Two `scripts/*` runs stopped at the `account-identity` step with exit 5 because the 1-hour deployer session had expired: the cleanup-prepare plan (about 18:36Z) and destroy pass 2 (02:44:38Z on 2026-11-26). Nothing ran either time.
+- Both passed after a fresh `aws login`. No cloud change was made under a stale identity.
+- Same cause as the 18:27Z deferral above (the 1-hour deployer limit). The scripts' own `account-identity` step caught the expired session before any action, which is the early, safe failure the identity-check follow-up above asks for. The runbook note item stays proposed.
+
