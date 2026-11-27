@@ -17,6 +17,8 @@ COMMANDS RUN (observed, offline, read-only):
 TEST RESULTS: none run (documentation only)
 VALIDATION RESULTS: 298 relative links, 0 broken; 0 twelve-digit runs; 0 '@'; 244 numbers checked, 242 in the linked sources and 2 rounded p95 values (4732 and 7077, from 4731.616 and 7076.662) whose exact values are in the source; after round 1 repairs 304 links, 0 broken
 RISKS: Neptune bulk load in Session 2, Step Functions, SQS and most DynamoDB tables marked "not verified"; Mermaid not rendered; live rollback not exercised
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review
 
 ## documentation-engineer, instance 2 (17A-2 and 17F)
@@ -36,6 +38,8 @@ TEST RESULTS: none run (documentation only); the release-manifest test counts ar
 VALIDATION RESULTS: 467 relative links, 0 broken, 0 bad anchors; twelve-digit runs only inside sha256 hex strings; '@' only in `cnguye69@uic.edu` and in `openjdk@17` and curl syntax in README; numbers found in the committed sources except pre-existing README text
 RISKS: commands marked "not replayed in 17A (replay in 17G)"; README query examples need a running service; the video link and a release tag are still to be added by the human
 BLOCKED-ON EVIDENCE: final release SHA and tag; release build hashes
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review
 
 ## incident-responder (17B)
@@ -48,6 +52,8 @@ FILES MODIFIED: none (the 2026-11-16 record is unchanged)
 COMMANDS RUN (observed): read-only reads of the Session 2 decision log, evidence index and logs; link and privacy check script: `files 8 paths_checked 84 unresolved 0 12digit 0 at 0` (initial and after repairs)
 VALIDATION RESULTS: evidence differences recorded inside the records (abort time 20:52:44.209Z first failure vs 20:52:49.770Z abort event; poll-file blank stretches; decision-log ordering; derived ingest times; no quoted human decision for the c5 policy; exit codes 255 and 4 at different layers)
 RISKS: root cause "not determined" for the EMR class error and the 5xx burst; two records rest on the decision log because the raw logs are private or excluded
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review
 
 ## coordinator (17C, 17D)
@@ -65,6 +71,8 @@ FILES CREATED / MODIFIED: none
 COMMANDS RUN (observed): `git ls-files 'file:*' | wc -l`: 24; `git diff 3ccd61c HEAD --stat -- modules/hadoop/src/main`: empty; `sbt -batch "hadoop/testOnly edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec"` (JDK 17): `Tests: succeeded 30, failed 0, canceled 0, ignored 0, pending 0`, `All tests passed.`; afterwards `ls -d file:` prints nothing
 CAUSE: a one-slash `file:/<tmp>` stats directory string passed to `FsPaths.file` would resolve `file:` relative to the working directory without the `isFileUri` check (`HadoopIO.scala:27-35`); the current code has that check and a round-trip test (`HadoopPrepReviewSpec.scala:159-171`), so the junk came from an earlier pre-fix working-tree run
 RISKS: no test asserts that a `file:` directory is absent; no `.gitignore` entry (build-engineer's file)
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review, full check
 
 ## documentation-engineer, instance 1 (17I follow-up)
@@ -77,6 +85,8 @@ VALIDATION RESULTS (owner-reported): threat-model.md 69 relative links, 0 broken
 STATUS: DONE (draft; ratified by the human, see `ratification-17e.md`)
 FILES MODIFIED: `.claude/settings.json` (the four hook `command` values in the form `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh`), `.mcp.json` (`github-readonly` header `Authorization: ${GITHUB_MCP_AUTHORIZATION}`), `.claude/MCP-TRUST.md:7` (names the new variable)
 VALIDATION RESULTS (owner-reported): JSON parse OK for both files; `bash -n` OK for the four hooks; `validate-agent-files.sh`: "Validated 18 unique agents, reviewer fence, 32 representative ownership paths and 18 routes", exit 0; `scripts/tests` `test_check.py`: Ran 54 tests, OK
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review, ratification, fresh-session probes, full check
 
 ## documentation-engineer (package 17E follow-ups)
@@ -95,6 +105,8 @@ STATUS: DONE
 FILES CREATED: `modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/CoauthorPairGenerationSpec.scala` (37 tests: pair and team expansion, caps and reject text, ordinals, block keys, initials, bibliography keys, pair counts); no production file changed
 COMMANDS RUN (JDK 17): `sbt -batch hadoop/Test/scalafmt`; `sbt -batch "hadoop/testOnly edu.uic.cs441.scholarchain.hadoop.CoauthorPairGenerationSpec"`; `sbt -batch hadoop/test`; `sbt -batch "hadoop/Test/scalafmtCheck"`; `git diff --stat -- modules/hadoop/src/main`
 TEST RESULTS (owner-reported): spec `Tests: succeeded 37, failed 0`; `hadoop/test` `Tests: succeeded 101, failed 0` (5 suites); scalafmtCheck success; `modules/hadoop/src/main` diff empty
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review (APPROVE, `review.md`), full check 4 (`test-report.md`)
 
 ## documentation-engineer (17G close-out: replay notes, Hadoop documentation, review repairs)
@@ -103,4 +115,6 @@ STATUS: DONE
 FILES MODIFIED: `README.md` (replay status at lines 35, 66, 74, 94, 108, 114, 121, 159, 184; the `plan.sh` dry-run command now `bash scripts/plan.sh --env course --region us-east-2`); `docs/architecture.md`, `docs/evaluation.md`, `docs/runbook.md`, `docs/demo-script.md`, `docs/service-limits.md`, `docs/threat-model.md`, `docs/api.md` (17G replay notes); `docs/data-lineage.md` (per-job execution detail, outputs and test fixtures table; known limitations and trade-offs for Hadoop; review repairs at lines 76, 78, 80, 86, 90-92, 102); `reports/final-report.md` ("Commands replayed in 17G" table and replay-status text); `reports/release-manifest.md` (replay-status text only)
 VALIDATION RESULTS (owner-reported): relative-link checks 0 broken; `NoRealAccountIdIsAdded` Ran 2 tests, OK; no account ID, e-mail address or home path added
 ASSUMPTIONS: the HADOOP-04, -06 and -09 limitations are described from the code and records; where no reason was recorded the text says so
+MANUAL ACTION REQUIRED: not stated in the original report (field added 2026-11-26 by the coordinator, human decision recorded in `docs/agent-runs/phase-18/human-gate.md`)
+BLOCKED-ON OWNER: not stated in the original report (field added 2026-11-26, same decision)
 NEXT GATE: review (round 2 APPROVE, `review.md`), full check 4 (`test-report.md`)

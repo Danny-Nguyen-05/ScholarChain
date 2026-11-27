@@ -174,3 +174,31 @@ Command: `scripts/check.sh` (JDK 17), run id `20261126T192732Z-47531`, 1:27 PM t
 | sbt | PASS (820s); 9 sbt test summaries: 1,810 succeeded, 0 failed, 2 canceled |
 
 `RESULT: PASS gates=7`. This run follows the `terraform fmt` of the two ignored local tfvars, so it is also the first single run after the token redaction to pass all 7 gates.
+
+# Day 3: autograder fixes (2026-11-26)
+
+Change: the Hadoop oversize-team pair step now writes one reject record and its own counter, `OVERSIZE_TEAM_PAIR_STEP` (hadoop-engineer); each dataset schema and manifest entry records a schema version, checked by `validate_datasets.py` (dataset-engineer); lineage, threat model, final report and release manifest updated to match (documentation-engineer); Phase 18 owner report and `commit.txt` added, and the Phase 17 owner report given its two missing fields under the human decision in `human-gate.md` (coordinator). Review round 3 APPROVE (rounds 1 and 2 REQUEST CHANGES; all findings fixed by their owners).
+
+Owner checks before the full check (observed):
+
+- `sbt hadoop/test`: 103 succeeded, 0 failed; `hadoop/scalafmtCheck` success (hadoop-engineer).
+- Dataset validation with PyYAML 6.0.2: `OK`; dataset script tests 105, 12 and 13 tests `OK`, including the new `datasets/scripts/test_schema_versions.py` (coordinator rerun).
+- Link check over the changed Markdown files: 393 links, 0 problems (coordinator).
+
+## Full check after APPROVE
+
+Command: `scripts/check.sh` (JDK 17), run id `20261127T024053Z-18142`, 8:40 PM to 10:11 PM CST. Logs: `target/check-logs/20261127T024053Z-18142/` (git-ignored).
+
+| Gate | Result |
+|---|---|
+| constitution | PASS (1s) |
+| hooks | PASS (0s) |
+| shell | PASS (8s) |
+| python | PASS (0s) |
+| terraform | PASS (66s); all Terraform test suites passed (largest: 333 passed, 0 failed) |
+| script-tests | PASS (4437s) |
+| sbt | PASS (922s); 9 sbt test summaries: 1,812 succeeded, 0 failed, 2 canceled |
+
+`RESULT: PASS gates=7`; the test marker was updated at 10:11 PM CST.
+
+Limitation: the Phase 17 two-field amendment, the Phase 18 owner report and the human-gate entries were edited after this run started. They are Markdown records only, with no code, test or script change; the link check above covers them.
