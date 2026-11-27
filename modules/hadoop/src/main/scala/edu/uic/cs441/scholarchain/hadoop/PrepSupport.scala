@@ -20,6 +20,7 @@ object PrepCounters {
   val Conflict = "CONFLICT"
   val OversizeBlock = "OVERSIZE_BLOCK"
   val OversizeTeam = "OVERSIZE_TEAM"
+  val OversizeTeamPairStep = "OVERSIZE_TEAM_PAIR_STEP"
   val EmittedPair = "EMITTED_PAIR"
   val MissingKey = "MISSING_KEY"
   val SchemaFailure = "SCHEMA_FAILURE"
@@ -32,6 +33,7 @@ object PrepCounters {
     Conflict,
     OversizeBlock,
     OversizeTeam,
+    OversizeTeamPairStep,
     EmittedPair,
     MissingKey,
     SchemaFailure
@@ -580,7 +582,11 @@ final class TaskSink(
           case RejectReasonCode.OversizeBlock =>
             count(PrepCounters.OversizeBlock, 1)
           case RejectReasonCode.OversizeTeam =>
-            count(PrepCounters.OversizeTeam, 1)
+            // J07 and J08 both skip an oversize team. A separate counter keeps the run totals
+            // from counting one team twice under the team counter (REJECTED counts both).
+            if (reject.stage == PreparationStage.CoauthorPair)
+              count(PrepCounters.OversizeTeamPairStep, 1)
+            else count(PrepCounters.OversizeTeam, 1)
           case RejectReasonCode.SchemaFailure =>
             count(PrepCounters.SchemaFailure, 1)
           case _ => ()

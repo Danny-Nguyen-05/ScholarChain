@@ -210,9 +210,52 @@ class CoauthorPairGenerationSpec extends AnyFunSuite {
     assert(pairsOf(out).size == 6)
   }
 
-  test("a team one above the team-size limit yields nothing from the pair step") {
+  test("a team one above the team-size limit yields no pairs and one pair-step reject") {
     val work = named("conf/pair/OverLimit1", 5)
-    assert(DerivedRecords.pairs(work, 1000, 4, work.sourceRecordId) == Vector.empty)
+    val out = DerivedRecords.pairs(work, 1000, 4, work.sourceRecordId)
+    assert(pairsOf(out) == Vector.empty)
+    assert(out.size == 1)
+    val reject = rejectsOf(out).head
+    assert(reject.reasonCode == RejectReasonCode.OversizeTeam)
+    assert(reject.stage == PreparationStage.CoauthorPair)
+    assert(reject.source == Some(SourceType.Dblp))
+    assert(reject.sourceLocator == "conf/pair/OverLimit1")
+    assert(
+      reject.diagnosticExcerpt == Some(
+        s"pair step skipped work ${work.workId}: team 5 exceeds 4"
+      )
+    )
+  }
+
+  test("the task sink counts each skipped oversize team once under the pair-step counter") {
+    val counts = scala.collection.mutable.Map.empty[String, Long].withDefaultValue(0L)
+    val lines = scala.collection.mutable.ArrayBuffer.empty[String]
+    val sink = new TaskSink(
+      (key, line) => { val _ = key; lines += line },
+      (name, delta) => counts(name) = counts(name) + delta,
+      runId
+    )
+    val over = named("conf/pair/SinkOver1", 5)
+    val overToo = named("conf/pair/SinkOver2", 6)
+    val atLimit = named("conf/pair/SinkAt1", 4)
+    List(over, overToo, atLimit).foreach { work =>
+      DerivedRecords.pairs(work, 1000, 4, work.sourceRecordId).foreach(sink.emit)
+    }
+    assert(counts(PrepCounters.OversizeTeamPairStep) == 2L)
+    assert(counts(PrepCounters.OversizeTeam) == 0L)
+    assert(counts(PrepCounters.Rejected) == 2L)
+    assert(counts(PrepCounters.EmittedPair) == 6L)
+    assert(lines.count(_.contains("\"reasonCode\":\"OVERSIZE_TEAM\"")) == 2)
+  }
+
+  test("the team step still counts its own oversize team under the team counter") {
+    val counts = scala.collection.mutable.Map.empty[String, Long].withDefaultValue(0L)
+    val sink =
+      new TaskSink((_, _) => (), (name, delta) => counts(name) = counts(name) + delta, runId)
+    val over = named("conf/pair/SinkTeamOver1", 5)
+    DerivedRecords.teams(over, 4, over.sourceRecordId).foreach(sink.emit)
+    assert(counts(PrepCounters.OversizeTeam) == 1L)
+    assert(counts(PrepCounters.OversizeTeamPairStep) == 0L)
   }
 
   test("the team step rejects a team above the limit and keeps one at the limit") {

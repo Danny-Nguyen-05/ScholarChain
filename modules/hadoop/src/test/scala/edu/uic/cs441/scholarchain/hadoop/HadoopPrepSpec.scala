@@ -449,6 +449,17 @@ ${record(
     val teamLines = LogicalRecords.lines(oversizeTeam.toOption.get.directory.resolve("export"))
     assert(teamLines.exists(_.contains("OVERSIZE_TEAM")))
     assert(!teamLines.flatMap(CoreJson.parse[PublicationTeam](_).toOption).exists(_.teamSize == 4))
+    // J08 accounts for the same team: one pair-step counter and one COAUTHOR_PAIR reject, no pairs.
+    val teamResult = oversizeTeam.toOption.get
+    assert(teamResult.counters(PrepCounters.OversizeTeam) == 1L)
+    assert(teamResult.counters(PrepCounters.OversizeTeamPairStep) == 1L)
+    val pairStepRejects = teamLines
+      .flatMap(CoreJson.parse[RejectRecord](_).toOption)
+      .filter(_.stage == PreparationStage.CoauthorPair)
+    assert(pairStepRejects.size == 1)
+    assert(pairStepRejects.head.reasonCode == RejectReasonCode.OversizeTeam)
+    assert(pairStepRejects.head.diagnosticExcerpt.exists(_.contains("team 4 exceeds 3")))
+    assert(teamLines.flatMap(CoreJson.parse[CoauthorPairCandidate](_).toOption).isEmpty)
     val oversizeBlock = HadoopPrepPipeline.execute(
       request(
         dir.resolve("block-out"),

@@ -62,7 +62,22 @@ object DerivedRecords {
       locator: String
   ): Vector[EmittedRecord] = {
     val authors = work.authors
-    if (authors.size > maxTeam) Vector.empty
+    if (authors.size > maxTeam)
+      // J07 rejects this team too. The pair step reports its own skip so no work disappears
+      // silently; the reject keeps the CoauthorPair stage and names the work and team size.
+      Vector(
+        EmittedRecord.Rejected(
+          Rejects.record(
+            Some(work.source),
+            locator,
+            Some(work.provenance.datasetSnapshot),
+            work.provenance.runId,
+            PreparationStage.CoauthorPair,
+            RejectReasonCode.OversizeTeam,
+            s"pair step skipped work ${work.workId}: team ${authors.size} exceeds $maxTeam"
+          )
+        )
+      )
     else {
       val count =
         try PrepLimits.pairCount(authors.size)

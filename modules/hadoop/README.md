@@ -37,7 +37,7 @@ Every job uses Hadoop's default `HashPartitioner`. None of the jobs set a combin
 | J05 BlockingKey | `BlockReducer` | `OVERSIZE_BLOCK`, `OVERSIZE_CANDIDATE_PAIRS` | `intermediate/j05` | J04 bibliography rows |
 | J06 CandidateJoin | `CandidateReducer` | same oversize codes; fallback keys emit nothing | `intermediate/j06` | J05 block members |
 | J07 PublicationTeam | `PassReducer` | `OVERSIZE_TEAM` is emitted by the mapper | `intermediate/j07` | J04 works |
-| J08 CoauthorPairExpansion | `PassReducer` | team larger than the pair limit is emitted by the mapper | `intermediate/j08` | J04 works |
+| J08 CoauthorPairExpansion | `PassReducer` | a team above `maxAuthorTeamSize` yields no pairs and one `OVERSIZE_TEAM` reject (stage `COAUTHOR_PAIR`, work id and team size in the excerpt) counted as `OVERSIZE_TEAM_PAIR_STEP`; an expansion above the pair limit yields `OVERSIZE_CANDIDATE_PAIRS` | `intermediate/j08` | J04 works |
 | J09 GraphCandidateExport | `ExportReducer` | unresolved `abstractTextRef` | `export/snapshot=<snapshot>/run=<uuid>/<kind>/` | J04–J08 output |
 
 Map output keys are record kinds (`work`, `index`, `reject`, …), with an observation-instance suffix on J01–J03 lines. J04 groups by `source`, source record, and snapshot. J05 and J06 group by the block key (`exact:`, `name:`, `initial:`, `title-year:`, `venue:`, `affiliation:`, `coauthor:`, or `fallback:`). J07 and J08 group by record kind (`team`, `authorship`, `pair`, `reject`). J09 groups by snapshot or text-reference id. Values are domain JSON.
@@ -71,6 +71,8 @@ A path that is not that source's committed sample needs `--<source>-snapshot` an
 
 The driver never recursively deletes an output directory. Reuse requires `_SCHOLARCHAIN_COMPLETE`, `run-manifest.json`, and every export partition named by the marker. Each non-metadata export file is also bound by its relative path, byte length, and SHA-256. A truncated or missing part does not reuse. Run id, snapshot ids, retrieval dates, checksums, schema and transformation versions, and the config fingerprint must match. A changed snapshot does not reuse old results. A marker whose export files are gone is not success. Partial output is not marked successful.
 
+The transformation version `hadoop-prep-j01-j09-v3-stable-overflow-lineage` is unchanged by the 2026-11-26 J08 change, so it covers both the output before that date and the output after it. From 2026-11-26 J08 adds an `OVERSIZE_TEAM` reject with stage `COAUTHOR_PAIR` and the `OVERSIZE_TEAM_PAIR_STEP` counter for each team above `maxAuthorTeamSize`; the emitted pairs are unchanged. Reuse is keyed by run id: a run with a fresh run id does not reuse output written before the change; passing an existing `--run-id` would reuse it.
+
 `s3://`, `s3a://`, and `s3n://` output roots stay `org.apache.hadoop.fs.Path` values. This module does not create them as `java.nio` directories under the working directory and does not call AWS.
 
 Fresh-run logical comparison excludes the processing invocation UUID only from recognized intermediate-overflow locations. Exported rejects retain a bounded original location display and its complete SHA-256, plus a companion SHA-256 of the qualified file path with only the terminal `<run UUID>/intermediate/j01`–`j08` processing component canonicalized. Comparison uses the companion together with the part-file offset and native source-record reference. Genuine output roots, part identities, offsets, source record values/digests, sources and snapshots remain significant. Raw source-file locators and unknown-lineage rejects receive no location normalization.
@@ -88,4 +90,4 @@ java -cp "<Compile/fullClasspath>" edu.uic.cs441.scholarchain.hadoop.HadoopPrepM
 
 The main class loads `modules/core/src/main/resources/scholarchain.hadoop-prep.v1.json`. With no path overrides it runs the four committed samples. Optional arguments are `--config`, `--once`, `--run-id`, `--output-root`, `--execution-mode`, `--dblp`, `--openalex`, `--crossref`, `--orcid`, and the matching `--<flag>-snapshot` and `--<flag>-retrieval` pair when a path is overridden. Two runs compare a streaming export digest. `--once` does not.
 
-Counters in `counter-summary.json` are sums across the nine jobs: `INPUT`, `ACCEPTED`, `REJECTED`, `DUPLICATE`, `CONFLICT`, `OVERSIZE_BLOCK`, `OVERSIZE_TEAM`, `EMITTED_PAIR`, `MISSING_KEY`, and `SCHEMA_FAILURE`.
+Counters in `counter-summary.json` are sums across the nine jobs: `INPUT`, `ACCEPTED`, `REJECTED`, `DUPLICATE`, `CONFLICT`, `OVERSIZE_BLOCK`, `OVERSIZE_TEAM`, `OVERSIZE_TEAM_PAIR_STEP`, `EMITTED_PAIR`, `MISSING_KEY`, and `SCHEMA_FAILURE`.
