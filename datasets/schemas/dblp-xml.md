@@ -1,5 +1,18 @@
 # DBLP XML (committed sample mapping)
 
+**Schema version:** `scholarchain.dblp-xml-schema.v1`. This is the ScholarChain schema-note
+version; it is the value of `schema_version` for the `dblp` entry in
+`datasets/dataset-manifest.yaml`. It describes the mapping of the committed sample
+`samples/dblp/linked-records.xml` (three `inproceedings` records) from the DBLP XML monthly
+snapshot `dblp-2026-10-03` (retrieved 2026-10-05).
+
+**Upstream version:** DBLP XML snapshot `dblp-2026-10-03` (DOI `10.4230/dblp.xml.2026-10-03`), per
+`datasets/provenance/dblp-snapshot-2026-10-03-dagstuhl.txt`. The DTD this note was written against
+is `dblp-2023-06-28.dtd` (named in the upstream DOCTYPE example below and in
+`datasets/schemas/dblp/dblp-named-entities.v1.tsv`); the DTD revision shipped with the 2026-10-03
+snapshot is not recorded in the repository. The local character-entity catalogue is version `v1`
+(`dblp-named-entities.v1.tsv`).
+
 **Upstream schema:** DBLP DTD referenced by monthly full XML snapshots on Dagstuhl DROPS
 (example upstream DOCTYPE: `<!DOCTYPE dblp SYSTEM "dblp-2023-06-28.dtd">`). Pinned upstream
 gzip for bounded refresh: `dblp-2026-10-03.xml.gz` (DOI `10.4230/dblp.xml.2026-10-03`); filename,

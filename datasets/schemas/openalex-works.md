@@ -1,5 +1,16 @@
 # OpenAlex Work object (API JSON)
 
+**Schema version:** `scholarchain.openalex-works-schema.v1`. This is the ScholarChain schema-note
+version; it is the value of `schema_version` for the `openalex` entry in
+`datasets/dataset-manifest.yaml`. It describes the Work object in the committed sample
+`samples/openalex/works.jsonl` (one Work, 51 top-level keys), retrieved from the live OpenAlex
+REST API on 2026-10-05 (acquisition index id `openalex-rest-2026-10-05`).
+
+**Upstream version:** upstream version not recorded; written against the 2026-10-05 live REST API
+sample `samples/openalex/works.jsonl` (the Work's own `updated_date` is `2026-09-25T08:18:29.962427`).
+No OpenAlex API version or bulk snapshot date is pinned in the repository
+(`datasets/dataset-manifest.yaml`, `snapshot_or_version`).
+
 **Documentation:** https://help.openalex.org/data/works/ and https://api.openalex.org/works/{id}
 
 ## Fields present in `samples/openalex/works.jsonl`

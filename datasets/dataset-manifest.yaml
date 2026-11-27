@@ -42,6 +42,7 @@ datasets:
       gzip URL (206 Partial Content required; rejects HTTP 200) and extracts up to
       three multi-author inproceedings/article records with DBLP DTD entity declarations.
     schema: schemas/dblp-xml.md
+    schema_version: scholarchain.dblp-xml-schema.v1
     linkage_keys:
       - dblp_key
       - doi
@@ -94,6 +95,7 @@ datasets:
       Default regenerate mode performs no network I/O. Refresh mode fetches exactly
       one work by DOI (10.1007/978-3-642-31674-6_1) from api.openalex.org.
     schema: schemas/openalex-works.md
+    schema_version: scholarchain.openalex-works-schema.v1
     linkage_keys:
       - openalex_work_id
       - doi
@@ -143,6 +145,7 @@ datasets:
       Default regenerate mode performs no network I/O. Refresh mode fetches one
       public record via GET /v3.0/{orcid}/record for ORCID 0000-0002-4414-6920.
     schema: schemas/orcid-record.md
+    schema_version: scholarchain.orcid-record-schema.v1
     linkage_keys:
       - orcid
       - given_and_family_name
@@ -191,6 +194,7 @@ datasets:
       Default regenerate mode performs no network I/O. Refresh mode fetches one
       work via GET /works/10.1007/978-3-642-31674-6_1 with polite User-Agent.
     schema: schemas/crossref-works.md
+    schema_version: scholarchain.crossref-works-schema.v1
     linkage_keys:
       - doi
       - title

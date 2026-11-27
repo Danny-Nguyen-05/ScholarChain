@@ -1,5 +1,16 @@
 # ORCID public record (JSON)
 
+**Schema version:** `scholarchain.orcid-record-schema.v1`. This is the ScholarChain schema-note
+version; it is the value of `schema_version` for the `orcid` entry in
+`datasets/dataset-manifest.yaml`. It describes the public record in the committed sample
+`samples/orcid/records.jsonl` (one record, ORCID `0000-0002-4414-6920`), retrieved from the
+ORCID public API on 2026-10-05 (acquisition index id `orcid-public-api-2026-10-05`).
+
+**Upstream version:** ORCID public API `v3.0`, record endpoint `GET /v3.0/{orcid}/record`
+(`datasets/scripts/acquire_samples.py`, `refresh_orcid`; `datasets/dataset-manifest.yaml`,
+`bounded_subset_rule`). The annual Public Data File date is not pinned in the repository, and no
+finer ORCID API release is recorded; this note was written against the 2026-10-05 sample.
+
 **Documentation:** https://info.orcid.org/documentation/api-tutorials/api-tutorial-read-data-on-a-record/
 
 ## Fields present in `samples/orcid/records.jsonl`

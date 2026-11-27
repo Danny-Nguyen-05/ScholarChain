@@ -1,5 +1,16 @@
 # Crossref REST `/works` response
 
+**Schema version:** `scholarchain.crossref-works-schema.v1`. This is the ScholarChain schema-note
+version; it is the value of `schema_version` for the `crossref` entry in
+`datasets/dataset-manifest.yaml`. It describes the REST API response in the committed sample
+`samples/crossref/works.jsonl` (one `work` response for DOI `10.1007/978-3-642-31674-6_1`),
+retrieved on 2026-10-05 (acquisition index id `crossref-rest-2026-10-05`).
+
+**Upstream version:** Crossref REST API response envelope `message-type` `work`,
+`message-version` `1.0.0`, as recorded in the sample `samples/crossref/works.jsonl`. No Crossref
+public data file snapshot is pinned in the repository; this note was written against the
+2026-10-05 sample.
+
 **Documentation:** https://www.crossref.org/documentation/retrieve-metadata/rest-api/
 
 ## Fields present in `samples/crossref/works.jsonl`
