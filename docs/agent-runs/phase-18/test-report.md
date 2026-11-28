@@ -202,3 +202,23 @@ Command: `scripts/check.sh` (JDK 17), run id `20261127T024053Z-18142`, 8:40 PM t
 `RESULT: PASS gates=7`; the test marker was updated at 10:11 PM CST.
 
 Limitation: the Phase 17 two-field amendment, the Phase 18 owner report and the human-gate entries were edited after this run started. They are Markdown records only, with no code, test or script change; the link check above covers them.
+
+# Day 4: demo video v4 docs (2026-11-27)
+
+Docs-only change: `README.md` (video bullet and D19 row), `docs/demo-script.md` (status, Phase 18 note, new video update block with the 26-chapter list) and the Demonstration row of `reports/final-report.md` now point to the replacement video `https://youtu.be/Bb6OzssRdWg` (documentation-engineer); Day 4 entries in `human-gate.md` (coordinator). Review round 2 APPROVE (round 1 REQUEST CHANGES, minor findings only; all fixed by their owners). The coordinator's link check over the 4 changed Markdown files found 431 relative links and 0 problems (3 external links not fetched).
+
+## Full check after APPROVE
+
+Command: `scripts/check.sh` (JDK 17), run id `20261127T220232Z-7744`, 4:02 PM to 5:27 PM CST. Logs: `target/check-logs/20261127T220232Z-7744/` (git-ignored).
+
+| Gate | Result |
+|---|---|
+| constitution | PASS (0s) |
+| hooks | PASS (1s) |
+| shell | PASS (8s) |
+| python | PASS (0s) |
+| terraform | PASS (66s); all Terraform test suites passed (largest: 333 passed, 0 failed) |
+| script-tests | PASS (4170s) |
+| sbt | PASS (835s); 9 sbt test summaries: 1,812 succeeded, 0 failed, 2 canceled |
+
+`RESULT: PASS gates=7`.
